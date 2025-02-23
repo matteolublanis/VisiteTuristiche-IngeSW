@@ -1,5 +1,5 @@
 package main;
 
-public class Fruitore {
+public class Fruitore extends Utente {
 
 }

@@ -1,5 +1,5 @@
 package main;
 
-public class Configuratore {
+public class Configuratore extends Utente {
 
 }
