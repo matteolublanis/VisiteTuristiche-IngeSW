@@ -1,0 +1,31 @@
+{
+    "configuratore1":
+    {
+        "username":"admin",
+        "password":"admin"
+    }, 
+
+    "visitatore1":
+    {
+        "username":"admin",
+        "password":"admin"
+    }, 
+
+    "visitatore2":
+    {
+        "username":"admin",
+        "password":"admin"
+    }, 
+
+    "visitatore3":
+    {
+        "username":"admin",
+        "password":"admin"
+    }, 
+
+    "visitatore4":
+    {
+        "username":"admin",
+        "password":"admin"
+    }
+}
