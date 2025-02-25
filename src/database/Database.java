@@ -1,11 +1,24 @@
 package database;
 
 import user.Utente;
+
+import java.util.HashMap;
+
 import org.json.simple.JSONObject;
 import utility.JSONUtility;
 
 public class Database {
 	
+	/*
+	 * GESTIONE USR E PSW
+	 * 
+	 * 1- Avere un hashmap che preso usr mappa all'oggeto tipo Utente e poi ne verifica la password
+	 * 2- Usiamo 2 json
+	 * 
+	 */
+	
+	//Da serializzare l'hashmap per la gestione delle credenziali
+	private HashMap<String, String> credenziali = new HashMap<>();
 	private JSONObject jsonObject = JSONUtility.readJsonFile("src/memoria.json");
 	
 	public Database () {
@@ -36,7 +49,7 @@ public class Database {
 		JSONObject utente = (JSONObject) jsonObject.get(user);
 		utente.put("primo-accesso", true);
 		
-		JSONUtility.aggiornaJsonFile(jsonObject);
+		JSONUtility.aggiornaJsonFile(jsonObject); 
 	}
 	
 }

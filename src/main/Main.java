@@ -2,6 +2,9 @@ package main;
 
 public class Main {
 	public static void main (String args[]) {
-		System.out.println("giovanni");
+		System.out.println("Applicazione avviata...");
+		while(true) {
+			database.
+		}
 	}
 }
