@@ -1,6 +1,9 @@
 package user;
 
 public class Volontario extends Utente {
-	private boolean primoAccesso = false;
+
+	public Volontario (String username) {
+		this.username = username;
+	}
 
 }

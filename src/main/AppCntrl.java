@@ -3,7 +3,7 @@ package main;
 import database.Database;
 
 public class AppCntrl {
-	
+	/*
 	private Database database;
 	
 	public AppCntrl() {
@@ -21,4 +21,5 @@ public class AppCntrl {
 			}
 		}
 	}
+	*/
 }

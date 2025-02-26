@@ -1,31 +1,43 @@
 {
-    "configuratore1":
+	"primo_avvio":true,
+    "admin":
     {
         "username":"admin",
-        "password":"admin"
+        "password":"admin",
+		"tipo":1,
+		"primo_accesso":true
     }, 
 
-    "visitatore1":
+    "volontario1":
     {
-        "username":"admin",
-        "password":"admin"
+        "username":"volontario1",
+		"password":"admin",
+		"tipo":2,
+		"primo_accesso":true
+
     }, 
 
-    "visitatore2":
+    "volontario2":
     {
-        "username":"admin",
-        "password":"admin"
+		"username":"volontario2",
+		"password":"admin",
+		"tipo":2,
+		"primo_accesso":true
     }, 
 
-    "visitatore3":
+    "volontario3":
     {
-        "username":"admin",
-        "password":"admin"
+		"username":"volontario3",
+		"password":"admin",
+		"tipo":2,
+		"primo_accesso":true
     }, 
 
-    "visitatore4":
+    "volontario4":
     {
-        "username":"admin",
-        "password":"admin"
+		"username":"volontario4",
+		"password":"admin",
+		"tipo":2,
+		"primo_accesso":true
     }
 }

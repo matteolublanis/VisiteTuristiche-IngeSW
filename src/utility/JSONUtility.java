@@ -1,36 +1,36 @@
 package utility;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import org.json.simple.parser.ParseException;
+import java.util.Iterator;
+
+import org.json.*;
 
 public class JSONUtility {
 
     public static JSONObject readJsonFile(String filePath) {
-        JSONParser parser = new JSONParser();
         JSONObject jsonObject = null;
 
         try {
             FileReader reader = new FileReader(filePath);
-
-            Object obj = parser.parse(reader);
-            jsonObject = (JSONObject) obj;
+            JSONTokener  parser = new JSONTokener (reader);
+            jsonObject =  new JSONObject(parser);
 
             reader.close();
 
-        } catch (IOException | ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         return jsonObject;
     }
     
-    public static void aggiornaJsonFile (JSONObject jsonObject) {
-    	try (FileWriter file = new FileWriter("src/memoria.json")) {
-            file.write(jsonObject.toJSONString()); // Scrivi l'oggetto JSON aggiornato nel file
+    public static void aggiornaJsonFile (JSONObject jsonObject, String path) {
+    	Iterator<String> keys = jsonObject.keys();
+
+    	try (FileWriter file = new FileWriter(path)) {
+            file.write(jsonObject.toString(5)); 
         } catch (IOException e) {
             e.printStackTrace();
         }
