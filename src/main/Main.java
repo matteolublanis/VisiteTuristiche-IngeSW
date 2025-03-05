@@ -1,13 +1,12 @@
 package main;
 
-import database.GestoreDatabase;
-import user.GestoreUtente;
+import controller.GestoreArchivio;
 
 public class Main {
 	public static void main (String args[]) {
 		System.out.println("Applicazione avviata...");
-		GestoreDatabase gdb = new GestoreDatabase();
-		GestoreUtente gu = new GestoreUtente(gdb);
-		gu.start();
+		GestoreArchivio gdb = new GestoreArchivio();
+		AppCntrl app = new AppCntrl(gdb);
+		app.start();
 	}
 }

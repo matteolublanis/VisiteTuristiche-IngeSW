@@ -1,7 +1,7 @@
 package user;
 
 class Configuratore extends Utente {
-
+	
 	public Configuratore (String username) {
 		this.username = username;
 	}

@@ -1,4 +1,4 @@
-package database;
+package archivio;
 
 public class Luogo {
 	
