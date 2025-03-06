@@ -8,7 +8,7 @@ public abstract class Utente {
 		return this.username;
 	}
 	
-	protected void setUsername (String username) {
+	public void setUsername (String username) {
 		this.username = username;
 	}
 	

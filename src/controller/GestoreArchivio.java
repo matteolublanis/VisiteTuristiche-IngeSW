@@ -6,7 +6,7 @@ import archivio.Archivio;
 import user.Credenziali;
 
 public class GestoreArchivio {
-	
+
 	private HashMap<GestoreUtente, String> gu = new HashMap<>(); //Un gestore utente è legato ad un suo username in seguito ad un login OR tipo al posto di string
 	private static final String CREDENZIALI_CONF_INIZIALE = "PRIMO AVVIO, CREDENZIALI CONFIGURATORE\n"
 			+ "Username: admin Password: admin";
@@ -34,8 +34,8 @@ public class GestoreArchivio {
 	}
 	
 	public void effettuaLogin (GestoreUtente gu, Credenziali c) {
-		this.gu.put(gu, c.getUsername());
-		gu.setUsername(c.getUsername());
+		this.gu.put(gu, c.getUsername()); //mette in mappa il gestoreutente collegato
+		gu.setUser(c.getUsername(), d.getTipoUtente(c)); //imposta username
 	}
 	
 	public boolean checkPrimoAccesso (String username) {

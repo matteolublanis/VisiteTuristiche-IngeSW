@@ -18,7 +18,10 @@ public class AppCntrl { //può essere ampliata per poter gestire le interazioni 
 	}
 	
 	public void start() {
-		if (gu.checkPrimoAvvio()) System.out.println(gu.comunicaCredenzialiIniziali());
+		if (gu.checkPrimoAvvio()) {
+			String cred = gu.comunicaCredenzialiIniziali();
+			if (!cred.equals("")) System.out.println(gu.comunicaCredenzialiIniziali());
+		}
 		accesso();
 		if (isPrimoAccesso()) cambiaCredenziali();
 		//ciclo azioni da implementare

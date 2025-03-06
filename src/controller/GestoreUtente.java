@@ -1,10 +1,11 @@
 package controller;
 
 import user.Credenziali;
+import user.*;
 
 public class GestoreUtente {
-	
-	private String username = "";
+
+	private Utente user; //uso classe utente, determina cosa posso fare e info personali
 	private GestoreArchivio gdb;	
 	
 	public GestoreUtente (GestoreArchivio gdb) {
@@ -32,7 +33,7 @@ public class GestoreUtente {
 	}
 	
 	public boolean checkPrimoAccesso() {
-		return gdb.checkPrimoAccesso(username);
+		return gdb.checkPrimoAccesso(user.getUsername());
 	}
 	
 	public boolean checkCredenzialiCorrette (Credenziali c) {
@@ -43,12 +44,26 @@ public class GestoreUtente {
 		gdb.cambiaCredenziali(this, c);
 	} 
 	
-	public void setUsername(String username) { 
-		this.username = username;
+	public void setUser(String username, int tipo) { 
+		switch (tipo) {
+		case 1:
+			user = new Configuratore(username);
+			break;
+		case 2:
+			user = new Volontario(username);
+			break;
+		case 3:
+			user = new Fruitore(username);
+			break;
+		}
+	}
+	
+	public void setUsername(String username) {
+		user.setUsername(username);
 	}
 	
 	public String getUsername() {
-		return username;
+		return user.getUsername();
 	}
 
 }
