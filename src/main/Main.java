@@ -12,7 +12,7 @@ public class Main {
 		ControllerArchivio gdb = new ControllerArchivio();
 		ControllerUtente gu = new ControllerUtente(gdb);
 		AppCntrl app = new AppCntrl(gu);
-		//app.start();
+		app.start();
 		Configuratore c = new Configuratore("user", 3, gu);
 		c.getElencoTipiVisiteLuogo();
 	}

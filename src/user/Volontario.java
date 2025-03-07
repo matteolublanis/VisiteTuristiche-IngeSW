@@ -1,7 +1,5 @@
 package user;
 
-import java.lang.reflect.InvocationTargetException;
-
 import controller.ControllerUtente;
 
 public class Volontario extends Utente {

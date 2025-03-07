@@ -1,7 +1,5 @@
 package user;
 
-import java.lang.reflect.InvocationTargetException;
-
 import controller.ControllerUtente;
 
 public class Fruitore extends Utente {
@@ -11,7 +9,6 @@ public class Fruitore extends Utente {
 		this.tipo = tipo;
 		this.gu = gu;
 		actionMethods((i, map, method) -> map.put(i, method));
-
 	}
 	
 }

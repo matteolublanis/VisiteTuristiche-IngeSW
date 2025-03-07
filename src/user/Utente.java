@@ -24,12 +24,11 @@ public abstract class Utente {
 		this.username = username;
 	}
 		
+	@SuppressWarnings("rawtypes")
 	public void actionMethods(ActionMethods action) {
 		Class g = this.getClass();
 		Method[] m = g.getMethods(); 
-		int i = 0;
 		for (Method method : m) { 
-			i++;
             String methodName = method.getName(); 
             if (method.getDeclaringClass().equals(g)) 
             	action.execute(methodName, mappaMetodi, method); 

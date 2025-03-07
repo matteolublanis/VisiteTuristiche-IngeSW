@@ -14,16 +14,19 @@ public class Configuratore extends Utente {
 	
 	
 	public void modificaMaxPrenotazione () {
-		int maxPrenotazioneFruitore = (Integer) gu.richiediVal("Inserisci numero max prenotazioni per fruitore:", CostantiStruttura.INT);
+		int maxPrenotazioneFruitore = (Integer) gu.richiediVal("Inserisci numero max prenotazioni per fruitore:",
+															CostantiStruttura.INT);
+		System.out.println(maxPrenotazioneFruitore);
 		//TODO comunica a GU di voler modificare un valore intero
 		//TODO prima di implementare assicurarsi di ridurre al minimo il codice con funzioni atomiche
 	}
 	
 	public void indicaDatePrecluse () { //TODO completare
-		String data_preclusa;
+		String data_preclusa = "";
 		do {
 			data_preclusa = (String) gu.richiediVal("Inserisci data preclusa (gg-mm-aaaa):", CostantiStruttura.STRING);
-		} while (true); // !Time.isValidDate(data) && Time.isDateNextTwoMonths(date)
+		} while (false); // !Time.isValidDate(data) && Time.isDateNextTwoMonths(date)
+		System.out.println(data_preclusa);
 	}
 	
 	public void pubblicaPianoVisite () {

@@ -70,7 +70,7 @@ public class Archivio {
 		return !(jsonUsers.get(username).equals(null)); 
 	}
 	
-	@SuppressWarnings("unchecked") //TODO gestire eccezione
+	//TODO gestire eccezione
 	public void modificaCredenziali (String username, Credenziali c) {
 		JSONObject utente = (JSONObject) jsonUsers.get(username);
 		utente.put("username", c.getUsername());
@@ -107,7 +107,7 @@ public class Archivio {
 		return result;
 	}
 	
-	@SuppressWarnings("unchecked") 	//TODO gestire eccezione
+	//TODO gestire eccezione
 	public void primoAccessoEseguito (Utente user) {
 		JSONObject utente = (JSONObject) jsonUsers.get(user.getUsername());
 		utente.put("primo_accesso", false); 	
