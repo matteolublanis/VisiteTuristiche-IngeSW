@@ -19,14 +19,12 @@ public class ControllerUtente {
 		this.app = app;
 	}
 	
-	public String comunicaAzioniDisponibili () { 
-		
-		
-		return "";
+	public void comunicaAzioniDisponibili () { 
+		app.stampa(""); //implementare
 	}
 	
-	public String comunicaCredenzialiIniziali () {
-		return gdb.comunicaCredenzialiIniziali();
+	public void comunicaCredenzialiIniziali () {
+		app.stampa(gdb.comunicaCredenzialiIniziali());
 	}
 	
 	public Object richiediVal(String msg, int tipo) {

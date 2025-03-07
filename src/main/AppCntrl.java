@@ -19,8 +19,7 @@ public class AppCntrl {
 	
 	public void start() {
 		if (gu.checkPrimoAvvio()) {
-			String cred = gu.comunicaCredenzialiIniziali();
-			if (!cred.equals("")) System.out.println(gu.comunicaCredenzialiIniziali());
+			gu.comunicaCredenzialiIniziali();
 		}
 		accesso();
 		if (isPrimoAccesso()) cambiaCredenziali();
@@ -57,7 +56,7 @@ public class AppCntrl {
 	}
 	
 	public void stampa (String msg) {
-		System.out.println(msg);
+		if (!msg.equals("")) System.out.println(msg);
 	}
 	
 	public Object richiediVal (String msg, int tipo) {
