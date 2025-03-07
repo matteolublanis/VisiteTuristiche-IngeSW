@@ -28,6 +28,7 @@ public class JSONUtility {
         return jsonObject;
     }
     
+	//TODO gestire eccezione
     public static HashSet<String> allObjectsSameIntValue (JSONObject jsonObject, int tipo, String keyValue) {
     	HashSet<String> result = new HashSet<>();
     	Iterator<String> keys = jsonObject.keys();
@@ -42,6 +43,7 @@ public class JSONUtility {
     	return result;
     }
     
+	//TODO gestire eccezione
     public static HashMap<String, String> getAllSameValsFromObjects (JSONObject jsonObject, String keyValue) {
     	HashMap<String, String> result = new HashMap<>();
     	Iterator<String> keys = jsonObject.keys();

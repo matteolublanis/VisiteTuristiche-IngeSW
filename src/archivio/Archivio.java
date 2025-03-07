@@ -23,6 +23,7 @@ public class Archivio {
 		System.out.println("Creato archivio.");
 	}
 	
+	//Può causare eccezione
 	public boolean checkPrimoAvvio () {
 		boolean primoAvvio = (boolean) jsonUsers.get(PRIMO_AVVIO);
 		return (primoAvvio);
@@ -47,27 +48,29 @@ public class Archivio {
 		return result;
 	}
 	
+	//TODO gestire eccezione
 	public void setPrimoAvvio () {
 		jsonUsers.put(PRIMO_AVVIO, false);
 	}
-	//TODO GESTIRE EXCEPTION
+	//TODO gestire eccezione
 	public int getTipoUtente (Credenziali c) {
 		JSONObject utente = (JSONObject) jsonUsers.get(c.getUsername());
 		return (int) (utente.get("tipo"));
 	}
 	
-	//TODO da gestire eccezioni
+	//TODO gestire eccezioni
 	public boolean credenzialiCorrette (Credenziali c) {
 		JSONObject utente = (JSONObject) jsonUsers.get(c.getUsername());
 		if (utente == (null)) return false;
 		return (utente.get("password").equals(c.getPassword()));
 	}
 	
+	//TODO gestire eccezione
 	public boolean usernameEsiste (String username) {
 		return !(jsonUsers.get(username).equals(null)); 
 	}
 	
-	@SuppressWarnings("unchecked") //TODO GESTIRE EXCEPTION
+	@SuppressWarnings("unchecked") //TODO gestire eccezione
 	public void modificaCredenziali (String username, Credenziali c) {
 		JSONObject utente = (JSONObject) jsonUsers.get(username);
 		utente.put("username", c.getUsername());
@@ -78,6 +81,7 @@ public class Archivio {
 		JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, RIGHE_USERS);
 	}
 	
+	//TODO gestire eccezione
 	public boolean checkPrimoAccesso (String username) {
 		JSONObject utente = (JSONObject) jsonUsers.get(username);
 		return ((boolean) utente.get("primo_accesso") == true);
@@ -103,7 +107,7 @@ public class Archivio {
 		return result;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") 	//TODO gestire eccezione
 	public void primoAccessoEseguito (Utente user) {
 		JSONObject utente = (JSONObject) jsonUsers.get(user.getUsername());
 		utente.put("primo_accesso", false); 	
