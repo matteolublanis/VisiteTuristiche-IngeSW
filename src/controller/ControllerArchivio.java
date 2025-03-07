@@ -5,14 +5,14 @@ import java.util.HashMap;
 import archivio.Archivio;
 import user.Credenziali;
 
-public class GestoreArchivio {
+public class ControllerArchivio {
 
-	private HashMap<GestoreUtente, String> gu = new HashMap<>(); //Un gestore utente è legato ad un suo username in seguito ad un login OR tipo al posto di string
+	private HashMap<ControllerUtente, String> gu = new HashMap<>(); //Un gestore utente è legato ad un suo username in seguito ad un login OR tipo al posto di string
 	private static final String CREDENZIALI_CONF_INIZIALE = "PRIMO AVVIO, CREDENZIALI CONFIGURATORE\n"
 			+ "Username: admin Password: admin";
 	private Archivio d;
 	
-	public GestoreArchivio () {
+	public ControllerArchivio () {
 		this.d = new Archivio(); //imposta database col quale interagire
 	}
 	
@@ -28,12 +28,12 @@ public class GestoreArchivio {
 		else return ""; 
 	}
 	
-	public boolean checkCredenziali (Credenziali c, GestoreUtente gu) {
+	public boolean checkCredenziali (Credenziali c, ControllerUtente gu) {
 		if (d.credenzialiCorrette(c)) effettuaLogin(gu, c);
 		return d.credenzialiCorrette(c);
 	}
 	
-	public void effettuaLogin (GestoreUtente gu, Credenziali c) {
+	public void effettuaLogin (ControllerUtente gu, Credenziali c) {
 		this.gu.put(gu, c.getUsername()); //mette in mappa il gestoreutente collegato
 		gu.setUser(c.getUsername(), d.getTipoUtente(c)); //imposta username
 	}
@@ -42,13 +42,25 @@ public class GestoreArchivio {
 		return (d.checkPrimoAccesso(username) == true); //se true è il primo accesso
 	}
 	
-	public void cambiaCredenziali (GestoreUtente gu, Credenziali c) {
+	public void cambiaCredenziali (ControllerUtente gu, Credenziali c) {
 		//se l'username associato al client è uguale all'username che mi comunica al quale esso è associato permetto il cambio credenziali
 		if (this.gu.get(gu).equals(gu.getUsername())) { //TODO rivedere, secondo me ha senso ma si può migliorare, si può anche togliere
 			d.modificaCredenziali(gu.getUsername(), c); //cambia credenziali
 			gu.setUsername(c.getUsername()); //in un'ottica di client bisogna comunicare al client l'effettivo successo di cambio nickname
 		}
 		else System.out.println("Utente non associato a client.");
+	}
+	
+	public String getListaUser(int tipo_user) {
+		return d.getElencoUser(tipo_user);
+	}
+	
+	public String getElencoLuoghiVisitabili () {
+		return d.getElencoLuoghiVisitabili();
+	}
+	
+	public String getElencoTipiVisiteLuogo () {
+		return d.getElencoTipiVisiteLuogo();
 	}
 	
 }
