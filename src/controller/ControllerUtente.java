@@ -21,7 +21,6 @@ public class ControllerUtente {
 	
 	//TODO discuterne con gli altri
 	public void primaConfigurazione () {
-		comunicaAApp("Prima configurazione da eseguire.");
 		((Configuratore)user).impostaAmbitoTerritoriale();
 		((Configuratore)user).modificaMaxPrenotazione();
 		gdb.setPrimaConfigurazione();
@@ -39,10 +38,6 @@ public class ControllerUtente {
 	
 	public String comunicaAzioniDisponibili () { 
 		return (user.metodiEseguibili()); 
-	}
-	
-	public void comunicaAApp (String s) {
-		app.gestisciMessaggio(s); 
 	}
 	
 	public void eseguiMetodo (String method) {
@@ -99,16 +94,16 @@ public class ControllerUtente {
 		return user.getUsername();
 	}
 	
-	public void visualListaUser(int tipo_user) {
-		 app.stampa(gdb.getListaUser(tipo_user));
+	public String visualListaUser(int tipo_user) {
+		 return gdb.getListaUser(tipo_user);
 	}
 	
-	public void getElencoLuoghiVisitabili() {
-		app.stampa(gdb.getElencoLuoghiVisitabili());
+	public String getElencoLuoghiVisitabili() {
+		return gdb.getElencoLuoghiVisitabili();
 	}
 	
-	public void getElencoTipiVisiteLuogo() {
-		app.stampa(gdb.getElencoTipiVisiteLuogo());
+	public String getElencoTipiVisiteLuogo() {
+		return gdb.getElencoTipiVisiteLuogo();
 	}
 	
 	public void pubblicaPiano() {

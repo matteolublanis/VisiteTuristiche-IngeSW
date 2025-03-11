@@ -41,8 +41,10 @@ public class App {
 			System.out.println("Password:");
 			String password = sc.nextLine();
 			c = new Credenziali(username, password);
-			if (!gu.checkCredenzialiCorrette(c)) System.out.println("Credenziali errate! Reinserire.");
-			if (gu.effettuaLogin(c)) break;
+			if (gu.checkCredenzialiCorrette(c)) {
+				gu.effettuaLogin(c); //si può controllare se vero, non serve in quanto checkCredenzialiCorrette
+			}
+			else System.out.println("Credenziali errate! Reinserire.");
 		} while (!gu.checkCredenzialiCorrette(c)); 
 		
 	}
@@ -89,10 +91,6 @@ public class App {
 		
 		return null;
 
-	}
-	
-	public void gestisciMessaggio (String s) {
-		stampa(s);
 	}
 	
 }
