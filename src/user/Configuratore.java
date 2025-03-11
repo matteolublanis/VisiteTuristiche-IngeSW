@@ -5,20 +5,19 @@ import utility.CostantiStruttura;
 
 public class Configuratore extends Utente {
 	
-	public Configuratore (String username, int tipo, ControllerUtente gu) {
+	public Configuratore (String username, ControllerUtente gu) {
 		this.username = username;
-		this.tipo = tipo;
+		this.tipo = CostantiStruttura.CONFIGURATORE;
 		this.gu = gu;
 		actionMethods((i, map, method) -> map.put(i, method)); //mappa metodi
 	}
 	
+	public void impostaAmbitoTerritoriale() {
+		gu.impostaAmbitoTerritoriale("Inserisci nome ambito terrioriale:", CostantiStruttura.STRING);
+	}
 	
 	public void modificaMaxPrenotazione () {
-		int maxPrenotazioneFruitore = (Integer) gu.richiediVal("Inserisci numero max prenotazioni per fruitore:",
-															CostantiStruttura.INT);
-		System.out.println(maxPrenotazioneFruitore);
-		//TODO comunica a GU di voler modificare un valore intero
-		//TODO prima di implementare assicurarsi di ridurre al minimo il codice con funzioni atomiche
+		gu.modificaMaxPrenotazione("Inserisci numero max prenotazioni per fruitore:", CostantiStruttura.INT);
 	}
 	
 	public void indicaDatePrecluse () { //TODO completare
@@ -26,7 +25,7 @@ public class Configuratore extends Utente {
 		do {
 			data_preclusa = (String) gu.richiediVal("Inserisci data preclusa (gg-mm-aaaa):", CostantiStruttura.STRING);
 		} while (false); // !Time.isValidDate(data) && Time.isDateNextTwoMonths(date)
-		System.out.println(data_preclusa);
+		//System.out.println(data_preclusa);
 	}
 	
 	public void pubblicaPianoVisite () {
@@ -47,6 +46,14 @@ public class Configuratore extends Utente {
 	
 	public void visualStatusVisite () {
 		//TODO implementare logica visite, necessario questione tempo e ritocco archivio
+	}
+	
+	public void aggiungiTipoVisite() {
+		
+	}
+	
+	public void definisciAmbitoTerritoriale() {
+		
 	}
 
 }

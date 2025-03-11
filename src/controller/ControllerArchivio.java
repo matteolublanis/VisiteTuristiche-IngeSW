@@ -1,21 +1,17 @@
 package controller;
 
-import java.util.HashMap;
-
 import archivio.Archivio;
 import user.Credenziali;
+import utility.CostantiStruttura;
 
 public class ControllerArchivio {
 
-	private HashMap<ControllerUtente, String> gu = new HashMap<>(); //Un gestore utente è legato ad un suo username in seguito ad un login OR tipo al posto di string
-	private static final String CREDENZIALI_CONF_INIZIALE = "PRIMO AVVIO, CREDENZIALI CONFIGURATORE\n"
-			+ "Username: admin Password: admin";
 	private Archivio d;
 	
 	public ControllerArchivio () {
 		this.d = new Archivio(); //imposta database col quale interagire
 	}
-	
+
 	public boolean checkPrimoAvvio () {
 		return d.checkPrimoAvvio();
 	}
@@ -23,32 +19,43 @@ public class ControllerArchivio {
 	public String comunicaCredenzialiIniziali () {
 		if (checkPrimoAvvio()) {
 			d.setPrimoAvvio();
-			return new String(CREDENZIALI_CONF_INIZIALE); //TODO: problema logico, la Stringa dovrebbe essere del DB
+			return new String(d.getCredenzialiConfIniziale()); //TODO: problema logico, la Stringa dovrebbe essere del DB
 		}
 		else return ""; 
 	}
 	
-	public boolean checkCredenziali (Credenziali c, ControllerUtente gu) {
-		if (d.credenzialiCorrette(c)) effettuaLogin(gu, c);
-		return d.credenzialiCorrette(c);
+	public boolean checkCredenzialiCorrette (Credenziali c) {
+		return d.checkCredenzialiCorrette(c);
 	}
 	
-	public void effettuaLogin (ControllerUtente gu, Credenziali c) {
-		this.gu.put(gu, c.getUsername()); //mette in mappa il gestoreutente collegato
-		gu.setUser(c.getUsername(), d.getTipoUtente(c)); //imposta username
+	public int effettuaLogin (Credenziali c) {
+		return d.getTipoUtente(c.getUsername()); 
 	}
 	
 	public boolean checkPrimoAccesso (String username) {
 		return (d.checkPrimoAccesso(username) == true); //se true è il primo accesso
 	}
 	
-	public void cambiaCredenziali (ControllerUtente gu, Credenziali c) {
-		//se l'username associato al client è uguale all'username che mi comunica al quale esso è associato permetto il cambio credenziali
-		if (this.gu.get(gu).equals(gu.getUsername())) { //TODO rivedere, secondo me ha senso ma si può migliorare, si può anche togliere
-			d.modificaCredenziali(gu.getUsername(), c); //cambia credenziali
-			gu.setUsername(c.getUsername()); //in un'ottica di client bisogna comunicare al client l'effettivo successo di cambio nickname
+	public boolean cambiaCredenziali (String username, Credenziali c) {
+		if (d.modificaCredenziali(username, c)) {
+			d.primoAccessoEseguito(username);	
+			return true;
 		}
-		else System.out.println("Utente non associato a client.");
+		
+			
+		return false;
+	}
+	
+	public void setPrimaConfigurazione() {
+		d.setPrimaConfigurazione();
+	}
+	
+	public void impostaAmbitoTerritoriale (String s) {
+		d.impostaAmbitoTerritoriale(s);
+	}
+	
+	public void modificaMaxPrenotazione (int max) {
+		d.impostaMaxPrenotazione(max);
 	}
 	
 	public String getListaUser(int tipo_user) {

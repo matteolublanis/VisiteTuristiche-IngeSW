@@ -1,12 +1,5 @@
 {
-    "Castello di Brescia": {
-		"info": "Uno dei castelli più belli di Brescia.",
-		"collocazione": "Via del Castello, 9, 25121 Brescia BS, 45°32′34.48″N 10°13′30.78″E",
-		"tipo_visite": ["museo_armi", "caccia_ai_gorilla"]
-	},
-	"Casa di Dilbert": {
-		"info": "Uno dei castelli più belli della Polonia.",
-		"collocazione": "Via delle Battaglie 43",
-		"tipo_visite": []
-	}
+     "max_prenotazione": 5,
+     "nome": "Ciao",
+     "prima_configurazione": false
 }

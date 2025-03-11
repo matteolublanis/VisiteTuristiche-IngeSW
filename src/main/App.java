@@ -6,24 +6,28 @@ import controller.ControllerUtente;
 import user.Credenziali;
 import utility.CostantiStruttura;
 
-public class AppCntrl { 
+public class App { 
 	
 	private Scanner sc = new Scanner(System.in);
 	private static final String INSERISCI_LE_TUE_CREDENZIALI = "Inserisci le tue credenziali:";
 	private ControllerUtente gu;
 	
-	public AppCntrl(ControllerUtente gu) {
+	public App(ControllerUtente gu) {
 		this.gu = gu; 
-		gu.setAppCntrl(this);
+		gu.setApp(this);
 	}
 	
 	public void start() {
 		if (gu.checkPrimoAvvio()) {
-			gu.comunicaCredenzialiIniziali();
+			System.out.println(gu.comunicaCredenzialiIniziali());
 		}
 		accesso();
-		if (isPrimoAccesso()) cambiaCredenziali();
-		//ciclo azioni da implementare
+		if (isPrimoAccesso()) cambiaCredenziali(); //TODO confermare logica posizionale
+		do {
+			
+			stampa(gu.comunicaAzioniDisponibili());
+
+		} while (false); 
 		
 		sc.close();
 	}
@@ -38,7 +42,9 @@ public class AppCntrl {
 			String password = sc.nextLine();
 			c = new Credenziali(username, password);
 			if (!gu.checkCredenzialiCorrette(c)) System.out.println("Credenziali errate! Reinserire.");
+			if (gu.effettuaLogin(c)) break;
 		} while (!gu.checkCredenzialiCorrette(c)); 
+		
 	}
 	
 	public boolean isPrimoAccesso () {
@@ -83,6 +89,10 @@ public class AppCntrl {
 		
 		return null;
 
+	}
+	
+	public void gestisciMessaggio (String s) {
+		stampa(s);
 	}
 	
 }

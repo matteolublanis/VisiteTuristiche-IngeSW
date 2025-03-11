@@ -14,7 +14,8 @@ public class Event {
     }
 
     public boolean conflictsWith(Event other) {
-        return (start.before(other.end) && end.after(other.start)); //TODO leggere documentazione o test
+    	//TODO ricontrollare in base all'elaborato
+        return (start.before(other.end) && end.after(other.start)); 
     }
 
     @Override

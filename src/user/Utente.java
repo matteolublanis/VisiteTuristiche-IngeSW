@@ -37,13 +37,12 @@ public abstract class Utente {
 	
 	public void eseguiMetodo (String i)  {
 		Method m = mappaMetodi.get(i);
-		System.out.println(m.toString());
 		try {
-			m.invoke(this);
+			System.out.println(m.toString());
+			m.invoke(this); //
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Eseguito");
 	}
 	
 	public String metodiEseguibili () {

@@ -2,12 +2,12 @@ package controller;
 
 import user.Credenziali;
 import utility.CostantiStruttura;
-import main.AppCntrl;
+import main.App;
 import user.*;
 
 public class ControllerUtente {
 	
-	private AppCntrl app;
+	private App app;
 	private Utente user; 
 	private ControllerArchivio gdb;	
 
@@ -15,16 +15,42 @@ public class ControllerUtente {
 		this.gdb = gdb;
 	}
 	
-	public void setAppCntrl (AppCntrl app) {
+	public void setApp (App app) {
 		this.app = app;
 	}
 	
-	public void comunicaAzioniDisponibili () { 
-		app.stampa(""); //implementare
+	//TODO discuterne con gli altri
+	public void primaConfigurazione () {
+		comunicaAApp("Prima configurazione da eseguire.");
+		((Configuratore)user).impostaAmbitoTerritoriale();
+		((Configuratore)user).modificaMaxPrenotazione();
+		gdb.setPrimaConfigurazione();
 	}
 	
-	public void comunicaCredenzialiIniziali () {
-		app.stampa(gdb.comunicaCredenzialiIniziali());
+	public void impostaAmbitoTerritoriale(String msg, int tipo) {
+		String s = (String) richiediVal(msg, tipo);
+		gdb.impostaAmbitoTerritoriale(s);
+	}
+	
+	public void modificaMaxPrenotazione(String msg, int tipo) {
+		int maxPrenotazione = (int) richiediVal(msg, tipo);
+		gdb.modificaMaxPrenotazione(maxPrenotazione);
+	}
+	
+	public String comunicaAzioniDisponibili () { 
+		return (user.metodiEseguibili()); 
+	}
+	
+	public void comunicaAApp (String s) {
+		app.gestisciMessaggio(s); 
+	}
+	
+	public void eseguiMetodo (String method) {
+		user.eseguiMetodo(method);
+	}
+	
+	public String comunicaCredenzialiIniziali () {
+		return (gdb.comunicaCredenzialiIniziali());
 	}
 	
 	public Object richiediVal(String msg, int tipo) {
@@ -40,26 +66,30 @@ public class ControllerUtente {
 	}
 	
 	public boolean checkCredenzialiCorrette (Credenziali c) {
-		return gdb.checkCredenziali(c, this); 
+		return gdb.checkCredenzialiCorrette(c); 
 	}
 	
-	public void cambiaCredenziali (Credenziali c) { 
-		gdb.cambiaCredenziali(this, c);
-	} 
-	
-	public void setUser(String username, int tipo) { 
-		switch (tipo) {
-		case 1:
-			user = new Configuratore(username, CostantiStruttura.CONFIGURATORE, this);
-			break;
-		case 2:
-			user = new Volontario(username, CostantiStruttura.VOLONTARIO, this);
-			break;
-		case 3:
-			user = new Fruitore(username, CostantiStruttura.FRUITORE, this);
-			break;
+	public boolean effettuaLogin (Credenziali c) {
+		switch (gdb.effettuaLogin(c)) {
+		case CostantiStruttura.CONFIGURATORE:
+			user = new Configuratore(c.getUsername(), this);
+			return true;
+		case CostantiStruttura.VOLONTARIO:
+			user = new Volontario(c.getUsername(), this);
+			return true;
+		case CostantiStruttura.FRUITORE:
+			user = new Fruitore(c.getUsername(), this);
+			return true;
+		case -1:
+			System.out.println("Errore login");
+			return false;
 		}
+		return false;
 	}
+	
+	public boolean cambiaCredenziali (Credenziali c) { 
+		return (gdb.cambiaCredenziali(user.getUsername(), c));
+	} 
 	
 	public void setUsername(String username) {
 		user.setUsername(username);
@@ -82,7 +112,11 @@ public class ControllerUtente {
 	}
 	
 	public void pubblicaPiano() {
-		//TODO ControllerArchivio deve pubblica il nuovo piano
+		
+	}
+	
+	public void aggiungiTipoVisite() {
+		
 	}
 
 }

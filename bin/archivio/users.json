@@ -1,37 +1,37 @@
 {
-     "primo_avvio": true,
+     "primo_avvio": false,
      "volontario4": {
           "password": "admin",
           "tipo": 2,
           "primo_accesso": true,
-          "username": "volontario4",
-		  "tipi_visite": ["Alberto II dei Savoia"]
-     },
-     "admin": {
-          "password": "admin",
-          "tipo": 1,
-          "primo_accesso": true,
-          "username": "admin"
+          "tipi_visite": ["Alberto II dei Savoia"],
+          "username": "volontario4"
      },
      "volontario3": {
           "password": "admin",
           "tipo": 2,
           "primo_accesso": true,
-          "username": "volontario3",
-		  "tipi_visite": []
+          "tipi_visite": [],
+          "username": "volontario3"
      },
      "volontario2": {
           "password": "admin",
           "tipo": 2,
           "primo_accesso": true,
-          "username": "volontario2",
-		  "tipi_visite": []
+          "tipi_visite": [],
+          "username": "volontario2"
      },
      "volontario1": {
           "password": "admin",
           "tipo": 2,
           "primo_accesso": true,
-          "username": "volontario1",
-		  "tipi_visite": []
+          "tipi_visite": [],
+          "username": "volontario1"
+     },
+     "admin": {
+          "password": "admin",
+          "tipo": 1,
+          "primo_accesso": false,
+          "username": "admin"
      }
 }
