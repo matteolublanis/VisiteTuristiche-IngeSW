@@ -149,10 +149,6 @@ public class Archivio {
 		return result;
 	}
 	
-	public void modificaValoreAmbitoTerritoriale () {
-		
-	}
-	
 	public String getElencoTipiVisiteLuogo () {
 		String result = "";
 		HashMap<String, String> visite = JSONUtility.getAllSameValsFromObjects(jsonAmbitoTerritoriale, "tipo_visite");
