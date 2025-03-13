@@ -104,7 +104,7 @@ public class Archivio {
 		return !(jsonUsers.get(username).equals(null)); 
 	}
 	
-	//TODO gestire eccezione
+	//TODO gestire eccezione, usa usernameEsiste per verificare univocità 
 	public boolean modificaCredenziali (String username, Credenziali c) {
 		JSONObject utente = null;
 		try {
@@ -139,7 +139,7 @@ public class Archivio {
 		return result;
 	}
 	
-	public void modificaValoreAmbitoTerritoriale (String chiave, String s) {
+	public void modificaValoreAmbitoTerritoriale () {
 		
 	}
 	
