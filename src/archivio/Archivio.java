@@ -101,25 +101,35 @@ public class Archivio {
 	
 	//TODO gestire eccezione
 	public boolean usernameEsiste (String username) {
-		return !(jsonUsers.get(username).equals(null)); 
+		try {
+			return !(jsonUsers.get(username).equals(null)); 
+		}
+		catch (Exception e) {
+			return false;
+		}
+		
 	}
 	
 	//TODO gestire eccezione, usa usernameEsiste per verificare univocità 
 	public boolean modificaCredenziali (String username, Credenziali c) {
-		JSONObject utente = null;
-		try {
-			utente = (JSONObject) jsonUsers.get(username);
-			utente.put("username", c.getUsername());
-			utente.put("password", c.getPassword());
-			jsonUsers.remove(username);
-			jsonUsers.put(c.getUsername(), utente);
-			JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, RIGHE_USERS);
-			return true;
+		if (usernameEsiste(c.getUsername())) return false; //check if new user exists already
+		else {
+			JSONObject utente = null;
+			try {
+				utente = (JSONObject) jsonUsers.get(username);
+				utente.put("username", c.getUsername());
+				utente.put("password", c.getPassword());
+				jsonUsers.remove(username);
+				jsonUsers.put(c.getUsername(), utente);
+				JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, RIGHE_USERS);
+				return true;
+			}
+			catch (Exception e) {
+				System.out.println("Utente inesistente.");
+				return false;
+			}
 		}
-		catch (Exception e) {
-			System.out.println("Utente inesistente.");
-			return false;
-		}
+		
 	}
 	
 	//TODO gestire eccezione
