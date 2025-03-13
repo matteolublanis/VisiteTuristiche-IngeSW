@@ -10,7 +10,7 @@ public class App {
 	
 	private Scanner sc = new Scanner(System.in);
 	private Login gl;
-	private ControllerUtente gu; //swag
+	private ControllerUtente gu; 
 	private static final String INSERISCI_LE_TUE_CREDENZIALI = "Inserisci le tue credenziali:";
 
 	
@@ -59,7 +59,8 @@ public class App {
 		System.out.println("Password:");
 		String password = sc.nextLine();
 		c = new Credenziali(username, password);
-		//gu.cambiaCredenziali(c); //deve essere un'azione di utente che comunica col gu
+		if (gu.cambiaCredenziali(c)) System.out.println("Credenziali cambiate."); 
+		else System.out.println("Credenziali non cambiate.");
 	}
 	
 	public void stampa (String msg) {

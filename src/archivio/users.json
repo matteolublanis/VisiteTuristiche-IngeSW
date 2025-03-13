@@ -1,6 +1,5 @@
 {
-
-     "primo_avvio": false,
+     "primo_avvio": true,
      "volontario4": {
           "password": "admin",
           "tipo": 2,

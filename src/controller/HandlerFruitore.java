@@ -13,32 +13,28 @@ public class HandlerFruitore implements ControllerUtente {
 	
 	@Override
 	public boolean checkPrimoAccesso() {
-		// TODO Auto-generated method stub
-		return false;
+		return gdb.checkPrimoAccesso(username);
 	}
 
 	@Override
 	public boolean checkCredenzialiCorrette(Credenziali c) {
-		// TODO Auto-generated method stub
-		return false;
+		return gdb.checkCredenzialiCorrette(c);
 	}
 
 	@Override
 	public boolean cambiaCredenziali(Credenziali c) {
-		// TODO Auto-generated method stub
+		if (gdb.cambiaCredenziali(username, c)) return true;
 		return false;
 	}
 
 	@Override
 	public void setUsername(String username) {
-		// TODO Auto-generated method stub
-		
+		this.username = username;
 	}
 
 	@Override
 	public String getUsername() {
-		// TODO Auto-generated method stub
-		return null;
+		return username;
 	}
 
 	@Override
