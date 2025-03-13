@@ -1,0 +1,38 @@
+{
+	"modificaMaxPrenotazione":
+	{
+		"azione":1,
+		"privilegi_richiesti":1
+	},
+	"indicaDatePrecluse":
+	{
+		"azione":2,
+		"privilegi_richiesti":1
+	},
+	"pubblicaPianoVisite":
+	{
+		"azione":3,
+		"privilegi_richiesti":1
+	},
+	"visualElencoVolontari":
+	{
+		"azione":4,
+		"privilegi_richiesti":1
+	},
+	"visualElencoVisitaAssociatiLuogo":
+	{
+		"azione":5,
+		"privilegi_richiesti":1
+	},
+	"visualElencoLuoghiVisitabili":
+	{
+		"azione":6,
+		"privilegi_richiesti":1
+	},
+	"visualVisite":
+	{
+		"azione":7,
+		"privilegi_richiesti":1
+	}
+	
+}
