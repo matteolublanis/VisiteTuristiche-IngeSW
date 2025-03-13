@@ -31,7 +31,7 @@
      "admin": {
           "password": "admin",
           "tipo": 1,
-          "primo_accesso": false,
+          "primo_accesso": true,
           "username": "admin"
      }
 }

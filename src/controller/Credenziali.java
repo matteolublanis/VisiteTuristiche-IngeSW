@@ -1,4 +1,4 @@
-package user;
+package controller;
 
 public class Credenziali {
 	

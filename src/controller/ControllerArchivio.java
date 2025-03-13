@@ -1,8 +1,6 @@
 package controller;
 
 import archivio.Archivio;
-import user.Credenziali;
-import utility.CostantiStruttura;
 
 public class ControllerArchivio {
 
@@ -16,7 +14,7 @@ public class ControllerArchivio {
 		return d.checkPrimoAvvio();
 	}
 	
-	public String comunicaCredenzialiIniziali () {
+	public String getCredenzialiIniziali () {
 		if (checkPrimoAvvio()) {
 			d.setPrimoAvvio();
 			return new String(d.getCredenzialiConfIniziale()); //TODO: problema logico, la Stringa dovrebbe essere del DB

@@ -9,7 +9,6 @@ public class Configuratore extends Utente {
 		this.username = username;
 		this.tipo = CostantiStruttura.CONFIGURATORE;
 		this.gu = gu;
-		actionMethods((i, map, method) -> map.put(i, method)); //mappa metodi
 	}
 	
 	public void impostaAmbitoTerritoriale() {

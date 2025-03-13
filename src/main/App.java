@@ -1,31 +1,30 @@
 package main;
 
 import java.util.Scanner;
-
-import controller.ControllerUtente;
-import user.Credenziali;
+import controller.ControllerLogin;
+import controller.Credenziali;
+import user.Utente;
 import utility.CostantiStruttura;
 
 public class App { 
 	
 	private Scanner sc = new Scanner(System.in);
+	private ControllerLogin gl;
+	private Utente user;
 	private static final String INSERISCI_LE_TUE_CREDENZIALI = "Inserisci le tue credenziali:";
-	private ControllerUtente gu;
+
 	
-	public App(ControllerUtente gu) {
-		this.gu = gu; 
-		gu.setApp(this);
+	public App(ControllerLogin gl) {
+		this.gl = gl;
 	}
 	
 	public void start() {
-		if (gu.checkPrimoAvvio()) {
-			System.out.println(gu.comunicaCredenzialiIniziali());
-		}
-		accesso();
+		if (gl.checkPrimoAvvio()) System.out.println(gl.getCredenzialiIniziali());
+		accesso(); 
 		if (isPrimoAccesso()) cambiaCredenziali(); //TODO confermare logica posizionale
 		do {
 			
-			stampa(gu.comunicaAzioniDisponibili());
+			//do something
 
 		} while (false); 
 		
@@ -33,24 +32,25 @@ public class App {
 	}
 	
 	public void accesso () {
-		Credenziali c;
 		String username;
+		String password;
 		do {
 			System.out.println(INSERISCI_LE_TUE_CREDENZIALI + "\nUsername:");
 			username = sc.nextLine();
 			System.out.println("Password:");
-			String password = sc.nextLine();
-			c = new Credenziali(username, password);
-			if (gu.checkCredenzialiCorrette(c)) {
-				gu.effettuaLogin(c); //si può controllare se vero, non serve in quanto checkCredenzialiCorrette
+			password = sc.nextLine();
+			gl.inserisciCredenziali(username, password);
+			if (gl.checkCredenzialiCorrette()) {
+				user = gl.effettuaLogin(); 
 			}
 			else System.out.println("Credenziali errate! Reinserire.");
-		} while (!gu.checkCredenzialiCorrette(c)); 
+		} while ((!gl.checkCredenzialiCorrette())); 
+		System.out.println("Login effettuato, benvenuto " + user.getUsername());
 		
 	}
 	
 	public boolean isPrimoAccesso () {
-		return gu.checkPrimoAccesso();
+		return user.checkPrimoAccesso();
 	}
 	
 	public void cambiaCredenziali () {
@@ -60,7 +60,7 @@ public class App {
 		System.out.println("Password:");
 		String password = sc.nextLine();
 		c = new Credenziali(username, password);
-		gu.cambiaCredenziali(c);
+		//gu.cambiaCredenziali(c); //deve essere un'azione di utente che comunica col gu
 	}
 	
 	public void stampa (String msg) {

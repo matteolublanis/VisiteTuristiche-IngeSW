@@ -1,12 +1,12 @@
 package archivio;
 
-import user.Credenziali;
 import user.Utente;
 
 import java.util.HashMap;
 
 import org.json.*;
 
+import controller.Credenziali;
 import utility.CostantiStruttura;
 import utility.JSONUtility;
 
@@ -21,7 +21,6 @@ public class Archivio {
 	private static final String PRIMO_AVVIO = "primo_avvio";
 	private JSONObject jsonUsers = JSONUtility.readJsonFile(PATH_USERS);
 	private JSONObject jsonAmbitoTerritoriale = JSONUtility.readJsonFile(AMBITO);
-	//private boolean primaConfigurazione = true;
 	
 	public Archivio () {
 		System.out.println("Creato archivio.");
@@ -76,6 +75,7 @@ public class Archivio {
 	//TODO gestire eccezione
 	public void setPrimoAvvio () {
 		jsonUsers.put(PRIMO_AVVIO, false);
+		JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, RIGHE_USERS);
 	}
 	//TODO gestire eccezione
 	public int getTipoUtente (String username) {

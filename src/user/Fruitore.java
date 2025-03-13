@@ -9,7 +9,6 @@ public class Fruitore extends Utente {
 		this.username = username;
 		this.tipo = CostantiStruttura.FRUITORE;
 		this.gu = gu;
-		actionMethods((i, map, method) -> map.put(i, method));
 	}
 	
 }
