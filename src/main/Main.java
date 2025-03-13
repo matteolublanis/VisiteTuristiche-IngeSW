@@ -18,5 +18,6 @@ public class Main {
 	
 	public static void stampa(Object s) {
 		System.out.println(s);
-	}
+  }
+
 }
