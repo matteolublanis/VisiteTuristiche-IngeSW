@@ -1,20 +1,20 @@
 package main;
 
 import java.util.Scanner;
-import controller.ControllerLogin;
+import controller.Login;
 import controller.Credenziali;
-import user.Utente;
+import controller.ControllerUtente;
 import utility.CostantiStruttura;
 
 public class App { 
 	
 	private Scanner sc = new Scanner(System.in);
-	private ControllerLogin gl;
-	private Utente user;
+	private Login gl;
+	private ControllerUtente gu; //swag
 	private static final String INSERISCI_LE_TUE_CREDENZIALI = "Inserisci le tue credenziali:";
 
 	
-	public App(ControllerLogin gl) {
+	public App(Login gl) {
 		this.gl = gl;
 	}
 	
@@ -41,16 +41,15 @@ public class App {
 			password = sc.nextLine();
 			gl.inserisciCredenziali(username, password);
 			if (gl.checkCredenzialiCorrette()) {
-				user = gl.effettuaLogin(); 
+				gu = gl.configureHandlerUtente();
 			}
 			else System.out.println("Credenziali errate! Reinserire.");
 		} while ((!gl.checkCredenzialiCorrette())); 
-		System.out.println("Login effettuato, benvenuto " + user.getUsername());
 		
 	}
 	
 	public boolean isPrimoAccesso () {
-		return user.checkPrimoAccesso();
+		return gu.checkPrimoAccesso();
 	}
 	
 	public void cambiaCredenziali () {

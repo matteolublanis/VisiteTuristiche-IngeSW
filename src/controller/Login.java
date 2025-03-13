@@ -1,14 +1,13 @@
 package controller;
 
-import user.*;
 import utility.CostantiStruttura;
 
-public class ControllerLogin {
+public class Login {
 	
 	private ControllerArchivio gdb;
 	private Credenziali c;
 	
-	public ControllerLogin(ControllerArchivio gdb) {
+	public Login(ControllerArchivio gdb) {
 		this.gdb = gdb;
 	}
 	
@@ -29,20 +28,21 @@ public class ControllerLogin {
 		return gdb.checkCredenzialiCorrette(c);
 	}
 	
-	public Utente effettuaLogin () {
-		ControllerUtente gu = new ControllerUtente(gdb, c.getUsername());
+	public String getUsername() {
+		return c.getUsername();
+	}
+	
+	public ControllerUtente configureHandlerUtente (){
 		switch (gdb.effettuaLogin(c)) {
 		case CostantiStruttura.CONFIGURATORE:
-			return new Configuratore(c.getUsername(), gu);
+			return new HandlerConfiguratore(gdb, getUsername());
 		case CostantiStruttura.VOLONTARIO:
-			return new Volontario(c.getUsername(), gu);
+			return new HandlerVolontario(gdb, getUsername());
 		case CostantiStruttura.FRUITORE:
-			return new Fruitore(c.getUsername(), gu);
-		case -1:
-			System.out.println("Errore login");
+			return new HandlerFruitore(gdb, getUsername());
+		default: 
 			return null;
+
 		}
-		
-		return null;
 	}
 }

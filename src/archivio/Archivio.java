@@ -1,11 +1,7 @@
 package archivio;
 
-import user.Utente;
-
 import java.util.HashMap;
-
 import org.json.*;
-
 import controller.Credenziali;
 import utility.CostantiStruttura;
 import utility.JSONUtility;
@@ -35,7 +31,6 @@ public class Archivio {
 		JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, AMBITO, RIGHE_USERS);
 	}
 	
-	//Può causare eccezione
 	public boolean checkPrimoAvvio () {
 		boolean primoAvvio = (boolean) jsonUsers.get(PRIMO_AVVIO);
 		return (primoAvvio);
