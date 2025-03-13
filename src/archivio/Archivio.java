@@ -42,6 +42,12 @@ public class Archivio {
 
 	}
 	
+	public void impostaMaxPrenotazione (int max) {
+		jsonAmbitoTerritoriale.put("max_prenotazione", max);
+		JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, AMBITO, RIGHE_USERS);
+
+	}
+	
 	public String getElencoUser (int tipo) {
 		String result = "";
 		for (String s : JSONUtility.allObjectsSameIntValue(jsonUsers, tipo, "tipo")) {
@@ -61,18 +67,11 @@ public class Archivio {
 		return result;
 	}
 	
-	public void impostaMaxPrenotazione (int max) {
-		jsonAmbitoTerritoriale.put("max_prenotazione", max);
-		JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, AMBITO, RIGHE_USERS);
-
-	}
-	
-	//TODO gestire eccezione
 	public void setPrimoAvvio () {
 		jsonUsers.put(PRIMO_AVVIO, false);
 		JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, RIGHE_USERS);
 	}
-	//TODO gestire eccezione
+
 	public int getTipoUtente (String username) {
 		JSONObject utente = null;
 		try {
@@ -85,21 +84,16 @@ public class Archivio {
 		return (int) (utente.get("tipo"));
 	}
 	
-	//TODO gestire eccezioni
 	public boolean checkCredenzialiCorrette (Credenziali c) {
-		JSONObject utente = null;
-		try {
-			utente = (JSONObject) jsonUsers.get(c.getUsername());
+		if (!usernameEsiste(c.getUsername())) return false;
+		else { 
+			JSONObject utente = (JSONObject) jsonUsers.get(c.getUsername());
+			if (utente == (null)) return false;
+			return (utente.get("password").equals(c.getPassword()));
 		}
-		catch (Exception e) {
-			//TODO nulla
-		}
-		
-		if (utente == (null)) return false;
-		return (utente.get("password").equals(c.getPassword()));
+	
 	}
 	
-	//TODO gestire eccezione
 	public boolean usernameEsiste (String username) {
 		try {
 			return !(jsonUsers.get(username).equals(null)); 
@@ -110,8 +104,8 @@ public class Archivio {
 		
 	}
 	
-	//TODO gestire eccezione, usa usernameEsiste per verificare univocità 
 	public boolean modificaCredenziali (String username, Credenziali c) {
+		if (!usernameEsiste(username)) return false;
 		if (usernameEsiste(c.getUsername())) return false; //check if new user exists already
 		else {
 			JSONObject utente = null;
@@ -159,10 +153,17 @@ public class Archivio {
 	}
 	
 	//TODO gestire eccezione
-	public void primoAccessoEseguito (String user) {
-		JSONObject utente = (JSONObject) jsonUsers.get(user);
-		utente.put("primo_accesso", false); 	
-		JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, RIGHE_USERS); 
+	public boolean primoAccessoEseguito (String user) {
+		try {
+			JSONObject utente = (JSONObject) jsonUsers.get(user);
+			utente.put("primo_accesso", false); 	
+			JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, RIGHE_USERS); 
+			return true;
+		}
+		catch (Exception e) {
+			return false;
+		}
+		
 	}
 
 	public String getCredenzialiConfIniziale() {
