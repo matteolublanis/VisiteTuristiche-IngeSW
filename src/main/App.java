@@ -1,5 +1,7 @@
 package main;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Scanner;
 import controller.Login;
 import controller.Credenziali;
@@ -12,6 +14,7 @@ public class App {
 	private Login gl;
 	private ControllerUtente gu; 
 	private static final String INSERISCI_LE_TUE_CREDENZIALI = "Inserisci le tue credenziali:";
+	private ArrayList<Method> azioniDisponibili;
 
 	
 	public App(Login gl) {
@@ -21,12 +24,38 @@ public class App {
 	public void start() {
 		if (gl.checkPrimoAvvio()) System.out.println(gl.getCredenzialiIniziali());
 		accesso(); 
-		if (isPrimoAccesso()) cambiaCredenziali(); //TODO confermare logica posizionale
+		if (isPrimoAccesso()) cambiaCredenziali();
 		do {
+			stampa("Quale operazione desidera (ESC per uscire)?\n");
 			
-			//do something
+			for (Method azione:azioniDisponibili) {
+				stampa(azione.getName());
+				stampa("\n");
+			}
+			String input = sc.nextLine();
+			if (input.equalsIgnoreCase("ESC")) break;
+			try {
+	            boolean found = false;
 
-		} while (false); 
+	            for (Method method : azioniDisponibili) {
+	                if (method.getName().equalsIgnoreCase(input)) {
+	                    method.invoke(gu);
+	                    found = true;
+	                    break;
+	                }
+	            }
+
+	            if (!found) {
+	                System.out.println("Operazione non valida. Riprova.");
+	            }
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            System.out.println("Errore durante l'esecuzione del metodo.");
+	        }
+		} while (true); 
+		
+		stampa("Arrivederci!");
 		
 		sc.close();
 	}
@@ -42,6 +71,7 @@ public class App {
 			gl.inserisciCredenziali(username, password);
 			if (gl.checkCredenzialiCorrette()) {
 				gu = gl.configureHandlerUtente();
+				azioniDisponibili = gu.getAzioniDisponibili();
 			}
 			else System.out.println("Credenziali errate! Reinserire.");
 		} while ((!gl.checkCredenzialiCorrette())); 
