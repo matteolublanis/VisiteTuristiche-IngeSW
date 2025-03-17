@@ -21,7 +21,7 @@ public class App {
 	public void start() {
 		if (gl.checkPrimoAvvio()) System.out.println(gl.getCredenzialiIniziali());
 		accesso(); 
-		if (isPrimoAccesso()) cambiaCredenziali(); //TODO confermare logica posizionale
+		if (isPrimoAccesso()) cambiaCredenziali();
 		do {
 			
 			//do something
@@ -54,13 +54,19 @@ public class App {
 	
 	public void cambiaCredenziali () {
 		Credenziali c;
-		System.out.println("Cambia le tue credenziali:" + "\nUsername:");
-		String username = sc.nextLine();
-		System.out.println("Password:");
-		String password = sc.nextLine();
-		c = new Credenziali(username, password);
-		if (gu.cambiaCredenziali(c)) System.out.println("Credenziali cambiate."); 
-		else System.out.println("Credenziali non cambiate.");
+		System.out.println("Cambia le tue credenziali:" + "\n");
+		do {
+			System.out.println("Username:");
+			String username = sc.nextLine();
+			System.out.println("Password:");
+			String password = sc.nextLine();
+			c = new Credenziali(username, password);
+			if (gu.cambiaCredenziali(c)) {
+				System.out.println("Credenziali cambiate.");
+				break;
+			}
+			else System.out.println("Credenziali non cambiate. Reinserire nuove credenziali (username già in uso).");
+		} while (true);
 	}
 	
 	public void stampa (String msg) {

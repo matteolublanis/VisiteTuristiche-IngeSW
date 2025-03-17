@@ -126,10 +126,12 @@ public class Archivio {
 		
 	}
 	
-	//TODO gestire eccezione
 	public boolean checkPrimoAccesso (String username) {
-		JSONObject utente = (JSONObject) jsonUsers.get(username);
-		return ((boolean) utente.get("primo_accesso") == true);
+		if (!usernameEsiste(username)) {
+			JSONObject utente = (JSONObject) jsonUsers.get(username);
+			return ((boolean) utente.get("primo_accesso") == true);
+		}
+		else return false;
 	}
 	
 	public String getElencoLuoghiVisitabili () {
@@ -152,7 +154,6 @@ public class Archivio {
 		return result;
 	}
 	
-	//TODO gestire eccezione
 	public boolean primoAccessoEseguito (String user) {
 		try {
 			JSONObject utente = (JSONObject) jsonUsers.get(user);
