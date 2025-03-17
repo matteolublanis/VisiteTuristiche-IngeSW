@@ -1,6 +1,7 @@
 package main;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Scanner;
 import controller.Login;
@@ -14,8 +15,6 @@ public class App {
 	private Login gl;
 	private ControllerUtente gu; 
 	private static final String INSERISCI_LE_TUE_CREDENZIALI = "Inserisci le tue credenziali:";
-	private ArrayList<Method> azioniDisponibili;
-
 	
 	public App(Login gl) {
 		this.gl = gl;
@@ -24,40 +23,63 @@ public class App {
 	public void start() {
 		if (gl.checkPrimoAvvio()) System.out.println(gl.getCredenzialiIniziali());
 		accesso(); 
-		if (isPrimoAccesso()) cambiaCredenziali();
+		if (gu.checkPrimoAccesso()) cambiaCredenziali();
 		do {
 			stampa("Quale operazione desidera (ESC per uscire)?\n");
 			
-			for (Method azione:azioniDisponibili) {
-				stampa(azione.getName());
-				stampa("\n");
+			ArrayList<Method> azioniDisponibili = gu.getAzioniDisponibili();
+			for (int i = 0; i < azioniDisponibili.size(); i++) {
+				stampa((i + 1) + ") " + azioniDisponibili.get(i).getName());
 			}
+			
 			String input = sc.nextLine();
 			if (input.equalsIgnoreCase("ESC")) break;
+			
 			try {
-	            boolean found = false;
+				int scelta = Integer.parseInt(input);
+				if (scelta > 0 && scelta <= azioniDisponibili.size()) {
+					Method metodo = azioniDisponibili.get(scelta - 1);
+					
+					Parameter[] parameters = metodo.getParameters();
+					
+					Object[] args = new Object[parameters.length];
 
-	            for (Method method : azioniDisponibili) {
-	                if (method.getName().equalsIgnoreCase(input)) {
-	                    method.invoke(gu);
-	                    found = true;
-	                    break;
-	                }
-	            }
+					for (int j = 0; j < parameters.length; j++) {
+						args[j] = richiediParametro(parameters[j]);
+					}
 
-	            if (!found) {
-	                System.out.println("Operazione non valida. Riprova.");
-	            }
+					metodo.invoke(gu, args);
 
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	            System.out.println("Errore durante l'esecuzione del metodo.");
-	        }
+				} else {
+					stampa("Scelta non valida.");
+				}
+			} catch (Exception e) {
+				stampa("Errore: formato invalido");
+			}
+			
 		} while (true); 
 		
 		stampa("Arrivederci!");
 		
 		sc.close();
+	}
+	
+	private Object richiediParametro(Parameter parametro) {
+		String tipo = parametro.getType().getSimpleName();
+		stampa("Inserisci " + parametro.getName() + "--> ");
+		String input = sc.nextLine();
+
+		switch (tipo) {
+			case "String":
+				return input;
+			case "int":
+				return Integer.parseInt(input);
+			case "boolean":
+				return Boolean.parseBoolean(input);
+			default:
+				stampa("Tipo non supportato.");
+				return null;
+		}
 	}
 	
 	public void accesso () {
@@ -68,18 +90,12 @@ public class App {
 			username = sc.nextLine();
 			System.out.println("Password:");
 			password = sc.nextLine();
-			gl.inserisciCredenziali(username, password);
-			if (gl.checkCredenzialiCorrette()) {
-				gu = gl.configureHandlerUtente();
-				azioniDisponibili = gu.getAzioniDisponibili();
+			gu = gl.accesso(username, password);
+			if (gu == null) {
+				System.out.println("Credenziali errate! Reinserire.");
 			}
-			else System.out.println("Credenziali errate! Reinserire.");
-		} while ((!gl.checkCredenzialiCorrette())); 
+		} while (gu == null); 
 		
-	}
-	
-	public boolean isPrimoAccesso () {
-		return gu.checkPrimoAccesso();
 	}
 	
 	public void cambiaCredenziali () {
@@ -88,8 +104,7 @@ public class App {
 		String username = sc.nextLine();
 		System.out.println("Password:");
 		String password = sc.nextLine();
-		c = new Credenziali(username, password);
-		if (gu.cambiaCredenziali(c)) System.out.println("Credenziali cambiate."); 
+		if (gu.cambiaCredenziali(username, password)) System.out.println("Credenziali cambiate."); 
 		else System.out.println("Credenziali non cambiate.");
 	}
 	

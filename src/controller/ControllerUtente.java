@@ -21,8 +21,8 @@ public abstract class ControllerUtente {
 		return gdb.checkCredenzialiCorrette(c);
 	}
 	
-	public boolean cambiaCredenziali(Credenziali c) {
-		if (gdb.cambiaCredenziali(username, c)) return true;
+	public boolean cambiaCredenziali(String username, String password) {
+		if (gdb.cambiaCredenziali(username, new Credenziali(username, password))) return true;
 		return false;
 	}
 	
@@ -34,16 +34,17 @@ public abstract class ControllerUtente {
 		return username;
 	}
 	
-	public ArrayList<Method> getAzioniDisponibili() {
-		Method methods[] = this.getClass().getDeclaredMethods();
-		
-		ArrayList<Method> listaMetodi = new ArrayList<>();
-        
-        for (Method metodo : methods) {
-            listaMetodi.add(metodo);
-        }
-        
-        return listaMetodi;
-	}
-	
+	   public ArrayList<Method> getAzioniDisponibili() {
+	        ArrayList<Method> metodiConcreti = new ArrayList<>();
+	        
+	        Method[] metodi = this.getClass().getDeclaredMethods();
+	        
+	        for (Method metodo : metodi) {
+	            if (!metodo.getName().equals("getAzioniDisponibili")) {
+	                metodiConcreti.add(metodo);
+	            }
+	        }
+
+	        return metodiConcreti;
+	    }
 }

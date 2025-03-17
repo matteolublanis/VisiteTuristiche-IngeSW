@@ -46,5 +46,4 @@ public class HandlerConfiguratore extends ControllerUtente{
 	public void aggiungiTipoVisite() {
 		
 	}
-
 }
