@@ -5,14 +5,18 @@ import utility.CostantiStruttura;
 public class Login {
 	
 	private ControllerArchivio gdb;
-	private Credenziali c;
 	
 	public Login(ControllerArchivio gdb) {
 		this.gdb = gdb;
 	}
 	
-	public void inserisciCredenziali (String user, String pw) {
-		this.c = new Credenziali(user, pw);
+	public ControllerUtente accesso(String username, String password) {
+		if (checkPrimoAvvio()) System.out.println(getCredenzialiIniziali());
+		Credenziali credenziali = new Credenziali(username, password);
+		if(checkCredenzialiCorrette(credenziali)) {
+			return configureHandlerUtente(credenziali);
+		}
+		else return null;
 	}
 	
 	public String getCredenzialiIniziali() {
@@ -24,22 +28,18 @@ public class Login {
 		return gdb.checkPrimoAvvio();
 	}
 	
-	public boolean checkCredenzialiCorrette() {
+	private boolean checkCredenzialiCorrette(Credenziali c) {
 		return gdb.checkCredenzialiCorrette(c);
 	}
 	
-	public String getUsername() {
-		return c.getUsername();
-	}
-	
-	public ControllerUtente configureHandlerUtente (){
+	private ControllerUtente configureHandlerUtente (Credenziali c){
 		switch (gdb.effettuaLogin(c)) {
 		case CostantiStruttura.CONFIGURATORE:
-			return new HandlerConfiguratore(gdb, getUsername());
+			return new HandlerConfiguratore(gdb, c.getUsername());
 		case CostantiStruttura.VOLONTARIO:
-			return new HandlerVolontario(gdb, getUsername());
+			return new HandlerVolontario(gdb, c.getUsername());
 		case CostantiStruttura.FRUITORE:
-			return new HandlerFruitore(gdb, getUsername());
+			return new HandlerFruitore(gdb, c.getUsername());
 		default: 
 			return null;
 
