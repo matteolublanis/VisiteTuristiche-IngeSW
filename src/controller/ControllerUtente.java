@@ -34,17 +34,17 @@ public abstract class ControllerUtente {
 		return username;
 	}
 	
-	   public ArrayList<Method> getAzioniDisponibili() {
-	        ArrayList<Method> metodiConcreti = new ArrayList<>();
-	        
-	        Method[] metodi = this.getClass().getDeclaredMethods();
-	        
-	        for (Method metodo : metodi) {
-	            if (!metodo.getName().equals("getAzioniDisponibili")) {
-	                metodiConcreti.add(metodo);
-	            }
-	        }
-
-	        return metodiConcreti;
-	    }
+    public ArrayList<Method> getAzioniDisponibili() {
+         ArrayList<Method> metodiConcreti = new ArrayList<>();
+        
+         Method[] metodi = this.getClass().getDeclaredMethods();
+        
+         for (Method metodo : metodi) {
+             if (!metodo.getName().equals("getAzioniDisponibili")) {
+             metodiConcreti.add(metodo);
+         }
+    }
+     
+    return metodiConcreti;
+}
 }
