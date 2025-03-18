@@ -1,8 +1,5 @@
 package controller;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-
 import utility.MethodName;
 import utility.ParamName;
 
@@ -12,50 +9,47 @@ public class HandlerConfiguratore extends ControllerUtente{
 		super(gdb, username);
 	}
 	
-	@MethodName("Imposta l'ambito territoriale")
+	@MethodName("Swag")
 	public void primaConfigurazione () {
 
 	}
 	
 	@MethodName("Imposta l'ambito territoriale")
-	public void impostaAmbitoTerritoriale(@ParamName("Nome del ambito territoriale")String msg, int tipo) {
-		//String s = (String) "";
-		//gdb.impostaAmbitoTerritoriale(s);
-		System.out.println("Funziona");
+	public void impostaAmbitoTerritoriale(@ParamName("Nome del ambito territoriale")String s) {
+		gdb.impostaAmbitoTerritoriale(s);
 	}
 	
-	@MethodName("Imposta l'ambito territoriale")
-	public void modificaMaxPrenotazione(String msg, int tipo) {
-		int maxPrenotazione = 0;
+	@MethodName("Modifica numero max prenotazione per fruitore")
+	public void modificaMaxPrenotazione(@ParamName("N max per prenotazione di un fruitore")int maxPrenotazione) {
 		gdb.modificaMaxPrenotazione(maxPrenotazione);
 	}
 	
-	@MethodName("Imposta l'ambito territoriale")
-	public String visualListaUser(int tipo_user) {
+	@MethodName("Visualizza lista user.")
+	public String getListaUser(int tipo_user) {
 		 return gdb.getListaUser(tipo_user);
 	}
 	
-	@MethodName("Imposta l'ambito territoriale")
+	@MethodName("Visualizza elenco luoghi visitabili.")
 	public String getElencoLuoghiVisitabili() {
 		return gdb.getElencoLuoghiVisitabili();
 	}
 	
-	@MethodName("Imposta l'ambito territoriale")
+	@MethodName("Visualizza elenco tipi visite per luogo.")
 	public String getElencoTipiVisiteLuogo() {
 		return gdb.getElencoTipiVisiteLuogo();
 	}
 	
-	@MethodName("Imposta l'ambito territoriale")
+	@MethodName("Non lo so.")
 	public void pubblicaPianoVisite() {
 		
 	}
 	
-	@MethodName("Imposta l'ambito territoriale")
+	@MethodName("Indica date precluse del prossimo piano a quello successivo a questo.")
 	public void indicaDatePrecluse() {
 		
 	}
 	
-	@MethodName("Imposta l'ambito territoriale")
+	@MethodName("Aggiungi tipo visite.")
 	public void aggiungiTipoVisite() {
 		
 	}

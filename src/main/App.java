@@ -2,7 +2,7 @@ package main;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Scanner;
 import controller.Login;
 import controller.Credenziali;
@@ -29,7 +29,7 @@ public class App {
 		do {
 			stampa("Quale operazione desidera (ESC per uscire)?\n");
 			
-			ArrayList<Method> azioniDisponibili = gu.getAzioniDisponibili();
+			LinkedList<Method> azioniDisponibili = new LinkedList<>(gu.getAzioniDisponibili());
 			for (int i = 0; i < azioniDisponibili.size(); i++) {
 				try {
 					MethodName annotation = azioniDisponibili.get(i).getAnnotation(MethodName.class);
@@ -47,16 +47,14 @@ public class App {
 				int scelta = Integer.parseInt(input);
 				if (scelta > 0 && scelta <= azioniDisponibili.size()) {
 					Method metodo = azioniDisponibili.get(scelta - 1);
-					
 					Parameter[] parameters = metodo.getParameters();
-					
+
 					Object[] args = new Object[parameters.length];
 
 					for (int j = 0; j < parameters.length; j++) {
 						args[j] = richiediParametro(parameters[j]);
 					}
-
-					metodo.invoke(gu, args);
+					System.out.println(metodo.invoke(gu, args));
 
 				} else {
 					stampa("Scelta non valida.");

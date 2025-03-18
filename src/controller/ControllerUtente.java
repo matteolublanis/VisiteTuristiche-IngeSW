@@ -1,7 +1,8 @@
 package controller;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class ControllerUtente {
 	
@@ -34,17 +35,22 @@ public abstract class ControllerUtente {
 		return username;
 	}
 	
-    public ArrayList<Method> getAzioniDisponibili() {
+    public List<Method> getAzioniDisponibili() {
+    	/*
          ArrayList<Method> metodiConcreti = new ArrayList<>();
         
          Method[] metodi = this.getClass().getDeclaredMethods();
         
          for (Method metodo : metodi) {
-             if (!metodo.getName().equals("getAzioniDisponibili")) {
+             if (!metodo.getName().equals("getAzioniDisponibili")) { 
              metodiConcreti.add(metodo);
-         }
-    }
+         		}
+    	}
      
-    return metodiConcreti;
-}
+    	return metodiConcreti;
+    	 */
+    	return Arrays.stream(this.getClass().getDeclaredMethods())
+                .filter(metodo -> !metodo.getName().equals("getAzioniDisponibili")) //aggiungere altri controlli
+                .toList();
+    }
 }
