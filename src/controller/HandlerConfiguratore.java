@@ -1,8 +1,5 @@
 package controller;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-
 public class HandlerConfiguratore extends ControllerUtente{	
 	
 	public HandlerConfiguratore (ControllerArchivio gdb, String username) {

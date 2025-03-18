@@ -2,10 +2,8 @@ package main;
 
 import java.lang.reflect.InvocationTargetException;
 
-import archivio.Archivio;
 import controller.ControllerArchivio;
 import controller.Login;
-import controller.ControllerUtente;
 
 public class Main {
 	public static void main (String args[]) throws IllegalAccessException, InvocationTargetException {

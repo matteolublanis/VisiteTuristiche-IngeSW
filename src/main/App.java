@@ -5,7 +5,6 @@ import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Scanner;
 import controller.Login;
-import controller.Credenziali;
 import controller.ControllerUtente;
 import utility.CostantiStruttura;
 
@@ -83,13 +82,11 @@ public class App {
 	}
 	
 	public void accesso () {
-		String username;
-		String password;
 		do {
 			System.out.println(INSERISCI_LE_TUE_CREDENZIALI + "\nUsername:");
-			username = sc.nextLine();
+			String username = sc.nextLine();
 			System.out.println("Password:");
-			password = sc.nextLine();
+			String password = sc.nextLine();
 			gu = gl.accesso(username, password);
 			if (gu == null) {
 				System.out.println("Credenziali errate! Reinserire.");
@@ -99,13 +96,18 @@ public class App {
 	}
 	
 	public void cambiaCredenziali () {
-		Credenziali c;
-		System.out.println("Cambia le tue credenziali:" + "\nUsername:");
-		String username = sc.nextLine();
-		System.out.println("Password:");
-		String password = sc.nextLine();
-		if (gu.cambiaCredenziali(username, password)) System.out.println("Credenziali cambiate."); 
-		else System.out.println("Credenziali non cambiate.");
+		System.out.println("Cambia le tue credenziali:" + "\n");
+ 		do {
+ 			System.out.println("Username:");
+ 			String username = sc.nextLine();
+ 			System.out.println("Password:");
+ 			String password = sc.nextLine();
+ 			if (gu.cambiaCredenziali(username, password)) {
+ 				System.out.println("Credenziali cambiate.");
+ 				break;
+ 			}
+ 			else System.out.println("Credenziali non cambiate. Reinserire nuove credenziali (username già in uso).");
+ 		} while (true);
 	}
 	
 	public void stampa (String msg) {

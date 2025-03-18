@@ -17,8 +17,8 @@ public abstract class ControllerUtente {
 		return gdb.checkPrimoAccesso(username);
 	}
 	
-	public boolean checkCredenzialiCorrette(Credenziali c) {
-		return gdb.checkCredenzialiCorrette(c);
+	public boolean checkCredenzialiCorrette(String username, String password) {
+		return gdb.checkCredenzialiCorrette(new Credenziali(username, password));
 	}
 	
 	public boolean cambiaCredenziali(String username, String password) {
