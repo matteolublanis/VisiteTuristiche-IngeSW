@@ -36,7 +36,7 @@ public class ControllerArchivio {
 	
 	public boolean cambiaCredenziali (String username, Credenziali c) {
 		if (d.modificaCredenziali(username, c)) {
-			d.primoAccessoEseguito(username);	
+			d.primoAccessoEseguito(c.getUsername());	
 			return true;
 		}
 		
