@@ -8,6 +8,8 @@ import controller.Login;
 import controller.Credenziali;
 import controller.ControllerUtente;
 import utility.CostantiStruttura;
+import utility.ParamName;
+import utility.MethodName;
 
 public class App { 
 	
@@ -29,7 +31,13 @@ public class App {
 			
 			ArrayList<Method> azioniDisponibili = gu.getAzioniDisponibili();
 			for (int i = 0; i < azioniDisponibili.size(); i++) {
-				stampa((i + 1) + ") " + azioniDisponibili.get(i).getName());
+				try {
+					MethodName annotation = azioniDisponibili.get(i).getAnnotation(MethodName.class);
+					stampa((i + 1) + ") " + annotation.value());
+				}
+				catch(Exception e){
+					System.out.println("Miaooooo");
+				}
 			}
 			
 			String input = sc.nextLine();
@@ -65,8 +73,9 @@ public class App {
 	}
 	
 	private Object richiediParametro(Parameter parametro) {
+        ParamName annotation = parametro.getAnnotation(ParamName.class);
 		String tipo = parametro.getType().getSimpleName();
-		stampa("Inserisci " + parametro.getName() + "--> ");
+		stampa("Inserisci " + annotation.value() + "--> ");
 		String input = sc.nextLine();
 
 		switch (tipo) {
