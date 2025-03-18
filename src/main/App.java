@@ -3,12 +3,14 @@ package main;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner;
 import controller.Login;
 import controller.ControllerUtente;
+import controller.HandlerConfiguratore;
 import utility.CostantiStruttura;
-import utility.ParamName;
 import utility.MethodName;
+import utility.ParamName;
 
 public class App { 
 	
@@ -22,51 +24,87 @@ public class App {
 	}
 	
 	public void start() {
-		if (gl.checkPrimoAvvio()) System.out.println(gl.getCredenzialiIniziali());
+		System.out.println(gl.avvio());
 		accesso(); 
 		if (gu.checkPrimoAccesso()) cambiaCredenziali();
+		
+		//TODO rivedere
+		if (gu.getTipoUtente() == CostantiStruttura.CONFIGURATORE &&
+				((HandlerConfiguratore)gu).checkPrimaConfigurazioneArchivio()) {
+			configuraArchivio();
+		}
+		
 		do {
-			stampa("Quale operazione desidera (ESC per uscire)?\n");
 			
-			LinkedList<Method> azioniDisponibili = new LinkedList<>(gu.getAzioniDisponibili());
-			for (int i = 0; i < azioniDisponibili.size(); i++) {
-				try {
-					MethodName annotation = azioniDisponibili.get(i).getAnnotation(MethodName.class);
-					stampa((i + 1) + ") " + annotation.value());
-				}
-				catch(Exception e){
-					System.out.println("Miaooooo");
-				}
-			}
-			
-			String input = sc.nextLine();
-			if (input.equalsIgnoreCase("ESC")) break;
-			
-			try {
-				int scelta = Integer.parseInt(input);
-				if (scelta > 0 && scelta <= azioniDisponibili.size()) {
-					Method metodo = azioniDisponibili.get(scelta - 1);
-					Parameter[] parameters = metodo.getParameters();
-
-					Object[] args = new Object[parameters.length];
-
-					for (int j = 0; j < parameters.length; j++) {
-						args[j] = richiediParametro(parameters[j]);
-					}
-					System.out.println(metodo.invoke(gu, args));
-
-				} else {
-					stampa("Scelta non valida.");
-				}
-			} catch (Exception e) {
-				stampa("Errore: formato invalido");
-			}
+			if (!scegliAzione()) break;
 			
 		} while (true); 
 		
 		stampa("Arrivederci!");
 		
 		sc.close();
+	}
+	
+	private void configuraArchivio() {
+		HandlerConfiguratore g = (HandlerConfiguratore)gu;
+		System.out.println("Inserisci nome ambito territoriale:");
+		String ambito = sc.nextLine();
+		g.impostaAmbitoTerritoriale(ambito);
+		System.out.println("Inserisci max prenotazione per fruitore:");
+		do {
+			if (sc.hasNextInt()) {
+				g.modificaMaxPrenotazione(sc.nextInt());
+				break;
+			}
+			else System.out.println("Formato non valido, reinserire:");
+		} while (true);
+		
+		//ciclo aggiunta visite/tipi visite da implementare
+		
+	}
+	
+	
+	
+	private boolean scegliAzione () {
+		stampa("Quale operazione desidera (ESC per uscire)?\n");
+		
+		LinkedList<Method> azioniDisponibili = new LinkedList<>(gu.getAzioniDisponibili());
+		for (int i = 0; i < azioniDisponibili.size(); i++) {
+			try {
+				MethodName annotation = azioniDisponibili.get(i).getAnnotation(MethodName.class);
+				stampa((i + 1) + ") " + annotation.value());
+			}
+			catch(Exception e){
+				System.out.println("Non sono stati definiti correttamente i metodi, non pagare il team di sviluppo.");
+			}
+		}
+		
+		String input = sc.nextLine();
+		if (input.equalsIgnoreCase("ESC")) return false;
+		else return eseguiAzione(input, azioniDisponibili);
+		
+	}
+	
+	private boolean eseguiAzione (String input, List<Method> azioniDisponibili) {
+		try {
+			int scelta = Integer.parseInt(input);
+			if (scelta > 0 && scelta <= azioniDisponibili.size()) {
+				Method metodo = azioniDisponibili.get(scelta - 1);
+				Parameter[] parameters = metodo.getParameters();
+				Object[] args = new Object[parameters.length];
+				for (int j = 0; j < parameters.length; j++) {
+					args[j] = richiediParametro(parameters[j]);
+				}
+				System.out.println(metodo.invoke(gu, args));
+
+			} else {
+				stampa("Scelta non valida.");
+			}
+		} catch (Exception e) {
+			stampa("Errore: formato invalido");
+		}
+		
+		return true;
 	}
 	
 	private Object richiediParametro(Parameter parametro) {
@@ -119,32 +157,6 @@ public class App {
 	
 	public void stampa (String msg) {
 		if (!msg.equals("")) System.out.println(msg);
-	}
-	
-	public Object richiediVal (String msg, int tipo) {
-		
-		switch (tipo) {
-		case CostantiStruttura.INT:
-	        System.out.println(msg);
-
-			 while (!sc.hasNextInt()){
-			        sc.nextLine();
-			        if (!sc.hasNextInt()) System.out.println("Formato non corretto, reinserire.");
-			}
-			 return sc.nextInt();
-		case CostantiStruttura.STRING:
-			System.out.println(msg);
-			return sc.nextLine();
-		case CostantiStruttura.BOOLEAN:
-			System.out.println(msg);
-			do {
-				sc.nextLine(); 
-				if (!sc.hasNextBoolean()) System.out.println("Formato non corretto, reinserire.");
-			} while (!sc.hasNextBoolean()); //TODO da cambiare
-		}
-		
-		return null;
-
 	}
 	
 }

@@ -4,7 +4,7 @@
           "password": "admin",
           "tipo": 2,
           "primo_accesso": true,
-          "tipi_visite": ["Alberto II dei Savoia"],
+          "tipi_visite": ["museo_armi"],
           "username": "volontario4"
      },
      "volontario3": {

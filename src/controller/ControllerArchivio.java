@@ -14,6 +14,14 @@ public class ControllerArchivio {
 		return d.checkPrimoAvvio();
 	}
 	
+	public int getTipoUtente (String username) {
+		return d.getTipoUtente(username);
+	}
+	
+	public boolean checkPrimaConfigurazioneArchivio (String username) {
+		return d.checkPrimaConfigurazioneArchivio(username);
+	}
+	
 	public String getCredenzialiIniziali () {
 		if (checkPrimoAvvio()) {
 			d.setPrimoAvvio();

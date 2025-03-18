@@ -1,0 +1,52 @@
+{"visite": [
+    {
+        "tipo": "Guidata",
+        "data": "2025-04-10",
+        "luogo": "Colosseo"
+    },
+    {
+        "tipo": "Autonoma",
+        "data": "2025-05-15",
+        "luogo": "Musei Vaticani"
+    },
+    {
+        "tipo": "tipo",
+        "data": "ieri",
+        "luogo": "bs"
+    },
+    {
+        "tipo": "visita",
+        "data": "domani",
+        "luogo": "bs"
+    },
+    {
+        "tipo": "s",
+        "data": "s",
+        "luogo": "bs"
+    },
+    {
+        "tipo": "q",
+        "data": "q",
+        "luogo": "q"
+    },
+    {
+        "tipo": "a",
+        "data": "a",
+        "luogo": "a"
+    },
+    {
+        "tipo": "w",
+        "data": "w",
+        "luogo": "w"
+    },
+    {
+        "tipo": "x",
+        "data": "x",
+        "luogo": "x"
+    },
+    {
+        "tipo": "eee",
+        "data": "111",
+        "luogo": "qqq"
+    }
+]}

@@ -11,7 +11,6 @@ public class Login {
 	}
 	
 	public ControllerUtente accesso(String username, String password) {
-		if (checkPrimoAvvio()) System.out.println(getCredenzialiIniziali());
 		Credenziali credenziali = new Credenziali(username, password);
 		if(checkCredenzialiCorrette(credenziali)) {
 			return configureHandlerUtente(credenziali);
@@ -19,13 +18,13 @@ public class Login {
 		else return null;
 	}
 	
-	public String getCredenzialiIniziali() {
-		if (checkPrimoAvvio()) return (gdb.getCredenzialiIniziali());
-		else return "";
-	}
-	
-	public boolean checkPrimoAvvio () {
+	public boolean checkPrimoAvvio() {
 		return gdb.checkPrimoAvvio();
+	}
+	public String avvio () {
+		String a = "Benvenuto!\n";
+		if (checkPrimoAvvio()) a += gdb.getCredenzialiIniziali();
+		return a;
 	}
 	
 	private boolean checkCredenzialiCorrette(Credenziali c) {

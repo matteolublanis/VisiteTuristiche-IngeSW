@@ -12,12 +12,16 @@ public class Archivio {
 			+ "Username: admin Password: admin";
 	private static final String PRIMA_CONFIGURAZIONE = "prima_configurazione";
 	private static final int RIGHE_USERS = 5;
+	private static final String PATH_DATE_PRECLUSE = "src/archivio/date_precluse.json";
 	private static final String PATH_USERS = "src/archivio/users.json";
+	private static final String PATH_VISITE = "src/archivio/piano_visite.json";
+	private static final String PATH_TIPI_VISITE = "src/archivio/tipo_visite.json";
 	private static final String AMBITO = "src/archivio/ambito_territoriale.json";
 	private static final String PRIMO_AVVIO = "primo_avvio";
 	private JSONObject jsonUsers = JSONUtility.readJsonFile(PATH_USERS);
 	private JSONObject jsonAmbitoTerritoriale = JSONUtility.readJsonFile(AMBITO);
-	
+	private JSONObject pianoVisite = JSONUtility.readJsonFile(PATH_VISITE);
+
 	public Archivio () {
 		System.out.println("Creato archivio.");
 	}
@@ -37,8 +41,11 @@ public class Archivio {
 	}
 	
 	public void impostaAmbitoTerritoriale (String nome) {
-		jsonAmbitoTerritoriale.put("nome", nome);
-		JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, AMBITO, RIGHE_USERS);
+		if (isPrimaConfigurazione()) {
+			jsonAmbitoTerritoriale.put("nome", nome);
+			JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, AMBITO, RIGHE_USERS);
+			setPrimaConfigurazione();
+		}
 
 	}
 	
@@ -104,6 +111,17 @@ public class Archivio {
 		
 	}
 	
+	public boolean checkPrimaConfigurazioneArchivio (String username) {
+		if (!usernameEsiste(username)) return false;
+		else {
+			if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE &&
+					isPrimaConfigurazione()) {
+				return true;
+			}
+			else return false;
+		}
+	}
+	
 	public boolean modificaCredenziali (String username, Credenziali c) {
 		if (!usernameEsiste(username)) return false;
 		if (usernameEsiste(c.getUsername())) return false; //check if new user exists already
@@ -145,6 +163,57 @@ public class Archivio {
 		return result;
 	}
 	
+	
+	public void aggiungiVisita(String luogo, String tipo, String data) {
+		
+		JSONArray visite = (JSONArray) pianoVisite.get("visite");
+		JSONObject nuovaVisita = new JSONObject();
+		nuovaVisita.put("luogo", (String) luogo);
+		nuovaVisita.put("tipo", (String) tipo);
+		nuovaVisita.put("data", (String) data);
+		visite.put(nuovaVisita);
+		JSONUtility.aggiornaJsonFile(pianoVisite, PATH_VISITE, 4); //TODO check file json
+		//System.out.println("Visita aggiunta con successo.");
+	}
+	
+	public void indicaDatePrecluse(Object data) {
+		JSONObject jsonPreclusione = JSONUtility.readJsonFile(PATH_DATE_PRECLUSE);
+		JSONArray datePrecluse = (JSONArray) jsonPreclusione.get("datePrecluse");
+		boolean contains = false;
+        for (int i = 0; i < datePrecluse.length(); i++) {
+            if (datePrecluse.get(i).equals(data)) {
+                contains = true;
+                break;
+            }
+        }
+        if (contains) {
+        	System.out.println("La data " + data + " è già preclusa.");
+        } else {
+        	datePrecluse.put(data);
+            JSONUtility.aggiornaJsonFile(jsonPreclusione, PATH_DATE_PRECLUSE, 4); //TODO check file in cui salvare
+            System.out.println("Data preclusa salvata con successo: " + data);
+        }
+	}
+	
+	public void pubblicaPianoVisite() {
+		/*
+		JSONObject jsonPiano = JSONUtility.readJsonFile(PATH_VISITE);
+		JSONArray visiteArray = jsonPiano.getJSONArray("visite");
+		for (int i = 0; i < visiteArray.length(); i++) {
+            JSONObject visita = visiteArray.getJSONObject(i);
+            String tipo = visita.optString("tipo", "Tipo non specificato");
+            String data = visita.optString("data", "Data non specificata");
+            String luogo = visita.optString("luogo", "Luogo non specificato");
+
+            System.out.println("Visita " + (i + 1) + ": ");
+            System.out.println("Tipo: " + tipo);
+            System.out.println("Data: " + data);
+            System.out.println("Luogo: " + luogo);
+            System.out.println();
+        }
+        */
+	}
+	
 	public String getElencoTipiVisiteLuogo () {
 		String result = "";
 		HashMap<String, String> visite = JSONUtility.getAllSameValsFromObjects(jsonAmbitoTerritoriale, "tipo_visite");
@@ -165,6 +234,28 @@ public class Archivio {
 			return false;
 		}
 		
+	}
+	
+	public void aggiungiTipoVisite(Object tipoVisita, Object titolo, Object descrizione, Object puntoIncontro, Object dataInizio, Object dataFine, Object giorniPrenotabili, Object oraInizio, Object durataVisita, Object daAcquistare, Object minFruitore, Object maxFruitore) {
+		
+	    JSONObject pianoVisite = JSONUtility.readJsonFile(PATH_TIPI_VISITE);
+	    JSONObject nuovoTipoVisita = new JSONObject();
+	    nuovoTipoVisita.put("titolo", (String) titolo);
+	    nuovoTipoVisita.put("descrizione", (String) descrizione);
+	    nuovoTipoVisita.put("punto-incontro", (String) puntoIncontro);
+	    nuovoTipoVisita.put("data-inizio", (String) dataInizio);
+	    nuovoTipoVisita.put("data-fine", (String) dataFine);
+	    nuovoTipoVisita.put("giorni-prenotabili", (String) giorniPrenotabili);
+	    nuovoTipoVisita.put("ora-inizio", (String) oraInizio);
+	    nuovoTipoVisita.put("durata-visita", (String) durataVisita);
+	    nuovoTipoVisita.put("da-acquistare", (Boolean) daAcquistare);
+	    nuovoTipoVisita.put("min-fruitore", (Integer) minFruitore);
+	    nuovoTipoVisita.put("max-fruitore", (Integer) maxFruitore);
+	    	    
+	    pianoVisite.put((String) tipoVisita, nuovoTipoVisita);
+
+	    JSONUtility.aggiornaJsonFile(pianoVisite, PATH_TIPI_VISITE, 4);
+	    System.out.println("Tipo di visita aggiunto con successo.");
 	}
 
 	public String getCredenzialiConfIniziale() {

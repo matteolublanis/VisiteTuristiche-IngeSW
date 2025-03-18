@@ -26,7 +26,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	}
 	
 	@MethodName("Visualizza lista user.")
-	public String getListaUser(int tipo_user) {
+	public String getListaUser(@ParamName("Tipo user")int tipo_user) {
 		 return gdb.getListaUser(tipo_user);
 	}
 	

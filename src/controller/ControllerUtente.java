@@ -14,12 +14,16 @@ public abstract class ControllerUtente {
 		this.username = username;
 	}
 	
-	public boolean checkPrimoAccesso() {
-		return gdb.checkPrimoAccesso(username);
+	public int getTipoUtente () {
+		return gdb.getTipoUtente(username);
 	}
 	
-	public boolean checkCredenzialiCorrette(String username, String password) {
-		return gdb.checkCredenzialiCorrette(new Credenziali(username, password));
+	public boolean checkPrimaConfigurazioneArchivio () {
+		return gdb.checkPrimaConfigurazioneArchivio(username);
+	}
+	
+	public boolean checkPrimoAccesso() {
+		return gdb.checkPrimoAccesso(username);
 	}
 	
 	public boolean cambiaCredenziali(String username, String password) {
