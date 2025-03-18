@@ -2,11 +2,13 @@ package main;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Scanner;
 import controller.Login;
 import controller.ControllerUtente;
 import utility.CostantiStruttura;
+import utility.ParamName;
+import utility.MethodName;
 
 public class App { 
 	
@@ -26,9 +28,15 @@ public class App {
 		do {
 			stampa("Quale operazione desidera (ESC per uscire)?\n");
 			
-			ArrayList<Method> azioniDisponibili = gu.getAzioniDisponibili();
+			LinkedList<Method> azioniDisponibili = new LinkedList<>(gu.getAzioniDisponibili());
 			for (int i = 0; i < azioniDisponibili.size(); i++) {
-				stampa((i + 1) + ") " + azioniDisponibili.get(i).getName());
+				try {
+					MethodName annotation = azioniDisponibili.get(i).getAnnotation(MethodName.class);
+					stampa((i + 1) + ") " + annotation.value());
+				}
+				catch(Exception e){
+					System.out.println("Miaooooo");
+				}
 			}
 			
 			String input = sc.nextLine();
@@ -38,16 +46,14 @@ public class App {
 				int scelta = Integer.parseInt(input);
 				if (scelta > 0 && scelta <= azioniDisponibili.size()) {
 					Method metodo = azioniDisponibili.get(scelta - 1);
-					
 					Parameter[] parameters = metodo.getParameters();
-					
+
 					Object[] args = new Object[parameters.length];
 
 					for (int j = 0; j < parameters.length; j++) {
 						args[j] = richiediParametro(parameters[j]);
 					}
-
-					metodo.invoke(gu, args);
+					System.out.println(metodo.invoke(gu, args));
 
 				} else {
 					stampa("Scelta non valida.");
@@ -64,8 +70,9 @@ public class App {
 	}
 	
 	private Object richiediParametro(Parameter parametro) {
+        ParamName annotation = parametro.getAnnotation(ParamName.class);
 		String tipo = parametro.getType().getSimpleName();
-		stampa("Inserisci " + parametro.getName() + "--> ");
+		stampa("Inserisci " + annotation.value() + "--> ");
 		String input = sc.nextLine();
 
 		switch (tipo) {
