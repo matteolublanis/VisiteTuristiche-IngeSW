@@ -3,12 +3,10 @@ package main;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Scanner;
 import controller.Login;
 import controller.ControllerUtente;
 import controller.HandlerConfiguratore;
-import utility.CostantiStruttura;
 import utility.MethodName;
 import utility.ParamName;
 
@@ -29,8 +27,7 @@ public class App {
 		if (gu.checkPrimoAccesso()) cambiaCredenziali();
 		
 		//TODO rivedere
-		if (gu.getTipoUtente() == CostantiStruttura.CONFIGURATORE &&
-				((HandlerConfiguratore)gu).checkPrimaConfigurazioneArchivio()) {
+		if (gu.checkPrimaConfigurazioneArchivio()) {
 			configuraArchivio();
 		}
 		
@@ -45,6 +42,14 @@ public class App {
 		sc.close();
 	}
 	
+	/*
+	 * Questo metodo è da rivedere, in quanto impone un casting non molto carino
+	 * Effettivamente se viene ritornato un tipo configuratore l'app può mostrare specifiche cose al configuratore,
+	 * quindi logicamente potrebbe anche starci, solo che è da rivedere, al momento ci sono due soluzioni:
+	 * 1. Separare le App in base all'utente
+	 * 2. Introdurre un'interfaccia di mezzo tra gli Handler e App
+	 * 3. Affidarsi alla sfera di cristallo di Singh
+	 */
 	private void configuraArchivio() {
 		HandlerConfiguratore g = (HandlerConfiguratore)gu;
 		System.out.println("Inserisci nome ambito territoriale:");
@@ -68,7 +73,7 @@ public class App {
 	private boolean scegliAzione () {
 		stampa("Quale operazione desidera (ESC per uscire)?\n");
 		
-		LinkedList<Method> azioniDisponibili = new LinkedList<>(gu.getAzioniDisponibili());
+		LinkedList<Method> azioniDisponibili = gu.getAzioniDisponibili();
 		for (int i = 0; i < azioniDisponibili.size(); i++) {
 			try {
 				MethodName annotation = azioniDisponibili.get(i).getAnnotation(MethodName.class);
@@ -85,7 +90,7 @@ public class App {
 		
 	}
 	
-	private boolean eseguiAzione (String input, List<Method> azioniDisponibili) {
+	private boolean eseguiAzione (String input, LinkedList<Method> azioniDisponibili) {
 		try {
 			int scelta = Integer.parseInt(input);
 			if (scelta > 0 && scelta <= azioniDisponibili.size()) {
@@ -101,7 +106,7 @@ public class App {
 				stampa("Scelta non valida.");
 			}
 		} catch (Exception e) {
-			stampa("Errore: formato invalido");
+			stampa(e.toString());
 		}
 		
 		return true;

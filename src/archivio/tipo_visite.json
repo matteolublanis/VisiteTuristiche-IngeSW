@@ -11,5 +11,117 @@
 		"da-acquistare": true,
 		"min-fruitore": 5,
 		"max-fruitore": 20
+	},
+	
+	"tour_castello": {
+	    "titolo": "Tour del Castello",
+	    "descrizione": "Esplorazione guidata del castello con aneddoti storici e vista panoramica sulla città.",
+	    "punto-incontro": "Ingresso principale del Castello di Brescia",
+	    "data-inizio": "15-04-2025",
+	    "data-fine": "30-09-2025",
+	    "giorni-prenotabili": ["ven", "sab", "dom"],
+	    "ora-inizio": "15:00",
+	    "durata-visita": "90 minuti",
+	    "da-acquistare": false,
+	    "min-fruitore": 3,
+	    "max-fruitore": 15
+	},
+
+	"visita_sotterranei": {
+	    "titolo": "Visita ai Sotterranei Segreti",
+	    "descrizione": "Un'esperienza suggestiva nei sotterranei nascosti del castello, tra leggende e misteri.",
+	    "punto-incontro": "Cortile interno del castello",
+	    "data-inizio": "10-05-2025",
+	    "data-fine": "20-10-2025",
+	    "giorni-prenotabili": ["mer", "gio", "sab"],
+	    "ora-inizio": "18:00",
+	    "durata-visita": "75 minuti",
+	    "da-acquistare": true,
+	    "min-fruitore": 4,
+	    "max-fruitore": 12
+	},
+
+	"percorso_natura_castello": {
+	    "titolo": "Percorso Naturalistico",
+	    "descrizione": "Passeggiata tra i sentieri verdi del parco storico del castello con guida naturalistica.",
+	    "punto-incontro": "Ingresso del Parco del Castello",
+	    "data-inizio": "20-03-2025",
+	    "data-fine": "15-10-2025",
+	    "giorni-prenotabili": ["mar", "gio", "dom"],
+	    "ora-inizio": "09:00",
+	    "durata-visita": "110 minuti",
+	    "da-acquistare": false,
+	    "min-fruitore": 2,
+	    "max-fruitore": 25
+	},
+	
+	"museo_santa_giulia": {
+	    "titolo": "Tour del Museo di Santa Giulia",
+	    "descrizione": "Visita guidata al Museo di Santa Giulia, patrimonio UNESCO, con focus sulla storia longobarda.",
+	    "punto-incontro": "Ingresso Museo di Santa Giulia, Brescia",
+	    "data-inizio": "05-04-2025",
+	    "data-fine": "30-09-2025",
+	    "giorni-prenotabili": ["mar", "gio", "sab"],
+	    "ora-inizio": "10:00",
+	    "durata-visita": "120 minuti",
+	    "da-acquistare": true,
+	    "min-fruitore": 4,
+	    "max-fruitore": 20
+	},
+
+	"franciacorta_wine_tour": {
+	    "titolo": "Franciacorta Wine Tour",
+	    "descrizione": "Un'esperienza enologica tra le vigne della Franciacorta con degustazione di vini DOCG.",
+	    "punto-incontro": "Cantina Ca' del Bosco, Erbusco (BS)",
+	    "data-inizio": "01-05-2025",
+	    "data-fine": "31-10-2025",
+	    "giorni-prenotabili": ["ven", "sab", "dom"],
+	    "ora-inizio": "16:00",
+	    "durata-visita": "150 minuti",
+	    "da-acquistare": true,
+	    "min-fruitore": 6,
+	    "max-fruitore": 18
+	},
+
+	"escursione_monte_isola": {
+	    "titolo": "Escursione a Monte Isola",
+	    "descrizione": "Gita guidata alla scoperta dell'isola lacustre più grande d'Europa con panorami mozzafiato.",
+	    "punto-incontro": "Imbarcadero di Sulzano, Lago d'Iseo",
+	    "data-inizio": "20-04-2025",
+	    "data-fine": "30-09-2025",
+	    "giorni-prenotabili": ["mer", "sab", "dom"],
+	    "ora-inizio": "09:30",
+	    "durata-visita": "180 minuti",
+	    "da-acquistare": false,
+	    "min-fruitore": 5,
+	    "max-fruitore": 25
+	},
+
+	"passeggiata_valle_camonica": {
+	    "titolo": "Passeggiata tra le incisioni rupestri",
+	    "descrizione": "Tour archeologico nel Parco Nazionale delle Incisioni Rupestri della Valle Camonica.",
+	    "punto-incontro": "Centro visitatori di Capo di Ponte",
+	    "data-inizio": "15-03-2025",
+	    "data-fine": "15-11-2025",
+	    "giorni-prenotabili": ["gio", "sab", "dom"],
+	    "ora-inizio": "14:30",
+	    "durata-visita": "120 minuti",
+	    "da-acquistare": false,
+	    "min-fruitore": 3,
+	    "max-fruitore": 20
+	},
+
+	"tour_brescia_romana": {
+	    "titolo": "Brescia Romana: Il Foro e il Capitolium",
+	    "descrizione": "Viaggio nel tempo tra i resti della Brixia romana con visita al Capitolium e al teatro antico.",
+	    "punto-incontro": "Piazza del Foro, Brescia",
+	    "data-inizio": "10-04-2025",
+	    "data-fine": "31-10-2025",
+	    "giorni-prenotabili": ["mar", "gio", "sab"],
+	    "ora-inizio": "17:00",
+	    "durata-visita": "90 minuti",
+	    "da-acquistare": true,
+	    "min-fruitore": 4,
+	    "max-fruitore": 15
 	}
 }

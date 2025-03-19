@@ -1,5 +1,7 @@
 package utility;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,6 +51,30 @@ public class Time {
         
         }
         return true;
+	}
+	
+	public static int getActualYear () {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
+		String s = ZonedDateTime.now().format(formatter);
+		return Integer.parseInt(s);
+	}
+	
+	public static int getDayOfTheMonth () {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd");
+		String s = ZonedDateTime.now().format(formatter);
+		return Integer.parseInt(s);
+	}
+	
+	public static int getActualMonth () {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM");
+		String s = ZonedDateTime.now().format(formatter);
+		return Integer.parseInt(s);
+	}
+	
+	public static String getTodaysDate () {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		String s = ZonedDateTime.now().format(formatter);
+		return s;
 	}
 	
 	public static boolean isLeapYear (int year) {

@@ -6,8 +6,8 @@ public class ControllerArchivio {
 
 	private Archivio d;
 	
-	public ControllerArchivio () {
-		this.d = new Archivio(); //imposta database col quale interagire
+	public ControllerArchivio (Archivio d) {
+		this.d = d; 
 	}
 
 	public boolean checkPrimoAvvio () {
@@ -17,6 +17,7 @@ public class ControllerArchivio {
 	public int getTipoUtente (String username) {
 		return d.getTipoUtente(username);
 	}
+
 	
 	public boolean checkPrimaConfigurazioneArchivio (String username) {
 		return d.checkPrimaConfigurazioneArchivio(username);
@@ -34,12 +35,12 @@ public class ControllerArchivio {
 		return d.checkCredenzialiCorrette(c);
 	}
 	
-	public int effettuaLogin (Credenziali c) {
-		return d.getTipoUtente(c.getUsername()); 
-	}
-	
 	public boolean checkPrimoAccesso (String username) {
 		return (d.checkPrimoAccesso(username) == true); //se true è il primo accesso
+	}
+	
+	public boolean indicaDatePrecluse (String date) {
+		return d.indicaDatePrecluse(date);
 	}
 	
 	public boolean cambiaCredenziali (String username, Credenziali c) {
@@ -60,8 +61,8 @@ public class ControllerArchivio {
 		d.impostaAmbitoTerritoriale(s);
 	}
 	
-	public void modificaMaxPrenotazione (int max) {
-		d.impostaMaxPrenotazione(max);
+	public boolean modificaMaxPrenotazione (int max) {
+		return d.impostaMaxPrenotazione(max);
 	}
 	
 	public String getListaUser(int tipo_user) {

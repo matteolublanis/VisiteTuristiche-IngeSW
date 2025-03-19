@@ -32,7 +32,7 @@ public class Login {
 	}
 	
 	private ControllerUtente configureHandlerUtente (Credenziali c){
-		switch (gdb.effettuaLogin(c)) {
+		switch (gdb.getTipoUtente(c.getUsername())) {
 		case CostantiStruttura.CONFIGURATORE:
 			return new HandlerConfiguratore(gdb, c.getUsername());
 		case CostantiStruttura.VOLONTARIO:
