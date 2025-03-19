@@ -8,6 +8,10 @@ import utility.Time;
 
 public class Archivio {
 	
+	private static final String PASSWORD = "password";
+	private static final String TIPO_USER = "tipo";
+	private static final String USERNAME = "username";
+	private static final String PRIMO_ACCESSO = "primo-accesso";
 	private static final String CREDENZIALI_CONF_INIZIALE = "PRIMO AVVIO, CREDENZIALI CONFIGURATORE\n"
 			+ "Username: admin Password: admin";
 	private static final String PRIMA_CONFIGURAZIONE = "prima_configurazione";
@@ -17,11 +21,11 @@ public class Archivio {
 	private static final String PATH_VISITE = "src/archivio/piano_visite.json";
 	private static final String PATH_VISITE_DAPUBBLICARE = "src/archivio/piano_visite.json";
 	private static final String PATH_TIPI_VISITE = "src/archivio/tipo_visite.json";
-	private static final String AMBITO = "src/archivio/ambito_territoriale.json";
+	private static final String PATH_AMBITO = "src/archivio/ambito_territoriale.json";
 	private static final String PRIMO_AVVIO = "primo_avvio";
 	private JSONObject jsonTipiVisite = JSONUtility.readJsonFile(PATH_TIPI_VISITE);
 	private JSONObject jsonUsers = JSONUtility.readJsonFile(PATH_USERS);
-	private JSONObject jsonAmbitoTerritoriale = JSONUtility.readJsonFile(AMBITO);
+	private JSONObject jsonAmbitoTerritoriale = JSONUtility.readJsonFile(PATH_AMBITO);
 	private JSONObject pianoVisite = JSONUtility.readJsonFile(PATH_VISITE);
 	private JSONObject pianoVisiteDaPubblicare = JSONUtility.readJsonFile(PATH_VISITE_DAPUBBLICARE);
 	JSONObject jsonPreclusione = JSONUtility.readJsonFile(PATH_DATE_PRECLUSE);
@@ -36,7 +40,7 @@ public class Archivio {
 	
 	public void setPrimaConfigurazione () {
 		jsonAmbitoTerritoriale.put(PRIMA_CONFIGURAZIONE, false);
-		JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, AMBITO, RIGHE_USERS);
+		JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, PATH_AMBITO, RIGHE_USERS);
 	}
 	
 	public boolean checkPrimoAvvio () {
@@ -47,16 +51,30 @@ public class Archivio {
 	public void impostaAmbitoTerritoriale (String nome) {
 		if (isPrimaConfigurazione()) {
 			jsonAmbitoTerritoriale.put("nome", nome);
-			JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, AMBITO, RIGHE_USERS);
+			JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, PATH_AMBITO, RIGHE_USERS);
 			setPrimaConfigurazione();
 		}
 
 	}
 	
+	public boolean impostaCredenzialiNuovoConfiguratore(String username, String password) {
+		if (usernameEsiste(username)) return false; 
+		else {
+			JSONObject configuratore = new JSONObject();
+			configuratore.put(USERNAME, username);
+			configuratore.put(PRIMO_ACCESSO, true);
+			configuratore.put(TIPO_USER, 1);
+			configuratore.put(PASSWORD, password);
+			jsonUsers.put(username, configuratore);
+			JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, RIGHE_USERS);
+			return true;
+		}
+	}
+	
 	public boolean impostaMaxPrenotazione (int max) {
 		try {
 			jsonAmbitoTerritoriale.put("max_prenotazione", max);
-			JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, AMBITO, RIGHE_USERS);
+			JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, PATH_AMBITO, RIGHE_USERS);
 			return true;
 		}
 		catch (Exception e) {
@@ -68,18 +86,18 @@ public class Archivio {
 	
 	public String getElencoUser (int tipo) {
 		String result = "";
-		for (String s : JSONUtility.allObjectsSameIntValue(jsonUsers, tipo, "tipo")) {
+		for (String s : JSONUtility.allObjectsSameIntValue(jsonUsers, tipo, TIPO_USER)) {
 			JSONObject user = (JSONObject) jsonUsers.get(s);
 			switch (tipo) {
 			case CostantiStruttura.CONFIGURATORE:
-				result += "Username: " + user.get("username") + "\n";
+				result += "Username: " + user.get(USERNAME) + "\n";
 				break;
 			case CostantiStruttura.VOLONTARIO:
-				result += "Username: " + user.get("username") + "\n" +
-							"Tipi visite: " + user.get("tipi_visite") + "\n";
+				result += "Username: " + user.get(USERNAME) + "\n" +
+							"Tipi visite: " + user.get("tipo-visita") + "\n";
 				break;
 			case CostantiStruttura.FRUITORE:
-				result += "Username: " + user.get("username") + "\n";
+				result += "Username: " + user.get(USERNAME) + "\n";
 			}
 		}
 		return result;
@@ -99,7 +117,7 @@ public class Archivio {
 			System.out.println("Utente non trovato: getTipoUtente");
 			return -1;
 		}
-		return (int) (utente.get("tipo"));
+		return (int) (utente.get(TIPO_USER));
 	}
 	
 	public boolean checkCredenzialiCorrette (Credenziali c) {
@@ -107,7 +125,7 @@ public class Archivio {
 		else { 
 			JSONObject utente = (JSONObject) jsonUsers.get(c.getUsername());
 			if (utente == (null)) return false;
-			return (utente.get("password").equals(c.getPassword()));
+			return (utente.get(PASSWORD).equals(c.getPassword()));
 		}
 	
 	}
@@ -140,8 +158,8 @@ public class Archivio {
 			JSONObject utente = null;
 			try {
 				utente = (JSONObject) jsonUsers.get(username);
-				utente.put("username", c.getUsername());
-				utente.put("password", c.getPassword());
+				utente.put(USERNAME, c.getUsername());
+				utente.put(PASSWORD, c.getPassword());
 				jsonUsers.remove(username);
 				jsonUsers.put(c.getUsername(), utente);
 				JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, RIGHE_USERS);
@@ -172,9 +190,9 @@ public class Archivio {
 	}
 	
 	public boolean checkPrimoAccesso (String username) {
-		if (!usernameEsiste(username)) {
+		if (usernameEsiste(username)) {
 			JSONObject utente = (JSONObject) jsonUsers.get(username);
-			return ((boolean) utente.get("primo_accesso") == true);
+			return ((boolean) utente.get(PRIMO_ACCESSO) == true);
 		}
 		else return false;
 	}
@@ -257,7 +275,7 @@ public class Archivio {
 	public boolean primoAccessoEseguito (String user) {
 		try {
 			JSONObject utente = (JSONObject) jsonUsers.get(user);
-			utente.put("primo_accesso", false); 	
+			utente.put(PRIMO_ACCESSO, false); 	
 			JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, RIGHE_USERS); 
 			return true;
 		}

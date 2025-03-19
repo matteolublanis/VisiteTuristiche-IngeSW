@@ -25,8 +25,6 @@ public class App {
 		System.out.println(gl.avvio());
 		accesso(); 
 		if (gu.checkPrimoAccesso()) cambiaCredenziali();
-		
-		//TODO rivedere
 		if (gu.checkPrimaConfigurazioneArchivio()) {
 			configuraArchivio();
 		}

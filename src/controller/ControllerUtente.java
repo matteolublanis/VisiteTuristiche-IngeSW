@@ -30,7 +30,7 @@ public abstract class ControllerUtente {
 	}
 	
 	public boolean cambiaCredenziali(String username, String password) {
-		if (gdb.cambiaCredenziali(username, new Credenziali(username, password))) return true;
+		if (gdb.cambiaCredenziali(this.username, new Credenziali(username, password))) return true;
 		return false;
 	}
 	

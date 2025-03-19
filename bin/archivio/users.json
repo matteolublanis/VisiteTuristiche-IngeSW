@@ -3,35 +3,41 @@
      "volontario4": {
           "password": "admin",
           "tipo": 2,
-          "primo_accesso": true,
-          "tipi_visite": ["museo_armi"],
+          "primo-accesso": true,
+          "tipo-visita": ["museo_armi"],
           "username": "volontario4"
      },
      "volontario3": {
           "password": "admin",
           "tipo": 2,
-          "primo_accesso": true,
-          "tipi_visite": [],
+          "primo-accesso": true,
+          "tipo-visita": [],
           "username": "volontario3"
      },
      "volontario2": {
           "password": "admin",
           "tipo": 2,
-          "primo_accesso": true,
-          "tipi_visite": [],
+          "primo-accesso": true,
+          "tipo-visita": [],
           "username": "volontario2"
      },
      "volontario1": {
           "password": "admin",
           "tipo": 2,
-          "primo_accesso": true,
-          "tipi_visite": [],
+          "primo-accesso": true,
+          "tipo-visita": [],
           "username": "volontario1"
+     },
+     "Dilbert": {
+          "tipo": 1,
+          "password": "koala03",
+          "primo-accesso": false,
+          "username": "Dilbert"
      },
      "admin": {
           "password": "admin",
           "tipo": 1,
-          "primo_accesso": true,
+          "primo-accesso": false,
           "username": "admin"
      }
 }

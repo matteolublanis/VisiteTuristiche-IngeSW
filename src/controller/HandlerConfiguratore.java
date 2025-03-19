@@ -19,37 +19,39 @@ public class HandlerConfiguratore extends ControllerUtente{
 		super(gdb, username);
 	}
 	
+	@MethodName("Imposta ambito territoriale")
 	public void impostaAmbitoTerritoriale(@ParamName("Nome del ambito territoriale")String s) {
 		gdb.impostaAmbitoTerritoriale(s);
 	}
 	
 	@MethodName("Modifica numero max prenotazione per fruitore")
-	public boolean modificaMaxPrenotazione(@ParamName("N max per prenotazione di un fruitore")int maxPrenotazione) {
-		return gdb.modificaMaxPrenotazione(maxPrenotazione);
+	public String modificaMaxPrenotazione(@ParamName("N max per prenotazione di un fruitore")int maxPrenotazione) {
+		if (gdb.modificaMaxPrenotazione(maxPrenotazione)) return "Il valore max prenotazione è stato modificato.";
+		else return "Il valore max prenotazione non è stato modificato.";
 	}
 	
-	@MethodName("Visualizza lista volontari.")
+	@MethodName("Visualizza lista volontari")
 	public String getListaVolontari() {
 		 return gdb.getListaUser(CostantiStruttura.VOLONTARIO);
 	}
 	
-	@MethodName("Visualizza elenco luoghi visitabili.")
+	@MethodName("Visualizza elenco luoghi visitabili")
 	public String getElencoLuoghiVisitabili() {
 		return gdb.getElencoLuoghiVisitabili();
 	}
 	
-	@MethodName("Visualizza elenco tipi visite per luogo.")
+	@MethodName("Visualizza elenco tipi visite per luogo")
 	public String getElencoTipiVisiteLuogo() {
 		return gdb.getElencoTipiVisiteLuogo();
 	}
 	
-	@MethodName("Pubbica il piano delle visite.")
+	@MethodName("Pubbica il piano delle visite")
 	public void pubblicaPianoVisite() {
 		
 	}
 	
-	@MethodName("Indica date precluse del prossimo piano a quello successivo a questo.")
-	public boolean indicaDatePrecluse(@ParamName("Giorno precluso del mese successivo al prossimo")int giorno) {
+	@MethodName("Indica date precluse del prossimo piano a quello successivo a questo")
+	public String indicaDatePrecluse(@ParamName("Giorno precluso del mese successivo al prossimo")int giorno) {
 		int mese, anno;
 		if (Time.getActualMonth() + 3 > 12) {
 			mese = Time.getActualMonth() + 3 - 12;
@@ -60,11 +62,37 @@ public class HandlerConfiguratore extends ControllerUtente{
 			anno = Time.getActualYear();
 		}
 		String date = String.format("%02d-%02d-%04d", giorno, mese, anno);
-		return gdb.indicaDatePrecluse(date);
+		if (gdb.indicaDatePrecluse(date)) return "Inserita data preclusa.";
+		else return "La data preclusa non è stata inserita";
 	}
 	
-	@MethodName("Aggiungi tipo visite.")
+	@MethodName("Aggiungi tipo visite")
 	public void aggiungiTipoVisite() {
+		
+	}
+	@MethodName("Aggiungi credenziali nuovo configuratore")
+	public String impostaCredenzialiNuovoConfiguratore (@ParamName("Username")String username, @ParamName("Password")String password) {
+		if (gdb.impostaCredenzialiNuovoConfiguratore(username, password)) return "Aggiunte credenziali nuovo configuratore.";
+		else return "Non sono state aggiunte nuove credenziali.";
+				
+	}
+	@MethodName("Visualizza visite proposte, complete, confermate, cancellate e effettuate")
+	public String getElencoVisiteProposteCompleteConfermateCancellateEffettuate () {
+		
+		/*
+		 * 
+		 * Le visite proposte sono nel piano pubblicato del mese i+1
+		 * Le visite complete sono nello stesso piano di proposte ma non accettano fruitori (confronto MaxFruitore e prenotazioni)
+		 * Le visite confermate sono nello stesso piano di proposte di prima ma non accettano più nulla anche se sotto maxfruitore
+		 * Le visite cancellate sono come le confermate ma non vengono successivamente memorizzate nello storico una volta fatte
+		 * Le visite effettuate sono quelle confermate che superano la data quando viene effettuata
+		 * 
+		 */
+		
+		return "";
+	}
+	@MethodName("Aggiungi nuova visita nel piano da pubblicare")
+	public void aggiungiVisita () {
 		
 	}
 	

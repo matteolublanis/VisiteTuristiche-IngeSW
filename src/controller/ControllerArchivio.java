@@ -61,6 +61,10 @@ public class ControllerArchivio {
 		d.impostaAmbitoTerritoriale(s);
 	}
 	
+	public boolean impostaCredenzialiNuovoConfiguratore(String username, String password) {
+		return d.impostaCredenzialiNuovoConfiguratore(username, password);
+	}
+	
 	public boolean modificaMaxPrenotazione (int max) {
 		return d.impostaMaxPrenotazione(max);
 	}
