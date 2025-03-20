@@ -307,7 +307,6 @@ public class Archivio {
 	    	if (!checkValueExistance(k, PATH_TIPI_VISITE)) return false;
 	    	else tipiVisita.put(k);
 	    }
-	    if (tipiVisita.length() == 0) return false;
 	    nuovoLuogo.put("tipo-visita", tipiVisita);
 	    jsonAmbitoTerritoriale.put(tag, nuovoLuogo);
 	    return true;

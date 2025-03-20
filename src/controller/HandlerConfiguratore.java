@@ -109,7 +109,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	public boolean aggiungiLuogo (@ParamName("Tag")String tag, 
 			@ParamName("Nome")String nome, 
 			@ParamName("Collocazione")String collocazione, 
-			@ParamName("Tipi visita (tipo1, tipo2, ...")String tipiVisitaVal) {
+			@ParamName("Tipi visita (tipo1, tipo2, ...)")String tipiVisitaVal) {
 		return (gdb.aggiungiLuogo(tag, nome, collocazione, tipiVisitaVal));
 	}
 	@MethodName("Aggiungi nuova visita nel piano da pubblicare")
