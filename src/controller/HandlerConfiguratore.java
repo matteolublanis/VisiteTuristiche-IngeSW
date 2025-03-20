@@ -10,7 +10,7 @@ import utility.Time;
 
 
 public class HandlerConfiguratore extends ControllerUtente{	
-	
+		
 	public HandlerConfiguratore () {
 		
 	}
@@ -51,24 +51,43 @@ public class HandlerConfiguratore extends ControllerUtente{
 	}
 	
 	@MethodName("Indica date precluse del prossimo piano a quello successivo a questo")
-	public String indicaDatePrecluse(@ParamName("Giorno precluso del mese successivo al prossimo")int giorno) {
-		int mese, anno;
-		if (Time.getActualMonth() + 3 > 12) {
-			mese = Time.getActualMonth() + 3 - 12;
-			anno = Time.getActualYear() + 1;
-		}
-		else {
-			mese = Time.getActualMonth() + 2;
-			anno = Time.getActualYear();
-		}
-		String date = String.format("%02d-%02d-%04d", giorno, mese, anno);
-		if (gdb.indicaDatePrecluse(date)) return "Inserita data preclusa.";
+	public String indicaDatePrecluse(@ParamName("Giorno precluso del mese successivo al prossimo")String data) {
+		if (gdb.indicaDatePrecluse(data)) return "Inserita data preclusa.";
 		else return "La data preclusa non è stata inserita";
 	}
+	/*
+	 * String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
+			String dataInizio, String dataFine, HashSet<Integer> giorniPrenotabili, String oraInizio,
+			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore
+	 */
 	
 	@MethodName("Aggiungi tipo visite")
-	public void aggiungiTipoVisite() {
-		
+	public String aggiungiTipoVisite(@ParamName("Codice id visita")String tipoVisita, 
+			@ParamName("Titolo visita")String titolo, 
+			@ParamName("Descrizione riassuntiva")String descrizione,
+			@ParamName("Punto d'incontro")String puntoIncontro,
+			@ParamName("Apertura periodo visita (gg-mm-yyyy)")String dataInizio,
+			@ParamName("Chiusura periodo visita (gg-mm-yyyy)")String dataFine,
+			@ParamName("Giorni prenotabili (es. '1, 2, 3' per 'lunedì, martedì, mercoledì')")String giorniPrenotabili,
+			@ParamName("Ora inizio (hh:mm)") String oraInizio,
+			@ParamName("Durata visita in minuti") int durataVisita,
+			@ParamName("Acquistabile (si/no)") String ticket,
+			@ParamName("Minimo fruitori per confermarla") int minFruitore,
+			@ParamName("Massimo fruitori per questa visita") int maxFruitore,
+			@ParamName("Volontari associati (volontario1, volontario2,...") String volontari) {
+		boolean daAcquistare = false;
+		switch (ticket.toLowerCase()) {
+		case "si":
+			daAcquistare = true;
+			break;
+		case "no":
+			break;
+		default:
+				return "Tipo visita non inserito.";
+		}
+		if (gdb.aggiungiTipoVisite(tipoVisita, titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniPrenotabili, oraInizio, durataVisita, daAcquistare, minFruitore, maxFruitore, volontari))
+			return "Tipo visita inserito.";
+		else return "Tipo visita non inserito.";
 	}
 	@MethodName("Aggiungi credenziali nuovo configuratore")
 	public String impostaCredenzialiNuovoConfiguratore (@ParamName("Username")String username, @ParamName("Password")String password) {

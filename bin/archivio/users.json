@@ -4,28 +4,41 @@
           "password": "admin",
           "tipo": 2,
           "primo-accesso": true,
-          "tipo-visita": ["museo_armi"],
+          "tipo-visita": [
+               "percorso_natura_castello",
+               "museo_santa_giulia"
+          ],
           "username": "volontario4"
      },
      "volontario3": {
           "password": "admin",
           "tipo": 2,
           "primo-accesso": true,
-          "tipo-visita": [],
+          "tipo-visita": [
+               "visita_sotterranei",
+               "franciacorta_wine_tour"
+          ],
           "username": "volontario3"
      },
      "volontario2": {
           "password": "admin",
           "tipo": 2,
           "primo-accesso": true,
-          "tipo-visita": [],
+          "tipo-visita": [
+               "tour_castello",
+               "escursione_monte_isola",
+               "tour_brescia_romana"
+          ],
           "username": "volontario2"
      },
      "volontario1": {
           "password": "admin",
           "tipo": 2,
           "primo-accesso": true,
-          "tipo-visita": [],
+          "tipo-visita": [
+               "museo_armi",
+               "passeggiata_valle_camonica"
+          ],
           "username": "volontario1"
      },
      "Dilbert": {

@@ -123,6 +123,7 @@ public class App {
 				return Integer.parseInt(input);
 			case "boolean":
 				return Boolean.parseBoolean(input);
+			
 			default:
 				stampa("Tipo non supportato.");
 				return null;

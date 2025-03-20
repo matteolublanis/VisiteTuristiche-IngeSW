@@ -8,6 +8,7 @@ import utility.Time;
 
 public class Archivio {
 	
+	private static final String[] GIORNISETTIMANA = new String[] {"lun","mar","mer","gio","ven","sab","dom"};
 	private static final String PASSWORD = "password";
 	private static final String TIPO_USER = "tipo";
 	private static final String USERNAME = "username";
@@ -26,8 +27,8 @@ public class Archivio {
 	private JSONObject jsonTipiVisite = JSONUtility.readJsonFile(PATH_TIPI_VISITE);
 	private JSONObject jsonUsers = JSONUtility.readJsonFile(PATH_USERS);
 	private JSONObject jsonAmbitoTerritoriale = JSONUtility.readJsonFile(PATH_AMBITO);
-	private JSONObject pianoVisite = JSONUtility.readJsonFile(PATH_VISITE);
-	private JSONObject pianoVisiteDaPubblicare = JSONUtility.readJsonFile(PATH_VISITE_DAPUBBLICARE);
+	private JSONObject jsonPianoVisite = JSONUtility.readJsonFile(PATH_VISITE); 
+	private JSONObject jsonPianoVisiteDaPubblicare = JSONUtility.readJsonFile(PATH_VISITE_DAPUBBLICARE);
 	JSONObject jsonPreclusione = JSONUtility.readJsonFile(PATH_DATE_PRECLUSE);
 
 	public Archivio () {
@@ -58,7 +59,7 @@ public class Archivio {
 	}
 	
 	public boolean impostaCredenzialiNuovoConfiguratore(String username, String password) {
-		if (usernameEsiste(username)) return false; 
+		if (checkValueExistance(username, PATH_USERS)) return false; 
 		else {
 			JSONObject configuratore = new JSONObject();
 			configuratore.put(USERNAME, username);
@@ -121,7 +122,7 @@ public class Archivio {
 	}
 	
 	public boolean checkCredenzialiCorrette (Credenziali c) {
-		if (!usernameEsiste(c.getUsername())) return false;
+		if (!checkValueExistance(c.getUsername(), PATH_USERS)) return false;
 		else { 
 			JSONObject utente = (JSONObject) jsonUsers.get(c.getUsername());
 			if (utente == (null)) return false;
@@ -129,19 +130,8 @@ public class Archivio {
 		}
 	
 	}
-	
-	public boolean usernameEsiste (String username) {
-		try {
-			return !(jsonUsers.get(username).equals(null)); 
-		}
-		catch (Exception e) {
-			return false;
-		}
-		
-	}
-	
 	public boolean checkPrimaConfigurazioneArchivio (String username) {
-		if (!usernameEsiste(username)) return false;
+		if (!checkValueExistance(username, PATH_USERS)) return false;
 		else {
 			if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE &&
 					isPrimaConfigurazione()) {
@@ -152,8 +142,8 @@ public class Archivio {
 	}
 	
 	public boolean modificaCredenziali (String username, Credenziali c) {
-		if (!usernameEsiste(username)) return false;
-		if (usernameEsiste(c.getUsername())) return false; //check if new user exists already
+		if (!checkValueExistance(username, PATH_USERS)) return false;
+		if (checkValueExistance(c.getUsername(), PATH_USERS)) return false; 
 		else {
 			JSONObject utente = null;
 			try {
@@ -181,16 +171,16 @@ public class Archivio {
 	                return false;
 	            }
 	        }
+	        //TODO imporre controllo sul fatto che la data sia del mese i+3
 	        datePrecluse.put(date);
 	        JSONUtility.aggiornaJsonFile(jsonPreclusione, PATH_DATE_PRECLUSE, 31); 
-	        System.out.println("Data preclusa salvata con successo: " + date);
 	        return true;
 		}
 		else return false;
 	}
 	
 	public boolean checkPrimoAccesso (String username) {
-		if (usernameEsiste(username)) {
+		if (checkValueExistance(username, PATH_USERS)) {
 			JSONObject utente = (JSONObject) jsonUsers.get(username);
 			return ((boolean) utente.get(PRIMO_ACCESSO) == true);
 		}
@@ -198,7 +188,7 @@ public class Archivio {
 	}
 	
 	public void aggiungiVisita(String luogo, String tipo, String data) {
-		JSONObject giorno = (JSONObject) pianoVisiteDaPubblicare.get(data); //TODO gestire eccezione, può non esserci
+		JSONObject giorno = (JSONObject) jsonPianoVisiteDaPubblicare.get(data); //TODO gestire eccezione, può non esserci
 		JSONObject nuovaVisita = new JSONObject();
 		nuovaVisita.put("luogo", luogo);
 		nuovaVisita.put("tipo-visita", tipo);
@@ -217,17 +207,18 @@ public class Archivio {
             String data = visita.optString("data", "Data non specificata");
             String luogo = visita.optString("luogo", "Luogo non specificato");
 
-            System.out.println("Visita " + (i + 1) + ": ");
-            System.out.println("Tipo: " + tipo);
-            System.out.println("Data: " + data);
-            System.out.println("Luogo: " + luogo);
-            System.out.println();
+
         }
         */
 	}
 	
 	public String getElencoTipiVisite () {
-		return null; //TODO implementare
+		String result = "[";
+		for (String k : jsonTipiVisite.keySet()) {
+			result += k + ",";
+		}
+		result += "]";
+		return result;
 	}
 	//TODO stampa da far gestire alla GUI
 	public String getElencoLuoghiVisitabili () {
@@ -286,30 +277,64 @@ public class Archivio {
 	}
 	
 	public boolean aggiungiTipoVisite(String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
-			String dataInizio, String dataFine, String giorniPrenotabili, String oraInizio,
-			String durataVisita, String daAcquistare, String minFruitore, String maxFruitore) {
-		
-	    JSONObject nuovoTipoVisita = new JSONObject();
+			String dataInizio, String dataFine, String giorniPrenotabiliVal, String oraInizio,
+			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, String volontariVal) {
+		JSONObject nuovoTipoVisita = new JSONObject();
+		if (checkValueExistance(tipoVisita, PATH_TIPI_VISITE))  return false;
 	    nuovoTipoVisita.put("titolo", titolo);
 	    nuovoTipoVisita.put("descrizione", descrizione);
 	    nuovoTipoVisita.put("punto-incontro", puntoIncontro);
+	    if (!Time.isValidDate(dataInizio) || !Time.isValidDate(dataFine) || Time.comesBefore(dataFine, dataInizio)) return false;
 	    nuovoTipoVisita.put("data-inizio", dataInizio);
 	    nuovoTipoVisita.put("data-fine", dataFine);
+	    JSONArray giorniPrenotabili = new JSONArray();
+	    String[] s = giorniPrenotabiliVal.split("\\s*,\\s*");
+	    for (String k : s) {
+	    	try {
+	    		int j = Integer.parseInt(k);
+	    		if (!(j < 1 || j > 7)) {
+		    		giorniPrenotabili.put(GIORNISETTIMANA[j]);
+		    	}
+	    	}
+	    	catch (NumberFormatException e) {
+	    		return false;
+	    	}
+	    }
+	    if (giorniPrenotabili.length() == 0) return false;
 	    nuovoTipoVisita.put("giorni-prenotabili", giorniPrenotabili);
-	    nuovoTipoVisita.put("ora-inizio", oraInizio);
-	    nuovoTipoVisita.put("durata-visita", durataVisita);
+	    if (!Time.isValidHour(oraInizio)) return false;
+	    nuovoTipoVisita.put("ora-inizio", oraInizio); 
+	    nuovoTipoVisita.put("durata-visita", durataVisita); 
 	    nuovoTipoVisita.put("da-acquistare", daAcquistare);
+	    if (minFruitore > maxFruitore) return false;
 	    nuovoTipoVisita.put("min-fruitore", minFruitore);
 	    nuovoTipoVisita.put("max-fruitore", maxFruitore);
-	    	    
-	    pianoVisite.put(tipoVisita, nuovoTipoVisita);
+	    
+	    String[] m = volontariVal.split("\\s*,\\s*");
+	    JSONArray volontari = new JSONArray();
+	    for (String k : m) {
+	    	if (!checkValueExistance(k, PATH_USERS)) return false;
+	    	else volontari.put(k);
+	    }
+	    nuovoTipoVisita.put("volontari", volontari);
+	    jsonTipiVisite.put(tipoVisita, nuovoTipoVisita);
 
-	    JSONUtility.aggiornaJsonFile(pianoVisite, PATH_TIPI_VISITE, 4);
-	    return true; //TODO rivedere
+	    JSONUtility.aggiornaJsonFile(jsonTipiVisite, PATH_TIPI_VISITE, 10);
+	    return true; 
+	}
+	
+	public boolean checkValueExistance (String key, String path) {
+		JSONObject json = JSONUtility.readJsonFile(path);
+		try {
+			return !(json.get(key).equals(null)); 
+		}
+		catch (Exception e) {
+			return false;
+		}
 	}
 
 	public String getCredenzialiConfIniziale() {
-		return CREDENZIALI_CONF_INIZIALE;
+		return CREDENZIALI_CONF_INIZIALE; //TODO da prendere dall'archivo
 	}
 
 }

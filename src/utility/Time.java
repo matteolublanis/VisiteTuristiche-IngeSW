@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 public class Time {
 	
+	private static final String TIMEREGEX = "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$";
     private static final String DATAREGEX = "\\b(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\\d{4})\\b";
 	
 	public static Event createEvent (String name,int year, int month, int day, int hour, int minutes, int duration) {
@@ -51,6 +52,23 @@ public class Time {
         
         }
         return true;
+	}
+	
+	public static boolean comesBefore (String date1, String date2) {
+		if (!Time.isValidDate(date1) || !Time.isValidDate(date2)) return false;
+		System.out.println(date1);
+		String[] date1_vals = date1.split("-"); String[] date2_vals = date1.split("-");
+		for (int i = 2; i >= 0 ; i--) {
+			if (Integer.parseInt(date1_vals[i]) > Integer.parseInt(date2_vals[i])) return true;
+		}
+		return false;
+	}
+	
+	public static boolean isValidHour (String time) {
+		Pattern pattern = Pattern.compile(TIMEREGEX); //hh-mm
+        Matcher matcher = pattern.matcher(time);
+        if (!matcher.matches()) return false;
+        else return true;
 	}
 	
 	public static int getActualYear () {
