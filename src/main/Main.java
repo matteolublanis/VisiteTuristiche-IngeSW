@@ -1,7 +1,6 @@
 package main;
 
 import java.lang.reflect.InvocationTargetException;
-
 import archivio.Archivio;
 import controller.ControllerArchivio;
 import controller.Login;
@@ -15,7 +14,6 @@ public class Main {
 		Login gl = new Login(gdb);
 		App app = new App(gl); 
 		app.start();
-		
 	}
 
 }

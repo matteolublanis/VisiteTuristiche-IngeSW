@@ -62,7 +62,7 @@ public class App {
 			else System.out.println("Formato non valido, reinserire:");
 		} while (true);
 		
-		//ciclo aggiunta visite/tipi visite da implementare
+		System.out.println();
 		
 	}
 	
@@ -98,7 +98,8 @@ public class App {
 				for (int j = 0; j < parameters.length; j++) {
 					args[j] = richiediParametro(parameters[j]);
 				}
-				System.out.println(metodo.invoke(gu, args));
+				if ((boolean) metodo.invoke(gu, args)) System.out.println("Azione eseguita.");
+				else System.out.println("Azione non eseguita.");
 
 			} else {
 				stampa("Scelta non valida.");

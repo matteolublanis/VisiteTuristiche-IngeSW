@@ -6,8 +6,6 @@ import java.util.LinkedList;
 import utility.CostantiStruttura;
 import utility.MethodName;
 import utility.ParamName;
-import utility.Time;
-
 
 public class HandlerConfiguratore extends ControllerUtente{	
 		
@@ -18,6 +16,12 @@ public class HandlerConfiguratore extends ControllerUtente{
 	public HandlerConfiguratore (ControllerArchivio gdb, String username) {
 		super(gdb, username);
 	}
+	@MethodName("Aggiungi nuovo volontario")
+	public boolean impostaCredenzialiNuovoVolontario (@ParamName("Username")String username, 
+			@ParamName("Password")String password, 
+			@ParamName("Tipi visite associati (tipo1, tipo2,...)")String tipi_visiteVal) {
+		return gdb.impostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal);
+	}
 	
 	@MethodName("Imposta ambito territoriale")
 	public void impostaAmbitoTerritoriale(@ParamName("Nome del ambito territoriale")String s) {
@@ -25,11 +29,9 @@ public class HandlerConfiguratore extends ControllerUtente{
 	}
 	
 	@MethodName("Modifica numero max prenotazione per fruitore")
-	public String modificaMaxPrenotazione(@ParamName("N max per prenotazione di un fruitore")int maxPrenotazione) {
-		if (gdb.modificaMaxPrenotazione(maxPrenotazione)) return "Il valore max prenotazione è stato modificato.";
-		else return "Il valore max prenotazione non è stato modificato.";
+	public boolean modificaMaxPrenotazione(@ParamName("N max per prenotazione di un fruitore")int maxPrenotazione) {
+		return (gdb.modificaMaxPrenotazione(maxPrenotazione));
 	}
-	
 	@MethodName("Visualizza lista volontari")
 	public String getListaVolontari() {
 		 return gdb.getListaUser(CostantiStruttura.VOLONTARIO);
@@ -51,18 +53,13 @@ public class HandlerConfiguratore extends ControllerUtente{
 	}
 	
 	@MethodName("Indica date precluse del prossimo piano a quello successivo a questo")
-	public String indicaDatePrecluse(@ParamName("Giorno precluso del mese successivo al prossimo")String data) {
-		if (gdb.indicaDatePrecluse(data)) return "Inserita data preclusa.";
-		else return "La data preclusa non è stata inserita";
+	public boolean indicaDatePrecluse(@ParamName("Giorno precluso del mese successivo al prossimo")String data) {
+		return (gdb.indicaDatePrecluse(data));
 	}
-	/*
-	 * String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
-			String dataInizio, String dataFine, HashSet<Integer> giorniPrenotabili, String oraInizio,
-			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore
-	 */
 	
 	@MethodName("Aggiungi tipo visite")
-	public String aggiungiTipoVisite(@ParamName("Codice id visita")String tipoVisita, 
+	public boolean aggiungiTipoVisite(@ParamName("Luogo associato") String luogo,
+			@ParamName("Codice id visita")String tipoVisita, 
 			@ParamName("Titolo visita")String titolo, 
 			@ParamName("Descrizione riassuntiva")String descrizione,
 			@ParamName("Punto d'incontro")String puntoIncontro,
@@ -83,16 +80,14 @@ public class HandlerConfiguratore extends ControllerUtente{
 		case "no":
 			break;
 		default:
-				return "Tipo visita non inserito.";
+				return false;
 		}
-		if (gdb.aggiungiTipoVisite(tipoVisita, titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniPrenotabili, oraInizio, durataVisita, daAcquistare, minFruitore, maxFruitore, volontari))
-			return "Tipo visita inserito.";
-		else return "Tipo visita non inserito.";
+		return (gdb.aggiungiTipoVisite(luogo, tipoVisita, titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniPrenotabili, oraInizio, durataVisita, daAcquistare, minFruitore, maxFruitore, volontari));
+		
 	}
 	@MethodName("Aggiungi credenziali nuovo configuratore")
-	public String impostaCredenzialiNuovoConfiguratore (@ParamName("Username")String username, @ParamName("Password")String password) {
-		if (gdb.impostaCredenzialiNuovoConfiguratore(username, password)) return "Aggiunte credenziali nuovo configuratore.";
-		else return "Non sono state aggiunte nuove credenziali.";
+	public boolean impostaCredenzialiNuovoConfiguratore (@ParamName("Username")String username, @ParamName("Password")String password) {
+		return (gdb.impostaCredenzialiNuovoConfiguratore(username, password));
 				
 	}
 	@MethodName("Visualizza visite proposte, complete, confermate, cancellate e effettuate")
@@ -109,6 +104,13 @@ public class HandlerConfiguratore extends ControllerUtente{
 		 */
 		
 		return "";
+	}
+	@MethodName("Aggiungi luogo")
+	public boolean aggiungiLuogo (@ParamName("Tag")String tag, 
+			@ParamName("Nome")String nome, 
+			@ParamName("Collocazione")String collocazione, 
+			@ParamName("Tipi visita (tipo1, tipo2, ...")String tipiVisitaVal) {
+		return (gdb.aggiungiLuogo(tag, nome, collocazione, tipiVisitaVal));
 	}
 	@MethodName("Aggiungi nuova visita nel piano da pubblicare")
 	public void aggiungiVisita () {

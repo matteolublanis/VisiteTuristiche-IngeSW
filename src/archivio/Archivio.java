@@ -29,7 +29,7 @@ public class Archivio {
 	private JSONObject jsonAmbitoTerritoriale = JSONUtility.readJsonFile(PATH_AMBITO);
 	private JSONObject jsonPianoVisite = JSONUtility.readJsonFile(PATH_VISITE); 
 	private JSONObject jsonPianoVisiteDaPubblicare = JSONUtility.readJsonFile(PATH_VISITE_DAPUBBLICARE);
-	JSONObject jsonPreclusione = JSONUtility.readJsonFile(PATH_DATE_PRECLUSE);
+	private JSONObject jsonPreclusione = JSONUtility.readJsonFile(PATH_DATE_PRECLUSE);
 
 	public Archivio () {
 		System.out.println("Creato archivio.");
@@ -58,13 +58,35 @@ public class Archivio {
 
 	}
 	
+	public boolean impostaCredenzialiNuovoVolontario (String username, String password, String tipi_visiteVal) {
+		if (checkValueExistance(username, PATH_USERS)) return false; 
+		else {
+			JSONObject volontario = new JSONObject();
+			volontario.put(USERNAME, username);
+			volontario.put(PRIMO_ACCESSO, true);
+			volontario.put(TIPO_USER, CostantiStruttura.VOLONTARIO);
+			volontario.put(PASSWORD, password);
+			JSONArray tipiVisite = new JSONArray();
+		    String[] s = tipi_visiteVal.split("\\s*,\\s*");
+		    for (String k : s) {
+		    	if (!checkValueExistance(k, PATH_TIPI_VISITE)) return false;
+		    	else tipiVisite.put(k);
+		    }
+		    if (tipiVisite.length() == 0) return false;
+			jsonUsers.put(username, volontario);
+			JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, RIGHE_USERS);
+			return true;
+		}
+	}
+	
+	
 	public boolean impostaCredenzialiNuovoConfiguratore(String username, String password) {
 		if (checkValueExistance(username, PATH_USERS)) return false; 
 		else {
 			JSONObject configuratore = new JSONObject();
 			configuratore.put(USERNAME, username);
 			configuratore.put(PRIMO_ACCESSO, true);
-			configuratore.put(TIPO_USER, 1);
+			configuratore.put(TIPO_USER, CostantiStruttura.CONFIGURATORE);
 			configuratore.put(PASSWORD, password);
 			jsonUsers.put(username, configuratore);
 			JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, RIGHE_USERS);
@@ -188,13 +210,11 @@ public class Archivio {
 	}
 	
 	public void aggiungiVisita(String luogo, String tipo, String data) {
-		JSONObject giorno = (JSONObject) jsonPianoVisiteDaPubblicare.get(data); //TODO gestire eccezione, può non esserci
-		JSONObject nuovaVisita = new JSONObject();
-		nuovaVisita.put("luogo", luogo);
-		nuovaVisita.put("tipo-visita", tipo);
-		nuovaVisita.put("data", data);
-		giorno.put(tipo ,nuovaVisita); //TODO Rivedere
-
+		
+		/*
+		 * TODO controllare che quel giorno non ci sia una visita dello stesso tipo, luogo
+		 */
+		
 	}
 	
 	public void pubblicaPianoVisite() {
@@ -276,10 +296,29 @@ public class Archivio {
 		
 	}
 	
-	public boolean aggiungiTipoVisite(String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
+	public boolean aggiungiLuogo (String tag, String nome, String collocazione, String tipiVisitaVal) {
+		if (checkValueExistance(tag, PATH_AMBITO)) return false;
+		JSONObject nuovoLuogo = new JSONObject();
+		nuovoLuogo.put("nome", nome);
+		nuovoLuogo.put("collocazione", collocazione);
+		String[] s = tipiVisitaVal.split("\\s*,\\s*");
+		JSONArray tipiVisita = new JSONArray();
+	    for (String k : s) {
+	    	if (!checkValueExistance(k, PATH_TIPI_VISITE)) return false;
+	    	else tipiVisita.put(k);
+	    }
+	    if (tipiVisita.length() == 0) return false;
+	    nuovoLuogo.put("tipo-visita", tipiVisita);
+	    jsonAmbitoTerritoriale.put(tag, nuovoLuogo);
+	    return true;
+	}
+	
+	public boolean aggiungiTipoVisite(String luogo, String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
 			String dataInizio, String dataFine, String giorniPrenotabiliVal, String oraInizio,
 			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, String volontariVal) {
 		JSONObject nuovoTipoVisita = new JSONObject();
+		JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject("luoghi");
+		if (!luoghi.has(luogo)) return false;
 		if (checkValueExistance(tipoVisita, PATH_TIPI_VISITE))  return false;
 	    nuovoTipoVisita.put("titolo", titolo);
 	    nuovoTipoVisita.put("descrizione", descrizione);
@@ -314,11 +353,20 @@ public class Archivio {
 	    JSONArray volontari = new JSONArray();
 	    for (String k : m) {
 	    	if (!checkValueExistance(k, PATH_USERS)) return false;
-	    	else volontari.put(k);
+	    	else {
+	    		JSONObject volontario = jsonUsers.getJSONObject(k);
+	    		JSONArray tipi = volontario.getJSONArray("tipo-visita");
+	    		tipi.put(tipoVisita);
+	    		volontari.put(k);
+	    	}
 	    }
 	    nuovoTipoVisita.put("volontari", volontari);
+		JSONObject x = luoghi.getJSONObject(luogo);
+		JSONArray tipi = x.getJSONArray("tipo-visita");
+		tipi.put(tipoVisita);
 	    jsonTipiVisite.put(tipoVisita, nuovoTipoVisita);
-
+	    JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, 10);
+	    JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, PATH_AMBITO, 10);
 	    JSONUtility.aggiornaJsonFile(jsonTipiVisite, PATH_TIPI_VISITE, 10);
 	    return true; 
 	}

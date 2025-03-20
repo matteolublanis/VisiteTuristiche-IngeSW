@@ -10,7 +10,9 @@ public class Time {
 	
 	private static final String TIMEREGEX = "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$";
     private static final String DATAREGEX = "\\b(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\\d{4})\\b";
-	
+	private static String fictionalDate = "09-05-2018";
+    private static String actualDate = "";
+    
 	public static Event createEvent (String name,int year, int month, int day, int hour, int minutes, int duration) {
 		Calendar start = Calendar.getInstance();
 		start.set(year, month, day, hour, minutes);
@@ -18,6 +20,22 @@ public class Time {
 		int[] endTime = calculateEndTimeWithStartAndDuration(hour, minutes, duration);
 		end.set(year, month, day, endTime[0], endTime[1]);
 		return new Event(name, start, end);
+	}
+	
+	public static void setActualDate (String date) {
+		actualDate = date;
+	}
+	
+	public static String getActualDate () {
+		return actualDate;
+	}
+	
+	public static void setFictionalDate (String date) {
+		fictionalDate = date;
+	}
+	
+	public static String getFictionalDate () {
+		return fictionalDate;
 	}
 	
 	public static int[] calculateEndTimeWithStartAndDuration (int hour, int minute, int duration) {
@@ -56,7 +74,6 @@ public class Time {
 	
 	public static boolean comesBefore (String date1, String date2) {
 		if (!Time.isValidDate(date1) || !Time.isValidDate(date2)) return false;
-		System.out.println(date1);
 		String[] date1_vals = date1.split("-"); String[] date2_vals = date1.split("-");
 		for (int i = 2; i >= 0 ; i--) {
 			if (Integer.parseInt(date1_vals[i]) > Integer.parseInt(date2_vals[i])) return true;

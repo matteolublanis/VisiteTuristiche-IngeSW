@@ -19,6 +19,10 @@ public class ControllerArchivio {
 	}
 
 	
+	public boolean impostaCredenzialiNuovoVolontario (String username, String password, String tipi_visiteVal) {
+		return d.impostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal);
+	}
+	
 	public boolean checkPrimaConfigurazioneArchivio (String username) {
 		return d.checkPrimaConfigurazioneArchivio(username);
 	}
@@ -47,20 +51,22 @@ public class ControllerArchivio {
 		if (d.modificaCredenziali(username, c)) {
 			d.primoAccessoEseguito(c.getUsername());	
 			return true;
-		}
-		
-			
+		}	
 		return false;
+	}
+	
+	public boolean aggiungiLuogo (String tag, String nome, String collocazione, String tipiVisitaVal) {
+		return d.aggiungiLuogo(tag, nome, collocazione, tipiVisitaVal);
 	}
 	
 	public void setPrimaConfigurazione() {
 		d.setPrimaConfigurazione();
 	}
 	
-	public boolean aggiungiTipoVisite (String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
+	public boolean aggiungiTipoVisite (String luogo, String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
 			String dataInizio, String dataFine, String giorniPrenotabili, String oraInizio,
 			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, String volontari) {
-		return d.aggiungiTipoVisite(tipoVisita, titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniPrenotabili, oraInizio, durataVisita, daAcquistare, minFruitore, maxFruitore, volontari);
+		return d.aggiungiTipoVisite(luogo, tipoVisita, titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniPrenotabili, oraInizio, durataVisita, daAcquistare, minFruitore, maxFruitore, volontari);
 	}
 	
 	public void impostaAmbitoTerritoriale (String s) {
