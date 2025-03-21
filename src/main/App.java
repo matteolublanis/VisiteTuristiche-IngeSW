@@ -1,7 +1,6 @@
 package main;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.LinkedList;
 import java.util.Scanner;
 import controller.Login;
@@ -9,7 +8,6 @@ import controller.ControllerUtente;
 import utility.CostantiStruttura;
 import utility.Credenziali;
 import utility.MethodName;
-import utility.ParamName;
 
 public class App { 
 	
@@ -65,13 +63,7 @@ public class App {
 			int scelta = Integer.parseInt(input);
 			if (scelta > 0 && scelta <= azioniDisponibili.size()) {
 				Method metodo = azioniDisponibili.get(scelta - 1);
-				Parameter[] parameters = metodo.getParameters();
-				Object[] args = new Object[parameters.length];
-				for (int j = 0; j < parameters.length; j++) {
-					args[j] = richiediParametro(parameters[j]);
-				}
-				if ((boolean) metodo.invoke(gu, args)) view("Azione eseguita.");
-				else view("Azione non eseguita.");
+				metodo.invoke(gu, this);
 
 			} else {
 				view("Scelta non valida.");
@@ -83,7 +75,8 @@ public class App {
 		return true;
 	}
 	
-	public Object richiediVal (int tipo) {
+	public Object richiediVal (int tipo, String s) {
+		view("Inserisci " + s + ":");
 		switch (tipo) {
 		case CostantiStruttura.STRING:
 			return sc.nextLine();
@@ -100,26 +93,6 @@ public class App {
 		default:
 			view("Tipo non supportato.");
 			return null;
-		}
-	}
-	
-	private Object richiediParametro(Parameter parametro) {
-        ParamName annotation = parametro.getAnnotation(ParamName.class);
-		String tipo = parametro.getType().getSimpleName();
-		view("Inserisci " + annotation.value() + "--> ");
-		String input = sc.nextLine();
-
-		switch (tipo) {
-			case "String":
-				return input;
-			case "int":
-				return Integer.parseInt(input);
-			case "boolean":
-				return Boolean.parseBoolean(input);
-			
-			default:
-				view("Tipo non supportato.");
-				return null;
 		}
 	}
 	

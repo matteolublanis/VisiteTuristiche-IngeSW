@@ -1,4 +1,10 @@
 {
+     "Piero": {
+          "tipo": 1,
+          "password": "MaurizioSecondo",
+          "primo-accesso": true,
+          "username": "Piero"
+     },
      "primo_avvio": false,
      "volontario4": {
           "password": "admin",

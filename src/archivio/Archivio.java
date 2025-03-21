@@ -9,6 +9,7 @@ import utility.Time;
 
 public class Archivio {
 	
+	private static final String TIPO_VISITA = "tipo-visita";
 	private static final String[] GIORNISETTIMANA = new String[] {"lun","mar","mer","gio","ven","sab","dom"};
 	private static final String PASSWORD = "password";
 	private static final String TIPO_USER = "tipo";
@@ -70,10 +71,12 @@ public class Archivio {
 			JSONArray tipiVisite = new JSONArray();
 		    String[] s = tipi_visiteVal.split("\\s*,\\s*");
 		    for (String k : s) {
-		    	if (!checkValueExistance(k, PATH_TIPI_VISITE)) return false;
-		    	else tipiVisite.put(k);
+		    	if (!checkValueExistance(k, PATH_TIPI_VISITE) && !k.equals("")) return false;
+		    	else {
+		    		if (!k.equals(""))tipiVisite.put(k);
+		    	}
 		    }
-		    if (tipiVisite.length() == 0) return false;
+		    volontario.put(TIPO_VISITA, tipiVisite);
 			jsonUsers.put(username, volontario);
 			JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, RIGHE_USERS);
 			return true;
@@ -118,7 +121,7 @@ public class Archivio {
 				break;
 			case CostantiStruttura.VOLONTARIO:
 				result += "Username: " + user.get(USERNAME) + "\n" +
-							"Tipi visite: " + user.get("tipo-visita") + "\n";
+							"Tipi visite: " + user.get(TIPO_VISITA) + "\n";
 				break;
 			case CostantiStruttura.FRUITORE:
 				result += "Username: " + user.get(USERNAME) + "\n";
@@ -241,22 +244,21 @@ public class Archivio {
 		result += "]";
 		return result;
 	}
-	//TODO stampa da far gestire alla GUI
+
 	public String getElencoLuoghiVisitabili () {
 		String result = "";
 		try {
 			JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject("luoghi");
 			for (String k : luoghi.toMap().keySet()) {
 				JSONObject j = luoghi.getJSONObject(k);
-				if (!j.get("tipo-visita").equals("[]")) { //[] indica array vuoto tipivisite, quindi no visite
+				if (!j.get(TIPO_VISITA).equals("[]")) { //[] indica array vuoto tipivisite, quindi no visite
 					result += "Luogo: " + j.get("nome") + "\n";
 				}
 			}
 			return result;
 		}
 		catch (Exception e) {
-			System.out.println(e.getMessage());
-			return result;
+			return (e.getMessage());
 		}
 	}
 	//TODO stampa da far gestire alla GUI
@@ -266,8 +268,8 @@ public class Archivio {
 			JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject("luoghi");
 			for (String nomeLuogo : luoghi.toMap().keySet()) {
 				JSONObject infoLuogo = luoghi.getJSONObject(nomeLuogo);
-				if (!infoLuogo.get("tipo-visita").equals("[]")) { //[] indica array vuoto tipivisite, quindi no visite
-					JSONArray tipiVisite = infoLuogo.getJSONArray("tipo-visita");
+				if (!infoLuogo.get(TIPO_VISITA).equals("[]")) { //[] indica array vuoto tipivisite, quindi no visite
+					JSONArray tipiVisite = infoLuogo.getJSONArray(TIPO_VISITA);
 					result += "Luogo: " + infoLuogo.get("nome") + ", tipi visite associati: ";
 					for (int i = 0 ; i < tipiVisite.length() ; i++) 
 					{
@@ -279,8 +281,7 @@ public class Archivio {
 			return result;
 		}
 		catch (Exception e) {
-			System.out.println(e.getMessage());
-			return result;
+			return (e.getMessage());
 		}
 	}
 	
@@ -308,7 +309,7 @@ public class Archivio {
 	    	if (!checkValueExistance(k, PATH_TIPI_VISITE)) return false;
 	    	else tipiVisita.put(k);
 	    }
-	    nuovoLuogo.put("tipo-visita", tipiVisita);
+	    nuovoLuogo.put(TIPO_VISITA, tipiVisita);
 	    jsonAmbitoTerritoriale.put(tag, nuovoLuogo);
 	    return true;
 	}
@@ -355,14 +356,15 @@ public class Archivio {
 	    	if (!checkValueExistance(k, PATH_USERS)) return false;
 	    	else {
 	    		JSONObject volontario = jsonUsers.getJSONObject(k);
-	    		JSONArray tipi = volontario.getJSONArray("tipo-visita");
+	    		JSONArray tipi = volontario.getJSONArray(TIPO_VISITA);
 	    		tipi.put(tipoVisita);
 	    		volontari.put(k);
 	    	}
 	    }
+	    if (volontari.length() == 0) return false;
 	    nuovoTipoVisita.put("volontari", volontari);
 		JSONObject x = luoghi.getJSONObject(luogo);
-		JSONArray tipi = x.getJSONArray("tipo-visita");
+		JSONArray tipi = x.getJSONArray(TIPO_VISITA);
 		tipi.put(tipoVisita);
 	    jsonTipiVisite.put(tipoVisita, nuovoTipoVisita);
 	    JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, 10);
