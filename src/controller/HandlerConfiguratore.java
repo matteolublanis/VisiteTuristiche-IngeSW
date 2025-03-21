@@ -26,8 +26,8 @@ public class HandlerConfiguratore extends ControllerUtente{
 		String ambito = (String)a.richiediVal(CostantiStruttura.STRING, "nome ambito territoriale");
 		impostaAmbitoTerritoriale(ambito);
 		modificaMaxPrenotazione(a);
-		
-		//ciclo creazione luoghi
+		a.view("Inizio fase creazione luoghi dell'ambito territoriale.");
+		aggiungiLuogo(a);
 		
 	}
 	
