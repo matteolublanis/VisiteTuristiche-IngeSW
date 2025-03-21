@@ -57,7 +57,6 @@ public class Archivio {
 			JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, PATH_AMBITO, RIGHE_USERS);
 			setPrimaConfigurazione();
 		}
-
 	}
 	
 	public boolean impostaCredenzialiNuovoVolontario (String username, String password, String tipi_visiteVal) {
@@ -182,7 +181,7 @@ public class Archivio {
 				return true;
 			}
 			catch (Exception e) {
-				System.out.println("Utente inesistente.");
+				System.out.println("Problema in modificaCredenziali: " + e.getMessage()); //da comunicare ad App???
 				return false;
 			}
 		}
@@ -197,7 +196,7 @@ public class Archivio {
 	                return false;
 	            }
 	        }
-	        //TODO imporre controllo sul fatto che la data sia del mese i+3
+	        if (!Time.isThisDateInMonthiplus3(date)) return false; 
 	        datePrecluse.put(date);
 	        JSONUtility.aggiornaJsonFile(jsonPreclusione, PATH_DATE_PRECLUSE, 31); 
 	        return true;
@@ -222,18 +221,9 @@ public class Archivio {
 	}
 	
 	public void pubblicaPianoVisite() {
-		/*
-		JSONObject jsonPiano = JSONUtility.readJsonFile(PATH_VISITE);
-		JSONArray visiteArray = jsonPiano.getJSONArray("visite");
-		for (int i = 0; i < visiteArray.length(); i++) {
-            JSONObject visita = visiteArray.getJSONObject(i);
-            String tipo = visita.optString("tipo", "Tipo non specificato");
-            String data = visita.optString("data", "Data non specificata");
-            String luogo = visita.optString("luogo", "Luogo non specificato");
-
-
-        }
-        */
+		if (Time.todayIsDay(16)) {
+			
+		}
 	}
 	
 	public String getElencoTipiVisite () {
@@ -306,17 +296,22 @@ public class Archivio {
 		String[] s = tipiVisitaVal.split("\\s*,\\s*");
 		JSONArray tipiVisita = new JSONArray();
 	    for (String k : s) {
-	    	if (!checkValueExistance(k, PATH_TIPI_VISITE)) return false;
-	    	else tipiVisita.put(k);
+	    	if (!checkValueExistance(k, PATH_TIPI_VISITE) && !k.equals("")) return false;
+	    	else {
+	    		if (!k.equals("")) tipiVisita.put(k);
+	    	}
 	    }
 	    nuovoLuogo.put(TIPO_VISITA, tipiVisita);
-	    jsonAmbitoTerritoriale.put(tag, nuovoLuogo);
+	    JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject("luoghi");
+	    luoghi.put(tag, nuovoLuogo);
+	    JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, PATH_AMBITO, 10); 
 	    return true;
 	}
 	
 	public boolean aggiungiTipoVisite(String luogo, String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
 			String dataInizio, String dataFine, String giorniPrenotabiliVal, String oraInizio,
 			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, String volontariVal) {
+		jsonAmbitoTerritoriale = JSONUtility.readJsonFile(PATH_AMBITO);
 		JSONObject nuovoTipoVisita = new JSONObject();
 		JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject("luoghi");
 		if (!luoghi.has(luogo)) return false;
@@ -333,7 +328,7 @@ public class Archivio {
 	    	try {
 	    		int j = Integer.parseInt(k);
 	    		if (!(j < 1 || j > 7)) {
-		    		giorniPrenotabili.put(GIORNISETTIMANA[j]);
+		    		giorniPrenotabili.put(GIORNISETTIMANA[j-1]);
 		    	}
 	    	}
 	    	catch (NumberFormatException e) {

@@ -8,10 +8,11 @@ import java.util.regex.Pattern;
 
 public class Time {
 	
+	private static final int DAY = 1, MONTH = 2, YEAR = 3;
 	private static final String TIMEREGEX = "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$";
     private static final String DATAREGEX = "\\b(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\\d{4})\\b";
 	private static String fictionalDate = "09-05-2018";
-    private static String actualDate = "";
+    private static String actualDate = getTodaysDate();
     
 	public static Event createEvent (String name,int year, int month, int day, int hour, int minutes, int duration) {
 		Calendar start = Calendar.getInstance();
@@ -36,6 +37,37 @@ public class Time {
 	
 	public static String getFictionalDate () {
 		return fictionalDate;
+	}
+	
+	public static boolean todayIsDay (int day) {
+		String[] s = actualDate.split("-");
+		return (Integer.parseInt(s[0]) == day);
+	}
+	
+	public static boolean isThisDateInMonthiplus3 (String date) {
+		String[] d = date.split("-");
+		String[] s = actualDate.split("-");
+		if (Integer.parseInt(d[0]) > 15) { //16 mese i al 31 del mese i
+			if (Integer.parseInt(d[1]) < 10) {
+				return (Integer.parseInt(d[1]) == Integer.parseInt(s[1]) + 3);
+			}
+			else {
+				if (Integer.parseInt(d[2]) != Integer.parseInt(s[2]) + 1) return false;
+				else return (Integer.parseInt(d[1]) == Integer.parseInt(s[1]) + 3 - 12); 
+			}
+		}
+		else { //dall'1 al 15 del mese i+1
+			if (Integer.parseInt(d[0]) < 16) {
+				if (Integer.parseInt(d[1]) < 11) {
+					return (Integer.parseInt(d[1]) == Integer.parseInt(s[1]) + 2);
+				}
+				else {
+					if (Integer.parseInt(d[2]) != Integer.parseInt(s[2]) + 1) return false;
+					else return (Integer.parseInt(d[1]) == Integer.parseInt(s[1]) + 2 - 12); 
+				}
+			}
+			else return false;
+		}
 	}
 	
 	public static int[] calculateEndTimeWithStartAndDuration (int hour, int minute, int duration) {
@@ -88,7 +120,22 @@ public class Time {
         else return true;
 	}
 	
-	public static int getActualYear () {
+	public static int getActualDateValue (int s) {
+		String[] d = actualDate.split("-");
+		switch (s) {
+		case DAY:
+			return Integer.parseInt(d[0]);
+		case MONTH:
+			return Integer.parseInt(d[1]);
+		case YEAR:
+			return Integer.parseInt(d[2]);
+		default:
+			return -1;
+			
+		}
+	}
+	
+	public static int getTodayYear () {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
 		String s = ZonedDateTime.now().format(formatter);
 		return Integer.parseInt(s);
@@ -100,7 +147,7 @@ public class Time {
 		return Integer.parseInt(s);
 	}
 	
-	public static int getActualMonth () {
+	public static int getTodayMonth () {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM");
 		String s = ZonedDateTime.now().format(formatter);
 		return Integer.parseInt(s);

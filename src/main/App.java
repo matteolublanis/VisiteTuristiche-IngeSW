@@ -75,21 +75,22 @@ public class App {
 		return true;
 	}
 	
-	public Object richiediVal (int tipo, String s) {
+	public String richiediVal (int tipo, String s) {
 		view("Inserisci " + s + ":");
 		switch (tipo) {
 		case CostantiStruttura.STRING:
-			return sc.nextLine();
+			s = sc.nextLine();
+			return s;
 		case CostantiStruttura.INT:
 			while (!sc.hasNextInt()) {
 				view("Formato non valido, reinserire.");
 			}
-			return sc.nextInt();
+			return sc.nextLine();
 		case CostantiStruttura.BOOLEAN:
 			while (!sc.hasNextBoolean()) {
 				view("Formato non valido, reinserire.");
 			}
-			return sc.nextBoolean();
+			return sc.nextLine();
 		default:
 			view("Tipo non supportato.");
 			return null;

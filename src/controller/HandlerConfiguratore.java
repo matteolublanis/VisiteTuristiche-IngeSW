@@ -31,6 +31,19 @@ public class HandlerConfiguratore extends ControllerUtente{
 		
 	}
 	
+	private String impostaNuovoVolontarioPerNuovoTipoVisita (App a, String tipo) {
+		String username = (String) a.richiediVal(CostantiStruttura.STRING, "username del nuovo volontario");
+		String password = (String) a.richiediVal(CostantiStruttura.STRING, "password del nuovo volontario");
+		String tipi_visiteVal = tipo;
+		if (gdb.impostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal)) {
+			a.view("Inserito nuovo volontario.");
+			return username;
+		}
+		else {
+			a.view("Non è stato inserito il nuovo volontario, username già in uso.");
+			return "";
+		}
+	}
 	
 	@MethodName("Aggiungi nuovo volontario")
 	public void impostaCredenzialiNuovoVolontario (App a) {
@@ -51,7 +64,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	
 	@MethodName("Modifica numero max prenotazione per fruitore")
 	public void modificaMaxPrenotazione (App a) {
-		int max = (int) a.richiediVal(CostantiStruttura.INT, "max prenotazione per fruitore");
+		int max = Integer.parseInt(a.richiediVal(CostantiStruttura.INT, "max prenotazione per fruitore"));
 		if (impostaMaxPrenotazione(max)) a.view("Modificato valore max prenotazione.");
 		else a.view("Valore max prenotazione non modificato.");
 	}
@@ -91,11 +104,20 @@ public class HandlerConfiguratore extends ControllerUtente{
 		String dataFine = (String)a.richiediVal(CostantiStruttura.STRING, "chiusura del periodo della visita");
 		String giorniPrenotabili = (String)a.richiediVal(CostantiStruttura.STRING, "giorni prenotabili della visita (1, 3, 7 indicano lun, mer, dom)");
 		String oraInizio = (String)a.richiediVal(CostantiStruttura.STRING, "ora d'inizio visita");
-		int durataVisita = (int)a.richiediVal(CostantiStruttura.STRING, "durata della visita in minuti (ad esempio 120 sono 120 minuti, quindi 2 ore)");
+		int durataVisita = Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "durata della visita in minuti (ad esempio 120 sono 120 minuti, quindi 2 ore)"));
 		String ticket = (String)a.richiediVal(CostantiStruttura.STRING, "se è da acquistare o no un biglietto (si/no)");
-		int minFruitore =(int) a.richiediVal(CostantiStruttura.STRING, "minimo fruitori per confermare la visita");
-		int maxFruitore = (int)a.richiediVal(CostantiStruttura.STRING, "massimo fruitori per completare la visita");
-		String volontari = (String)a.richiediVal(CostantiStruttura.STRING, "volontari che gestiranno la visita (volontario1, volontario2,...)");
+		int minFruitore =Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "minimo fruitori per confermare la visita"));
+		int maxFruitore = Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "massimo fruitori per completare la visita"));
+		String volontari = "";
+		a.view("Vuoi associare un nuovo volontario per questo tipo di visita?");
+		if (chiediSioNo(a, "Vuoi associare un nuovo volontario per questo tipo di visita?")) {
+			do {
+				volontari = impostaNuovoVolontarioPerNuovoTipoVisita(a, "");
+			} while (volontari.equals(""));
+		}
+		else {
+			volontari = (String)a.richiediVal(CostantiStruttura.STRING, "volontari che gestiranno la visita (volontario1, volontario2,...)");
+		}
 		boolean daAcquistare = false;
 		switch (ticket.toLowerCase()) {
 		case "si":
@@ -129,11 +151,20 @@ public class HandlerConfiguratore extends ControllerUtente{
 		String dataFine = (String)a.richiediVal(CostantiStruttura.STRING, "chiusura del periodo della visita");
 		String giorniPrenotabili = (String)a.richiediVal(CostantiStruttura.STRING, "giorni prenotabili della visita (1, 3, 7 indicano lun, mer, dom)");
 		String oraInizio = (String)a.richiediVal(CostantiStruttura.STRING, "ora d'inizio visita");
-		int durataVisita = (int)a.richiediVal(CostantiStruttura.STRING, "durata della visita in minuti (ad esempio 120 sono 120 minuti, quindi 2 ore)");
+		int durataVisita = Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "durata della visita in minuti (ad esempio 120 sono 120 minuti, quindi 2 ore)"));
 		boolean ticket = chiediSioNo(a, "se è da acquistare o no un biglietto (si/no)");
-		int minFruitore =(int) a.richiediVal(CostantiStruttura.STRING, "minimo fruitori per confermare la visita");
-		int maxFruitore = (int)a.richiediVal(CostantiStruttura.STRING, "massimo fruitori per completare la visita");
-		String volontari = (String)a.richiediVal(CostantiStruttura.STRING, "volontari che gestiranno la visita (volontario1, volontario2,...)");
+		int minFruitore =Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "minimo fruitori per confermare la visita"));
+		int maxFruitore = Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "massimo fruitori per completare la visita"));
+		String volontari = "";
+		a.view("Vuoi associare un nuovo volontario per questo tipo di visita?");
+		if (chiediSioNo(a, "Vuoi associare un nuovo volontario per questo tipo di visita?")) {
+			do {
+				volontari = impostaNuovoVolontarioPerNuovoTipoVisita(a, "");
+			} while (volontari.equals(""));
+		}
+		else {
+			volontari = (String)a.richiediVal(CostantiStruttura.STRING, "volontari che gestiranno la visita (volontario1, volontario2,...)");
+		}
 		
 		if (gdb.aggiungiTipoVisite(luogo, tipoVisita, titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniPrenotabili, oraInizio, durataVisita, ticket, minFruitore, maxFruitore, volontari)) {
 			a.view("Il nuovo tipo di visita è stato aggiunto.");
