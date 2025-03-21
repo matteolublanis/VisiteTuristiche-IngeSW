@@ -1,6 +1,8 @@
 package controller;
 
+import main.App;
 import utility.CostantiStruttura;
+import utility.Credenziali;
 
 public class Login {
 	
@@ -10,37 +12,50 @@ public class Login {
 		this.gdb = gdb;
 	}
 	
-	public ControllerUtente accesso(String username, String password) {
-		Credenziali credenziali = new Credenziali(username, password);
-		if(checkCredenzialiCorrette(credenziali)) {
-			return configureHandlerUtente(credenziali);
-		}
-		else return null;
+	public void accesso(App a) {
+		Credenziali credenziali;
+		boolean b = true;
+		do {
+			a.view("Inserisci le tue credenziali:");
+			credenziali = a.inserisciCredenziali();
+			b = !checkCredenzialiCorrette(credenziali);
+			if (b) a.view("Credenziali errate, reinserirle.");
+		} while (b);
+		configureHandlerUtente(credenziali.getUsername(), a);
 	}
 	
 	public boolean checkPrimoAvvio() {
 		return gdb.checkPrimoAvvio();
 	}
-	public String avvio () {
-		String a = "Benvenuto!\n";
-		if (checkPrimoAvvio()) a += gdb.getCredenzialiIniziali();
-		return a;
+	
+	public void avvio (App a) {
+		if (checkPrimoAvvio()) {
+			a.view(gdb.getCredenzialiIniziali());
+			accesso(a);
+		}
+		else {
+			accesso(a);
+		}
 	}
 	
 	private boolean checkCredenzialiCorrette(Credenziali c) {
 		return gdb.checkCredenzialiCorrette(c);
 	}
 	
-	private ControllerUtente configureHandlerUtente (Credenziali c){
-		switch (gdb.getTipoUtente(c.getUsername())) {
+	private void configureHandlerUtente (String username, App a){
+		switch (gdb.getTipoUtente(username)) {
 		case CostantiStruttura.CONFIGURATORE:
-			return new HandlerConfiguratore(gdb, c.getUsername());
+			a.setGu(new HandlerConfiguratore(gdb, username, a));
+			break;
 		case CostantiStruttura.VOLONTARIO:
-			return new HandlerVolontario(gdb, c.getUsername());
+			a.setGu(new HandlerVolontario(gdb, username, a));
+			break;
 		case CostantiStruttura.FRUITORE:
-			return new HandlerFruitore(gdb, c.getUsername());
+			a.setGu(new HandlerFruitore(gdb, username));
+			break;
 		default: 
-			return null;
+			a.view("Problema setting gu");
+			return;
 
 		}
 	}

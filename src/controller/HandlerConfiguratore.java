@@ -1,21 +1,41 @@
 package controller;
 
-import java.lang.reflect.Method;
-import java.util.LinkedList;
-
+import main.App;
 import utility.CostantiStruttura;
 import utility.MethodName;
 import utility.ParamName;
+
 
 public class HandlerConfiguratore extends ControllerUtente{	
 		
 	public HandlerConfiguratore () {
 		
 	}
-	
-	public HandlerConfiguratore (ControllerArchivio gdb, String username) {
-		super(gdb, username);
+
+	public HandlerConfiguratore(ControllerArchivio gdb, String username, App a) {
+		this.gdb = gdb;
+		this.username = username;
+		checkPrimoAccesso(a);
+		if (checkPrimaConfigurazioneArchivio(a)) configuraArchivio(a);
 	}
+	
+	private boolean checkPrimaConfigurazioneArchivio (App a) {
+		return gdb.checkPrimaConfigurazioneArchivio(username);
+	}
+	
+	private void configuraArchivio(App a) {
+		a.view("Inserisci nome ambito territoriale:");
+		String ambito = (String)a.richiediVal(CostantiStruttura.STRING);
+		impostaAmbitoTerritoriale(ambito);
+		a.view("Inserisci max prenotazione per fruitore:");
+		int max = (int) a.richiediVal(CostantiStruttura.INT);
+		modificaMaxPrenotazione(max);
+		
+		//ciclo creazione luoghi
+		
+	}
+	
+	
 	@MethodName("Aggiungi nuovo volontario")
 	public boolean impostaCredenzialiNuovoVolontario (@ParamName("Username")String username, 
 			@ParamName("Password")String password, 
@@ -24,7 +44,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	}
 	
 	@MethodName("Imposta ambito territoriale")
-	public void impostaAmbitoTerritoriale(@ParamName("Nome del ambito territoriale")String s) {
+	private void impostaAmbitoTerritoriale(String s) {
 		gdb.impostaAmbitoTerritoriale(s);
 	}
 	
@@ -117,29 +137,4 @@ public class HandlerConfiguratore extends ControllerUtente{
 		
 	}
 	
-	@Override
-    public LinkedList<Method> getAzioniDisponibili() {
-    	
-    	LinkedList<Method> metodiConcreti = new LinkedList<>();
-        
-         Method[] metodi = this.getClass().getDeclaredMethods();
-        
-         for (Method metodo : metodi) {
-             if (!metodo.getName().equals("getAzioniDisponibili")
-            		 && !metodo.getName().equals("impostaAmbitoTerritoriale")
-            		 && !metodo.getName().startsWith("lambda$")) { 
-             metodiConcreti.add(metodo);
-             
-         	}
-    	}
-        metodiConcreti.sort((m1, m2) -> m1.getName().compareTo(m2.getName()));
-    	return metodiConcreti;
-    	/*
-    	Metodo più generico per usare più strutture, serve però ordine quindi usiamo linkedlist
-    	return Arrays.stream(this.getClass().getDeclaredMethods())
-                .filter(metodo -> !metodo.getName().equals("getAzioniDisponibili")) //aggiungere altri controlli
-                .toList();
-                
-        */
-    }
 }

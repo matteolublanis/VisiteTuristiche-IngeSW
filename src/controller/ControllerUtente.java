@@ -1,7 +1,11 @@
 package controller;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.LinkedList;
+
+import main.App;
+import utility.Credenziali;
 
 public abstract class ControllerUtente {
 	
@@ -21,17 +25,22 @@ public abstract class ControllerUtente {
 		return gdb.getTipoUtente(username);
 	}
 	
-	public boolean checkPrimaConfigurazioneArchivio () {
-		return gdb.checkPrimaConfigurazioneArchivio(username);
+	public void checkPrimoAccesso(App a) {
+		if (gdb.checkPrimoAccesso(username)) {
+			a.view("Primo accesso eseguito.");
+			boolean b = false;
+			do {
+				a.view("Cambia le tue credenziali:");
+				Credenziali c = a.inserisciCredenziali();
+				b = cambiaCredenziali(c);
+				if (!b) a.view("Credenziali non cambiate, username già presente.");
+			} while (!b);
+			a.view("Credenziali cambiate.");
+		};
 	}
 	
-	public boolean checkPrimoAccesso() {
-		return gdb.checkPrimoAccesso(username);
-	}
-	
-	public boolean cambiaCredenziali(String username, String password) {
-		if (gdb.cambiaCredenziali(this.username, new Credenziali(username, password))) return true;
-		return false;
+	public boolean cambiaCredenziali(Credenziali c) {
+		return (gdb.cambiaCredenziali(this.username, c));
 	}
 	
 	public void setUsername(String username) {
@@ -50,7 +59,8 @@ public abstract class ControllerUtente {
         
          for (Method metodo : metodi) {
              if (!metodo.getName().equals("getAzioniDisponibili")
-            		 && !metodo.getName().startsWith("lambda$")) { 
+            		 && !metodo.getName().startsWith("lambda$")
+            		 && (Modifier.isPublic(metodo.getModifiers()))) { 
              metodiConcreti.add(metodo);
          		}
     	}

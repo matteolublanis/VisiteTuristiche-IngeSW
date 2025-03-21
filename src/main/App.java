@@ -6,7 +6,8 @@ import java.util.LinkedList;
 import java.util.Scanner;
 import controller.Login;
 import controller.ControllerUtente;
-import controller.HandlerConfiguratore;
+import utility.CostantiStruttura;
+import utility.Credenziali;
 import utility.MethodName;
 import utility.ParamName;
 
@@ -15,70 +16,41 @@ public class App {
 	private Scanner sc = new Scanner(System.in);
 	private Login gl;
 	private ControllerUtente gu; 
-	private static final String INSERISCI_LE_TUE_CREDENZIALI = "Inserisci le tue credenziali:";
 	
 	public App(Login gl) {
 		this.gl = gl;
 	}
 	
+	public void setGu (ControllerUtente gu) {
+		this.gu = gu;
+	}
+	
 	public void start() {
-		System.out.println(gl.avvio());
-		accesso(); 
-		if (gu.checkPrimoAccesso()) cambiaCredenziali();
-		if (gu.checkPrimaConfigurazioneArchivio()) {
-			configuraArchivio();
-		}
-		
+		view("Benvenuto!");
+		gl.avvio(this);
+
 		do {
 			
 			if (!scegliAzione()) break;
 			
 		} while (true); 
 		
-		stampa("Arrivederci!");
+		view("Arrivederci!");
 		
 		sc.close();
 	}
 	
-	/*
-	 * Questo metodo è da rivedere, in quanto impone un casting non molto carino
-	 * Effettivamente se viene ritornato un tipo configuratore l'app può mostrare specifiche cose al configuratore,
-	 * quindi logicamente potrebbe anche starci, solo che è da rivedere, al momento ci sono due soluzioni:
-	 * 1. Separare le App in base all'utente
-	 * 2. Introdurre un'interfaccia di mezzo tra gli Handler e App
-	 * 3. Affidarsi alla sfera di cristallo di Singh
-	 */
-	private void configuraArchivio() {
-		HandlerConfiguratore g = (HandlerConfiguratore)gu;
-		System.out.println("Inserisci nome ambito territoriale:");
-		String ambito = sc.nextLine();
-		g.impostaAmbitoTerritoriale(ambito);
-		System.out.println("Inserisci max prenotazione per fruitore:");
-		do {
-			if (sc.hasNextInt()) {
-				g.modificaMaxPrenotazione(sc.nextInt());
-				break;
-			}
-			else System.out.println("Formato non valido, reinserire:");
-		} while (true);
-		
-		System.out.println();
-		
-	}
-	
-	
-	
 	private boolean scegliAzione () {
-		stampa("Quale operazione desidera (ESC per uscire)?\n");
+		view("Quale operazione desidera (ESC per uscire)?\n");
 		
 		LinkedList<Method> azioniDisponibili = gu.getAzioniDisponibili();
 		for (int i = 0; i < azioniDisponibili.size(); i++) {
 			try {
 				MethodName annotation = azioniDisponibili.get(i).getAnnotation(MethodName.class);
-				stampa((i + 1) + ") " + annotation.value());
+				view((i + 1) + ") " + annotation.value());
 			}
 			catch(Exception e){
-				System.out.println("Non sono stati definiti correttamente i metodi, non pagare il team di sviluppo.");
+				view("Non sono stati definiti correttamente i metodi, non pagare il team di sviluppo.");
 			}
 		}
 		
@@ -98,23 +70,43 @@ public class App {
 				for (int j = 0; j < parameters.length; j++) {
 					args[j] = richiediParametro(parameters[j]);
 				}
-				if ((boolean) metodo.invoke(gu, args)) System.out.println("Azione eseguita.");
-				else System.out.println("Azione non eseguita.");
+				if ((boolean) metodo.invoke(gu, args)) view("Azione eseguita.");
+				else view("Azione non eseguita.");
 
 			} else {
-				stampa("Scelta non valida.");
+				view("Scelta non valida.");
 			}
 		} catch (Exception e) {
-			stampa(e.toString());
+			view(e.toString());
 		}
 		
 		return true;
 	}
 	
+	public Object richiediVal (int tipo) {
+		switch (tipo) {
+		case CostantiStruttura.STRING:
+			return sc.nextLine();
+		case CostantiStruttura.INT:
+			while (!sc.hasNextInt()) {
+				view("Formato non valido, reinserire.");
+			}
+			return sc.nextInt();
+		case CostantiStruttura.BOOLEAN:
+			while (!sc.hasNextBoolean()) {
+				view("Formato non valido, reinserire.");
+			}
+			return sc.nextBoolean();
+		default:
+			view("Tipo non supportato.");
+			return null;
+		}
+	}
+	
 	private Object richiediParametro(Parameter parametro) {
         ParamName annotation = parametro.getAnnotation(ParamName.class);
 		String tipo = parametro.getType().getSimpleName();
-		stampa("Inserisci " + annotation.value() + "--> ");
+		view("Inserisci " + annotation.value() + "--> ");
 		String input = sc.nextLine();
 
 		switch (tipo) {
@@ -126,41 +118,20 @@ public class App {
 				return Boolean.parseBoolean(input);
 			
 			default:
-				stampa("Tipo non supportato.");
+				view("Tipo non supportato.");
 				return null;
 		}
 	}
 	
-	public void accesso () {
-		do {
-			System.out.println(INSERISCI_LE_TUE_CREDENZIALI + "\nUsername:");
-			String username = sc.nextLine();
-			System.out.println("Password:");
-			String password = sc.nextLine();
-			gu = gl.accesso(username, password);
-			if (gu == null) {
-				System.out.println("Credenziali errate! Reinserire.");
-			}
-		} while (gu == null); 
-		
+	public Credenziali inserisciCredenziali () {
+		view("Username:");
+		String username = sc.nextLine();
+		view("Password:");
+		String password = sc.nextLine();
+		return new Credenziali(username, password);
 	}
 	
-	public void cambiaCredenziali () {
-		System.out.println("Cambia le tue credenziali:" + "\n");
- 		do {
- 			System.out.println("Username:");
- 			String username = sc.nextLine();
- 			System.out.println("Password:");
- 			String password = sc.nextLine();
- 			if (gu.cambiaCredenziali(username, password)) {
- 				System.out.println("Credenziali cambiate.");
- 				break;
- 			}
- 			else System.out.println("Credenziali non cambiate. Reinserire nuove credenziali (username già in uso).");
- 		} while (true);
-	}
-	
-	public void stampa (String msg) {
+	public void view (String msg) {
 		if (!msg.equals("")) System.out.println(msg);
 	}
 	
