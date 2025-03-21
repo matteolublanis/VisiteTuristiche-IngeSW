@@ -1,52 +1,16 @@
-{"visite": [
-    {
-        "tipo-visita": "Guidata",
-        "data": "2025-04-10",
-        "luogo": "Colosseo"
-    },
-    {
-        "tipo-visita": "Autonoma",
-        "data": "2025-05-15",
-        "luogo": "Musei Vaticani"
-    },
-    {
-        "tipo-visita": "tipo",
-        "data": "ieri",
-        "luogo": "bs"
-    },
-    {
-        "tipo-visita": "visita",
-        "data": "domani",
-        "luogo": "bs"
-    },
-    {
-        "tipo-visita": "s",
-        "data": "s",
-        "luogo": "bs"
-    },
-    {
-        "tipo-visita": "q",
-        "data": "q",
-        "luogo": "q"
-    },
-    {
-        "tipo-visita": "a",
-        "data": "a",
-        "luogo": "a"
-    },
-    {
-        "tipo-visita": "w",
-        "data": "w",
-        "luogo": "w"
-    },
-    {
-        "tipo-visita": "x",
-        "data": "x",
-        "luogo": "x"
-    },
-    {
-        "tipo-visita": "eee",
-        "data": "111",
-        "luogo": "qqq"
-    }
-]}
+{
+	"18-08-2025": {
+		"castello_brescia": {
+			"tipo-visita": "percorso_natura_castello",
+			"volontari": "volontario4",
+			"stato": "confermata"
+		}
+	},
+	"07-08-2025": {
+		"parco_incisioni_valle_camonica": {
+			"tipo-visita": "passeggiata_valle_camonica",
+			"volontari": "volontario1",
+			"stato": "cancellata"
+		}
+	}
+}

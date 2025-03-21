@@ -185,19 +185,8 @@ public class HandlerConfiguratore extends ControllerUtente{
 				
 	}
 	@MethodName("Visualizza visite proposte, complete, confermate, cancellate e effettuate")
-	public String getElencoVisiteProposteCompleteConfermateCancellateEffettuate (App a) {
-		
-		/*
-		 * 
-		 * Le visite proposte sono nel piano pubblicato del mese i+1
-		 * Le visite complete sono nello stesso piano di proposte ma non accettano fruitori (confronto MaxFruitore e prenotazioni)
-		 * Le visite confermate sono nello stesso piano di proposte di prima ma non accettano più nulla anche se sotto maxfruitore
-		 * Le visite cancellate sono come le confermate ma non vengono successivamente memorizzate nello storico una volta fatte
-		 * Le visite effettuate sono quelle confermate che superano la data quando viene effettuata
-		 * 
-		 */
-		
-		return "";
+	public void getElencoVisiteProposteCompleteConfermateCancellateEffettuate (App a) {
+		a.view(gdb.getElencoVisiteProposteCompleteConfermateCancellateEffettuate());
 	}
 	private boolean chiediSioNo (App a, String val) {
 		do {

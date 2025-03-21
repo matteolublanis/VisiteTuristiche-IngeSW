@@ -25,12 +25,14 @@ public class Archivio {
 	private static final String PATH_VISITE_DAPUBBLICARE = "src/archivio/piano_visite.json";
 	private static final String PATH_TIPI_VISITE = "src/archivio/tipo_visite.json";
 	private static final String PATH_AMBITO = "src/archivio/ambito_territoriale.json";
+	private static final String PATH_STORICO = "src/archivio/visite_effettuate_storico.json";
 	private static final String PRIMO_AVVIO = "primo_avvio";
 	private JSONObject jsonTipiVisite = JSONUtility.readJsonFile(PATH_TIPI_VISITE);
 	private JSONObject jsonUsers = JSONUtility.readJsonFile(PATH_USERS);
 	private JSONObject jsonAmbitoTerritoriale = JSONUtility.readJsonFile(PATH_AMBITO);
 	private JSONObject jsonPianoVisite = JSONUtility.readJsonFile(PATH_VISITE); 
 	private JSONObject jsonPianoVisiteDaPubblicare = JSONUtility.readJsonFile(PATH_VISITE_DAPUBBLICARE);
+	private JSONObject jsonPianoStorico = JSONUtility.readJsonFile(PATH_STORICO);
 	private JSONObject jsonPreclusione = JSONUtility.readJsonFile(PATH_DATE_PRECLUSE);
 
 	public Archivio () {
@@ -82,6 +84,31 @@ public class Archivio {
 		}
 	}
 	
+	public String getElencoVisiteProposteCompleteConfermateCancellateEffettuate () {
+		String result = "";
+		//ciclo sul pianoVisite attuale
+		for (String k : jsonPianoVisite.keySet()) { //giorno
+			JSONObject j = jsonPianoVisite.getJSONObject(k); 
+			for (String m : j.keySet()) { //visite del giorno
+				JSONObject visita = j.getJSONObject(m);
+				JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject("luoghi");
+				JSONObject luogo = luoghi.getJSONObject(m);
+				String titoloLuogo = luogo.getString("nome");
+				JSONObject tipoVisita = jsonTipiVisite.getJSONObject(visita.getString("tipo-visita"));
+				String titoloVisita = tipoVisita.getString("titolo");
+				String stato = visita.getString("stato");
+				result += "Giorno: " + k + ", Luogo: " + titoloLuogo + ", Visita: " + titoloVisita + ", Stato: " + stato + "\n";
+			}
+		}
+		for (String k : jsonPianoStorico.keySet()) { //giorno
+			JSONObject j = jsonPianoStorico.getJSONObject(k); 
+			for (String m : j.keySet()) { //visite del giorno
+				String s = j.getString(m);
+				result += "Giorno: " + k + ", Tag Luogo: " + m + ", Tipo Visita: " + s + ", Stato: effettuata\n";
+			}
+		}
+		return result;
+	}
 	
 	public boolean impostaCredenzialiNuovoConfiguratore(String username, String password) {
 		if (checkValueExistance(username, PATH_USERS)) return false; 

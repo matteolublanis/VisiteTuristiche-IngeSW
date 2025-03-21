@@ -48,6 +48,10 @@ public class ControllerArchivio {
 		return d.indicaDatePrecluse(date);
 	}
 	
+	public String getElencoVisiteProposteCompleteConfermateCancellateEffettuate () {
+		return d.getElencoVisiteProposteCompleteConfermateCancellateEffettuate();
+	}
+	
 	public boolean cambiaCredenziali (String username, Credenziali c) {
 		if (d.modificaCredenziali(username, c)) {
 			d.primoAccessoEseguito(c.getUsername());	
