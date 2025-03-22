@@ -19,7 +19,6 @@ public class Archivio {
 			+ "Username: admin Password: admin";
 	private static final String PRIMA_CONFIGURAZIONE = "prima_configurazione";
 	private static final int RIGHE_USERS = 5;
-	private static final String PATH_DATE_PRECLUSE = "src/archivio/date_precluse.json";
 	private static final String PATH_USERS = "src/archivio/users.json";
 	private static final String PATH_VISITE = "src/archivio/piano_visite.json";
 	private static final String PATH_VISITE_DAPUBBLICARE = "src/archivio/piano_visite.json";
@@ -33,7 +32,6 @@ public class Archivio {
 	private JSONObject jsonPianoVisite = JSONUtility.readJsonFile(PATH_VISITE); 
 	private JSONObject jsonPianoVisiteDaPubblicare = JSONUtility.readJsonFile(PATH_VISITE_DAPUBBLICARE);
 	private JSONObject jsonPianoStorico = JSONUtility.readJsonFile(PATH_STORICO);
-	private JSONObject jsonPreclusione = JSONUtility.readJsonFile(PATH_DATE_PRECLUSE);
 
 	public Archivio () {
 		System.out.println("Creato archivio.");
@@ -65,10 +63,6 @@ public class Archivio {
 		if (checkValueExistance(username, PATH_USERS)) return false; 
 		else {
 			JSONObject volontario = new JSONObject();
-			volontario.put(USERNAME, username);
-			volontario.put(PRIMO_ACCESSO, true);
-			volontario.put(TIPO_USER, CostantiStruttura.VOLONTARIO);
-			volontario.put(PASSWORD, password);
 			JSONArray tipiVisite = new JSONArray();
 		    String[] s = tipi_visiteVal.split("\\s*,\\s*");
 		    for (String k : s) {
@@ -77,6 +71,10 @@ public class Archivio {
 		    		if (!k.equals(""))tipiVisite.put(k);
 		    	}
 		    }
+		    volontario.put(USERNAME, username);
+			volontario.put(PRIMO_ACCESSO, true);
+			volontario.put(TIPO_USER, CostantiStruttura.VOLONTARIO);
+			volontario.put(PASSWORD, password);
 		    volontario.put(TIPO_VISITA, tipiVisite);
 			jsonUsers.put(username, volontario);
 			JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, RIGHE_USERS);
@@ -182,6 +180,7 @@ public class Archivio {
 		}
 	
 	}
+	
 	public boolean checkPrimaConfigurazioneArchivio (String username) {
 		if (!checkValueExistance(username, PATH_USERS)) return false;
 		else {
@@ -217,15 +216,15 @@ public class Archivio {
 	
 	public boolean indicaDatePrecluse (String date) {
 		if (Time.isValidDate(date)) {
-			JSONArray datePrecluse = (JSONArray) jsonPreclusione.get("datePrecluseI+3");
+			JSONArray datePrecluse = (JSONArray) jsonPianoVisiteDaPubblicare.get("datePrecluseI+3");
+			if (!Time.isThisDateInMonthiplus3(date)) return false; 
 	        for (int i = 0; i < datePrecluse.length(); i++) {
 	            if (datePrecluse.get(i).equals(date)) {
 	                return false;
 	            }
 	        }
-	        if (!Time.isThisDateInMonthiplus3(date)) return false; 
 	        datePrecluse.put(date);
-	        JSONUtility.aggiornaJsonFile(jsonPreclusione, PATH_DATE_PRECLUSE, 31); 
+	        JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10); 
 	        return true;
 		}
 		else return false;
@@ -238,15 +237,7 @@ public class Archivio {
 		}
 		else return false;
 	}
-	
-	public void aggiungiVisita(String luogo, String tipo, String data) {
-		
-		/*
-		 * TODO controllare che quel giorno non ci sia una visita dello stesso tipo, luogo
-		 */
-		
-	}
-	
+	//TODO implementare
 	public void pubblicaPianoVisite() {
 		if (Time.todayIsDay(16)) {
 			
@@ -278,7 +269,7 @@ public class Archivio {
 			return (e.getMessage());
 		}
 	}
-	//TODO stampa da far gestire alla GUI
+
 	public String getElencoTipiVisiteLuogo () {
 		String result = "";
 		try {
@@ -318,8 +309,6 @@ public class Archivio {
 	public boolean aggiungiLuogo (String tag, String nome, String collocazione, String tipiVisitaVal) {
 		if (checkValueExistance(tag, PATH_AMBITO)) return false;
 		JSONObject nuovoLuogo = new JSONObject();
-		nuovoLuogo.put("nome", nome);
-		nuovoLuogo.put("collocazione", collocazione);
 		String[] s = tipiVisitaVal.split("\\s*,\\s*");
 		JSONArray tipiVisita = new JSONArray();
 	    for (String k : s) {
@@ -328,6 +317,8 @@ public class Archivio {
 	    		if (!k.equals("")) tipiVisita.put(k);
 	    	}
 	    }
+	    nuovoLuogo.put("nome", nome);
+		nuovoLuogo.put("collocazione", collocazione);
 	    nuovoLuogo.put(TIPO_VISITA, tipiVisita);
 	    JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject("luoghi");
 	    luoghi.put(tag, nuovoLuogo);
@@ -338,15 +329,11 @@ public class Archivio {
 	public boolean aggiungiTipoVisite(String luogo, String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
 			String dataInizio, String dataFine, String giorniPrenotabiliVal, String oraInizio,
 			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, String volontariVal) {
+		
 		JSONObject nuovoTipoVisita = new JSONObject();
-		if(checkIfPlaceExists(luogo)) return false;
-		if (checkValueExistance(tipoVisita, PATH_TIPI_VISITE))  return false;
-	    if (!Time.isValidDate(dataInizio) || !Time.isValidDate(dataFine) || Time.comesBefore(dataFine, dataInizio)) return false;
-	    nuovoTipoVisita.put("titolo", titolo);
-	    nuovoTipoVisita.put("descrizione", descrizione);
-	    nuovoTipoVisita.put("punto-incontro", puntoIncontro);
-	    nuovoTipoVisita.put("data-inizio", dataInizio);
-	    nuovoTipoVisita.put("data-fine", dataFine);
+		if(checkIfPlaceExists(luogo)) return false; //se il luogo esiste già ritorna falso
+		if (checkValueExistance(tipoVisita, PATH_TIPI_VISITE))  return false; //se il tipovisita esiste già ritorna falso
+	    if (!Time.isValidDate(dataInizio) || !Time.isValidDate(dataFine) || Time.comesBefore(dataFine, dataInizio)) return false; //se dateformat errato ritorna falso
 	    JSONArray giorniPrenotabili = new JSONArray();
 	    String[] s = giorniPrenotabiliVal.split("\\s*,\\s*");
 	    String days = "";
@@ -362,17 +349,10 @@ public class Archivio {
 	    		return false;
 	    	}
 	    }
-	    if (giorniPrenotabili.length() == 0) return false;
-	    if (!Time.isValidHour(oraInizio)) return false;
+	    if (giorniPrenotabili.length() == 0) return false; //se non ha giorni disponibili ritorna falso
+	    if (!Time.isValidHour(oraInizio)) return false; //se hourformat errato ritorna falso
 	    if (intersectOtherEventSamePlace (dataInizio, dataFine, oraInizio, durataVisita, days, jsonAmbitoTerritoriale.getJSONObject("luoghi").getJSONObject(luogo))) return false;
 	    if (minFruitore > maxFruitore) return false;
-	    nuovoTipoVisita.put("giorni-prenotabili", giorniPrenotabili);
-	    nuovoTipoVisita.put("ora-inizio", oraInizio); 
-	    nuovoTipoVisita.put("durata-visita", durataVisita); 
-	    nuovoTipoVisita.put("da-acquistare", daAcquistare);
-	    nuovoTipoVisita.put("min-fruitore", minFruitore);
-	    nuovoTipoVisita.put("max-fruitore", maxFruitore);
-	    
 	    String[] m = volontariVal.split("\\s*,\\s*");
 	    JSONArray volontari = new JSONArray();
 	    for (String k : m) {
@@ -386,6 +366,17 @@ public class Archivio {
 	    	}
 	    }
 	    if (volontari.length() == 0) return false;
+	    nuovoTipoVisita.put("titolo", titolo);
+	    nuovoTipoVisita.put("descrizione", descrizione);
+	    nuovoTipoVisita.put("punto-incontro", puntoIncontro);
+	    nuovoTipoVisita.put("data-inizio", dataInizio);
+	    nuovoTipoVisita.put("data-fine", dataFine);
+	    nuovoTipoVisita.put("giorni-prenotabili", giorniPrenotabili);
+	    nuovoTipoVisita.put("ora-inizio", oraInizio); 
+	    nuovoTipoVisita.put("durata-visita", durataVisita); 
+	    nuovoTipoVisita.put("da-acquistare", daAcquistare);
+	    nuovoTipoVisita.put("min-fruitore", minFruitore);
+	    nuovoTipoVisita.put("max-fruitore", maxFruitore);
 	    nuovoTipoVisita.put("volontari", volontari);
 		JSONArray tipiLuogo = jsonAmbitoTerritoriale.getJSONObject("luoghi").getJSONObject(luogo).getJSONArray(TIPO_VISITA);
 		tipiLuogo.put(tipoVisita);
@@ -402,8 +393,8 @@ public class Archivio {
 		else return false;
 	}
 	
-	public boolean volontarioAlreadyLinkedForThatDay (String dateStart1, String dateFinish1, String hour1, int duration1, String days1, JSONArray tipi) {
-		for (Object k : tipi) { //itera sui tipi del volontario
+	public boolean volontarioAlreadyLinkedForThatDay (String dateStart1, String dateFinish1, String hour1, int duration1, String days1, JSONArray tipiVisitaVolontario) {
+		for (Object k : tipiVisitaVolontario) { 
 			JSONObject tipo = jsonTipiVisite.getJSONObject((String)k); //prende ogni tipo dal json dei tipi
 			if (Time.comesBefore(dateStart1, tipo.getString("data-fine")) && !Time.comesBefore(dateFinish1, tipo.getString("data-inizio"))) { //controlla se periodi intersecano
 				JSONArray days2 = tipo.getJSONArray("giorni-prenotabili"); //prende giorni prenotabili del tipo
@@ -417,13 +408,12 @@ public class Archivio {
 	
 	public boolean intersectOtherEventSamePlace (String dateStart1, String dateFinish1, String hour1, int duration1, String days1, JSONObject luogo) {
 		JSONArray tipiLuogo = luogo.getJSONArray("tipo-visita");
-		for (Object k : tipiLuogo) { //le chiavi di tipiLuogo sono stringhe per come vengono create
-			JSONObject tipo = jsonTipiVisite.getJSONObject((String)k);
-			System.out.println(tipo);
+		for (Object k : tipiLuogo) { //tipiVisita del luogo
+			JSONObject tipo = jsonTipiVisite.getJSONObject((String)k); 
 			if (Time.comesBefore(dateStart1, tipo.getString("data-fine")) && !Time.comesBefore(dateFinish1, tipo.getString("data-inizio"))) {
-				JSONArray days2 = tipo.getJSONArray("giorni-prenotabili");
+				JSONArray days2 = tipo.getJSONArray("giorni-prenotabili"); //giorni del tipo già esistente
 				for (Object d : days2) {
-					if (days1.contains((String)d)) return true;
+					if (days1.contains((String)d)) return true; 
 				}
 			}
 		}

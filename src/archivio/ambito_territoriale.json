@@ -4,7 +4,9 @@
                               "descrizione": "Una delle cantine più rinomate della Franciacorta, celebre per la produzione di spumanti metodo classico DOCG.",
                               "collocazione": "Via Albano Zanella, 13, 25030 Erbusco BS, Italia",
                               "nome": "Cantina Ca' del Bosco",
-                              "tipo-visita": ["franciacorta_wine_tour"]
+                              "tipo-visita": [
+                                        "franciacorta_wine_tour"
+                              ]
                     },
                     "area_archeologica_brescia_romana": {
                               "descrizione": "Sito UNESCO che conserva il Foro Romano, il Capitolium e il Teatro Romano, testimoni dell'antica Brixia.",

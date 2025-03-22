@@ -69,7 +69,7 @@ public class App {
 				view("Scelta non valida.");
 			}
 		} catch (Exception e) {
-			view(e.toString());
+			view("Formato inserito non corretto.");
 		}
 		
 		return true;
