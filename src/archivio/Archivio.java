@@ -9,29 +9,28 @@ import utility.Time;
 
 public class Archivio {
 	
-	private static final String TIPO_VISITA = "tipo-visita";
-	private static final String[] GIORNISETTIMANA = new String[] {"lun","mar","mer","gio","ven","sab","dom"};
-	private static final String PASSWORD = "password";
-	private static final String TIPO_USER = "tipo";
-	private static final String USERNAME = "username";
-	private static final String PRIMO_ACCESSO = "primo-accesso";
-	private static final String CREDENZIALI_CONF_INIZIALE = "PRIMO AVVIO, CREDENZIALI CONFIGURATORE\n"
-			+ "Username: admin Password: admin";
-	private static final String PRIMA_CONFIGURAZIONE = "prima_configurazione";
-	private static final int RIGHE_USERS = 5;
 	private static final String PATH_USERS = "src/archivio/users.json";
 	private static final String PATH_VISITE = "src/archivio/piano_visite.json";
 	private static final String PATH_VISITE_DAPUBBLICARE = "src/archivio/piano_visite.json";
 	private static final String PATH_TIPI_VISITE = "src/archivio/tipo_visite.json";
 	private static final String PATH_AMBITO = "src/archivio/ambito_territoriale.json";
 	private static final String PATH_STORICO = "src/archivio/visite_effettuate_storico.json";
-	private static final String PRIMO_AVVIO = "primo_avvio";
 	private JSONObject jsonTipiVisite = JSONUtility.readJsonFile(PATH_TIPI_VISITE);
 	private JSONObject jsonUsers = JSONUtility.readJsonFile(PATH_USERS);
 	private JSONObject jsonAmbitoTerritoriale = JSONUtility.readJsonFile(PATH_AMBITO);
 	private JSONObject jsonPianoVisite = JSONUtility.readJsonFile(PATH_VISITE); 
 	private JSONObject jsonPianoVisiteDaPubblicare = JSONUtility.readJsonFile(PATH_VISITE_DAPUBBLICARE);
 	private JSONObject jsonPianoStorico = JSONUtility.readJsonFile(PATH_STORICO);
+	private static final String TIPO_VISITA = "tipo-visita";
+	private static final String[] GIORNISETTIMANA = new String[] {"lun","mar","mer","gio","ven","sab","dom"};
+	private static final String PASSWORD = "password";
+	private static final String TIPO_USER = "tipo";
+	private static final String USERNAME = "username";
+	private static final String PRIMO_ACCESSO = "primo-accesso";
+	private static final String CREDENZIALI_CONF_INIZIALE = "PRIMO AVVIO, CREDENZIALI CONFIGURATORE\nUsername: admin Password: admin";
+	private static final String PRIMA_CONFIGURAZIONE = "prima_configurazione";
+	private static final int RIGHE_USERS = 5;
+	private static final String PRIMO_AVVIO = "primo_avvio";
 
 	public Archivio () {
 		System.out.println("Creato archivio.");

@@ -109,7 +109,6 @@ public class HandlerConfiguratore extends ControllerUtente{
 		int minFruitore =Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "minimo fruitori per confermare la visita"));
 		int maxFruitore = Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "massimo fruitori per completare la visita"));
 		String volontari = "";
-		a.view("Vuoi associare un nuovo volontario per questo tipo di visita?");
 		if (chiediSioNo(a, "Vuoi associare un nuovo volontario per questo tipo di visita?")) {
 			do {
 				volontari = impostaNuovoVolontarioPerNuovoTipoVisita(a, "");
