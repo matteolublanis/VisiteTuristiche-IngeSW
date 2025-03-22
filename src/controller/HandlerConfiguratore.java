@@ -1,8 +1,12 @@
 package controller;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import main.App;
 import utility.CostantiStruttura;
 import utility.MethodName;
+import utility.Time;
 
 
 public class HandlerConfiguratore extends ControllerUtente{	
@@ -141,30 +145,84 @@ public class HandlerConfiguratore extends ControllerUtente{
 	
 	@MethodName("Aggiungi tipo visite")
 	public boolean aggiungiTipoVisite(App a) {
-		String luogo = (String)a.richiediVal(CostantiStruttura.STRING, "luogo della visita");
-		String tipoVisita = (String)a.richiediVal(CostantiStruttura.STRING, "tag del tipo della visita");
+		String luogo = "";
+		do {
+			luogo = (String)a.richiediVal(CostantiStruttura.STRING, "luogo della visita");
+			if (!gdb.checkIfPlaceExists(luogo)) a.view("Il luogo inserito è inesistente.");
+		} while (!gdb.checkIfPlaceExists(luogo));
+		
+		String tipoVisita = "";
+		do {
+			tipoVisita = (String)a.richiediVal(CostantiStruttura.STRING, "tag del tipo della visita");
+			if (gdb.checkIfVisitTypeExists(tipoVisita)) a.view("Il tag inserito esiste già.");
+		} while (gdb.checkIfVisitTypeExists(tipoVisita));
+		
 		String titolo = (String)a.richiediVal(CostantiStruttura.STRING, "titolo della visita");
 		String descrizione = (String)a.richiediVal(CostantiStruttura.STRING, "descrizione riassuntiva della visita");
 		String puntoIncontro = (String)a.richiediVal(CostantiStruttura.STRING, "punto di incontro della visita (locazione geografica)");
-		String dataInizio = (String)a.richiediVal(CostantiStruttura.STRING, "apertura del periodo della visita");
-		String dataFine = (String)a.richiediVal(CostantiStruttura.STRING, "chiusura del periodo della visita");
-		String giorniPrenotabili = (String)a.richiediVal(CostantiStruttura.STRING, "giorni prenotabili della visita (1, 3, 7 indicano lun, mer, dom)");
-		String oraInizio = (String)a.richiediVal(CostantiStruttura.STRING, "ora d'inizio visita");
+		String dataInizio = "";
+		do {
+			dataInizio = (String)a.richiediVal(CostantiStruttura.STRING, "apertura del periodo della visita");
+			if (!Time.isValidDate(dataInizio)) a.view("Formato data non valido");
+		} while (!Time.isValidDate(dataInizio));
+		String dataFine = "";
+		do {
+			dataFine = (String)a.richiediVal(CostantiStruttura.STRING, "chiusura del periodo della visita");
+			if (!Time.isValidDate(dataFine)) a.view("Formato data non valido");
+			if (Time.comesBefore(dataFine, dataInizio)) a.view("Non può finire prima che inizi.");
+		} while (!Time.isValidDate(dataFine) || Time.comesBefore(dataFine, dataInizio));
+		//^\d+(,\d+)*$
+		String giorniPrenotabili = "";
+		boolean b = true;
+		do {
+			giorniPrenotabili = (String)a.richiediVal(CostantiStruttura.STRING, "giorni prenotabili della visita (1, 3, 7 indicano lun, mer, dom)");
+			Pattern pattern = Pattern.compile("^\\d+(,\\d+)*$"); 
+	        Matcher matcher = pattern.matcher(giorniPrenotabili);
+	        b = !matcher.matches();
+	        if (b) a.view("Formato non corretto, inserire come 1,2,3 senza spazi.");
+		} while (b);
+		String oraInizio = "";
+		do {
+			oraInizio = (String)a.richiediVal(CostantiStruttura.STRING, "ora d'inizio visita (hh-mm)");
+			if (!Time.isValidHour(oraInizio)) a.view("Formato non corretto, inserire tipo 10:30.");
+		} while (!Time.isValidHour(oraInizio));
 		int durataVisita = Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "durata della visita in minuti (ad esempio 120 sono 120 minuti, quindi 2 ore)"));
 		boolean ticket = chiediSioNo(a, "se è da acquistare o no un biglietto (si/no)");
-		int minFruitore =Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "minimo fruitori per confermare la visita"));
-		int maxFruitore = Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "massimo fruitori per completare la visita"));
+		int minFruitore = 0;
+		do {
+			minFruitore =Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "minimo fruitori per confermare la visita"));
+			if (minFruitore <= 0) a.view("Il numero minimo di fruitori non può essere minore o uguale a 0.");
+		} while (minFruitore <= 0);
+		int maxFruitore = 0;
+		do {
+			maxFruitore = Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "massimo fruitori per completare la visita"));
+			if (maxFruitore < minFruitore) a.view("Il numero massimo di fruitori non può essere minore del minimo.");
+		} while (maxFruitore < minFruitore);
 		String volontari = "";
-		a.view("Vuoi associare un nuovo volontario per questo tipo di visita?");
 		if (chiediSioNo(a, "Vuoi associare un nuovo volontario per questo tipo di visita?")) {
 			do {
 				volontari = impostaNuovoVolontarioPerNuovoTipoVisita(a, "");
 			} while (volontari.equals(""));
 		}
 		else {
-			volontari = (String)a.richiediVal(CostantiStruttura.STRING, "volontari che gestiranno la visita (volontario1, volontario2,...)");
+			volontari = "";
+			String volontario = "";
+			boolean bool = true;
+			do {
+				volontario = (String)a.richiediVal(CostantiStruttura.STRING, "volontario che gestirà la visita");
+				if (!gdb.checkIfVolontarioExists(volontario)) a.view("L'username inserito non è associato a nessun volontario.");
+				else {
+					if (!volontari.contains(volontario)) {
+						volontari += volontario + ",";
+						bool = chiediSioNo(a, "Vuoi inserire un altro volontario?");
+					}
+					else {
+						a.view("Volontario già inserito!");
+						bool = true;
+					}
+				}
+			} while (!gdb.checkIfVolontarioExists(volontario) || bool);
 		}
-		
 		if (gdb.aggiungiTipoVisite(luogo, tipoVisita, titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniPrenotabili, oraInizio, durataVisita, ticket, minFruitore, maxFruitore, volontari)) {
 			a.view("Il nuovo tipo di visita è stato aggiunto.");
 			return true;
@@ -187,22 +245,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	public void getElencoVisiteProposteCompleteConfermateCancellateEffettuate (App a) {
 		a.view(gdb.getElencoVisiteProposteCompleteConfermateCancellateEffettuate());
 	}
-	private boolean chiediSioNo (App a, String val) {
-		a.view(val);
-		do {
-			String answer = (String)a.richiediVal(CostantiStruttura.STRING, "si o no");
-			switch (answer.toLowerCase()) {
-			case "si":
-				return true;
-			case "no":
-				return false;
-			default:
-				a.view("Formato non valido, inserire si/no");
-			}
-		} while (true);
-		
 
-	}
 	@MethodName("Aggiungi luogo")
 	public void aggiungiLuogo (App a) {
 		String tag = (String)a.richiediVal(CostantiStruttura.STRING, "tag del luogo");

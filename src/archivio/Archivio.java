@@ -330,9 +330,6 @@ public class Archivio {
 			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, String volontariVal) {
 		
 		JSONObject nuovoTipoVisita = new JSONObject();
-		if(checkIfPlaceExists(luogo)) return false; //se il luogo esiste già ritorna falso
-		if (checkValueExistance(tipoVisita, PATH_TIPI_VISITE))  return false; //se il tipovisita esiste già ritorna falso
-	    if (!Time.isValidDate(dataInizio) || !Time.isValidDate(dataFine) || Time.comesBefore(dataFine, dataInizio)) return false; //se dateformat errato ritorna falso
 	    JSONArray giorniPrenotabili = new JSONArray();
 	    String[] s = giorniPrenotabiliVal.split("\\s*,\\s*");
 	    String days = "";
@@ -348,23 +345,17 @@ public class Archivio {
 	    		return false;
 	    	}
 	    }
-	    if (giorniPrenotabili.length() == 0) return false; //se non ha giorni disponibili ritorna falso
-	    if (!Time.isValidHour(oraInizio)) return false; //se hourformat errato ritorna falso
-	    if (intersectOtherEventSamePlace (dataInizio, dataFine, oraInizio, durataVisita, days, jsonAmbitoTerritoriale.getJSONObject("luoghi").getJSONObject(luogo))) return false;
-	    if (minFruitore > maxFruitore) return false;
+	    if (days.length() == 0) return false;
 	    String[] m = volontariVal.split("\\s*,\\s*");
 	    JSONArray volontari = new JSONArray();
 	    for (String k : m) {
-	    	if (!checkValueExistance(k, PATH_USERS)) return false;
-	    	else {
-	    		JSONObject volontario = jsonUsers.getJSONObject(k);
-	    		JSONArray tipi = volontario.getJSONArray(TIPO_VISITA);
-	    		if (volontarioAlreadyLinkedForThatDay(dataInizio, dataFine, oraInizio, durataVisita, days, tipi)) return false;
-	    		tipi.put(tipoVisita);
-	    		volontari.put(k);
-	    	}
+	    	JSONObject volontario = jsonUsers.getJSONObject(k);
+	    	JSONArray tipi = volontario.getJSONArray(TIPO_VISITA);
+	   		if (volontarioAlreadyLinkedForThatDay(dataInizio, dataFine, oraInizio, durataVisita, days, tipi)) return false;
+	   		tipi.put(tipoVisita);
+	   		volontari.put(k);
 	    }
-	    if (volontari.length() == 0) return false;
+	    System.out.println(volontariVal);
 	    nuovoTipoVisita.put("titolo", titolo);
 	    nuovoTipoVisita.put("descrizione", descrizione);
 	    nuovoTipoVisita.put("punto-incontro", puntoIncontro);
@@ -386,9 +377,29 @@ public class Archivio {
 	    return true; 
 	}
 	
+	public boolean checkIfVisitTypeExists (String tipo) {
+		JSONObject t = JSONUtility.readJsonFile(PATH_TIPI_VISITE);
+		try {
+			return !(t.get(tipo).equals(null)); 
+		}
+		catch (Exception e) {
+			return false;
+		}
+	}
+	
+	public boolean checkIfVolontarioExists (String volontario) {
+		JSONObject user = JSONUtility.readJsonFile(PATH_USERS);
+		try {
+			return !(user.get(volontario).equals(null)); 
+		}
+		catch (Exception e) {
+			return false;
+		}
+	}
+	
 	public boolean checkIfPlaceExists(String luogo) {
 		JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject("luoghi");
-		if (!luoghi.has(luogo)) return true;
+		if (luoghi.has(luogo)) return true;
 		else return false;
 	}
 	

@@ -5,6 +5,7 @@ import java.lang.reflect.Modifier;
 import java.util.LinkedList;
 
 import main.App;
+import utility.CostantiStruttura;
 import utility.Credenziali;
 
 public abstract class ControllerUtente {
@@ -49,6 +50,22 @@ public abstract class ControllerUtente {
 	
 	public String getUsername() {
 		return username;
+	}
+	
+	protected boolean chiediSioNo (App a, String val) {
+		a.view(val);
+		do {
+			String answer = (String)a.richiediVal(CostantiStruttura.STRING, "si o no");
+			switch (answer.toLowerCase()) {
+			case "si":
+				return true;
+			case "no":
+				return false;
+			default:
+				a.view("Formato non valido, inserire si/no");
+			}
+		} while (true);
+
 	}
 	
     public LinkedList<Method> getAzioniDisponibili() {

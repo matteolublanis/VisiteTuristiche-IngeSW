@@ -60,6 +60,10 @@ public class ControllerArchivio {
 		return false;
 	}
 	
+	public boolean checkIfPlaceExists (String luogo) {
+		return d.checkIfPlaceExists(luogo);
+	}
+	
 	public boolean aggiungiLuogo (String tag, String nome, String collocazione, String tipiVisitaVal) {
 		return d.aggiungiLuogo(tag, nome, collocazione, tipiVisitaVal);
 	}
@@ -72,6 +76,14 @@ public class ControllerArchivio {
 			String dataInizio, String dataFine, String giorniPrenotabili, String oraInizio,
 			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, String volontari) {
 		return d.aggiungiTipoVisite(luogo, tipoVisita, titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniPrenotabili, oraInizio, durataVisita, daAcquistare, minFruitore, maxFruitore, volontari);
+	}
+	
+	public boolean checkIfVolontarioExists (String volontario) {
+		return d.checkIfVolontarioExists(volontario);
+	}
+	
+	public boolean checkIfVisitTypeExists (String tipo) {
+		return d.checkIfVisitTypeExists(tipo);
 	}
 	
 	public void impostaAmbitoTerritoriale (String s) {
