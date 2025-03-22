@@ -43,7 +43,8 @@
                     "primo-accesso": true,
                     "tipo-visita": [
                               "museo_armi",
-                              "passeggiata_valle_camonica"
+                              "passeggiata_valle_camonica",
+                              "m"
                     ],
                     "username": "volontario1"
           },

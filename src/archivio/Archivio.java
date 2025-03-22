@@ -338,24 +338,24 @@ public class Archivio {
 	public boolean aggiungiTipoVisite(String luogo, String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
 			String dataInizio, String dataFine, String giorniPrenotabiliVal, String oraInizio,
 			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, String volontariVal) {
-		jsonAmbitoTerritoriale = JSONUtility.readJsonFile(PATH_AMBITO);
 		JSONObject nuovoTipoVisita = new JSONObject();
-		JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject("luoghi");
-		if (!luoghi.has(luogo)) return false;
+		if(checkIfPlaceExists(luogo)) return false;
 		if (checkValueExistance(tipoVisita, PATH_TIPI_VISITE))  return false;
+	    if (!Time.isValidDate(dataInizio) || !Time.isValidDate(dataFine) || Time.comesBefore(dataFine, dataInizio)) return false;
 	    nuovoTipoVisita.put("titolo", titolo);
 	    nuovoTipoVisita.put("descrizione", descrizione);
 	    nuovoTipoVisita.put("punto-incontro", puntoIncontro);
-	    if (!Time.isValidDate(dataInizio) || !Time.isValidDate(dataFine) || Time.comesBefore(dataFine, dataInizio)) return false;
 	    nuovoTipoVisita.put("data-inizio", dataInizio);
 	    nuovoTipoVisita.put("data-fine", dataFine);
 	    JSONArray giorniPrenotabili = new JSONArray();
 	    String[] s = giorniPrenotabiliVal.split("\\s*,\\s*");
+	    String days = "";
 	    for (String k : s) {
 	    	try {
 	    		int j = Integer.parseInt(k);
 	    		if (!(j < 1 || j > 7)) {
 		    		giorniPrenotabili.put(GIORNISETTIMANA[j-1]);
+		    		days += GIORNISETTIMANA[j-1] + ",";
 		    	}
 	    	}
 	    	catch (NumberFormatException e) {
@@ -363,12 +363,13 @@ public class Archivio {
 	    	}
 	    }
 	    if (giorniPrenotabili.length() == 0) return false;
-	    nuovoTipoVisita.put("giorni-prenotabili", giorniPrenotabili);
 	    if (!Time.isValidHour(oraInizio)) return false;
+	    if (intersectOtherEventSamePlace (dataInizio, dataFine, oraInizio, durataVisita, days, jsonAmbitoTerritoriale.getJSONObject("luoghi").getJSONObject(luogo))) return false;
+	    if (minFruitore > maxFruitore) return false;
+	    nuovoTipoVisita.put("giorni-prenotabili", giorniPrenotabili);
 	    nuovoTipoVisita.put("ora-inizio", oraInizio); 
 	    nuovoTipoVisita.put("durata-visita", durataVisita); 
 	    nuovoTipoVisita.put("da-acquistare", daAcquistare);
-	    if (minFruitore > maxFruitore) return false;
 	    nuovoTipoVisita.put("min-fruitore", minFruitore);
 	    nuovoTipoVisita.put("max-fruitore", maxFruitore);
 	    
@@ -379,20 +380,54 @@ public class Archivio {
 	    	else {
 	    		JSONObject volontario = jsonUsers.getJSONObject(k);
 	    		JSONArray tipi = volontario.getJSONArray(TIPO_VISITA);
+	    		if (volontarioAlreadyLinkedForThatDay(dataInizio, dataFine, oraInizio, durataVisita, days, tipi)) return false;
 	    		tipi.put(tipoVisita);
 	    		volontari.put(k);
 	    	}
 	    }
 	    if (volontari.length() == 0) return false;
 	    nuovoTipoVisita.put("volontari", volontari);
-		JSONObject x = luoghi.getJSONObject(luogo);
-		JSONArray tipi = x.getJSONArray(TIPO_VISITA);
-		tipi.put(tipoVisita);
+		JSONArray tipiLuogo = jsonAmbitoTerritoriale.getJSONObject("luoghi").getJSONObject(luogo).getJSONArray(TIPO_VISITA);
+		tipiLuogo.put(tipoVisita);
 	    jsonTipiVisite.put(tipoVisita, nuovoTipoVisita);
 	    JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, 10);
 	    JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, PATH_AMBITO, 10);
 	    JSONUtility.aggiornaJsonFile(jsonTipiVisite, PATH_TIPI_VISITE, 10);
 	    return true; 
+	}
+	
+	public boolean checkIfPlaceExists(String luogo) {
+		JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject("luoghi");
+		if (!luoghi.has(luogo)) return true;
+		else return false;
+	}
+	
+	public boolean volontarioAlreadyLinkedForThatDay (String dateStart1, String dateFinish1, String hour1, int duration1, String days1, JSONArray tipi) {
+		for (Object k : tipi) { //itera sui tipi del volontario
+			JSONObject tipo = jsonTipiVisite.getJSONObject((String)k); //prende ogni tipo dal json dei tipi
+			if (Time.comesBefore(dateStart1, tipo.getString("data-fine")) && !Time.comesBefore(dateFinish1, tipo.getString("data-inizio"))) { //controlla se periodi intersecano
+				JSONArray days2 = tipo.getJSONArray("giorni-prenotabili"); //prende giorni prenotabili del tipo
+				for (Object d : days2) { 
+					if (days1.contains((String)d)) return true; //se i giorni intersecano allora volontario linkato per quei giorni
+				}
+			}
+		}
+		return false;
+	}
+	
+	public boolean intersectOtherEventSamePlace (String dateStart1, String dateFinish1, String hour1, int duration1, String days1, JSONObject luogo) {
+		JSONArray tipiLuogo = luogo.getJSONArray("tipo-visita");
+		for (Object k : tipiLuogo) { //le chiavi di tipiLuogo sono stringhe per come vengono create
+			JSONObject tipo = jsonTipiVisite.getJSONObject((String)k);
+			System.out.println(tipo);
+			if (Time.comesBefore(dateStart1, tipo.getString("data-fine")) && !Time.comesBefore(dateFinish1, tipo.getString("data-inizio"))) {
+				JSONArray days2 = tipo.getJSONArray("giorni-prenotabili");
+				for (Object d : days2) {
+					if (days1.contains((String)d)) return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	public boolean checkValueExistance (String key, String path) {

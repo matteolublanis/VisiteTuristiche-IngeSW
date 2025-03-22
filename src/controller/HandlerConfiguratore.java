@@ -189,8 +189,9 @@ public class HandlerConfiguratore extends ControllerUtente{
 		a.view(gdb.getElencoVisiteProposteCompleteConfermateCancellateEffettuate());
 	}
 	private boolean chiediSioNo (App a, String val) {
+		a.view(val);
 		do {
-			String answer = (String)a.richiediVal(CostantiStruttura.STRING, "");
+			String answer = (String)a.richiediVal(CostantiStruttura.STRING, "si o no");
 			switch (answer.toLowerCase()) {
 			case "si":
 				return true;
@@ -218,10 +219,6 @@ public class HandlerConfiguratore extends ControllerUtente{
 				notFinished = chiediSioNo(a, ""); //se si, allora ha finito
 			}
 		} while (notFinished);
-		
-	}
-	@MethodName("Aggiungi nuova visita nel piano da pubblicare")
-	public void aggiungiVisita () {
 		
 	}
 	

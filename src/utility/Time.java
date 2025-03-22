@@ -106,7 +106,7 @@ public class Time {
 	
 	public static boolean comesBefore (String date1, String date2) {
 		if (!Time.isValidDate(date1) || !Time.isValidDate(date2)) return false;
-		String[] date1_vals = date1.split("-"); String[] date2_vals = date1.split("-");
+		String[] date1_vals = date1.split("-"); String[] date2_vals = date2.split("-");
 		for (int i = 2; i >= 0 ; i--) {
 			if (Integer.parseInt(date1_vals[i]) > Integer.parseInt(date2_vals[i])) return true;
 		}
