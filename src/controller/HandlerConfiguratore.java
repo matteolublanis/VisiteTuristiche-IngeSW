@@ -175,11 +175,15 @@ public class HandlerConfiguratore extends ControllerUtente{
 		String giorniPrenotabili = "";
 		boolean b = true;
 		do {
-			giorniPrenotabili = (String)a.richiediVal(CostantiStruttura.STRING, "giorni prenotabili della visita (1, 3, 7 indicano lun, mer, dom)");
-			Pattern pattern = Pattern.compile("^\\d+(,\\d+)*$"); 
-	        Matcher matcher = pattern.matcher(giorniPrenotabili);
-	        b = !matcher.matches();
-	        if (b) a.view("Formato non corretto, inserire come 1,2,3 senza spazi.");
+			String giorno = (a.richiediVal(CostantiStruttura.INT, "giorno prenotabile della visita (da 1 a 7, da lun a dom)"));
+			if (Integer.parseInt(giorno) < 1 || Integer.parseInt(giorno) > 7) {
+				b = true;
+				a.view("Numero inserito non valido, deve essere tra 1 e 7.");
+			}
+			else {
+				if (!giorniPrenotabili.contains(giorno)) giorniPrenotabili += giorno + ",";
+				b = chiediSioNo(a, "Vuoi aggiungere un altro giorno prenotabile?");
+			}
 		} while (b);
 		String oraInizio = "";
 		do {

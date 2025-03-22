@@ -330,7 +330,7 @@ public class Archivio {
 			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, String volontariVal) {
 		
 		JSONObject nuovoTipoVisita = new JSONObject();
-	    JSONArray giorniPrenotabili = new JSONArray();
+		JSONArray giorniPrenotabili = new JSONArray();
 	    String[] s = giorniPrenotabiliVal.split("\\s*,\\s*");
 	    String days = "";
 	    for (String k : s) {
@@ -345,17 +345,16 @@ public class Archivio {
 	    		return false;
 	    	}
 	    }
-	    if (days.length() == 0) return false;
+	    if (intersectOtherEventSamePlace (dataInizio, dataFine, oraInizio, durataVisita, days, jsonAmbitoTerritoriale.getJSONObject("luoghi").getJSONObject(luogo))) return false;
 	    String[] m = volontariVal.split("\\s*,\\s*");
 	    JSONArray volontari = new JSONArray();
 	    for (String k : m) {
-	    	JSONObject volontario = jsonUsers.getJSONObject(k);
-	    	JSONArray tipi = volontario.getJSONArray(TIPO_VISITA);
-	   		if (volontarioAlreadyLinkedForThatDay(dataInizio, dataFine, oraInizio, durataVisita, days, tipi)) return false;
-	   		tipi.put(tipoVisita);
-	   		volontari.put(k);
+    		JSONObject volontario = jsonUsers.getJSONObject(k);
+    		JSONArray tipi = volontario.getJSONArray(TIPO_VISITA);
+    		if (volontarioAlreadyLinkedForThatDay(dataInizio, dataFine, oraInizio, durataVisita, days, tipi)) return false;
+    		tipi.put(tipoVisita);
+    		volontari.put(k);
 	    }
-	    System.out.println(volontariVal);
 	    nuovoTipoVisita.put("titolo", titolo);
 	    nuovoTipoVisita.put("descrizione", descrizione);
 	    nuovoTipoVisita.put("punto-incontro", puntoIncontro);
