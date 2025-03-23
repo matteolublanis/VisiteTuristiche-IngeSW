@@ -2,6 +2,7 @@ package utility;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,7 +20,7 @@ public class Time {
 		start.set(year, month, day, hour, minutes);
 		Calendar end = Calendar.getInstance();
 		int[] endTime = calculateEndTimeWithStartAndDuration(hour, minutes, duration);
-		end.set(year, month, day, endTime[0], endTime[1]);
+		end.set(year, month - 1, day, endTime[0], endTime[1]);
 		return new Event(name, start, end);
 	}
 	
@@ -42,6 +43,43 @@ public class Time {
 	public static boolean todayIsDay (int day) {
 		String[] s = actualDate.split("-");
 		return (Integer.parseInt(s[0]) == day);
+	}
+	
+	public static ArrayList<String> getAllDatesSameDayOfTheWeek (String open, String close, int desideredDay) { 
+		ArrayList<String> s = new ArrayList<>();
+		String[] start = open.split("-");
+		String[] stop = close.split("-");
+		String stopMonth = stop[1], startMonth = start[1];
+		Calendar c = Calendar.getInstance();
+		for (int i = Integer.parseInt(start[2]) ; i <= Integer.parseInt(stop[2]) ; i++) { //ciclo anni
+			if (i != Integer.parseInt(stop[2])) { //se anno non finale cicla fino dicembre
+				stopMonth = "12";
+			}
+			else stopMonth = stop[1]; //se anno finale cicla fino stop mese
+			for (int j = 1 ; j <= Integer.parseInt(stopMonth) ; j++) { //ciclo mesi
+				if (i == Integer.parseInt(start[2]) && Integer.parseInt(startMonth) > 1) { //se anno iniziale e mese start dopo gennaio setta
+					j = Integer.parseInt(startMonth);
+					startMonth = "-1"; 
+				}
+				for (int k = 1 ; k <= 31 ; k++) { //ciclo giorni
+					if (Integer.parseInt(start[0]) > 1 && j == Integer.parseInt(start[1]) && i == Integer.parseInt(start[2])) { //se giorno iniziale maggiore di 1 setta
+						k = Integer.parseInt(start[0]);
+						start[0] = "-1";
+					}
+					String nowDate = new String(String.format("%02d-%02d-%04d", k, j, i));
+					if (Time.isValidDate(nowDate)) {
+						String[] a = nowDate.split("-");
+						c.set(Integer.parseInt(a[2]),Integer.parseInt(a[1]) - 1, Integer.parseInt(a[0]));
+						int day = c.get(Calendar.DAY_OF_WEEK);
+						if (day == 1) day = 7;
+						else day -= 1;
+						if (day == desideredDay) s.add(nowDate);
+					}
+					if (nowDate.equals(close)) break;
+				}
+			}
+		}
+		return s;
 	}
 	
 	public static boolean isThisDateInMonthiplus3 (String date) {
@@ -98,9 +136,12 @@ public class Time {
         	case "04": case "06": case "09": case "11":
         		if (Integer.parseInt(s[0]) > 30) return false; 
         		break;
+        	default:
+        		break;
         	}
         
         }
+
         return true;
 	}
 	

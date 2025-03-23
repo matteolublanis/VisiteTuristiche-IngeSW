@@ -31,7 +31,7 @@ public class ControllerArchivio {
 	public String getCredenzialiIniziali () {
 		if (checkPrimoAvvio()) {
 			d.setPrimoAvvio();
-			return new String(d.getCredenzialiConfIniziale()); //TODO: problema logico, la Stringa dovrebbe essere del DB
+			return new String(d.getCredenzialiConfIniziale()); 
 		}
 		else return ""; 
 	}
@@ -41,7 +41,7 @@ public class ControllerArchivio {
 	}
 	
 	public boolean checkPrimoAccesso (String username) {
-		return (d.checkPrimoAccesso(username) == true); //se true è il primo accesso
+		return (d.checkPrimoAccesso(username) == true); 
 	}
 	
 	public boolean indicaDatePrecluse (String date) {

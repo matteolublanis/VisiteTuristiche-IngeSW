@@ -11,7 +11,7 @@ public class Archivio {
 	
 	private static final String PATH_USERS = "src/archivio/users.json";
 	private static final String PATH_VISITE = "src/archivio/piano_visite.json";
-	private static final String PATH_VISITE_DAPUBBLICARE = "src/archivio/piano_visite.json";
+	private static final String PATH_VISITE_DAPUBBLICARE = "src/archivio/visite_da_pubblicare.json";
 	private static final String PATH_TIPI_VISITE = "src/archivio/tipo_visite.json";
 	private static final String PATH_AMBITO = "src/archivio/ambito_territoriale.json";
 	private static final String PATH_STORICO = "src/archivio/visite_effettuate_storico.json";
@@ -215,10 +215,14 @@ public class Archivio {
 	
 	public boolean indicaDatePrecluse (String date) {
 		if (Time.isValidDate(date)) {
-			JSONArray datePrecluse = (JSONArray) jsonPianoVisiteDaPubblicare.get("datePrecluseI+3");
-			if (!Time.isThisDateInMonthiplus3(date)) return false; 
+			JSONArray datePrecluse = jsonPianoVisiteDaPubblicare.getJSONArray("datePrecluseI+3");
+
+			if (!Time.isThisDateInMonthiplus3(date)) {
+				return false;
+			}
+			System.out.println(2);
 	        for (int i = 0; i < datePrecluse.length(); i++) {
-	            if (datePrecluse.get(i).equals(date)) {
+	            if (datePrecluse.get(i).equals(date)) { //eccezione?
 	                return false;
 	            }
 	        }
@@ -440,7 +444,7 @@ public class Archivio {
 	}
 
 	public String getCredenzialiConfIniziale() {
-		return CREDENZIALI_CONF_INIZIALE; //TODO da prendere dall'archivo
+		return CREDENZIALI_CONF_INIZIALE;
 	}
 
 }

@@ -1,8 +1,5 @@
 package controller;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import main.App;
 import utility.CostantiStruttura;
 import utility.MethodName;
@@ -94,9 +91,10 @@ public class HandlerConfiguratore extends ControllerUtente{
 	}
 	
 	@MethodName("Indica date precluse del prossimo piano a quello successivo a questo")
-	public boolean indicaDatePrecluse(App a) {
-		String data = (String)a.richiediVal(CostantiStruttura.STRING, "data preclusa"); //TODO comunicare per quale mese deve essere
-		return (gdb.indicaDatePrecluse(data));
+	public void indicaDatePrecluse(App a) {
+		String data = (String)a.richiediVal(CostantiStruttura.STRING, "data preclusa"); 
+		if ((gdb.indicaDatePrecluse(data))) a.view("La data preclusa è stata inserita.");
+		else a.view("La data preclusa non è stata inserita, assicurarsi che sia nel formato e nel periodo corretto.");
 	}
 	
 	private boolean aggiungiTipoVisitePartendoDaLuogo (App a, String luogo) {
