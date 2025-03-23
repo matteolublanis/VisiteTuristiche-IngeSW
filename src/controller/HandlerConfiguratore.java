@@ -15,11 +15,11 @@ public class HandlerConfiguratore extends ControllerUtente{
 	public HandlerConfiguratore(ControllerArchivio gdb, String username, App a) {
 		this.gdb = gdb;
 		this.username = username;
-		checkPrimoAccesso(a);
-		if (checkPrimaConfigurazioneArchivio(a)) configuraArchivio(a);
+		if (checkPrimoAccesso()) primoAccesso(a);
+		if (checkPrimaConfigurazioneArchivio()) configuraArchivio(a);
 	}
 	
-	private boolean checkPrimaConfigurazioneArchivio (App a) {
+	private boolean checkPrimaConfigurazioneArchivio () {
 		return gdb.checkPrimaConfigurazioneArchivio(username);
 	}
 	

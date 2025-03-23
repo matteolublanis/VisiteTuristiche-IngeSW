@@ -52,9 +52,10 @@ public class ControllerArchivio {
 		return d.getElencoVisiteProposteCompleteConfermateCancellateEffettuate();
 	}
 	
-	public boolean cambiaCredenziali (String username, Credenziali c) {
+	public boolean cambiaCredenziali (String username, Credenziali c, ControllerUtente gu) {
 		if (d.modificaCredenziali(username, c)) {
-			d.primoAccessoEseguito(c.getUsername());	
+			d.primoAccessoEseguito(c.getUsername());
+			gu.setUsername(c.getUsername());
 			return true;
 		}	
 		return false;

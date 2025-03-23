@@ -26,8 +26,11 @@ public abstract class ControllerUtente {
 		return gdb.getTipoUtente(username);
 	}
 	
-	public void checkPrimoAccesso(App a) {
-		if (gdb.checkPrimoAccesso(username)) {
+	public boolean checkPrimoAccesso() {
+		return gdb.checkPrimoAccesso(username);
+	}
+	public void primoAccesso(App a) {
+		if (checkPrimoAccesso()) {
 			a.view("Primo accesso eseguito.");
 			boolean b = false;
 			do {
@@ -41,7 +44,7 @@ public abstract class ControllerUtente {
 	}
 	
 	public boolean cambiaCredenziali(Credenziali c) {
-		return (gdb.cambiaCredenziali(this.username, c));
+		return (gdb.cambiaCredenziali(this.username, c, this));
 	}
 	
 	public void setUsername(String username) {
