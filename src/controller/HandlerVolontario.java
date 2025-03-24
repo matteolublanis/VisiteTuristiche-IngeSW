@@ -27,7 +27,7 @@ public class HandlerVolontario extends ControllerUtente {
  				a.view("I tipi di visita a te associati non richiedono nuove disponibilità o c'è un problema con l'archivio, contatta un configuratore.");
  			}
  			else {
- 				a.view(gdb.getDatePerDisponibilita(username) + "Indica le tue disponibilità.");
+ 				a.view(dateDisponibilita + "Indica le tue disponibilità.");
  				String data = "";
  				boolean validDate = true;
  				boolean b = true;

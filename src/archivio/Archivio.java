@@ -417,16 +417,7 @@ public class Archivio {
 	}
 	
 	public String getElencoTipiVisiteVolontario(String v) { 
- 	    String result = "";
- 
- 	    JSONObject volontario = jsonUsers.getJSONObject(v);
- 	    JSONArray visiteArray = volontario.getJSONArray(TIPO_VISITA);
- 
- 	    for (int i = 0; i < visiteArray.length(); i++) {
- 	        result += visiteArray.getString(i) + " ";
- 	    }
- 
- 	    return result;
+ 	    return jsonUsers.getJSONObject(v).getJSONArray(TIPO_VISITA).toString();
  	}
 	
 	public void setPrimaPubblicazione() {
