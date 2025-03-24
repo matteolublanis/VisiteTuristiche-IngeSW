@@ -93,6 +93,7 @@ public class Time {
 		String s = "";
 		String[] start = open.split("-");
 		String[] stop = close.split("-");
+		if (desideredDay < 1 || desideredDay > 7) return s; //TODO ECCEZIONE
 		String stopMonth = stop[1], startMonth = start[1];
 		Calendar c = Calendar.getInstance();
 		for (int i = Integer.parseInt(start[2]) ; i <= Integer.parseInt(stop[2]) ; i++) { //ciclo anni
