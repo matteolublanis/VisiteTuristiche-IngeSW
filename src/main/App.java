@@ -68,8 +68,8 @@ public class App {
 			} else {
 				view("Scelta non valida.");
 			}
-		} catch (Exception e) {
-			view("Formato inserito non corretto.");
+		} catch (Exception e) { //TODO migliorare gestione eccezioni
+			view("Formato inserito non corretto."); //Tutte le eccezioni vengono catturate qua quando si esegue un metodo, difficile da debuggare
 		}
 		
 		return true;
