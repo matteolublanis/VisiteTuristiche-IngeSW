@@ -406,6 +406,7 @@ public class Archivio {
 	public void setPossibilitaDareDisponibilitaVolontari(boolean b) {
 		if (isPrimaPubblicazione()) setPrimaPubblicazione();
 		jsonPianoVisiteDaPubblicare.put(POSSIBILE_DARE_DISPONIBILITA, b);
+		JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
 	}
 	
 	public void setPrimaPubblicazione() {
