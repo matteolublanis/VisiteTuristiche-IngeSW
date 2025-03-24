@@ -36,6 +36,18 @@ public class ControllerArchivio {
 		else return ""; 
 	}
 	
+	public void setPossibilitaDareDisponibilitaVolontari(boolean b) {
+		d.setPossibilitaDareDisponibilitaVolontari(b);
+	}
+	
+	public boolean isReleaseOrLaterDay() {
+		return d.isReleaseOrLaterDay();
+	}
+	
+	public boolean isPrimaPubblicazione () {
+		return d.isPrimaPubblicazione();
+	}
+	
 	public boolean checkCredenzialiCorrette (Credenziali c) {
 		return d.checkCredenzialiCorrette(c);
 	}

@@ -87,7 +87,16 @@ public class HandlerConfiguratore extends ControllerUtente{
 	
 	@MethodName("Pubbica il piano delle visite")
 	public void pubblicaPianoVisite(App a) {
-		
+		if (gdb.isReleaseOrLaterDay()) {
+			if (gdb.isPrimaPubblicazione()) {
+				a.view("Applicazione ufficialmente aperta.");
+				gdb.setPossibilitaDareDisponibilitaVolontari(true);
+			}
+			else {
+				//do something
+			}
+		}
+		else a.view("Non è possibile pubblicare adesso il piano.");
 	}
 	
 	@MethodName("Indica date precluse del prossimo piano a quello successivo a questo")

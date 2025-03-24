@@ -176,6 +176,11 @@ public class Time {
 		}
 	}
 	
+	public static int getActualDayOfTheMonth () {
+		String s[] = actualDate.split("-");
+		return Integer.parseInt(s[0]);
+	}
+	
 	public static int getTodayYear () {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
 		String s = ZonedDateTime.now().format(formatter);

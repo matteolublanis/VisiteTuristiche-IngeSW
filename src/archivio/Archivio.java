@@ -9,6 +9,8 @@ import utility.Time;
 
 public class Archivio {
 	
+	private static final String POSSIBILE_DARE_DISPONIBILITA = "possibile-dare-disponibilita";
+	private static final String PRIMA_PUBBLICAZIONE = "prima-pubblicazione";
 	private static final String VOLONTARI2 = "volontari";
 	private static final String MAX_FRUITORE = "max-fruitore";
 	private static final String MIN_FRUITORE = "min-fruitore";
@@ -50,7 +52,7 @@ public class Archivio {
 	private static final int RIGHE_USERS = 5;
 	private static final String PRIMO_AVVIO = "primo_avvio";
 	private static final String NAME = "nome";
-
+	private static int RELEASE_DAY = 16;
 
 	public Archivio () {
 		System.out.println("Creato archivio.");
@@ -399,6 +401,23 @@ public class Archivio {
 	    JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, PATH_AMBITO, 10);
 	    JSONUtility.aggiornaJsonFile(jsonTipiVisite, PATH_TIPI_VISITE, 10);
 	    return true; 
+	}
+	
+	public void setPossibilitaDareDisponibilitaVolontari(boolean b) {
+		if (isPrimaPubblicazione()) setPrimaPubblicazione();
+		jsonPianoVisiteDaPubblicare.put(POSSIBILE_DARE_DISPONIBILITA, b);
+	}
+	
+	public void setPrimaPubblicazione() {
+		jsonPianoVisiteDaPubblicare.put(PRIMA_PUBBLICAZIONE, false);
+	}
+	
+	public boolean isReleaseOrLaterDay() {
+		return (RELEASE_DAY >= Time.getActualDayOfTheMonth());
+	}
+	
+	public boolean isPrimaPubblicazione() {
+		return jsonPianoVisiteDaPubblicare.getBoolean(PRIMA_PUBBLICAZIONE);
 	}
 	
 	public boolean checkIfVisitTypeExists (String tipo) {

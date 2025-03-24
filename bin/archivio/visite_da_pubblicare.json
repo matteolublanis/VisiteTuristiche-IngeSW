@@ -1,4 +1,6 @@
 {
+	"prima-pubblicazione": true,
+	"possibile-dare-disponibilita": false,
           "visite_da_pubblicare": {
                     "09-09-2025": {"castello_brescia": {
                               "tipo-visita": "percorso_natura_castello",
