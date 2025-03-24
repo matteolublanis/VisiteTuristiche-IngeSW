@@ -2,6 +2,7 @@ package main;
 
 import java.lang.reflect.Method;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import controller.Login;
 import controller.ControllerUtente;
@@ -76,33 +77,32 @@ public class App {
 	}
 	
 	public String richiediVal (int tipo, String s) {
-		view("Inserisci " + s + ":");
-		switch (tipo) {
-		case CostantiStruttura.STRING:
-			s = sc.nextLine();
-			return s;
-		case CostantiStruttura.INT:
-			while (!sc.hasNextInt()) {
-				view("Formato non valido, reinserire.");
+		try {
+			view("Inserisci " + s + ":");
+			switch (tipo) {
+			case CostantiStruttura.STRING:
+				s = sc.nextLine();
+				return s;
+			case CostantiStruttura.INT:
+				while (!sc.hasNextInt()) {
+					view("Formato non valido, reinserire.");
+				}
+				return sc.nextLine();
+			case CostantiStruttura.BOOLEAN:
+				while (!sc.hasNextBoolean()) {
+					view("Formato non valido, reinserire.");
+				}
+				return sc.nextLine();
+			default:
+				view("Tipo non supportato.");
+				return null;
 			}
-			return sc.nextLine();
-		case CostantiStruttura.BOOLEAN:
-			while (!sc.hasNextBoolean()) {
-				view("Formato non valido, reinserire.");
-			}
-			return sc.nextLine();
-		default:
-			view("Tipo non supportato.");
-			return null;
 		}
-	}
-	
-	public Credenziali inserisciCredenziali () {
-		view("Username:");
-		String username = sc.nextLine();
-		view("Password:");
-		String password = sc.nextLine();
-		return new Credenziali(username, password);
+		catch (NoSuchElementException e) {
+			//premendo CTRL Z si manda un EOF, non ho trovato come gestirlo
+			throw e;
+		}
+
 	}
 	
 	public void view (String msg) {

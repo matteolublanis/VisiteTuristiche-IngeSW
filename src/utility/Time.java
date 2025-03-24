@@ -2,7 +2,6 @@ package utility;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,15 +39,60 @@ public class Time {
 		return fictionalDate;
 	}
 	
+	public static int[] getDesideredMonthAndYear(int releaseDay) {
+		String[] d = actualDate.split("-");
+		if (Integer.parseInt(d[0]) < releaseDay) {
+			if (Integer.parseInt(d[1]) + 1 > 12) return new int[] {(Integer.parseInt(d[1]) + 1 - 12), (Integer.parseInt(d[2]) + 1)};
+			return new int[] {(Integer.parseInt(d[1]) + 1), (Integer.parseInt(d[2]))};
+		}
+		else {
+			if (Integer.parseInt(d[1]) + 2 > 12) return new int[] {(Integer.parseInt(d[1]) + 2 - 12), (Integer.parseInt(d[2]) + 1)};
+			return new int[] {(Integer.parseInt(d[1]) + 2), (Integer.parseInt(d[2]))};
+		}
+	}
+	
+	public static String[] getAvailabilityWindow (String open, String close, int[] desideredMonthAndYear) {
+		String desideredStartingDate = String.format("%02d-%02d-%04d", 1, desideredMonthAndYear[0], desideredMonthAndYear[1]);
+		if (comesBefore(desideredStartingDate, open) || !comesBefore(desideredStartingDate, close)) {
+			return null;
+		}
+		else {
+			//se la starting date non è errata allora di sicuro inizia dal giorno 1
+			String finish = String.format("%02d-%02d-%04d", getMaxDayForMonth(desideredMonthAndYear[0], desideredMonthAndYear[1]), desideredMonthAndYear[0], desideredMonthAndYear[1]);
+			if (comesBefore(close, finish)) {
+				finish = String.format("%02d-%02d-%04d", Integer.parseInt(close.split("-")[0]), desideredMonthAndYear[0], desideredMonthAndYear[1]);
+				return new String[] {desideredStartingDate, finish};
+			}
+			else {
+				return new String[] {desideredStartingDate, finish};
+			}
+		}
+	}
+	
+	public static int getMaxDayForMonth(int month, int year) {
+    	switch (month) {
+    	case 2:
+    		if (isLeapYear(year)) {
+    			return 29;
+    		}
+    		else return 28;
+    	case 4: case 6: case 9: case 11:
+    		return 30;
+    	default:
+    		return 31;
+    	}
+	}
+	
 	public static boolean todayIsDay (int day) {
 		String[] s = actualDate.split("-");
 		return (Integer.parseInt(s[0]) == day);
 	}
 	
-	public static ArrayList<String> getAllDatesSameDayOfTheWeek (String open, String close, int desideredDay) { 
-		ArrayList<String> s = new ArrayList<>();
+	public static String getAllDatesSameDayOfTheWeek (String open, String close, int desideredDay) { 
+		String s = "";
 		String[] start = open.split("-");
 		String[] stop = close.split("-");
+		if (desideredDay < 1 || desideredDay > 7) return s; //TODO ECCEZIONE
 		String stopMonth = stop[1], startMonth = start[1];
 		Calendar c = Calendar.getInstance();
 		for (int i = Integer.parseInt(start[2]) ; i <= Integer.parseInt(stop[2]) ; i++) { //ciclo anni
@@ -73,7 +117,7 @@ public class Time {
 						int day = c.get(Calendar.DAY_OF_WEEK);
 						if (day == 1) day = 7;
 						else day -= 1;
-						if (day == desideredDay) s.add(nowDate);
+						if (day == desideredDay) s += (nowDate) + " ";
 					}
 					if (nowDate.equals(close)) break;
 				}
@@ -150,6 +194,7 @@ public class Time {
 		String[] date1_vals = date1.split("-"); String[] date2_vals = date2.split("-");
 		for (int i = 2; i >= 0 ; i--) {
 			if (Integer.parseInt(date1_vals[i]) < Integer.parseInt(date2_vals[i])) return true;
+			else if (Integer.parseInt(date1_vals[i]) > Integer.parseInt(date2_vals[i])) return false;
 		}
 		return false;
 	}

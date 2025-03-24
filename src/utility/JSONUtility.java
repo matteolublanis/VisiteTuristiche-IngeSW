@@ -28,6 +28,15 @@ public class JSONUtility {
         return jsonObject;
     }
     
+    public static boolean containsValue(JSONArray jsonArray, String value) {
+        for (int i = 0; i < jsonArray.length(); i++) {
+            if (jsonArray.get(i).equals(value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
 	//TODO gestire eccezione
     public static HashSet<String> allObjectsSameIntValue (JSONObject jsonObject, int tipo, String keyValue) {
     	HashSet<String> result = new HashSet<>();

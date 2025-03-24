@@ -18,7 +18,26 @@ public class ControllerArchivio {
 	public int getTipoUtente (String username) {
 		return d.getTipoUtente(username);
 	}
-
+	
+	public boolean getPossibilitaDareDisponibilita() {
+		return d.getPossibilitaDareDisponibilita();
+	}
+	
+	public boolean inserisciDisponibilita(String data, String username) {
+		return d.inserisciDisponibilita(data, username);
+	}
+	
+	public String getDatePerDisponibilita(String username) {
+		return d.getDatePerDisponibilita(username);
+	}
+	
+	public String getElencoTipiVisite () {
+ 		return d.getElencoTipiVisite();
+ 	}
+ 
+ 	public String getElencoTipiVisiteVolontario (String username) {
+ 		return d.getElencoTipiVisiteVolontario(username);
+ 	}
 	
 	public boolean impostaCredenzialiNuovoVolontario (String username, String password, String tipi_visiteVal, boolean tipiVisitaNecessario) {
 		return d.impostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal, tipiVisitaNecessario);
@@ -28,12 +47,12 @@ public class ControllerArchivio {
 		return d.checkPrimaConfigurazioneArchivio(username);
 	}
 	
-	public String getCredenzialiIniziali () {
+	public Credenziali getCredenzialiIniziali () {
 		if (checkPrimoAvvio()) {
 			d.setPrimoAvvio();
-			return new String(d.getCredenzialiConfIniziale()); 
+			return (d.getCredenzialiConfIniziale()); 
 		}
-		else return ""; 
+		else return null; 
 	}
 	
 	public void setPossibilitaDareDisponibilitaVolontari(boolean b) {

@@ -17,7 +17,9 @@ public class Login {
 		boolean b = true;
 		do {
 			a.view("Inserisci le tue credenziali:");
-			credenziali = a.inserisciCredenziali();
+			String username = a.richiediVal(CostantiStruttura.STRING, "username");
+			String password = a.richiediVal(CostantiStruttura.STRING, "password");
+			credenziali = new Credenziali(username, password);
 			b = !checkCredenzialiCorrette(credenziali);
 			if (b) a.view("Credenziali errate, reinserirle.");
 		} while (b);
@@ -30,7 +32,8 @@ public class Login {
 	
 	public void avvio (App a) {
 		if (checkPrimoAvvio()) {
-			a.view(gdb.getCredenzialiIniziali());
+			Credenziali c = gdb.getCredenzialiIniziali();
+			a.view("PRIMO AVVIO, CREDENZIALI INIZIALI\nUsername: " + c.getUsername() + "\nPassword: " + c.getPassword());
 			accesso(a);
 		}
 		else {
