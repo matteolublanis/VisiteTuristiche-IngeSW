@@ -413,7 +413,7 @@ public class Archivio {
 	}
 	
 	public boolean isReleaseOrLaterDay() {
-		return (RELEASE_DAY >= Time.getActualDayOfTheMonth());
+		return (RELEASE_DAY <= Time.getActualDayOfTheMonth());
 	}
 	
 	public boolean isPrimaPubblicazione() {
