@@ -20,8 +20,8 @@ public class ControllerArchivio {
 	}
 
 	
-	public boolean impostaCredenzialiNuovoVolontario (String username, String password, String tipi_visiteVal) {
-		return d.impostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal);
+	public boolean impostaCredenzialiNuovoVolontario (String username, String password, String tipi_visiteVal, boolean tipiVisitaNecessario) {
+		return d.impostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal, tipiVisitaNecessario);
 	}
 	
 	public boolean checkPrimaConfigurazioneArchivio (String username) {

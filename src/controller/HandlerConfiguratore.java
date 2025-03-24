@@ -36,7 +36,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 		String username = (String) a.richiediVal(CostantiStruttura.STRING, "username del nuovo volontario");
 		String password = (String) a.richiediVal(CostantiStruttura.STRING, "password del nuovo volontario");
 		String tipi_visiteVal = tipo;
-		if (gdb.impostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal)) {
+		if (gdb.impostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal, false)) {
 			a.view("Inserito nuovo volontario.");
 			return username;
 		}
@@ -51,8 +51,8 @@ public class HandlerConfiguratore extends ControllerUtente{
 		String username = (String) a.richiediVal(CostantiStruttura.STRING, "username del nuovo volontario");
 		String password = (String) a.richiediVal(CostantiStruttura.STRING, "password del nuovo volontario");
 		String tipi_visiteVal = (String) a.richiediVal(CostantiStruttura.STRING, "tipi delle visite associate al nuovo volontario (tipo1, tipo2,...)");
-		if (gdb.impostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal)) a.view("Inserito nuovo volontario.");
-		else a.view("Non è stato inserito il nuovo volontario.");	
+		if (gdb.impostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal, true)) a.view("Inserito nuovo volontario.");
+		else a.view("Non è stato inserito il nuovo volontario, username in uso o non sono stati inseriti tipi di visita esistenti.");	
 	}
 	
 	private void impostaAmbitoTerritoriale(String s) {
