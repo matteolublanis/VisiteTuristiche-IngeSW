@@ -23,10 +23,7 @@ public class Archivio {
 			
 			PATH_USERS = "src/archivio/users.json", PATH_VISITE = "src/archivio/piano_visite.json", PATH_VISITE_DAPUBBLICARE = "src/archivio/visite_da_pubblicare.json",
 			PATH_TIPI_VISITE = "src/archivio/tipo_visite.json", PATH_AMBITO = "src/archivio/ambito_territoriale.json", 
-			PATH_STORICO = "src/archivio/visite_effettuate_storico.json",
-
-			
-			CREDENZIALI_CONF_INIZIALE = "Username: admin Password: admin";
+			PATH_STORICO = "src/archivio/visite_effettuate_storico.json";
 
 	private JSONObject jsonTipiVisite = JSONUtility.readJsonFile(PATH_TIPI_VISITE);
 	private JSONObject jsonUsers = JSONUtility.readJsonFile(PATH_USERS);
@@ -34,7 +31,8 @@ public class Archivio {
 	private JSONObject jsonPianoVisite = JSONUtility.readJsonFile(PATH_VISITE); 
 	private JSONObject jsonPianoVisiteDaPubblicare = JSONUtility.readJsonFile(PATH_VISITE_DAPUBBLICARE);
 	private JSONObject jsonPianoStorico = JSONUtility.readJsonFile(PATH_STORICO);
-	private static final String[] GIORNISETTIMANA = new String[] {"lun","mar","mer","gio","ven","sab","dom"};
+	private static final String[] GIORNISETTIMANA = new String[] {"lun","mar","mer","gio","ven","sab","dom"},
+			CREDENZIALI_CONF_INIZIALE = new String[] {"admin", "admin"};
 	private static final int RIGHE_USERS = 5;
 	private static int RELEASE_DAY = 16;
 
@@ -526,8 +524,8 @@ public class Archivio {
 		}
 	}
 
-	public String getCredenzialiConfIniziale() { //TODO non ritornare una stringa ma un oggetto che dia tutte le info da stampare, tipo Credenziali
-		return CREDENZIALI_CONF_INIZIALE;
+	public Credenziali getCredenzialiConfIniziale() { 
+		return new Credenziali(CREDENZIALI_CONF_INIZIALE[0], CREDENZIALI_CONF_INIZIALE[1]);
 	}
 
 }

@@ -35,7 +35,9 @@ public abstract class ControllerUtente {
 			boolean b = false;
 			do {
 				a.view("Cambia le tue credenziali:");
-				Credenziali c = a.inserisciCredenziali();
+				String username = a.richiediVal(CostantiStruttura.STRING, "username");
+				String password = a.richiediVal(CostantiStruttura.STRING, "password");
+				Credenziali c = new Credenziali(username, password);
 				b = cambiaCredenziali(c);
 				if (!b) a.view("Credenziali non cambiate, username già presente.");
 			} while (!b);

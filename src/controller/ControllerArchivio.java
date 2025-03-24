@@ -47,12 +47,12 @@ public class ControllerArchivio {
 		return d.checkPrimaConfigurazioneArchivio(username);
 	}
 	
-	public String getCredenzialiIniziali () {
+	public Credenziali getCredenzialiIniziali () {
 		if (checkPrimoAvvio()) {
 			d.setPrimoAvvio();
-			return new String(d.getCredenzialiConfIniziale()); 
+			return (d.getCredenzialiConfIniziale()); 
 		}
-		else return ""; 
+		else return null; 
 	}
 	
 	public void setPossibilitaDareDisponibilitaVolontari(boolean b) {
