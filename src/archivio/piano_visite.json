@@ -1,0 +1,16 @@
+{
+	"18-08-2025": {
+		"castello_brescia": {
+			"tipo-visita": "percorso_natura_castello",
+			"volontari": "volontario4",
+			"stato": "confermata"
+		}
+	},
+	"07-08-2025": {
+		"parco_incisioni_valle_camonica": {
+			"tipo-visita": "passeggiata_valle_camonica",
+			"volontari": "volontario1",
+			"stato": "cancellata"
+		}
+	}
+}

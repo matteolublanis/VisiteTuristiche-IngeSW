@@ -1,0 +1,62 @@
+package controller;
+
+import main.App;
+import utility.CostantiStruttura;
+import utility.Credenziali;
+
+public class Login {
+	
+	private ControllerArchivio gdb;
+	
+	public Login(ControllerArchivio gdb) {
+		this.gdb = gdb;
+	}
+	
+	public void accesso(App a) {
+		Credenziali credenziali;
+		boolean b = true;
+		do {
+			a.view("Inserisci le tue credenziali:");
+			credenziali = a.inserisciCredenziali();
+			b = !checkCredenzialiCorrette(credenziali);
+			if (b) a.view("Credenziali errate, reinserirle.");
+		} while (b);
+		configureHandlerUtente(credenziali.getUsername(), a);
+	}
+	
+	public boolean checkPrimoAvvio() {
+		return gdb.checkPrimoAvvio();
+	}
+	
+	public void avvio (App a) {
+		if (checkPrimoAvvio()) {
+			a.view(gdb.getCredenzialiIniziali());
+			accesso(a);
+		}
+		else {
+			accesso(a);
+		}
+	}
+	
+	private boolean checkCredenzialiCorrette(Credenziali c) {
+		return gdb.checkCredenzialiCorrette(c);
+	}
+	
+	private void configureHandlerUtente (String username, App a){
+		switch (gdb.getTipoUtente(username)) {
+		case CostantiStruttura.CONFIGURATORE:
+			a.setGu(new HandlerConfiguratore(gdb, username, a));
+			break;
+		case CostantiStruttura.VOLONTARIO:
+			a.setGu(new HandlerVolontario(gdb, username, a));
+			break;
+		case CostantiStruttura.FRUITORE:
+			a.setGu(new HandlerFruitore(gdb, username));
+			break;
+		default: 
+			a.view("Problema setting gu");
+			return;
+
+		}
+	}
+}
