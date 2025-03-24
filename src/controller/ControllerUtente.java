@@ -66,6 +66,7 @@ public abstract class ControllerUtente {
 				return false;
 			default:
 				a.view("Formato non valido, inserire si/no");
+				break;
 			}
 		} while (true);
 
