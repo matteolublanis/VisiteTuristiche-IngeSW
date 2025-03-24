@@ -10,19 +10,17 @@ class TimeTest {
 
 	@Test
 	void getAllDatesSameDayOfTheWeekCheckIfDayCorrect() {
-		ArrayList<String> dates = Time.getAllDatesSameDayOfTheWeek("12-12-2025", "19-12-2025", 1);
-		for (String s : dates) {
-			assertEquals(s, "15-12-2025");
-		}
+		String dates = Time.getAllDatesSameDayOfTheWeek("12-12-2025", "19-12-2025", 1).split(",")[0];
+		assertEquals(dates, "15-12-2025");
 	}
 	
 	@Test
 	void getAllDatesSameDayOfTheWeekCheckIfDatesCorrect() {
-		ArrayList<String> dates = Time.getAllDatesSameDayOfTheWeek("01-12-2025", "01-02-2026", 1);
+		String[] dates = Time.getAllDatesSameDayOfTheWeek("01-12-2025", "01-02-2026", 1).split(",");
 		String[] c = new String[] {"01-12-2025", "08-12-2025", "15-12-2025", "22-12-2025", "29-12-2025",
 				"05-01-2026", "12-01-2026", "19-01-2026", "26-01-2026"};
 		for (int i = 0 ; i < c.length ; i++) {
-			assertEquals(dates.get(i), c[i]);
+			assertEquals(dates[i], c[i]);
 		}
 	}
 	

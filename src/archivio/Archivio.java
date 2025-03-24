@@ -1,5 +1,7 @@
 package archivio;
 
+import java.util.Arrays;
+
 import org.json.*;
 
 import utility.CostantiStruttura;
@@ -28,6 +30,7 @@ public class Archivio {
 	private static final String STATO_VISITA = "stato";
 	private static final String TITOLO = "titolo";
 	private static final String LUOGHI = "luoghi";
+	private static final String DISPONIBILITA = "disponibilita";
 	private static final String SPLIT_REGEX_LISTA = "\\s*,\\s*";
 	private static final String PATH_USERS = "src/archivio/users.json";
 	private static final String PATH_VISITE = "src/archivio/piano_visite.json";
@@ -363,7 +366,7 @@ public class Archivio {
 	    for (String k : s) {
 	    	try {
 	    		int j = Integer.parseInt(k);
-	    		if (!(j < 1 || j > 7)) {
+	    		if (!(j < 1 || j > 7) && !days.contains(GIORNISETTIMANA[j-1])) {
 		    		giorniPrenotabili.put(GIORNISETTIMANA[j-1]);
 		    		days += GIORNISETTIMANA[j-1] + ",";
 		    	}
@@ -403,6 +406,10 @@ public class Archivio {
 	    return true; 
 	}
 	
+	public boolean getPossibilitaDareDisponibilita() {
+		return jsonPianoVisiteDaPubblicare.getBoolean(POSSIBILE_DARE_DISPONIBILITA);
+	}
+	
 	public void setPossibilitaDareDisponibilitaVolontari(boolean b) {
 		if (isPrimaPubblicazione()) setPrimaPubblicazione();
 		jsonPianoVisiteDaPubblicare.put(POSSIBILE_DARE_DISPONIBILITA, b);
@@ -419,7 +426,7 @@ public class Archivio {
  	        result += visiteArray.getString(i) + " ";
  	    }
  
- 	    return result.trim();
+ 	    return result;
  	}
 	
 	public void setPrimaPubblicazione() {
@@ -485,6 +492,56 @@ public class Archivio {
 			}
 		}
 		return false;
+	}
+	
+	public String getDatePerDisponibilita(String username) {
+		if (getTipoUtente(username) == CostantiStruttura.VOLONTARIO) {
+			String result = "";
+			JSONObject volontario = jsonUsers.getJSONObject(username); //prendi user
+			JSONArray tipiVisite = volontario.getJSONArray(TIPO_VISITA); //prendi tipi
+			if (tipiVisite.length() == 0); //TODO se non ha tipi bisogna chiudere l'App e rimuovere il volontario associato, o gestire la mancanza
+			for (Object s : tipiVisite) { 
+				JSONObject tipo = jsonTipiVisite.getJSONObject((String)s);
+				try {
+					String[] periodoDaDareDisponibilita = Time.getAvailabilityWindow(tipo.getString(DATA_INIZIO), tipo.getString(DATA_FINE), Time.getDesideredMonthAndYear(RELEASE_DAY));
+					JSONArray giorni = tipo.getJSONArray(GIORNI_PRENOTABILI);
+					result += "Giorni tipo " + s + ": ";
+					for (Object g : giorni) {
+						result += Time.getAllDatesSameDayOfTheWeek(periodoDaDareDisponibilita[0], periodoDaDareDisponibilita[1], Arrays.asList(GIORNISETTIMANA).indexOf((String) g) + 1); //calcola giorni disponibili
+					}
+					result += "\n";
+				}
+				catch (Exception e) {
+					result += "Il tipo " + s + " non ha date disponibili, contattare un configuratore\n";
+				}
+			}
+			
+			return result;
+		}
+		else return "";
+	}
+	
+	public boolean inserisciDisponibilita(String data, String username) {
+		if (!getDatePerDisponibilita(username).contains(data)) return false;
+		else {
+			JSONObject disponibilita = jsonPianoVisiteDaPubblicare.getJSONObject(DISPONIBILITA);
+			if (!disponibilita.has(username)) {
+				JSONArray volontario = new JSONArray();
+				volontario.put(data);
+				disponibilita.put(username, volontario);
+				JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
+				return true;
+			}
+			else {
+				JSONArray volontario = disponibilita.getJSONArray(username);
+				if (JSONUtility.containsValue(volontario, data)) return true;
+				else {
+					volontario.put(data);
+					JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
+					return true;
+				}
+			}
+		}
 	}
 	
 	public boolean checkValueExistance (String key, String path) {

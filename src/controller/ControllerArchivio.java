@@ -19,6 +19,18 @@ public class ControllerArchivio {
 		return d.getTipoUtente(username);
 	}
 	
+	public boolean getPossibilitaDareDisponibilita() {
+		return d.getPossibilitaDareDisponibilita();
+	}
+	
+	public boolean inserisciDisponibilita(String data, String username) {
+		return d.inserisciDisponibilita(data, username);
+	}
+	
+	public String getDatePerDisponibilita(String username) {
+		return d.getDatePerDisponibilita(username);
+	}
+	
 	public String getElencoTipiVisite () {
  		return d.getElencoTipiVisite();
  	}

@@ -34,7 +34,7 @@
      "volontario1": {
           "password": "admin",
           "tipo": 2,
-          "primo-accesso": true,
+          "primo-accesso": false,
           "tipo-visita": [
                "museo_armi",
                "passeggiata_valle_camonica"
