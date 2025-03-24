@@ -18,7 +18,14 @@ public class ControllerArchivio {
 	public int getTipoUtente (String username) {
 		return d.getTipoUtente(username);
 	}
-
+	
+	public String getElencoTipiVisite () {
+ 		return d.getElencoTipiVisite();
+ 	}
+ 
+ 	public String getElencoTipiVisiteVolontario (String username) {
+ 		return d.getElencoTipiVisiteVolontario(username);
+ 	}
 	
 	public boolean impostaCredenzialiNuovoVolontario (String username, String password, String tipi_visiteVal, boolean tipiVisitaNecessario) {
 		return d.impostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal, tipiVisitaNecessario);

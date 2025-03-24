@@ -1,6 +1,7 @@
 package controller;
 
 import main.App;
+import utility.MethodName;
 
 public class HandlerVolontario extends ControllerUtente {
 	
@@ -9,5 +10,10 @@ public class HandlerVolontario extends ControllerUtente {
 		this.username = username;
 		if (checkPrimoAccesso()) primoAccesso(a);
 	}
+	
+	@MethodName("Visualizza i tipi di visita a cui sei collegato")
+ 	public void visualizzaTipiVisita(App a) {
+ 		a.view(gdb.getElencoTipiVisiteVolontario(username));
+ 	}
 	
 }

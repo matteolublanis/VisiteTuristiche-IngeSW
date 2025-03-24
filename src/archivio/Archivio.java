@@ -409,6 +409,19 @@ public class Archivio {
 		JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
 	}
 	
+	public String getElencoTipiVisiteVolontario(String v) { 
+ 	    String result = "";
+ 
+ 	    JSONObject volontario = jsonUsers.getJSONObject(v);
+ 	    JSONArray visiteArray = volontario.getJSONArray(TIPO_VISITA);
+ 
+ 	    for (int i = 0; i < visiteArray.length(); i++) {
+ 	        result += visiteArray.getString(i) + " ";
+ 	    }
+ 
+ 	    return result.trim();
+ 	}
+	
 	public void setPrimaPubblicazione() {
 		jsonPianoVisiteDaPubblicare.put(PRIMA_PUBBLICAZIONE, false);
 	}
