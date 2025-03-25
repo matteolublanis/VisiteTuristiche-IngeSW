@@ -45,6 +45,33 @@ public class HandlerConfiguratore extends ControllerUtente{
 			return "";
 		}
 	}
+	@MethodName("Rimuovi luogo")
+	public void rimuoviLuogo (App a) {
+		if (gdb.canAddOrRemove(username)) {
+			if (gdb.rimuoviLuogo(a.richiediVal(CostantiStruttura.STRING, "luogo da rimuovere"), username)) a.view("Luogo rimosso con successo, controllare conseguenze.");
+			else a.view("Luogo non rimosso, controllare di aver inserito i dati correttamente.");
+		}
+		else a.view("Non puoi attuare queste modifiche attualmente.");
+	}
+
+	@MethodName("Rimuovi volontario")
+	public void rimuoviVolontario (App a) {
+		if (gdb.canAddOrRemove(username)) {
+			if (gdb.rimuoviVolontario(a.richiediVal(CostantiStruttura.STRING, "username del volontario da rimuovere"), username)) a.view("Volontario rimosso con successo, controllare conseguenze.");
+			else a.view("Volontario non rimosso, controllare di aver inserito i dati correttamente.");
+		}
+		else a.view("Non puoi attuare queste modifiche attualmente.");
+	}
+
+	@MethodName("Aggiungi tipo di visita")
+	public void rimuoviTipo (App a) {
+		if (gdb.canAddOrRemove(username)) {
+			if (gdb.rimuoviTipo(a.richiediVal(CostantiStruttura.STRING, "tipo da rimuovere"), username)) a.view("Tipo visita rimosso con successo, controllare conseguenze.");
+			else a.view("Tipo visita non rimosso, controllare di aver inserito i dati correttamente.");
+		}
+		else a.view("Non puoi attuare queste modifiche attualmente.");
+	}
+	
 	
 	@MethodName("Aggiungi nuovo volontario")
 	public void impostaCredenzialiNuovoVolontario (App a) {

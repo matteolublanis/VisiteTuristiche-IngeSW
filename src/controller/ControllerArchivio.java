@@ -139,6 +139,21 @@ public class ControllerArchivio {
 		return d.impostaCredenzialiNuovoVolontario(username, password, tipiVisite, tipiVisitaNecessario);
 	}
 	
+	public boolean rimuoviLuogo (String luogo, String username) {
+		if (d.checkIfPlaceExists(luogo) && canAddOrRemove(username)) return d.rimuoviLuogo(luogo);
+		else return false;
+	}
+	
+	public boolean rimuoviVolontario (String volontario, String username) {
+		if (d.checkIfUserExists(volontario) && d.getTipoUtente(volontario) == CostantiStruttura.VOLONTARIO && canAddOrRemove(username)) return d.rimuoviVolontario(volontario);
+		else return false;
+	}
+	
+	public boolean rimuoviTipo (String tipo, String username) {
+		if (d.checkIfVisitTypeExists(tipo) && canAddOrRemove(username)) return d.rimuoviTipo(tipo);
+		else return false;
+	}
+	
 	public boolean canAddOrRemove(String username) {
 		if (checkIfUserExists(username) && getTipoUtente(username) == CostantiStruttura.CONFIGURATORE) {
 			return d.canAddOrRemove();
