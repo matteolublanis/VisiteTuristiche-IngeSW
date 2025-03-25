@@ -17,7 +17,7 @@ public class Archivio {
 			PUNTO_INCONTRO = "punto-incontro", DESCRIPTION = "descrizione", COLLOCAZIONE = "collocazione", DATE_PRECLUSE_MESEIPLUS3 = "datePrecluseI+3",
 			MAX_PRENOTAZIONE = "max_prenotazione", STATO_VISITA = "stato", TITOLO = "titolo", LUOGHI = "luoghi", DISPONIBILITA = "disponibilita",
 			TIPO_VISITA = "tipo-visita", PASSWORD = "password", TIPO_USER = "tipo", USERNAME = "username", PRIMO_ACCESSO = "primo-accesso", 
-			PRIMA_CONFIGURAZIONE = "prima_configurazione", PRIMO_AVVIO = "primo_avvio", NAME = "nome",
+			PRIMA_CONFIGURAZIONE = "prima_configurazione", PRIMO_AVVIO = "primo_avvio", NAME = "nome", ULTIMO_PIANO_PUBBLICATO = "ultimo-piano-pubblicato",
 			
 			SPLIT_REGEX_LISTA = "\\s*,\\s*",
 			
@@ -38,6 +38,28 @@ public class Archivio {
 
 	public Archivio () {
 		System.out.println("Creato archivio.");
+	}
+	
+	public boolean apriRaccoltaDisponibilita(String username) {
+		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE && Time.getActualDayOfTheMonth() >= RELEASE_DAY) { //TODO se configuratore si dimentica?
+			if (jsonPianoVisiteDaPubblicare.getBoolean(ULTIMO_PIANO_PUBBLICATO)) { //deve essere pubblicato prima il piano
+				jsonPianoVisiteDaPubblicare.put(POSSIBILE_DARE_DISPONIBILITA, true);
+				jsonPianoVisiteDaPubblicare.put(ULTIMO_PIANO_PUBBLICATO, true);
+				JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
+				return true;
+			}
+			else return false;
+		}
+		else return false;
+	}
+	
+	public boolean chiudiRaccoltaDisponibilita(String username) {
+		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE && Time.getActualDayOfTheMonth() >= RELEASE_DAY) { //TODO se configuratore si dimentica?
+			jsonPianoVisiteDaPubblicare.put(POSSIBILE_DARE_DISPONIBILITA, false);
+			JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
+			return true;
+		}
+		else return false;
 	}
 	
 	public boolean isPrimaConfigurazione () {
@@ -75,6 +97,11 @@ public class Archivio {
 		    	}
 		    }
 		    if (tipiVisitaNecessari && tipiVisite.length() == 0) return false;
+		    for (String k : s) {
+	    		JSONObject tipo = jsonTipiVisite.getJSONObject(k);
+	    		JSONArray vol = tipo.getJSONArray(VOLONTARI2);
+	    		vol.put(username);
+		    }
 		    volontario.put(USERNAME, username);
 			volontario.put(PRIMO_ACCESSO, true);
 			volontario.put(TIPO_USER, CostantiStruttura.VOLONTARIO);
@@ -82,6 +109,7 @@ public class Archivio {
 		    volontario.put(TIPO_VISITA, tipiVisite);
 			jsonUsers.put(username, volontario);
 			JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, RIGHE_USERS);
+			JSONUtility.aggiornaJsonFile(jsonTipiVisite, PATH_TIPI_VISITE, 10);
 			return true;
 		}
 	}
@@ -110,6 +138,28 @@ public class Archivio {
 			}
 		}
 		return result;
+	}
+	
+	public boolean associaVolontarioEsistenteATipoVisitaEsistente(String volontario, String tipoVisita) {
+		if (!checkValueExistance(volontario, PATH_USERS) || !checkValueExistance(tipoVisita, PATH_TIPI_VISITE)) return false;
+		JSONObject v = jsonUsers.getJSONObject(volontario);
+		JSONArray tipi = v.getJSONArray(TIPO_VISITA);
+		JSONObject tipo = jsonTipiVisite.getJSONObject(tipoVisita);
+		String dataInizio = tipo.getString(DATA_INIZIO);
+		String dataFine = tipo.getString(DATA_FINE);
+		String hour = tipo.getString(ORA_INIZIO);
+		String duration = tipo.getString(DURATA_VISITA);
+		JSONArray days = tipo.getJSONArray(GIORNI_PRENOTABILI);
+		if (volontarioAlreadyLinkedForThatDay(dataInizio, dataFine, hour, Integer.parseInt(duration), days.toString(), tipi)) {
+			return false;
+		}
+		else {
+			tipi.put(tipoVisita); //del volontario
+			tipo.getJSONArray(VOLONTARI2).put(volontario);
+			JSONUtility.aggiornaJsonFile(jsonTipiVisite, PATH_TIPI_VISITE, 10);
+			JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, 10);
+			return true;
+		}
 	}
 	
 	public boolean impostaCredenzialiNuovoConfiguratore(String username, String password) {
@@ -253,12 +303,7 @@ public class Archivio {
 	}
 	
 	public String getElencoTipiVisite () { //TODO non ritornare una stringa ma un oggetto che dia tutte le info da stampare
-		String result = "[";
-		for (String k : jsonTipiVisite.keySet()) {
-			result += k + ",";
-		}
-		result += "]";
-		return result;
+		return jsonTipiVisite.keySet().toString();
 	}
 
 	public String getElencoLuoghiVisitabili () { //TODO non ritornare una stringa ma un oggetto che dia tutte le info da stampare

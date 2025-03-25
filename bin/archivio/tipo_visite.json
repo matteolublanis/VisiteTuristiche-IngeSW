@@ -22,7 +22,10 @@
                     "max-fruitore": 15,
                     "punto-incontro": "Piazza del Foro, Brescia",
                     "durata-visita": "90",
-                    "volontari": ["volontario2"],
+                    "volontari": [
+                              "volontario2",
+                              "volontario9"
+                    ],
                     "data-inizio": "10-04-2025",
                     "data-fine": "31-10-2025",
                     "giorni-prenotabili": [

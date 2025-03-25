@@ -19,6 +19,14 @@ public class ControllerArchivio {
 		return d.getTipoUtente(username);
 	}
 	
+	public boolean apriRaccoltaDisponibilita(String username) {
+		return d.apriRaccoltaDisponibilita(username);
+	}
+	
+	public boolean associaVolontarioEsistenteATipoVisitaEsistente(String volontario, String tipoVisita) {
+		return d.associaVolontarioEsistenteATipoVisitaEsistente(volontario, tipoVisita);
+	}
+	
 	public boolean getPossibilitaDareDisponibilita() {
 		return d.getPossibilitaDareDisponibilita();
 	}
@@ -53,6 +61,10 @@ public class ControllerArchivio {
 			return (d.getCredenzialiConfIniziale()); 
 		}
 		else return null; 
+	}
+	
+	public boolean chiudiRaccoltaDisponibilita (String username) {
+		return d.chiudiRaccoltaDisponibilita(username);
 	}
 	
 	public void setPossibilitaDareDisponibilitaVolontari(boolean b) {

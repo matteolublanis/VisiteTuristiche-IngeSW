@@ -32,7 +32,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 		
 	}
 	
-	private String impostaNuovoVolontarioPerNuovoTipoVisita (App a, String tipo) {
+	private String impostaNuovoVolontarioConTipoVisitaScelto (App a, String tipo) {
 		String username = (String) a.richiediVal(CostantiStruttura.STRING, "username del nuovo volontario");
 		String password = (String) a.richiediVal(CostantiStruttura.STRING, "password del nuovo volontario");
 		String tipi_visiteVal = tipo;
@@ -106,58 +106,27 @@ public class HandlerConfiguratore extends ControllerUtente{
 		else a.view("La data preclusa non è stata inserita, assicurarsi che sia nel formato e nel periodo corretto.");
 	}
 	
-	private boolean aggiungiTipoVisitePartendoDaLuogo (App a, String luogo) {
-		String tipoVisita = (String)a.richiediVal(CostantiStruttura.STRING, "tag del tipo della visita");
-		String titolo = (String)a.richiediVal(CostantiStruttura.STRING, "titolo della visita");
-		String descrizione = (String)a.richiediVal(CostantiStruttura.STRING, "descrizione riassuntiva della visita");
-		String puntoIncontro = (String)a.richiediVal(CostantiStruttura.STRING, "punto di incontro della visita (locazione geografica)");
-		String dataInizio = (String)a.richiediVal(CostantiStruttura.STRING, "apertura del periodo della visita");
-		String dataFine = (String)a.richiediVal(CostantiStruttura.STRING, "chiusura del periodo della visita");
-		String giorniPrenotabili = (String)a.richiediVal(CostantiStruttura.STRING, "giorni prenotabili della visita (1, 3, 7 indicano lun, mer, dom)");
-		String oraInizio = (String)a.richiediVal(CostantiStruttura.STRING, "ora d'inizio visita");
-		int durataVisita = Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "durata della visita in minuti (ad esempio 120 sono 120 minuti, quindi 2 ore)"));
-		String ticket = (String)a.richiediVal(CostantiStruttura.STRING, "se è da acquistare o no un biglietto (si/no)");
-		int minFruitore =Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "minimo fruitori per confermare la visita"));
-		int maxFruitore = Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "massimo fruitori per completare la visita"));
-		String volontari = "";
-		if (chiediSioNo(a, "Vuoi associare un nuovo volontario per questo tipo di visita?")) {
-			do {
-				volontari = impostaNuovoVolontarioPerNuovoTipoVisita(a, "");
-			} while (volontari.equals(""));
+	@MethodName("Apri la raccolta delle disponibilità dei volontari")
+	public void apriRaccoltaDisponibilita (App a) {
+		if (gdb.apriRaccoltaDisponibilita(username)) {
+			a.view("La raccolta delle disponibilità è stata chiusa.");
 		}
 		else {
-			volontari = (String)a.richiediVal(CostantiStruttura.STRING, "volontari che gestiranno la visita (volontario1, volontario2,...)");
-		}
-		boolean daAcquistare = false;
-		switch (ticket.toLowerCase()) {
-		case "si":
-			daAcquistare = true;
-			break;
-		case "no":
-			daAcquistare = false;
-			return false;
-		default:
-			a.view("Formato acquistabile errato, non è stata aggiunto il nuovo tipo di visita.");
-				return false;
-		}
-		if (gdb.aggiungiTipoVisite(luogo, tipoVisita, titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniPrenotabili, oraInizio, durataVisita, daAcquistare, minFruitore, maxFruitore, volontari)) {
-			a.view("Il nuovo tipo di visita è stato aggiunto.");
-			return true;
-		}
-		else {
-			a.view("Il nuovo tipo di visita non è stato aggiunto.");
-			return false;
+			a.view("La raccolta delle disponibilità non è stata chiusa, non è ancora il momento.");
 		}
 	}
 	
-	@MethodName("Aggiungi tipo visite")
-	public boolean aggiungiTipoVisite(App a) {
-		String luogo = "";
-		do {
-			luogo = (String)a.richiediVal(CostantiStruttura.STRING, "luogo della visita");
-			if (!gdb.checkIfPlaceExists(luogo)) a.view("Il luogo inserito è inesistente.");
-		} while (!gdb.checkIfPlaceExists(luogo));
-		
+	@MethodName("Chiudi la raccolta delle disponibilità dei volontari")
+	public void chiudiRaccoltaDisponibilita (App a) {
+		if (gdb.chiudiRaccoltaDisponibilita(username)) {
+			a.view("La raccolta delle disponibilità è stata chiusa.");
+		}
+		else {
+			a.view("La raccolta delle disponibilità non è stata chiusa, non è ancora il momento.");
+		}
+	}
+	
+	private boolean aggiungiTipoVisitePartendoDaLuogo (App a, String luogo) {
 		String tipoVisita = "";
 		do {
 			tipoVisita = (String)a.richiediVal(CostantiStruttura.STRING, "tag del tipo della visita");
@@ -212,7 +181,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 		String volontari = "";
 		if (chiediSioNo(a, "Vuoi associare un nuovo volontario per questo tipo di visita?")) {
 			do {
-				volontari = impostaNuovoVolontarioPerNuovoTipoVisita(a, "");
+				volontari = impostaNuovoVolontarioConTipoVisitaScelto(a, "");
 			} while (volontari.equals(""));
 		}
 		else {
@@ -242,6 +211,24 @@ public class HandlerConfiguratore extends ControllerUtente{
 			a.view("Il nuovo tipo di visita non è stato aggiunto.");
 			return false;
 		}
+	}
+	
+	@MethodName("Aggiungi tipo visite")
+	public boolean aggiungiTipoVisite(App a) {
+		String luogo = "";
+		do {
+			luogo = (String)a.richiediVal(CostantiStruttura.STRING, "luogo della visita");
+			if (!gdb.checkIfPlaceExists(luogo)) a.view("Il luogo inserito è inesistente.");
+		} while (!gdb.checkIfPlaceExists(luogo));
+		
+		if (aggiungiTipoVisitePartendoDaLuogo(a, luogo)) {
+			a.view("Il nuovo tipo di visita è stato aggiunto.");
+			return true;
+		}
+		else {
+			a.view("Il nuovo tipo di visita non è stato aggiunto.");
+			return false;
+		}
 		
 	}
 	@MethodName("Aggiungi credenziali nuovo configuratore")
@@ -255,6 +242,41 @@ public class HandlerConfiguratore extends ControllerUtente{
 	@MethodName("Visualizza visite proposte, complete, confermate, cancellate e effettuate")
 	public void getElencoVisiteProposteCompleteConfermateCancellateEffettuate (App a) {
 		a.view(gdb.getElencoVisiteProposteCompleteConfermateCancellateEffettuate());
+	}
+	
+	@MethodName("Aggiungi volontari ad un tipo di visita esistente")
+	public void aggiungiVolontariATipiVisita (App a) {
+		String tipo = "";
+		boolean b;
+		a.view("Elenco dei tag delle visite esistenti:\n" + gdb.getElencoTipiVisite());
+		do {
+			tipo = a.richiediVal(CostantiStruttura.STRING, "tag del tipo dellla visita a cui associare nuovi volontari");
+			b = !gdb.checkIfVisitTypeExists(tipo);
+			if (b) a.view("Non esiste il tipo inserito, reinserisci i dati.");
+		} while (b);
+		b = true;
+		do {
+			if (chiediSioNo(a, "Vuoi creare un nuovo volontario da associare?")) {
+				while (impostaNuovoVolontarioConTipoVisitaScelto(a, tipo).equals(""));
+				b = chiediSioNo(a, "Vuoi aggiungere altri volontari?");
+			}
+			else {
+				String volontario = "";
+				getListaVolontari(a);
+				do {
+					volontario = a.richiediVal(CostantiStruttura.STRING, "volontari da associare");
+					if (!gdb.checkIfVolontarioExists(volontario)) {
+						a.view("Il volontario inserito non esiste, reinserie.");
+						b = true;
+					}
+					else {
+						if (!gdb.associaVolontarioEsistenteATipoVisitaEsistente(volontario, tipo)) a.view("Problema nell'inserimento del volontario, può essere che ci sia un problema con i giorni.");
+						b = false;
+					}
+				} while (b);
+				b = chiediSioNo(a, "Vuoi aggiungere altri volontari?");
+			}
+		} while (b);
 	}
 
 	@MethodName("Aggiungi luogo")
