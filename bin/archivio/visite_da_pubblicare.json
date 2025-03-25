@@ -1,11 +1,15 @@
 {
           "prima-pubblicazione": false,
           "disponibilita": {
-                    "volontario4": [],
-                    "volontario1": [
-                              "08-05-2025",
-                              "03-05-2025"
-                    ]
+                    "volontario4": {"05-05-2025": "percorso_natura_castello"},
+                    "volontario2": {"06-05-2025": "tour_brescia_romana"},
+                    "volontario1": {
+                              "06-05-2025": "museo_armi",
+                              "03-05-2025": "passeggiata_valle_camonica",
+                              "08-05-2025": "passeggiata_valle_camonica",
+                              "01-05-2025": "passeggiata_valle_camonica",
+                              "10-05-2025": "passeggiata_valle_camonica"
+                    }
           },
           "date-precluse": [],
           "ultimo-piano": true,

@@ -3,7 +3,7 @@
           "volontario4": {
                     "password": "admin",
                     "tipo": 2,
-                    "primo-accesso": true,
+                    "primo-accesso": false,
                     "tipo-visita": [
                               "percorso_natura_castello",
                               "museo_santa_giulia"
@@ -23,7 +23,7 @@
           "volontario2": {
                     "password": "admin",
                     "tipo": 2,
-                    "primo-accesso": true,
+                    "primo-accesso": false,
                     "tipo-visita": [
                               "tour_castello",
                               "escursione_monte_isola",

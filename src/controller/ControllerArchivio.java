@@ -1,6 +1,8 @@
 package controller;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -86,35 +88,36 @@ public class ControllerArchivio {
 	}
 	
 	public boolean inserisciDisponibilita(String data, String username) {
-		if (!getDatePerDisponibilita(username).contains(data)) return false;
-		else return d.inserisciDisponibilita(data, username);
+		HashMap<String, List<String>> m = getDatePerDisponibilita(username);
+		for (String k : m.keySet()) {
+			if (m.get(k).contains(data)) return d.inserisciDisponibilita(data, username, k);
+		}
+		return false;
 	}
 	
-	public String getDatePerDisponibilita(String username) {	
+	public HashMap<String, List<String>> getDatePerDisponibilita(String username) {	
 		if (getTipoUtente(username) == CostantiStruttura.VOLONTARIO) {
-			String result = "";
+			HashMap<String, List<String>> result = new HashMap<> () ;
 			JSONArray tipiVisite = d.getTipiVisitaOfVolontario(username);
-			if (tipiVisite.length() == 0) {
-				//TODO something
-			}
 			for (Object s : tipiVisite) { 
 				JSONObject tipo = d.getTipoVisitaJSONObject((String)s);
 				try {
 					String[] periodoDaDareDisponibilita = Time.getAvailabilityWindow(tipo.getString(Archivio.DATA_INIZIO), tipo.getString(Archivio.DATA_FINE), Time.getDesideredMonthAndYear(RELEASE_DAY, Time.getActualDate()));
 					JSONArray giorni = tipo.getJSONArray(Archivio.GIORNI_PRENOTABILI);
-					result += "Giorni tipo " + s + ": ";
+					
+					String days = "";
 					for (Object g : giorni) {
-						result += Time.getAllDatesSameDayOfTheWeek(periodoDaDareDisponibilita[0], periodoDaDareDisponibilita[1], Arrays.asList(Archivio.GIORNISETTIMANA).indexOf((String) g) + 1); //calcola giorni disponibili
+						days += Time.getAllDatesSameDayOfTheWeek(periodoDaDareDisponibilita[0], periodoDaDareDisponibilita[1], Arrays.asList(Archivio.GIORNISETTIMANA).indexOf((String) g) + 1); //calcola giorni disponibili
 					}
-					result += "\n";
-				}
+					result.put((String)s, Arrays.asList(days.split(" ")));
+				}	
 				catch (Exception e) {
-					result += "Il tipo " + s + " non ha date disponibili, contattare un configuratore\n";
+					//do smth
 				}
 			}
 			return result;
 		}
-		else return "";
+		else return null;
 	}
 	
 	public String getElencoTipiVisite () {

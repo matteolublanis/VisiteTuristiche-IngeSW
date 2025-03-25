@@ -452,20 +452,21 @@ public class Archivio {
 		return jsonUsers.getJSONObject(username).getJSONArray(TIPO_VISITA).length() == 0;
 	}
 	
-	public boolean inserisciDisponibilita(String data, String username) {
+	public boolean inserisciDisponibilita(String data, String username, String tagVisita) {
 		JSONObject disponibilita = jsonPianoVisiteDaPubblicare.getJSONObject(DISPONIBILITA);
 		if (!disponibilita.has(username)) {
-			JSONArray volontario = new JSONArray();
-			volontario.put(data);
-			disponibilita.put(username, volontario);
+			JSONObject d =  new JSONObject();
+			disponibilita.put(username, d);
+			JSONObject volontario = disponibilita.getJSONObject(username);
+			volontario.put(data, tagVisita);
 			JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
 			return true;
 		}
 		else {
-			JSONArray volontario = disponibilita.getJSONArray(username);
-			if (JSONUtility.containsValue(volontario, data)) return true;
+			JSONObject volontario = disponibilita.getJSONObject(username);
+			if (volontario.has(data)) return true;
 			else {
-				volontario.put(data);
+				volontario.put(data, tagVisita);
 				JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
 				return true;
 			}
