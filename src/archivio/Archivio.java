@@ -44,13 +44,21 @@ public class Archivio {
 		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE && Time.getActualDayOfTheMonth() >= RELEASE_DAY) { //TODO se configuratore si dimentica?
 			if (jsonPianoVisiteDaPubblicare.getBoolean(ULTIMO_PIANO_PUBBLICATO)) { //deve essere pubblicato prima il piano
 				jsonPianoVisiteDaPubblicare.put(POSSIBILE_DARE_DISPONIBILITA, true);
-				jsonPianoVisiteDaPubblicare.put(ULTIMO_PIANO_PUBBLICATO, true);
+				jsonPianoVisiteDaPubblicare.put(ULTIMO_PIANO_PUBBLICATO, false); //già pubblicato, da produrre uno nuovo
 				JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
 				return true;
 			}
 			else return false;
 		}
 		else return false;
+	}
+	
+	public boolean canAddOrRemove(String username) {
+		if (getTipoUtente(username) != CostantiStruttura.CONFIGURATORE) return false;
+		else {
+			if (jsonPianoVisiteDaPubblicare.getBoolean(PRIMA_PUBBLICAZIONE)) return true;
+			else return (jsonPianoVisiteDaPubblicare.getBoolean(ULTIMO_PIANO_PUBBLICATO) && !jsonPianoVisiteDaPubblicare.getBoolean(POSSIBILE_DARE_DISPONIBILITA));
+		}
 	}
 	
 	public boolean chiudiRaccoltaDisponibilita(String username) {

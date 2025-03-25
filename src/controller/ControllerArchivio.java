@@ -51,6 +51,10 @@ public class ControllerArchivio {
 		return d.impostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal, tipiVisitaNecessario);
 	}
 	
+	public boolean canAddOrRemove(String username) {
+		return d.canAddOrRemove(username);
+	}
+	
 	public boolean checkPrimaConfigurazioneArchivio (String username) {
 		return d.checkPrimaConfigurazioneArchivio(username);
 	}
