@@ -1,5 +1,6 @@
 {
-          "prima-pubblicazione": false,
+          "ultimo-piano-pubblicato": false,
+          "prima-pubblicazione": true,
           "disponibilita": {
                     "volontario4": {"05-05-2025": "percorso_natura_castello"},
                     "volontario2": {"06-05-2025": "tour_brescia_romana"},
@@ -12,7 +13,8 @@
                     }
           },
           "date-precluse": [],
-          "ultimo-piano": true,
           "datePrecluseI+3": [],
-          "possibile-dare-disponibilita": true
+          "mese-ultima-pubblicazione": 2,
+          "anno-ultima-pubblicazione": 2025,
+          "possibile-dare-disponibilita": false
 }

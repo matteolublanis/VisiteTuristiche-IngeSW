@@ -5,16 +5,21 @@ import org.json.*;
 import utility.CostantiStruttura;
 import utility.Credenziali;
 import utility.JSONUtility;
+import utility.Time;
 
 public class Archivio {
 	
+	private static final String ANNO_ULTIMA_PUBBLICAZIONE = "anno-ultima-pubblicazione";
+
+	private static final String MESE_ULTIMA_PUBBLICAZIONE = "mese-ultima-pubblicazione";
+
 	public static final String POSSIBILE_DARE_DISPONIBILITA = "possibile-dare-disponibilita",
 			PRIMA_PUBBLICAZIONE = "prima-pubblicazione", VOLONTARI2 = "volontari", MAX_FRUITORE = "max-fruitore", MIN_FRUITORE = "min-fruitore", DA_ACQUISTARE = "da-acquistare",
 			DURATA_VISITA = "durata-visita", ORA_INIZIO = "ora-inizio", GIORNI_PRENOTABILI = "giorni-prenotabili", DATA_FINE = "data-fine", DATA_INIZIO = "data-inizio",
 			PUNTO_INCONTRO = "punto-incontro", DESCRIPTION = "descrizione", COLLOCAZIONE = "collocazione", DATE_PRECLUSE_MESEIPLUS3 = "datePrecluseI+3",
 			MAX_PRENOTAZIONE = "max_prenotazione", STATO_VISITA = "stato", TITOLO = "titolo", LUOGHI = "luoghi", DISPONIBILITA = "disponibilita",
 			TIPO_VISITA = "tipo-visita", PASSWORD = "password", TIPO_USER = "tipo", USERNAME = "username", PRIMO_ACCESSO = "primo-accesso", 
-			PRIMA_CONFIGURAZIONE = "prima_configurazione", PRIMO_AVVIO = "primo_avvio", NAME = "nome", ULTIMO_PIANO = "ultimo-piano", LUOGO = "luogo",
+			PRIMA_CONFIGURAZIONE = "prima_configurazione", PRIMO_AVVIO = "primo_avvio", NAME = "nome", ULTIMO_PIANO = "ultimo-piano-pubblicato", LUOGO = "luogo",
 			
 			SPLIT_REGEX_LISTA = "\\s*,\\s*",
 			
@@ -44,6 +49,14 @@ public class Archivio {
 		jsonPianoVisiteDaPubblicare.put(POSSIBILE_DARE_DISPONIBILITA, true);
 		JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
 		return true;
+	}
+	
+	public int getUltimoMesePubblicazione() {
+		return jsonPianoVisiteDaPubblicare.getInt(MESE_ULTIMA_PUBBLICAZIONE);
+	}
+	
+	public int getUltimoAnnoPubblicazione() {
+		return jsonPianoVisiteDaPubblicare.getInt(ANNO_ULTIMA_PUBBLICAZIONE);
 	}
 	
 	public boolean canAddOrRemove() {
@@ -312,6 +325,8 @@ public class Archivio {
 	//TODO DA IMPLEMENTARE
 	public boolean pubblicaPiano() {
 		jsonPianoVisiteDaPubblicare.put(ULTIMO_PIANO, true);
+		jsonPianoVisiteDaPubblicare.put(MESE_ULTIMA_PUBBLICAZIONE, Time.getActualMonth());
+		jsonPianoVisiteDaPubblicare.put(ANNO_ULTIMA_PUBBLICAZIONE, Time.getActualYear());
 		JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
 		return true;
 	}
@@ -405,6 +420,9 @@ public class Archivio {
 	public void setPrimaPubblicazione() {
 		jsonPianoVisiteDaPubblicare.put(PRIMA_PUBBLICAZIONE, false);
 		jsonPianoVisiteDaPubblicare.put(ULTIMO_PIANO, true);
+		jsonPianoVisiteDaPubblicare.put(MESE_ULTIMA_PUBBLICAZIONE, Time.getActualMonth());
+		jsonPianoVisiteDaPubblicare.put(ANNO_ULTIMA_PUBBLICAZIONE, Time.getActualYear());
+
 		apriRaccoltaDisponibilita();
 		JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
 	}
