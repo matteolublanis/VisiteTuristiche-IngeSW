@@ -5,7 +5,6 @@ import org.json.*;
 import utility.CostantiStruttura;
 import utility.Credenziali;
 import utility.JSONUtility;
-import utility.Time;
 
 public class Archivio {
 	

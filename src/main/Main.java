@@ -26,15 +26,16 @@ public class Main {
             Clip clip = AudioSystem.getClip();
             clip.open(audioStream);
             clip.start();
-            //return;
+            while (clip.isOpen());
         }
-        
-		Archivio d = new Archivio();
-		System.out.println("Applicazione avviata...");
-		ControllerArchivio gdb = new ControllerArchivio(d);
-		Login gl = new Login(gdb);
-		App app = new App(gl); 
-		app.start();
+        else {
+    		Archivio d = new Archivio();
+    		System.out.println("Applicazione avviata...");
+    		ControllerArchivio gdb = new ControllerArchivio(d);
+    		Login gl = new Login(gdb);
+    		App app = new App(gl); 
+    		app.start();
+        }
 	}
 	
     private static boolean checkImageExists(String path) {
