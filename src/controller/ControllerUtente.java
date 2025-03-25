@@ -91,7 +91,6 @@ public abstract class ControllerUtente {
         metodiConcreti.sort((m1, m2) -> m1.getName().compareTo(m2.getName()));
     	return metodiConcreti;
     	/*
-    	 * 
     	Metodo più generico per usare più strutture, serve però ordine quindi usiamo linkedlist
     	return Arrays.stream(this.getClass().getDeclaredMethods())
                 .filter(metodo -> !metodo.getName().equals("getAzioniDisponibili")) //aggiungere altri controlli

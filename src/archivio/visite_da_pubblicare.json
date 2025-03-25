@@ -9,12 +9,13 @@
                               "03-05-2025": "passeggiata_valle_camonica",
                               "08-05-2025": "passeggiata_valle_camonica",
                               "01-05-2025": "passeggiata_valle_camonica",
+                              "13-05-2025": "museo_armi",
                               "10-05-2025": "passeggiata_valle_camonica"
                     }
           },
           "date-precluse": [],
           "datePrecluseI+3": [],
-          "mese-ultima-pubblicazione": 2, 
+          "mese-ultima-pubblicazione": 2,
           "anno-ultima-pubblicazione": 2025,
-          "possibile-dare-disponibilita": false
+          "possibile-dare-disponibilita": true
 }

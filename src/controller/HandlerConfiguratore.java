@@ -29,7 +29,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 		modificaMaxPrenotazione(a);
 		a.view("Inizio fase creazione luoghi dell'ambito territoriale.");
 		aggiungiLuogo(a);
-		
+		gdb.setPrimaConfigurazione();
 	}
 	
 	private String impostaNuovoVolontarioConTipoVisitaScelto (App a, String tipo) {

@@ -92,7 +92,7 @@ public class Time {
 		String s = "";
 		String[] start = open.split("-");
 		String[] stop = close.split("-");
-		if (desideredDay < 1 || desideredDay > 7) return s; //TODO ECCEZIONE
+		if (desideredDay < 1 || desideredDay > 7) return null; //TODO ECCEZIONE
 		String stopMonth = stop[1], startMonth = start[1];
 		Calendar c = Calendar.getInstance();
 		for (int i = Integer.parseInt(start[2]) ; i <= Integer.parseInt(stop[2]) ; i++) { //ciclo anni
@@ -126,11 +126,11 @@ public class Time {
 		return s;
 	}
 	
-	public static boolean isThisDateInMonthiplus3 (String date) {
+	public static boolean isThisDateInMonthiplus3 (String date) { //TODO usare variabili sensate
 		String[] d = date.split("-");
 		String[] s = actualDate.split("-");
-		if (Integer.parseInt(d[0]) > 15) { //16 mese i al 31 del mese i
-			if (Integer.parseInt(d[1]) < 10) {
+		if (Integer.parseInt(s[0]) > 15) { //se giorno di oggi maggiore di 15
+			if (Integer.parseInt(s[1]) < 10) {
 				return (Integer.parseInt(d[1]) == Integer.parseInt(s[1]) + 3);
 			}
 			else {
@@ -138,9 +138,9 @@ public class Time {
 				else return (Integer.parseInt(d[1]) == Integer.parseInt(s[1]) + 3 - 12); 
 			}
 		}
-		else { //dall'1 al 15 del mese i+1
-			if (Integer.parseInt(d[0]) < 16) {
-				if (Integer.parseInt(d[1]) < 11) {
+		else { //se giorno di oggi minore di 16
+			if (Integer.parseInt(s[0]) < 16) {
+				if (Integer.parseInt(s[1]) < 11) {
 					return (Integer.parseInt(d[1]) == Integer.parseInt(s[1]) + 2);
 				}
 				else {

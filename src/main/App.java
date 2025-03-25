@@ -70,6 +70,7 @@ public class App {
 			}
 		} catch (Exception e) { //TODO migliorare gestione eccezioni
 			view("Formato inserito non corretto."); //Tutte le eccezioni vengono catturate qua quando si esegue un metodo, difficile da debuggare
+			view(e.getMessage());
 		}
 		
 		return true;

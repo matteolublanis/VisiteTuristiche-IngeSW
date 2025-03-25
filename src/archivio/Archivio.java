@@ -88,7 +88,6 @@ public class Archivio {
 	public void impostaAmbitoTerritoriale (String nome) {
 		jsonAmbitoTerritoriale.put(NAME, nome);
 		JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, PATH_AMBITO, RIGHE_USERS);
-		setPrimaConfigurazione();
 	}
 	
 	public boolean checkIfUserExists(String user) {
@@ -150,13 +149,15 @@ public class Archivio {
 				rimuoviTipo((String)tipoVolontario); //rimuovo il tipo dai tipi, se rimuovendolo vado ad intaccare Luogo lo rimuove rimuovi tipo
 			}
 		}
+		/*
 		JSONObject disponibilita = jsonPianoVisiteDaPubblicare.getJSONObject(DISPONIBILITA);
 		disponibilita.remove(k);
+		*/
 		jsonUsers.remove(k);
 		JSONUtility.aggiornaJsonFile(jsonTipiVisite, PATH_TIPI_VISITE, 10);
 		JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, 10);
 		JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, PATH_AMBITO, 10);
-		JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
+		//JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
 		return true;
 	}
 	
@@ -176,7 +177,7 @@ public class Archivio {
 					}
 				}
 				if (tipiVolontario.length() == 0) {
-					jsonUsers.remove((String)m); //rimuovi volontario se non ha tipi associati
+					rimuoviLuogo((String)m); //TODO vedere se può usare rimuoviVolontario: jsonUsers.remove((String)m)
 				}
 			}
 			jsonTipiVisite.remove((String)s);
@@ -186,7 +187,7 @@ public class Archivio {
 		JSONUtility.aggiornaJsonFile(jsonTipiVisite, PATH_TIPI_VISITE, 10);
 		JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, 10);
 		JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, PATH_AMBITO, 10);
-
+		
 		return true;
 	}
 	
@@ -513,6 +514,7 @@ public class Archivio {
 	
 	public boolean inserisciDisponibilita(String data, String username, String tagVisita) {
 		JSONObject disponibilita = jsonPianoVisiteDaPubblicare.getJSONObject(DISPONIBILITA);
+		//TODO assicurarsi che non prenda datePrecluse
 		if (!disponibilita.has(username)) {
 			JSONObject d =  new JSONObject();
 			disponibilita.put(username, d);
