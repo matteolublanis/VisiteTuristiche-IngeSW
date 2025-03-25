@@ -11,7 +11,7 @@ public class Time {
 	private static final int DAY = 1, MONTH = 2, YEAR = 3;
 	private static final String TIMEREGEX = "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$";
     private static final String DATAREGEX = "\\b(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\\d{4})\\b";
-	private static String fictionalDate = "09-05-2018";
+	private static String fictionalDate = "17-04-2025";
     private static String actualDate = getTodaysDate();
     
 	public static Event createEvent (String name,int year, int month, int day, int hour, int minutes, int duration) {
@@ -219,6 +219,17 @@ public class Time {
 			return -1;
 			
 		}
+	}
+	
+	
+	public static int getActualYear () {
+		String s[] = actualDate.split("-");
+		return Integer.parseInt(s[2]);
+	}
+	
+	public static int getActualMonth () {
+		String s[] = actualDate.split("-");
+		return Integer.parseInt(s[1]);
 	}
 	
 	public static int getActualDayOfTheMonth () {

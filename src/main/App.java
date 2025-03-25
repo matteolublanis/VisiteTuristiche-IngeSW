@@ -7,7 +7,6 @@ import java.util.Scanner;
 import controller.Login;
 import controller.ControllerUtente;
 import utility.CostantiStruttura;
-import utility.Credenziali;
 import utility.MethodName;
 
 public class App { 
@@ -86,11 +85,13 @@ public class App {
 			case CostantiStruttura.INT:
 				while (!sc.hasNextInt()) {
 					view("Formato non valido, reinserire.");
+					sc.nextLine();
 				}
 				return sc.nextLine();
 			case CostantiStruttura.BOOLEAN:
 				while (!sc.hasNextBoolean()) {
 					view("Formato non valido, reinserire.");
+					sc.nextLine();
 				}
 				return sc.nextLine();
 			default:

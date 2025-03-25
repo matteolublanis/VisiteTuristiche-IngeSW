@@ -1,5 +1,8 @@
 package controller;
 
+import java.util.HashMap;
+import java.util.List;
+
 import main.App;
 import utility.CostantiStruttura;
 import utility.MethodName;
@@ -22,12 +25,20 @@ public class HandlerVolontario extends ControllerUtente {
  	public void comunicaDisponibilita(App a) {
  		if (gdb.getPossibilitaDareDisponibilita()) {
  			
- 			String dateDisponibilita = gdb.getDatePerDisponibilita(username);
- 			if (dateDisponibilita.equals("")) {
+ 			HashMap<String, List<String>> dateDisponibilita = gdb.getDatePerDisponibilita(username);
+ 			if (dateDisponibilita == null) {
  				a.view("I tipi di visita a te associati non richiedono nuove disponibilità o c'è un problema con l'archivio, contatta un configuratore.");
  			}
  			else {
- 				a.view(dateDisponibilita + "Indica le tue disponibilità.");
+ 				for (String k : dateDisponibilita.keySet()) {
+ 					a.view("Giorni tipo " + k + ": ");
+ 					String days = "";
+ 					for (String i : dateDisponibilita.get(k)) {
+ 						days += i + " ";
+ 					}
+ 					a.view(days);
+ 				}
+ 				a.view("Indica le tue disponibilità.");
  				String data = "";
  				boolean validDate = true;
  				boolean b = true;
