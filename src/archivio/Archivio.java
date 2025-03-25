@@ -87,7 +87,6 @@ public class Archivio {
 	public boolean impostaCredenzialiNuovoVolontario (String username, String password, String tipi_visiteVal, boolean tipiVisitaNecessari) {
 		if (checkValueExistance(username, PATH_USERS)) return false; 
 		else {
-			JSONObject volontario = new JSONObject();
 			JSONArray tipiVisite = new JSONArray();
 		    String[] s = tipi_visiteVal.split(SPLIT_REGEX_LISTA);
 		    for (String k : s) {
@@ -102,10 +101,7 @@ public class Archivio {
 	    		JSONArray vol = tipo.getJSONArray(VOLONTARI2);
 	    		vol.put(username);
 		    }
-		    volontario.put(USERNAME, username);
-			volontario.put(PRIMO_ACCESSO, true);
-			volontario.put(TIPO_USER, CostantiStruttura.VOLONTARIO);
-			volontario.put(PASSWORD, password);
+			JSONObject volontario = putValueInUserObject(username, true, CostantiStruttura.VOLONTARIO, password);
 		    volontario.put(TIPO_VISITA, tipiVisite);
 			jsonUsers.put(username, volontario);
 			JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, RIGHE_USERS);
@@ -121,18 +117,13 @@ public class Archivio {
 			JSONObject j = jsonPianoVisite.getJSONObject(k); 
 			for (String m : j.keySet()) { //visite del giorno
 				JSONObject visita = j.getJSONObject(m);
-				JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject(LUOGHI);
-				JSONObject luogo = luoghi.getJSONObject(m);
-				String titoloLuogo = luogo.getString(NAME);
-				JSONObject tipoVisita = jsonTipiVisite.getJSONObject(visita.getString(TIPO_VISITA));
-				String titoloVisita = tipoVisita.getString(TITOLO);
-				String stato = visita.getString(STATO_VISITA);
-				result += "Giorno: " + k + ", Luogo: " + titoloLuogo + ", Visita: " + titoloVisita + ", Stato: " + stato + "\n";
+				JSONObject luogo = jsonAmbitoTerritoriale.getJSONObject(LUOGHI).getJSONObject(m);
+				result += "Giorno: " + k + ", Luogo: " + luogo.getString(NAME) + ", Visita: " + jsonTipiVisite.getJSONObject(visita.getString(TIPO_VISITA)).getString(TITOLO) + ", Stato: " + visita.getString(STATO_VISITA) + "\n";
 			}
 		}
-		for (String k : jsonPianoStorico.keySet()) { //giorno
+		for (String k : jsonPianoStorico.keySet()) {
 			JSONObject j = jsonPianoStorico.getJSONObject(k); 
-			for (String m : j.keySet()) { //visite del giorno
+			for (String m : j.keySet()) { //TODO rivedere
 				String s = j.getString(m);
 				result += "Giorno: " + k + ", Tag Luogo: " + m + ", Tipo Visita: " + s + ", Stato: effettuata\n";
 			}
@@ -145,12 +136,7 @@ public class Archivio {
 		JSONObject v = jsonUsers.getJSONObject(volontario);
 		JSONArray tipi = v.getJSONArray(TIPO_VISITA);
 		JSONObject tipo = jsonTipiVisite.getJSONObject(tipoVisita);
-		String dataInizio = tipo.getString(DATA_INIZIO);
-		String dataFine = tipo.getString(DATA_FINE);
-		String hour = tipo.getString(ORA_INIZIO);
-		String duration = tipo.getString(DURATA_VISITA);
-		JSONArray days = tipo.getJSONArray(GIORNI_PRENOTABILI);
-		if (volontarioAlreadyLinkedForThatDay(dataInizio, dataFine, hour, Integer.parseInt(duration), days.toString(), tipi)) {
+		if (volontarioAlreadyLinkedForThatDay(tipo.getString(DATA_INIZIO), tipo.getString(DATA_FINE), tipo.getString(ORA_INIZIO), Integer.parseInt(tipo.getString(DURATA_VISITA)), tipo.getJSONArray(GIORNI_PRENOTABILI).toString(), tipi)) {
 			return false;
 		}
 		else {
@@ -165,15 +151,20 @@ public class Archivio {
 	public boolean impostaCredenzialiNuovoConfiguratore(String username, String password) {
 		if (checkValueExistance(username, PATH_USERS)) return false; 
 		else {
-			JSONObject configuratore = new JSONObject();
-			configuratore.put(USERNAME, username);
-			configuratore.put(PRIMO_ACCESSO, true);
-			configuratore.put(TIPO_USER, CostantiStruttura.CONFIGURATORE);
-			configuratore.put(PASSWORD, password);
+			JSONObject configuratore = putValueInUserObject(username, true, CostantiStruttura.CONFIGURATORE, password);
 			jsonUsers.put(username, configuratore);
 			JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, RIGHE_USERS);
 			return true;
 		}
+	}
+	
+	public JSONObject putValueInUserObject (String username, boolean firstAccess, int tipo, String pw) {
+		JSONObject user = new JSONObject();
+		user.put(USERNAME, username);
+		user.put(PRIMO_ACCESSO, true);
+		user.put(TIPO_USER, CostantiStruttura.CONFIGURATORE);
+		user.put(PASSWORD, pw);
+		return user;
 	}
 	
 	public boolean impostaMaxPrenotazione (int max) {
@@ -297,7 +288,7 @@ public class Archivio {
 	}
 	//TODO implementare
 	public void pubblicaPianoVisite() {
-		if (Time.todayIsDay(16)) {
+		if (Time.getActualDayOfTheMonth() >= RELEASE_DAY) {
 			
 		}
 	}
@@ -383,11 +374,9 @@ public class Archivio {
 			String dataInizio, String dataFine, String giorniPrenotabiliVal, String oraInizio,
 			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, String volontariVal) {
 		
-		JSONObject nuovoTipoVisita = new JSONObject();
 		JSONArray giorniPrenotabili = new JSONArray();
-	    String[] s = giorniPrenotabiliVal.split(SPLIT_REGEX_LISTA);
 	    String days = "";
-	    for (String k : s) {
+	    for (String k : giorniPrenotabiliVal.split(SPLIT_REGEX_LISTA)) {
 	    	try {
 	    		int j = Integer.parseInt(k);
 	    		if (!(j < 1 || j > 7) && !days.contains(GIORNISETTIMANA[j-1])) {
@@ -406,21 +395,11 @@ public class Archivio {
     		JSONObject volontario = jsonUsers.getJSONObject(k);
     		JSONArray tipi = volontario.getJSONArray(TIPO_VISITA);
     		if (volontarioAlreadyLinkedForThatDay(dataInizio, dataFine, oraInizio, durataVisita, days, tipi)) return false;
-    		tipi.put(tipoVisita);
+    		tipi.put(tipoVisita); 
     		volontari.put(k);
 	    }
-	    nuovoTipoVisita.put(TITOLO, titolo);
-	    nuovoTipoVisita.put(DESCRIPTION, descrizione);
-	    nuovoTipoVisita.put(PUNTO_INCONTRO, puntoIncontro);
-	    nuovoTipoVisita.put(DATA_INIZIO, dataInizio);
-	    nuovoTipoVisita.put(DATA_FINE, dataFine);
-	    nuovoTipoVisita.put(GIORNI_PRENOTABILI, giorniPrenotabili);
-	    nuovoTipoVisita.put(ORA_INIZIO, oraInizio); 
-	    nuovoTipoVisita.put(DURATA_VISITA, durataVisita); 
-	    nuovoTipoVisita.put(DA_ACQUISTARE, daAcquistare);
-	    nuovoTipoVisita.put(MIN_FRUITORE, minFruitore);
-	    nuovoTipoVisita.put(MAX_FRUITORE, maxFruitore);
-	    nuovoTipoVisita.put(VOLONTARI2, volontari);
+	    JSONObject nuovoTipoVisita = setNewVisitType(titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniPrenotabili, 
+	    		oraInizio, durataVisita, daAcquistare, minFruitore, maxFruitore, volontari);
 		JSONArray tipiLuogo = jsonAmbitoTerritoriale.getJSONObject(LUOGHI).getJSONObject(luogo).getJSONArray(TIPO_VISITA);
 		tipiLuogo.put(tipoVisita);
 	    jsonTipiVisite.put(tipoVisita, nuovoTipoVisita);
@@ -428,6 +407,25 @@ public class Archivio {
 	    JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, PATH_AMBITO, 10);
 	    JSONUtility.aggiornaJsonFile(jsonTipiVisite, PATH_TIPI_VISITE, 10);
 	    return true; 
+	}
+	
+	public JSONObject setNewVisitType (String titolo, String descrizione, String puntoIncontro, 
+			String dataInizio, String dataFine, JSONArray giorniPrenotabili, String oraInizio,
+			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, JSONArray volontari) {
+		JSONObject newVisitType = new JSONObject();
+		newVisitType.put(TITOLO, titolo);
+		newVisitType.put(DESCRIPTION, descrizione);
+		newVisitType.put(PUNTO_INCONTRO, puntoIncontro);
+		newVisitType.put(DATA_INIZIO, dataInizio);
+		newVisitType.put(DATA_FINE, dataFine);
+		newVisitType.put(GIORNI_PRENOTABILI, giorniPrenotabili);
+		newVisitType.put(ORA_INIZIO, oraInizio); 
+		newVisitType.put(DURATA_VISITA, durataVisita); 
+		newVisitType.put(DA_ACQUISTARE, daAcquistare);
+		newVisitType.put(MIN_FRUITORE, minFruitore);
+		newVisitType.put(MAX_FRUITORE, maxFruitore);
+		newVisitType.put(VOLONTARI2, volontari);
+		return newVisitType;
 	}
 	
 	public boolean getPossibilitaDareDisponibilita() {
