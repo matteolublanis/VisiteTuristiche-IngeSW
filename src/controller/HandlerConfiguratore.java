@@ -119,11 +119,11 @@ public class HandlerConfiguratore extends ControllerUtente{
 		if (gdb.isReleaseOrLaterDay()) {
 			if (gdb.isPrimaPubblicazione()) {
 				a.view("Applicazione ufficialmente aperta.");
-				gdb.pubblicaPiano();
+				gdb.pubblicaPiano(username);
 				gdb.setPossibilitaDareDisponibilitaVolontari(true);
 			}
 			else {
-				gdb.pubblicaPiano();
+				gdb.pubblicaPiano(username);
 			}
 		}
 		else a.view("Non è possibile pubblicare adesso il piano.");

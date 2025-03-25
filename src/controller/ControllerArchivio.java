@@ -31,8 +31,14 @@ public class ControllerArchivio {
 		return d.getTipoUtente(username);
 	}
 	
-	public boolean pubblicaPiano() {
-		return d.pubblicaPiano();
+	public boolean pubblicaPiano(String username) {
+		if(d.isPrimaPubblicazione()) return d.setPrimaPubblicazione();
+		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE && Time.getActualDayOfTheMonth() >= RELEASE_DAY &&
+				((d.getUltimoMesePubblicazione() == Time.getActualMonth() - 1 && d.getUltimoAnnoPubblicazione() == Time.getActualYear()) ||
+				(d.getUltimoMesePubblicazione() == Time.getActualMonth() - 1 + 12 && d.getUltimoAnnoPubblicazione() == Time.getActualYear() - 1))) {
+			return d.pubblicaPiano();
+		}
+		else return false;
 	}
 	
 	public boolean chiudiRaccoltaDisponibilita (String username) {
@@ -226,7 +232,7 @@ public class ControllerArchivio {
 		}
 		for (String k : jsonPianoStorico.keySet()) {
 			JSONObject j = jsonPianoStorico.getJSONObject(k); 
-			for (String m : j.keySet()) { //TODO rivedere
+			for (String m : j.keySet()) { 
 				String s = j.getString(m);
 				result += "Giorno: " + k + ", Tag Luogo: " + m + ", Tipo Visita: " + s + ", Stato: effettuata\n";
 			}

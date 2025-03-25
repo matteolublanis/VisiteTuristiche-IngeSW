@@ -20,6 +20,7 @@ public class Archivio {
 			MAX_PRENOTAZIONE = "max_prenotazione", STATO_VISITA = "stato", TITOLO = "titolo", LUOGHI = "luoghi", DISPONIBILITA = "disponibilita",
 			TIPO_VISITA = "tipo-visita", PASSWORD = "password", TIPO_USER = "tipo", USERNAME = "username", PRIMO_ACCESSO = "primo-accesso", 
 			PRIMA_CONFIGURAZIONE = "prima_configurazione", PRIMO_AVVIO = "primo_avvio", NAME = "nome", ULTIMO_PIANO = "ultimo-piano-pubblicato", LUOGO = "luogo",
+			DATE_PRECLUSE = "date-precluse",
 			
 			SPLIT_REGEX_LISTA = "\\s*,\\s*",
 			
@@ -149,11 +150,13 @@ public class Archivio {
 				rimuoviTipo((String)tipoVolontario); //rimuovo il tipo dai tipi, se rimuovendolo vado ad intaccare Luogo lo rimuove rimuovi tipo
 			}
 		}
+		JSONObject disponibilita = jsonPianoVisiteDaPubblicare.getJSONObject(DISPONIBILITA);
+		disponibilita.remove(k);
 		jsonUsers.remove(k);
 		JSONUtility.aggiornaJsonFile(jsonTipiVisite, PATH_TIPI_VISITE, 10);
 		JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, 10);
 		JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, PATH_AMBITO, 10);
-
+		JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
 		return true;
 	}
 	
@@ -322,12 +325,50 @@ public class Archivio {
 		JSONObject utente = (JSONObject) jsonUsers.get(username);
 		return utente.getBoolean(PRIMO_ACCESSO);
 	}
-	//TODO DA IMPLEMENTARE
+	
+	//what a glorious set of stairs we make
 	public boolean pubblicaPiano() {
+		JSONObject disponibilita = jsonPianoVisiteDaPubblicare.getJSONObject(DISPONIBILITA);
+		for (String usernameVol : disponibilita.keySet()) {
+			JSONObject volontarioDisponibilita = disponibilita.getJSONObject(usernameVol);
+			for (String data : volontarioDisponibilita.keySet()) {
+				if (jsonPianoVisite.has(data)) {
+					String tipo = volontarioDisponibilita.getString(data);
+					if (jsonPianoVisite.getJSONObject(data).has(tipo)) {
+						jsonPianoVisite.getJSONObject(data).getJSONObject(tipo).getJSONArray(VOLONTARI2).put(usernameVol);
+					}
+					else {
+						JSONObject visita = new JSONObject();
+						JSONArray volontariAssociati = new JSONArray();
+						volontariAssociati.put(usernameVol);
+						visita.put(LUOGO, jsonTipiVisite.getJSONObject(tipo).getString(LUOGO));
+						visita.put(STATO_VISITA, "proposta");
+						visita.put(VOLONTARI2, volontariAssociati);
+						jsonPianoVisite.getJSONObject(data).put(tipo, visita);
+					}
+				}
+				else {
+					jsonPianoVisite.put(data, new JSONObject()); //creo data nel piano
+					String tipo = volontarioDisponibilita.getString(data);
+					JSONObject visita = new JSONObject();
+					JSONArray volontariAssociati = new JSONArray();
+					volontariAssociati.put(usernameVol);
+					visita.put(LUOGO, jsonTipiVisite.getJSONObject(tipo).getString(LUOGO));
+					visita.put(STATO_VISITA, "proposta");
+					visita.put(VOLONTARI2, volontariAssociati);
+					jsonPianoVisite.getJSONObject(data).put(tipo, visita);
+				}
+			}
+		}
+		
+		jsonPianoVisiteDaPubblicare.put(DATE_PRECLUSE, jsonPianoVisiteDaPubblicare.getJSONArray(DATE_PRECLUSE_MESEIPLUS3));
+		jsonPianoVisiteDaPubblicare.put(DATE_PRECLUSE_MESEIPLUS3, new JSONArray());
+		jsonPianoVisiteDaPubblicare.put(DISPONIBILITA, new JSONObject());
 		jsonPianoVisiteDaPubblicare.put(ULTIMO_PIANO, true);
 		jsonPianoVisiteDaPubblicare.put(MESE_ULTIMA_PUBBLICAZIONE, Time.getActualMonth());
 		jsonPianoVisiteDaPubblicare.put(ANNO_ULTIMA_PUBBLICAZIONE, Time.getActualYear());
 		JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
+		JSONUtility.aggiornaJsonFile(jsonPianoVisite, PATH_VISITE, 10);
 		return true;
 	}
 	
@@ -407,7 +448,6 @@ public class Archivio {
 	}
 	
 	public void setPossibilitaDareDisponibilitaVolontari(boolean b) {
-		if (isPrimaPubblicazione()) setPrimaPubblicazione();
 		jsonPianoVisiteDaPubblicare.put(POSSIBILE_DARE_DISPONIBILITA, b);
 		jsonPianoVisiteDaPubblicare.put(ULTIMO_PIANO, b);
 		JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
@@ -417,7 +457,7 @@ public class Archivio {
  	    return jsonUsers.getJSONObject(v).getJSONArray(TIPO_VISITA).toString();
  	}
 	
-	public void setPrimaPubblicazione() {
+	public boolean setPrimaPubblicazione() {
 		jsonPianoVisiteDaPubblicare.put(PRIMA_PUBBLICAZIONE, false);
 		jsonPianoVisiteDaPubblicare.put(ULTIMO_PIANO, true);
 		jsonPianoVisiteDaPubblicare.put(MESE_ULTIMA_PUBBLICAZIONE, Time.getActualMonth());
@@ -425,6 +465,7 @@ public class Archivio {
 
 		apriRaccoltaDisponibilita();
 		JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
+		return true;
 	}
 	
 	public boolean isPrimaPubblicazione() {
