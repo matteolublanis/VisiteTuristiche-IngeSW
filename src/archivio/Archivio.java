@@ -14,7 +14,7 @@ public class Archivio {
 			PUNTO_INCONTRO = "punto-incontro", DESCRIPTION = "descrizione", COLLOCAZIONE = "collocazione", DATE_PRECLUSE_MESEIPLUS3 = "datePrecluseI+3",
 			MAX_PRENOTAZIONE = "max_prenotazione", STATO_VISITA = "stato", TITOLO = "titolo", LUOGHI = "luoghi", DISPONIBILITA = "disponibilita",
 			TIPO_VISITA = "tipo-visita", PASSWORD = "password", TIPO_USER = "tipo", USERNAME = "username", PRIMO_ACCESSO = "primo-accesso", 
-			PRIMA_CONFIGURAZIONE = "prima_configurazione", PRIMO_AVVIO = "primo_avvio", NAME = "nome", ULTIMO_PIANO = "ultimo-piano",
+			PRIMA_CONFIGURAZIONE = "prima_configurazione", PRIMO_AVVIO = "primo_avvio", NAME = "nome", ULTIMO_PIANO = "ultimo-piano", LUOGO = "luogo",
 			
 			SPLIT_REGEX_LISTA = "\\s*,\\s*",
 			
@@ -87,8 +87,64 @@ public class Archivio {
 		}
 	}
 	
+	public boolean rimuoviTipo (String k) {
+		JSONObject tipo = jsonTipiVisite.getJSONObject(k);
+		JSONArray volontariTipo = tipo.getJSONArray(VOLONTARI2);
+		for (Object volontarioTipo : volontariTipo) {
+			JSONObject volontario = jsonUsers.getJSONObject((String) volontarioTipo);
+			JSONArray tipiAssociatiVolontario = volontario.getJSONArray(TIPO_VISITA);
+			for (int i = 0 ; i < tipiAssociatiVolontario.length() ; i++) {
+				if (tipiAssociatiVolontario.get(i).equals(k)) {
+					tipiAssociatiVolontario.remove(i);
+					break;
+				}
+			}
+			if (tipiAssociatiVolontario.length() == 0) rimuoviVolontario((String) volontarioTipo);
+		}
+		JSONObject luogo = jsonAmbitoTerritoriale.getJSONObject(LUOGHI).getJSONObject(tipo.getString(LUOGO));
+		JSONArray tipiLuogo = luogo.getJSONArray(TIPO_VISITA);
+		for (int i = 0 ; i < tipiLuogo.length() ; i++) {
+			if (tipiLuogo.getString(i).equals(k)) {
+				tipiLuogo.remove(i); //rimuove reference
+				break;
+			}
+		}
+		if (checkIfPlaceExists(tipo.getString(LUOGO)))
+			if (checkIfLuogoHasNoVisitType(tipo.getString(LUOGO))) rimuoviLuogo(tipo.getString(LUOGO));
+		
+		jsonTipiVisite.remove(k);
+		JSONUtility.aggiornaJsonFile(jsonTipiVisite, PATH_TIPI_VISITE, 10);
+		JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, 10);
+		JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, PATH_AMBITO, 10);
+
+		return true;
+	}
+	
+	public boolean rimuoviVolontario (String k) {
+		JSONObject volontario = jsonUsers.getJSONObject(k); //prendo volontario
+		JSONArray tipiVolontario = volontario.getJSONArray(TIPO_VISITA);
+		for (Object tipoVolontario : tipiVolontario) { //ciclo sui suoi tipi
+			JSONObject tipo = jsonTipiVisite.getJSONObject((String)tipoVolontario);
+			JSONArray volontariTipo = tipo.getJSONArray(VOLONTARI2);
+			for (int i = 0 ; i < volontariTipo.length() ; i++) { //cicla sui volontari per rimuovere quello che voglio rimuovere
+				if (volontariTipo.get(i).equals(k)) {
+					volontariTipo.remove(i); 
+					break;
+				}
+			}
+			if (checkIfVisitTypeHasNoVolunteer((String) tipoVolontario)) { //se dopo aver rimosso il volontario il tipoVisita non ha più volontari lo elimino
+				rimuoviTipo((String)tipoVolontario); //rimuovo il tipo dai tipi, se rimuovendolo vado ad intaccare Luogo lo rimuove rimuovi tipo
+			}
+		}
+		jsonUsers.remove(k);
+		JSONUtility.aggiornaJsonFile(jsonTipiVisite, PATH_TIPI_VISITE, 10);
+		JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, 10);
+		JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, PATH_AMBITO, 10);
+
+		return true;
+	}
+	
 	public boolean rimuoviLuogo (String k) {
-		//TODO controllo da mettere nel controller
 		JSONObject luogo = jsonAmbitoTerritoriale.getJSONObject(LUOGHI).getJSONObject(k);
 		JSONArray tipiLuogo = luogo.getJSONArray(TIPO_VISITA);
 		for (Object s : tipiLuogo) {
@@ -300,7 +356,7 @@ public class Archivio {
 	public boolean aggiungiTipoVisite(String luogo, String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
 			String dataInizio, String dataFine,  String oraInizio,
 			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, JSONArray giorniPrenotabili, JSONArray volontari) {
-	    JSONObject nuovoTipoVisita = setNewVisitType(titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniPrenotabili, 
+	    JSONObject nuovoTipoVisita = setNewVisitType(luogo, titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniPrenotabili, 
 	    		oraInizio, durataVisita, daAcquistare, minFruitore, maxFruitore, volontari);
 		JSONArray tipiLuogo = jsonAmbitoTerritoriale.getJSONObject(LUOGHI).getJSONObject(luogo).getJSONArray(TIPO_VISITA);
 		tipiLuogo.put(tipoVisita);
@@ -311,10 +367,11 @@ public class Archivio {
 	    return true; 
 	}
 	
-	public JSONObject setNewVisitType (String titolo, String descrizione, String puntoIncontro, 
+	public JSONObject setNewVisitType (String luogo,String titolo, String descrizione, String puntoIncontro, 
 			String dataInizio, String dataFine, JSONArray giorniPrenotabili, String oraInizio,
 			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, JSONArray volontari) {
 		JSONObject newVisitType = new JSONObject();
+		newVisitType.put(LUOGO, luogo);
 		newVisitType.put(TITOLO, titolo);
 		newVisitType.put(DESCRIPTION, descrizione);
 		newVisitType.put(PUNTO_INCONTRO, puntoIncontro);

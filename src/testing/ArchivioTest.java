@@ -10,7 +10,7 @@ class ArchivioTest {
 	@Test
 	void test() {
 		Archivio d = new Archivio();
-		assertTrue(d.rimuoviLuogo("casa-mia"));
+		assertTrue(d.rimuoviVolontario("volontario10"));
 	}
 
 }
