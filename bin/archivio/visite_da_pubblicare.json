@@ -1,5 +1,4 @@
 {
-          "ultimo-piano-pubblicato": false,
           "prima-pubblicazione": false,
           "disponibilita": {
                     "volontario4": [],
@@ -9,6 +8,7 @@
                     ]
           },
           "date-precluse": [],
+          "ultimo-piano": false,
           "datePrecluseI+3": [],
-          "possibile-dare-disponibilita": false
+          "possibile-dare-disponibilita": true
 }

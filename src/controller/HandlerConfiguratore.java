@@ -58,11 +58,11 @@ public class HandlerConfiguratore extends ControllerUtente{
 	}
 	
 	private void impostaAmbitoTerritoriale(String s) {
-		gdb.impostaAmbitoTerritoriale(s);
+		gdb.impostaAmbitoTerritoriale(s, username);
 	}
 	
 	private boolean impostaMaxPrenotazione(int maxPrenotazione) {
-		return (gdb.modificaMaxPrenotazione(maxPrenotazione));
+		return (gdb.modificaMaxPrenotazione(username, maxPrenotazione));
 	}
 	
 	@MethodName("Modifica numero max prenotazione per fruitore")
@@ -74,28 +74,29 @@ public class HandlerConfiguratore extends ControllerUtente{
 	
 	@MethodName("Visualizza lista volontari")
 	public void getListaVolontari(App a) {
-		 a.view(gdb.getListaUser(CostantiStruttura.VOLONTARIO));
+		 a.view(gdb.getListaUser(username, CostantiStruttura.VOLONTARIO));
 	}
 	
 	@MethodName("Visualizza elenco luoghi visitabili")
 	public void getElencoLuoghiVisitabili(App a) {
-		a.view(gdb.getElencoLuoghiVisitabili());
+		a.view(gdb.getElencoLuoghiVisitabili(username));
 	}
 	
 	@MethodName("Visualizza elenco tipi visite per luogo")
 	public void getElencoTipiVisiteLuogo(App a) {
-		a.view(gdb.getElencoTipiVisiteLuogo());
+		a.view(gdb.getElencoTipiVisiteLuogo(username));
 	}
 	
-	@MethodName("Pubbica il piano delle visite")
+	@MethodName("Pubblica il piano delle visite")
 	public void pubblicaPianoVisite(App a) {
 		if (gdb.isReleaseOrLaterDay()) {
 			if (gdb.isPrimaPubblicazione()) {
 				a.view("Applicazione ufficialmente aperta.");
+				gdb.pubblicaPiano();
 				gdb.setPossibilitaDareDisponibilitaVolontari(true);
 			}
 			else {
-				//do something
+				gdb.pubblicaPiano();
 			}
 		}
 		else a.view("Non è possibile pubblicare adesso il piano.");
@@ -192,7 +193,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 			boolean bool = true;
 			do {
 				volontario = (String)a.richiediVal(CostantiStruttura.STRING, "volontario che gestirà la visita");
-				if (!gdb.checkIfVolontarioExists(volontario)) a.view("L'username inserito non è associato a nessun volontario.");
+				if (!gdb.checkIfUserExists(volontario)) a.view("L'username inserito non è associato a nessun volontario.");
 				else {
 					if (!volontari.contains(volontario)) {
 						volontari += volontario + ",";
@@ -203,7 +204,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 						bool = true;
 					}
 				}
-			} while (!gdb.checkIfVolontarioExists(volontario) || bool);
+			} while (!gdb.checkIfUserExists(volontario) || bool);
 		}
 		if (gdb.aggiungiTipoVisite(luogo, tipoVisita, titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniPrenotabili, oraInizio, durataVisita, ticket, minFruitore, maxFruitore, volontari)) {
 			a.view("Il nuovo tipo di visita è stato aggiunto.");
@@ -237,7 +238,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	public void impostaCredenzialiNuovoConfiguratore (App a) {
 		String username = (String)a.richiediVal(CostantiStruttura.STRING, "username del nuovo configuratore");
 		String password = (String)a.richiediVal(CostantiStruttura.STRING, "password del nuovo configuratore");
-		if (gdb.impostaCredenzialiNuovoConfiguratore(username, password)) a.view("Aggiunto nuovo configuratore.");
+		if (gdb.impostaCredenzialiNuovoConfiguratore(this.username, username, password)) a.view("Aggiunto nuovo configuratore.");
 		else a.view("Non è stato aggiunto un nuovo configuratore, username già in utilizzo.");
 				
 	}
@@ -268,7 +269,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 					getListaVolontari(a);
 					do {
 						volontario = a.richiediVal(CostantiStruttura.STRING, "volontari da associare");
-						if (!gdb.checkIfVolontarioExists(volontario)) {
+						if (!gdb.checkIfUserExists(volontario)) {
 							a.view("Il volontario inserito non esiste, reinserie.");
 							b = true;
 						}
