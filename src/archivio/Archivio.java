@@ -87,6 +87,37 @@ public class Archivio {
 		}
 	}
 	
+	public boolean rimuoviLuogo (String k) {
+		//TODO controllo da mettere nel controller
+		JSONObject luogo = jsonAmbitoTerritoriale.getJSONObject(LUOGHI).getJSONObject(k);
+		JSONArray tipiLuogo = luogo.getJSONArray(TIPO_VISITA);
+		for (Object s : tipiLuogo) {
+			JSONObject tipo = jsonTipiVisite.getJSONObject((String)s);
+			JSONArray volontariAssociati = tipo.getJSONArray(VOLONTARI2);
+			for (Object m : volontariAssociati) {
+				JSONObject volontario = jsonUsers.getJSONObject((String)m);
+				JSONArray tipiVolontario = volontario.getJSONArray(TIPO_VISITA);
+				for (int i = 0 ; i < tipiVolontario.length() ; i++) {
+					if (tipiVolontario.getString(i).equals((String)s)) {
+						tipiVolontario.remove(i);
+						break;
+					}
+				}
+				if (tipiVolontario.length() == 0) {
+					jsonUsers.remove((String)m); //rimuovi volontario se non ha tipi associati
+				}
+			}
+			jsonTipiVisite.remove((String)s);
+		}
+		jsonAmbitoTerritoriale.getJSONObject(LUOGHI).remove(k);
+		
+		JSONUtility.aggiornaJsonFile(jsonTipiVisite, PATH_TIPI_VISITE, 10);
+		JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, 10);
+		JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, PATH_AMBITO, 10);
+
+		return true;
+	}
+	
 	public boolean impostaCredenzialiNuovoVolontario (String username, String password, JSONArray tipi_visite, boolean tipiVisitaNecessari) {
 		    for (Object k : tipi_visite) {
 	    		JSONObject tipo = jsonTipiVisite.getJSONObject((String)k);
@@ -139,7 +170,7 @@ public class Archivio {
 		JSONObject user = new JSONObject();
 		user.put(USERNAME, username);
 		user.put(PRIMO_ACCESSO, true);
-		user.put(TIPO_USER, CostantiStruttura.CONFIGURATORE);
+		user.put(TIPO_USER, tipo);
 		user.put(PASSWORD, pw);
 		return user;
 	}
@@ -350,6 +381,18 @@ public class Archivio {
 	
 	public JSONArray getGiorniPrenotabiliJSONArray (JSONObject tipo) {
 		return tipo.getJSONArray(GIORNI_PRENOTABILI);
+	}
+	
+	public boolean checkIfVisitTypeHasNoVolunteer (String tipo) {
+		return jsonTipiVisite.getJSONObject(tipo).getJSONArray(VOLONTARI2).length() == 0;
+	}
+	
+	public boolean checkIfLuogoHasNoVisitType (String luogo) {
+		return jsonAmbitoTerritoriale.getJSONObject(LUOGHI).getJSONObject(luogo).getJSONArray(TIPO_VISITA).length() == 0;
+	}
+	
+	public boolean checkIfVolontarioHasNoVisitType (String username) {
+		return jsonUsers.getJSONObject(username).getJSONArray(TIPO_VISITA).length() == 0;
 	}
 	
 	public boolean inserisciDisponibilita(String data, String username) {
