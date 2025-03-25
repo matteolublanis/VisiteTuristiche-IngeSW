@@ -39,8 +39,8 @@ public class Time {
 		return fictionalDate;
 	}
 	
-	public static int[] getDesideredMonthAndYear(int releaseDay) {
-		String[] d = actualDate.split("-");
+	public static int[] getDesideredMonthAndYear(int releaseDay, String date) {
+		String[] d = date.split("-");
 		if (Integer.parseInt(d[0]) < releaseDay) {
 			if (Integer.parseInt(d[1]) + 1 > 12) return new int[] {(Integer.parseInt(d[1]) + 1 - 12), (Integer.parseInt(d[2]) + 1)};
 			return new int[] {(Integer.parseInt(d[1]) + 1), (Integer.parseInt(d[2]))};

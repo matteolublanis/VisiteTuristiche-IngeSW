@@ -41,6 +41,23 @@ class TimeTest {
 
 	    dates = Time.getAllDatesSameDayOfTheWeek("01-09-2025", "31-10-2025", 1).split(" ");
 	    assertEquals(9, dates.length);
+	    
+	    dates = Time.getAvailabilityWindow("01-11-2025", "03-03-2026", Time.getDesideredMonthAndYear(16, "17-11-2025"));
+	    dates = Time.getAllDatesSameDayOfTheWeek(dates[0], dates[1], 1).split(" ");
+	    String[] expected3 = {"05-01-2026", "12-01-2026", "19-01-2026", "26-01-2026"}; 
+	    assertArrayEquals(dates, expected3);
+	    
+	    dates = Time.getAvailabilityWindow("01-11-2025", "03-03-2026", Time.getDesideredMonthAndYear(16, "17-12-2025"));
+	    System.out.println(dates[0] + " " + dates[1]);
+	    dates = Time.getAllDatesSameDayOfTheWeek(dates[0], dates[1], 1).split(" ");
+	    String[] expected4 = {"02-02-2026", "09-02-2026", "16-02-2026", "23-02-2026"}; 
+	    assertArrayEquals(dates, expected4);
+	    
+	    dates = Time.getAvailabilityWindow("01-11-2025", "03-03-2026", Time.getDesideredMonthAndYear(16, "17-01-2026"));
+	    System.out.println(dates[0] + " " + dates[1]);
+	    dates = Time.getAllDatesSameDayOfTheWeek(dates[0], dates[1], 1).split(" ");
+	    String[] expected5 = {"02-03-2026"}; 
+	    assertArrayEquals(dates, expected5);
 
 	}
 	

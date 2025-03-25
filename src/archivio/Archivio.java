@@ -473,7 +473,7 @@ public class Archivio {
 			for (Object s : tipiVisite) { 
 				JSONObject tipo = jsonTipiVisite.getJSONObject((String)s);
 				try {
-					String[] periodoDaDareDisponibilita = Time.getAvailabilityWindow(tipo.getString(DATA_INIZIO), tipo.getString(DATA_FINE), Time.getDesideredMonthAndYear(RELEASE_DAY));
+					String[] periodoDaDareDisponibilita = Time.getAvailabilityWindow(tipo.getString(DATA_INIZIO), tipo.getString(DATA_FINE), Time.getDesideredMonthAndYear(RELEASE_DAY, Time.getActualDate()));
 					JSONArray giorni = tipo.getJSONArray(GIORNI_PRENOTABILI);
 					result += "Giorni tipo " + s + ": ";
 					for (Object g : giorni) {
