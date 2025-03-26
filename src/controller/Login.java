@@ -26,6 +26,22 @@ public class Login {
 		configureHandlerUtente(credenziali.getUsername(), a);
 	}
 	
+	public void registrazione(App a) {
+		Credenziali credenziali = null;
+		do {
+			a.view("Inserisci le tue nuove credenziali:");
+			String username = a.richiediVal(CostantiStruttura.STRING, "username");
+			String password = a.richiediVal(CostantiStruttura.STRING, "password");
+			if (checkUsernameGiaPresente(username)) a.view("Username già in uso, reinserire le credenziali.");
+			else {
+				credenziali = new Credenziali(username, password);
+				gdb.createNewFruitore(username, password);
+				break;
+			}
+		} while (true);
+		configureHandlerUtente(credenziali.getUsername(), a);
+	}
+	
 	public boolean checkPrimoAvvio() {
 		return gdb.checkPrimoAvvio();
 	}
@@ -37,8 +53,17 @@ public class Login {
 			accesso(a);
 		}
 		else {
-			accesso(a);
+			if (a.chiediSioNo("Sei un nuovo utente?")) {
+				registrazione(a);
+			}
+			else {
+				accesso(a);
+			}
 		}
+	}
+	
+	private boolean checkUsernameGiaPresente(String username) {
+		return gdb.checkIfUserExists(username);
 	}
 	
 	private boolean checkCredenzialiCorrette(Credenziali c) {

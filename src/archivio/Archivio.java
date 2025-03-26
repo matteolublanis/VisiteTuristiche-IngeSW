@@ -233,6 +233,14 @@ public class Archivio {
 		return true;
 	}
 	
+	public boolean impostaCredenzialiNuovoFruitore (String username, String password) {
+		JSONObject fruitore = putValueInUserObject(username, true, CostantiStruttura.FRUITORE, password);
+		jsonUsers.put(username, fruitore);
+		//TODO il fruitore tecnicamente ha più dati di un configuratore: codice prenotazione, visite a cui partecipa (non necessariamente da salvare col fruitore, può essere legato al codice)
+		JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, RIGHE_USERS);
+		return true;
+	}
+	
 	public boolean impostaCredenzialiNuovoConfiguratore(String username, String password) {
 		JSONObject configuratore = putValueInUserObject(username, true, CostantiStruttura.CONFIGURATORE, password);
 		jsonUsers.put(username, configuratore);

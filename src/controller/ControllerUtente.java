@@ -57,23 +57,6 @@ public abstract class ControllerUtente {
 		return username;
 	}
 	
-	protected boolean chiediSioNo (App a, String val) {
-		a.view(val);
-		do {
-			String answer = (String)a.richiediVal(CostantiStruttura.STRING, "si o no");
-			switch (answer.toLowerCase()) {
-			case "si":
-				return true;
-			case "no":
-				return false;
-			default:
-				a.view("Formato non valido, inserire si/no");
-				break;
-			}
-		} while (true);
-
-	}
-	
     public LinkedList<Method> getAzioniDisponibili() {
     	
     	LinkedList<Method> metodiConcreti = new LinkedList<>();

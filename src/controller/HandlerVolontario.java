@@ -47,11 +47,11 @@ public class HandlerVolontario extends ControllerUtente {
  						b = gdb.inserisciDisponibilita(data, username); //controllo se inserita
  						if (b) { //se inserita chiedo se vuole continuare
  							a.view("La tua disponibilità è stata inserita.");
- 							b = chiediSioNo(a, "Vuoi aggiungere altre disponibilità?");
+ 							b = a.chiediSioNo("Vuoi aggiungere altre disponibilità?");
  						}
  						else { //se non inserita richiedo
  							a.view("La tua disponibilità non è stata inserita, assicurati che sia una data corretta.");
- 							b = chiediSioNo(a, "Vuoi continuare ad aggiungere?"); //do possibilità di chiudere loop
+ 							b = a.chiediSioNo("Vuoi continuare ad aggiungere?"); //do possibilità di chiudere loop
  						}
  					}
  				} while (b); //TODO se viene inserito un formato errato chiude

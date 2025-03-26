@@ -76,6 +76,23 @@ public class App {
 		return true;
 	}
 	
+	public boolean chiediSioNo (String val) {
+		view(val);
+		do {
+			String answer = (String) richiediVal(CostantiStruttura.STRING, "si o no");
+			switch (answer.toLowerCase()) {
+			case "si":
+				return true;
+			case "no":
+				return false;
+			default:
+				view("Formato non valido, inserire si/no");
+				break;
+			}
+		} while (true);
+
+	}
+	
 	public String richiediVal (int tipo, String s) {
 		try {
 			view("Inserisci " + s + ":");

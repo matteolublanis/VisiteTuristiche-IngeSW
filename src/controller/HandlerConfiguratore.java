@@ -188,7 +188,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	            a.view("Numero inserito non valido, deve essere tra 1 e 7.");
 	        } else if (!giorni.contains(giorno)) { //se non contiene
 	            giorni.add(giorno); //aggiungi giorno
-	            continua = chiediSioNo(a, "Vuoi aggiungere un altro giorno prenotabile?");
+	            continua = a.chiediSioNo("Vuoi aggiungere un altro giorno prenotabile?");
 	        } else {
 	            a.view("Giorno già inserito!");
 	            continua = true;
@@ -233,7 +233,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	
 	private ArrayList<String> richiediVolontari(App a) {
 		ArrayList<String> volontari = new ArrayList<>();
-	    if (chiediSioNo(a, "Vuoi associare un nuovo volontario per questo tipo di visita?")) {
+	    if (a.chiediSioNo("Vuoi associare un nuovo volontario per questo tipo di visita?")) {
 	        String volontario;
 	        do {
 	        	volontario = impostaNuovoVolontarioConTipoVisitaScelto(a, "");
@@ -248,7 +248,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	                continua = true;
 	            } else if (!volontari.contains(volontario)) {
 	                volontari.add(volontario);
-	                continua = chiediSioNo(a, "Vuoi inserire un altro volontario?");
+	                continua = a.chiediSioNo("Vuoi inserire un altro volontario?");
 	            } else {
 	                a.view("Volontario già inserito!");
 	                continua = true;
@@ -272,7 +272,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 		ArrayList<Integer> giorniPrenotabili = richiediGiorniPrenotabili(a);
 		String oraInizio = richiediOraValida(a);
 		int durataVisita = Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "durata della visita in minuti (ad esempio 120 sono 120 minuti, quindi 2 ore)"));
-		boolean ticket = chiediSioNo(a, "se è da acquistare o no un biglietto (si/no)");
+		boolean ticket = a.chiediSioNo("è da acquistare o no un biglietto?");
 		int minFruitore = richiediNumeroMinimo(a);
 		int maxFruitore = richiediNumeroMassimo(a, minFruitore);
 		ArrayList<String> volontari = richiediVolontari(a);
@@ -340,13 +340,13 @@ public class HandlerConfiguratore extends ControllerUtente{
 			String tipo = richiediVisitaEsistente(a);
 			boolean continua;
 			do {
-				if (chiediSioNo(a, "Vuoi creare un nuovo volontario da associare?")) {
+				if (a.chiediSioNo("Vuoi creare un nuovo volontario da associare?")) {
 					while (impostaNuovoVolontarioConTipoVisitaScelto(a, tipo).isEmpty());
 				}
 				else {
 					associaVolontarioEsistente(a, tipo);
 				}
-				continua = chiediSioNo(a, "Vuoi aggiungere altri volontari?");
+				continua = a.chiediSioNo("Vuoi aggiungere altri volontari?");
 			} while (continua);
 		}
 		else a.view("Non puoi apportare modifiche al momento.");
@@ -374,7 +374,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 			do {
 				finished = aggiungiTipoVisitePartendoDaLuogo(a, tag);
 				if (finished) {
-					finished = chiediSioNo(a, "Vuoi terminare l'aggiunta di tipi di visite?"); //se non vuole inserire ha finito
+					finished = a.chiediSioNo("Vuoi terminare l'aggiunta di tipi di visite?"); //se non vuole inserire ha finito
 				}
 			} while (!finished);
 		}
