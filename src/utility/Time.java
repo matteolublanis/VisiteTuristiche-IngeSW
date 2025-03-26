@@ -15,7 +15,15 @@ public class Time {
     private static final String DATAREGEX = "\\b(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\\d{4})\\b";
 	private static String fictionalDate = "17-04-2025";
     private static String actualDate = getTodaysDate();
-  
+    
+	public static Event createEvent (String name,int year, int month, int day, int hour, int minutes, int duration) {
+		Calendar start = Calendar.getInstance();
+		start.set(year, month, day, hour, minutes);
+		Calendar end = Calendar.getInstance();
+		int[] endTime = calculateEndTimeWithStartAndDuration(hour, minutes, duration);
+		end.set(year, month - 1, day, endTime[0], endTime[1]);
+		return new Event(name, start, end);
+	}
 	
 	public static void setActualDate (String date) {
 		actualDate = date;
