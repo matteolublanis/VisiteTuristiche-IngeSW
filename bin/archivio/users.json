@@ -4,9 +4,7 @@
           "password": "admin",
           "tipo": 2,
           "primo-accesso": true,
-          "tipo-visita": [
-               "museo_santa_giulia"
-          ],
+          "tipo-visita": ["museo_santa_giulia"],
           "username": "volontario4"
      },
      "volontario3": {

@@ -87,7 +87,10 @@ public class Archivio {
 		    for (String k : s) {
 		    	if (!checkValueExistance(k, PATH_TIPI_VISITE) && !k.equals("")) return false;
 		    	else {
-		    		if (!k.equals(""))tipiVisite.put(k);
+		    		if (!k.equals("")) {
+		    			tipiVisite.put(k);
+		    		    jsonTipiVisite.getJSONObject(k).getJSONArray(VOLONTARI2).put(username);
+		    		}
 		    	}
 		    }
 		    if (tipiVisitaNecessari && tipiVisite.length() == 0) return false;
@@ -98,6 +101,8 @@ public class Archivio {
 		    volontario.put(TIPO_VISITA, tipiVisite);
 			jsonUsers.put(username, volontario);
 			JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, RIGHE_USERS);
+			JSONUtility.aggiornaJsonFile(jsonTipiVisite, PATH_TIPI_VISITE, RIGHE_USERS);
+
 			return true;
 		}
 	}
