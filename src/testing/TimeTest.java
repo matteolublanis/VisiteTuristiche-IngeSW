@@ -40,4 +40,34 @@ class TimeTest {
 		assertFalse(Time.comesBefore("31-09-2025", "08-09-2025"));
 		//TODO aggiungere altri casi di test
 	}
+	
+    @Test
+    void testTimeWithinRange() {
+        assertTrue(Time.isTimeBetween("12:30", "10:00", "14:00"));
+        assertTrue(Time.isTimeBetween("23:30", "22:00", "23:59"));
+        assertTrue(Time.isTimeBetween("00:30", "23:00", "02:00"));
+    }
+
+    @Test
+    void testTimeOutsideRange() {
+        assertFalse(Time.isTimeBetween("09:30", "10:00", "14:00"));
+        assertFalse(Time.isTimeBetween("14:30", "10:00", "14:00"));
+        assertFalse(Time.isTimeBetween("03:00", "23:00", "02:00"));
+    }
+
+    @Test
+    void testTimeAtBoundary() {
+        assertTrue(Time.isTimeBetween("10:00", "10:00", "14:00"));
+        assertTrue(Time.isTimeBetween("14:00", "10:00", "14:00"));
+        assertTrue(Time.isTimeBetween("23:00", "23:00", "02:00"));
+        assertTrue(Time.isTimeBetween("02:00", "23:00", "02:00"));
+    }
+
+    @Test
+    void testMidnightCrossing() {
+        assertTrue(Time.isTimeBetween("01:00", "23:00", "02:00"));
+        assertFalse(Time.isTimeBetween("03:00", "23:00", "02:00"));
+        assertTrue(Time.isTimeBetween("23:30", "23:00", "02:00"));
+    }
+
 }

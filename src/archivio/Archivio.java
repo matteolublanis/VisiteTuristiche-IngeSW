@@ -447,7 +447,12 @@ public class Archivio {
 			if (Time.comesBefore(dateStart1, tipo.getString(DATA_FINE)) && !Time.comesBefore(dateFinish1, tipo.getString(DATA_INIZIO))) {
 				JSONArray days2 = tipo.getJSONArray(GIORNI_PRENOTABILI); //giorni del tipo già esistente
 				for (Object d : days2) {
-					if (days1.contains((String)d)) return true; 
+					if (days1.contains((String)d)) { //vuol dire che un giorno qualsiasi può intersecare
+						String startHourType = tipo.getString(ORA_INIZIO);
+						int[] fValue = Time.calculateEndTimeWithStartAndDuration(Integer.parseInt(startHourType.split(":")[0]), Integer.parseInt(startHourType.split(":")[1]), tipo.getInt(DURATA_VISITA));
+						String finishHourType = String.format("%02d:%02d", fValue[0], fValue[1]);
+						if (Time.isTimeBetween(hour1, startHourType, finishHourType)) return true;
+					}
 				}
 			}
 		}

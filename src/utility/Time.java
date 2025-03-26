@@ -1,5 +1,6 @@
 package utility;
 
+import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -114,6 +115,18 @@ public class Time {
 		endMinute = minute + (60*(endHour-hour));
 		return new int[] {endHour, endMinute};
 	}
+	
+    public static boolean isTimeBetween(String time, String start, String end) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime targetTime = LocalTime.parse(time, formatter);
+        LocalTime startTime = LocalTime.parse(start, formatter);
+        LocalTime endTime = LocalTime.parse(end, formatter);
+        if (startTime.isBefore(endTime)) {
+            return !targetTime.isBefore(startTime) && !targetTime.isAfter(endTime);
+        } else {
+            return !targetTime.isBefore(startTime) || !targetTime.isAfter(endTime);
+        }
+    }
 	
 	public static boolean overTimeLimit (int startHour, int startMinute, int limitHour, int limitMinute, int duration) {
 		int[] h = calculateEndTimeWithStartAndDuration(startHour, startMinute, duration);
