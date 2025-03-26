@@ -62,7 +62,8 @@ public class Archivio {
 	
 	public boolean canAddOrRemove() {
 		if (jsonPianoVisiteDaPubblicare.getBoolean(PRIMA_PUBBLICAZIONE)) return true;
-		else return (!jsonPianoVisiteDaPubblicare.getBoolean(POSSIBILE_DARE_DISPONIBILITA));
+		else return (jsonPianoVisiteDaPubblicare.getBoolean(ULTIMO_PIANO) &&
+				!jsonPianoVisiteDaPubblicare.getBoolean(POSSIBILE_DARE_DISPONIBILITA)); //POSSO MODIFICARE SOLO SE TRA PUBBLICAZIONE E RITORNATA POSS DISP
 	}
 	
 	public boolean chiudiRaccoltaDisponibilita() {
@@ -294,6 +295,7 @@ public class Archivio {
 			utente = (JSONObject) jsonUsers.get(username);
 			utente.put(USERNAME, c.getUsername());
 			utente.put(PASSWORD, c.getPassword());
+			//TODO modificare anche file visiteDaPubblicare? tecnicamente le modifica solo all'inizio
 			jsonUsers.remove(username);
 			jsonUsers.put(c.getUsername(), utente);
 			JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, RIGHE_USERS);
@@ -366,8 +368,8 @@ public class Archivio {
 		jsonPianoVisiteDaPubblicare.put(DATE_PRECLUSE_MESEIPLUS3, new JSONArray());
 		jsonPianoVisiteDaPubblicare.put(DISPONIBILITA, new JSONObject());
 		jsonPianoVisiteDaPubblicare.put(ULTIMO_PIANO, true);
-		jsonPianoVisiteDaPubblicare.put(MESE_ULTIMA_PUBBLICAZIONE, Time.getActualMonth());
-		jsonPianoVisiteDaPubblicare.put(ANNO_ULTIMA_PUBBLICAZIONE, Time.getActualYear());
+		jsonPianoVisiteDaPubblicare.put(MESE_ULTIMA_PUBBLICAZIONE, Time.getActualDateValue(Time.MONTH));
+		jsonPianoVisiteDaPubblicare.put(ANNO_ULTIMA_PUBBLICAZIONE, Time.getActualDateValue(Time.YEAR));
 		JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
 		JSONUtility.aggiornaJsonFile(jsonPianoVisite, PATH_VISITE, 10);
 		return true;
@@ -461,8 +463,8 @@ public class Archivio {
 	public boolean setPrimaPubblicazione() {
 		jsonPianoVisiteDaPubblicare.put(PRIMA_PUBBLICAZIONE, false);
 		jsonPianoVisiteDaPubblicare.put(ULTIMO_PIANO, true);
-		jsonPianoVisiteDaPubblicare.put(MESE_ULTIMA_PUBBLICAZIONE, Time.getActualMonth());
-		jsonPianoVisiteDaPubblicare.put(ANNO_ULTIMA_PUBBLICAZIONE, Time.getActualYear());
+		jsonPianoVisiteDaPubblicare.put(MESE_ULTIMA_PUBBLICAZIONE, Time.getActualDateValue(Time.MONTH));
+		jsonPianoVisiteDaPubblicare.put(ANNO_ULTIMA_PUBBLICAZIONE, Time.getActualDateValue(Time.YEAR));
 
 		apriRaccoltaDisponibilita();
 		JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
@@ -512,7 +514,7 @@ public class Archivio {
 		return jsonUsers.getJSONObject(username).getJSONArray(TIPO_VISITA).length() == 0;
 	}
 	
-	public boolean inserisciDisponibilita(String data, String username, String tagVisita) {
+	public boolean inserisciDisponibilita(String data, String username, String tagVisita) { //ok
 		JSONObject disponibilita = jsonPianoVisiteDaPubblicare.getJSONObject(DISPONIBILITA);
 		//TODO assicurarsi che non prenda datePrecluse
 		if (!disponibilita.has(username)) {
@@ -534,7 +536,7 @@ public class Archivio {
 		}
 	}
 	
-	public boolean checkValueExistance (String key, String path) {
+	public boolean checkValueExistance (String key, String path) { //ok
 		JSONObject json = JSONUtility.readJsonFile(path);
 		try {
 			return !(json.get(key).equals(null)); 
@@ -544,7 +546,7 @@ public class Archivio {
 		}
 	}
 
-	public Credenziali getCredenzialiConfIniziale() { 
+	public Credenziali getCredenzialiConfIniziale() { //ok
 		return new Credenziali(CREDENZIALI_CONF_INIZIALE[0], CREDENZIALI_CONF_INIZIALE[1]);
 	}
 

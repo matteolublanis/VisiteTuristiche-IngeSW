@@ -2,13 +2,15 @@ package utility;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Time {
 	
-	private static final int DAY = 1, MONTH = 2, YEAR = 3;
+	public static final int DAY = 1, MONTH = 2, YEAR = 3;
 	private static final String TIMEREGEX = "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$";
     private static final String DATAREGEX = "\\b(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\\d{4})\\b";
 	private static String fictionalDate = "17-04-2025";
@@ -40,14 +42,14 @@ public class Time {
 	}
 	
 	public static int[] getDesideredMonthAndYear(int releaseDay, String date) {
-		String[] d = date.split("-");
-		if (Integer.parseInt(d[0]) < releaseDay) {
-			if (Integer.parseInt(d[1]) + 1 > 12) return new int[] {(Integer.parseInt(d[1]) + 1 - 12), (Integer.parseInt(d[2]) + 1)};
-			return new int[] {(Integer.parseInt(d[1]) + 1), (Integer.parseInt(d[2]))};
+		String[] dateValues = date.split("-");
+		if (Integer.parseInt(dateValues[0]) < releaseDay) { //mese i+1
+			if (Integer.parseInt(dateValues[1]) + 1 > 12) return new int[] {(Integer.parseInt(dateValues[1]) + 1 - 12), (Integer.parseInt(dateValues[2]) + 1)};
+			return new int[] {(Integer.parseInt(dateValues[1]) + 1), (Integer.parseInt(dateValues[2]))};
 		}
-		else {
-			if (Integer.parseInt(d[1]) + 2 > 12) return new int[] {(Integer.parseInt(d[1]) + 2 - 12), (Integer.parseInt(d[2]) + 1)};
-			return new int[] {(Integer.parseInt(d[1]) + 2), (Integer.parseInt(d[2]))};
+		else { //maggiore del release day, quindi mese i rispetto a i+2
+			if (Integer.parseInt(dateValues[1]) + 2 > 12) return new int[] {(Integer.parseInt(dateValues[1]) + 2 - 12), (Integer.parseInt(dateValues[2]) + 1)};
+			return new int[] {(Integer.parseInt(dateValues[1]) + 2), (Integer.parseInt(dateValues[2]))};
 		}
 	}
 	
@@ -69,32 +71,19 @@ public class Time {
 		}
 	}
 	
-	public static int getMaxDayForMonth(int month, int year) {
-    	switch (month) {
-    	case 2:
-    		if (isLeapYear(year)) {
-    			return 29;
-    		}
-    		else return 28;
-    	case 4: case 6: case 9: case 11:
-    		return 30;
-    	default:
-    		return 31;
-    	}
-	}
-	
 	public static boolean todayIsDay (int day) {
 		String[] s = actualDate.split("-");
 		return (Integer.parseInt(s[0]) == day);
 	}
 	
-	public static String getAllDatesSameDayOfTheWeek (String open, String close, int desideredDay) { 
-		String s = "";
+	public static List<String> getAllDatesSameDayOfTheWeek (String open, String close, int desideredDay) { 
+		ArrayList<String> s = new ArrayList<>();
 		String[] start = open.split("-");
 		String[] stop = close.split("-");
-		if (desideredDay < 1 || desideredDay > 7) return null; //TODO ECCEZIONE
+		if (desideredDay < 1 || desideredDay > 7) return null; 
 		String stopMonth = stop[1], startMonth = start[1];
 		Calendar c = Calendar.getInstance();
+		if (!isValidDate(open) || !isValidDate(close)) return null;
 		for (int i = Integer.parseInt(start[2]) ; i <= Integer.parseInt(stop[2]) ; i++) { //ciclo anni
 			if (i != Integer.parseInt(stop[2])) { //se anno non finale cicla fino dicembre
 				stopMonth = "12";
@@ -117,7 +106,7 @@ public class Time {
 						int day = c.get(Calendar.DAY_OF_WEEK);
 						if (day == 1) day = 7;
 						else day -= 1;
-						if (day == desideredDay) s += (nowDate) + " ";
+						if (day == desideredDay) s.add(nowDate);
 					}
 					if (nowDate.equals(close)) break;
 				}
@@ -126,26 +115,27 @@ public class Time {
 		return s;
 	}
 	
-	public static boolean isThisDateInMonthiplus3 (String date) { //TODO usare variabili sensate
-		String[] d = date.split("-");
-		String[] s = actualDate.split("-");
-		if (Integer.parseInt(s[0]) > 15) { //se giorno di oggi maggiore di 15
-			if (Integer.parseInt(s[1]) < 10) {
-				return (Integer.parseInt(d[1]) == Integer.parseInt(s[1]) + 3);
+	public static boolean isThisDateInMonthiplus3 (String date) { //usato solo per calcolo di date Precluse
+		String[] inputDateValues = date.split("-");
+		String[] actualDateValues = actualDate.split("-");
+		if (!isValidDate(date)) return false;
+		if (Integer.parseInt(actualDateValues[0]) > 15) { //se giorno di oggi maggiore di 15 quindi mese i rispetto i+3
+			if (Integer.parseInt(actualDateValues[1]) < 10) { //se mese fino a settembre
+				return (Integer.parseInt(inputDateValues[1]) == Integer.parseInt(actualDateValues[1]) + 3); //check se mese input in i+3
 			}
 			else {
-				if (Integer.parseInt(d[2]) != Integer.parseInt(s[2]) + 1) return false;
-				else return (Integer.parseInt(d[1]) == Integer.parseInt(s[1]) + 3 - 12); 
+				if (Integer.parseInt(inputDateValues[2]) != Integer.parseInt(actualDateValues[2]) + 1) return false;
+				else return (Integer.parseInt(inputDateValues[1]) == Integer.parseInt(actualDateValues[1]) + 3 - 12); 
 			}
 		}
-		else { //se giorno di oggi minore di 16
-			if (Integer.parseInt(s[0]) < 16) {
-				if (Integer.parseInt(s[1]) < 11) {
-					return (Integer.parseInt(d[1]) == Integer.parseInt(s[1]) + 2);
+		else { //se giorno di oggi minore di 16 quindi mese i+1 rispetto i+3
+			if (Integer.parseInt(actualDateValues[0]) < 16) {
+				if (Integer.parseInt(actualDateValues[1]) < 11) { //se mese fino ottobre
+					return (Integer.parseInt(inputDateValues[1]) == Integer.parseInt(actualDateValues[1]) + 2);
 				}
 				else {
-					if (Integer.parseInt(d[2]) != Integer.parseInt(s[2]) + 1) return false;
-					else return (Integer.parseInt(d[1]) == Integer.parseInt(s[1]) + 2 - 12); 
+					if (Integer.parseInt(inputDateValues[2]) != Integer.parseInt(actualDateValues[2]) + 1) return false;
+					else return (Integer.parseInt(inputDateValues[1]) == Integer.parseInt(actualDateValues[1]) + 2 - 12); 
 				}
 			}
 			else return false;
@@ -169,21 +159,8 @@ public class Time {
         Matcher matcher = pattern.matcher(date);
         if (!matcher.matches()) return false;
         else {
-        	String[] s = date.split("-");
-        	switch (s[1]) {
-        	case "02":
-        		if (isLeapYear(Integer.parseInt(s[2]))) {
-        			if (Integer.parseInt(s[0]) > 29) return false;
-        		}
-        		else if (Integer.parseInt(s[0]) > 28) return false;
-        		break;
-        	case "04": case "06": case "09": case "11":
-        		if (Integer.parseInt(s[0]) > 30) return false; 
-        		break;
-        	default:
-        		break;
-        	}
-        
+        	String[] s = date.split("-"); //s[0] day, s[1] month, s[2] year
+        	if (Integer.parseInt(s[0]) > getMaxDayForMonth(Integer.parseInt(s[1]), Integer.parseInt(s[2])))  return false;
         }
 
         return true;
@@ -196,7 +173,7 @@ public class Time {
 			if (Integer.parseInt(date1_vals[i]) < Integer.parseInt(date2_vals[i])) return true;
 			else if (Integer.parseInt(date1_vals[i]) > Integer.parseInt(date2_vals[i])) return false;
 		}
-		return false;
+		return false; //uguali
 	}
 	
 	public static boolean isValidHour (String time) {
@@ -204,6 +181,20 @@ public class Time {
         Matcher matcher = pattern.matcher(time);
         if (!matcher.matches()) return false;
         else return true;
+	}	
+	
+	public static int getMaxDayForMonth(int month, int year) {
+    	switch (month) {
+    	case 2:
+    		if (isLeapYear(year)) {
+    			return 29;
+    		}
+    		else return 28;
+    	case 4: case 6: case 9: case 11:
+    		return 30;
+    	default:
+    		return 31;
+    	}
 	}
 	
 	public static int getActualDateValue (int s) {
@@ -221,41 +212,7 @@ public class Time {
 		}
 	}
 	
-	
-	public static int getActualYear () {
-		String s[] = actualDate.split("-");
-		return Integer.parseInt(s[2]);
-	}
-	
-	public static int getActualMonth () {
-		String s[] = actualDate.split("-");
-		return Integer.parseInt(s[1]);
-	}
-	
-	public static int getActualDayOfTheMonth () {
-		String s[] = actualDate.split("-");
-		return Integer.parseInt(s[0]);
-	}
-	
-	public static int getTodayYear () {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
-		String s = ZonedDateTime.now().format(formatter);
-		return Integer.parseInt(s);
-	}
-	
-	public static int getDayOfTheMonth () {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd");
-		String s = ZonedDateTime.now().format(formatter);
-		return Integer.parseInt(s);
-	}
-	
-	public static int getTodayMonth () {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM");
-		String s = ZonedDateTime.now().format(formatter);
-		return Integer.parseInt(s);
-	}
-	
-	public static String getTodaysDate () {
+	public static String getTodaysDate () { //local time
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 		String s = ZonedDateTime.now().format(formatter);
 		return s;

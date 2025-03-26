@@ -18,20 +18,19 @@ public class HandlerVolontario extends ControllerUtente {
 	
 	@MethodName("Visualizza i tipi di visita a cui sei collegato")
  	public void visualizzaTipiVisita(App a) {
- 		a.view(gdb.getElencoTipiVisiteVolontario(username));
+ 		a.view(gdb.getElencoTipiVisiteVolontario(username)); //TODO se la stringa è vuota vuol dire che non ha disponibilità, DA ELIMINARE QUINDI!
  	}
 	
 	@MethodName("Comunica le tue prossime disponibilità")
  	public void comunicaDisponibilita(App a) {
- 		if (gdb.getPossibilitaDareDisponibilita()) {
- 			
- 			HashMap<String, List<String>> dateDisponibilita = gdb.getDatePerDisponibilita(username);
- 			if (dateDisponibilita == null) {
+ 		if (gdb.getPossibilitaDareDisponibilita()) { //se posso dare disponibilità	
+ 			HashMap<String, List<String>> dateDisponibilita = gdb.getDatePerDisponibilita(username); //prendi disponibilità possibili
+ 			if (dateDisponibilita == null) { //TODO se null significa che il volontario dovrebbe essere eliminato
  				a.view("I tipi di visita a te associati non richiedono nuove disponibilità o c'è un problema con l'archivio, contatta un configuratore.");
  			}
- 			else {
+ 			else { //se ho disponibilità
  				for (String k : dateDisponibilita.keySet()) {
- 					a.view("Giorni tipo " + k + ": ");
+ 					a.view("Giorni tipo " + k + ": "); //visualizzo le disponibilità
  					String days = "";
  					for (String i : dateDisponibilita.get(k)) {
  						days += i + " ";
@@ -40,24 +39,22 @@ public class HandlerVolontario extends ControllerUtente {
  				}
  				a.view("Indica le tue disponibilità.");
  				String data = "";
- 				boolean validDate = true;
  				boolean b = true;
- 				do {
- 					data = a.richiediVal(CostantiStruttura.STRING, "data in cui dai disponibilità");
- 					validDate = Time.isValidDate(data);
- 					if (!validDate) a.view("Il formato inserito non è corretto.");
- 					else {
- 						b = gdb.inserisciDisponibilita(data, username);
- 						if (b) {
+ 				do { //le inserisco
+ 					data = a.richiediVal(CostantiStruttura.STRING, "data in cui dai disponibilità"); //inserisco data
+ 					if (!Time.isValidDate(data)) a.view("Il formato inserito non è corretto."); //se non valida si rifa
+ 					else { //se valida
+ 						b = gdb.inserisciDisponibilita(data, username); //controllo se inserita
+ 						if (b) { //se inserita chiedo se vuole continuare
  							a.view("La tua disponibilità è stata inserita.");
  							b = chiediSioNo(a, "Vuoi aggiungere altre disponibilità?");
  						}
- 						else {
+ 						else { //se non inserita richiedo
  							a.view("La tua disponibilità non è stata inserita, assicurati che sia una data corretta.");
- 							b = true;
+ 							b = chiediSioNo(a, "Vuoi continuare ad aggiungere?"); //do possibilità di chiudere loop
  						}
  					}
- 				} while (validDate && b);
+ 				} while (b); //TODO se viene inserito un formato errato chiude
  				
  			}
  			
