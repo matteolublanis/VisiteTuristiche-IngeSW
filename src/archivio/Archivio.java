@@ -510,7 +510,7 @@ public class Archivio {
 		return jsonAmbitoTerritoriale.getJSONObject(LUOGHI).getJSONObject(luogo).getJSONArray(TIPO_VISITA).length() == 0;
 	}
 	
-	public boolean checkIfVolontarioHasNoVisitType (String username) {
+	public boolean checkIfVolontarioHasNoVisitType (String username) { 
 		return jsonUsers.getJSONObject(username).getJSONArray(TIPO_VISITA).length() == 0;
 	}
 	
