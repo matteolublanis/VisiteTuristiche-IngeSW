@@ -230,11 +230,12 @@ public class ControllerArchivio {
 		JSONObject jsonPianoStorico = d.getJSONPianoStorico();
 		//ciclo sul pianoVisite attuale
 		for (String k : jsonPianoVisite.keySet()) { //giorno
-			JSONObject j = jsonPianoVisite.getJSONObject(k); 
+			JSONObject j = jsonPianoVisite.getJSONObject(k); //prende le visite associate a quel giorno
 			for (String m : j.keySet()) { //visite del giorno
 				JSONObject visita = j.getJSONObject(m);
-				JSONObject luogo = jsonAmbitoTerritoriale.getJSONObject(Archivio.LUOGHI).getJSONObject(m);
-				result += "Giorno: " + k + ", Luogo: " + luogo.getString(Archivio.NAME) + ", Visita: " + jsonTipiVisite.getJSONObject(visita.getString(Archivio.TIPO_VISITA)).getString(Archivio.TITOLO) + ", Stato: " + visita.getString(Archivio.STATO_VISITA) + "\n";
+				JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject(Archivio.LUOGHI);
+				JSONObject luogo = luoghi.getJSONObject(visita.getString(Archivio.LUOGO));
+				result += "Giorno: " + k + ", Luogo: " + luogo.getString(Archivio.NAME) + ", Visita: " + jsonTipiVisite.getJSONObject(m).getString(Archivio.TITOLO) + ", Stato: " + visita.getString(Archivio.STATO_VISITA) + "\n";
 			}
 		}
 		for (String k : jsonPianoStorico.keySet()) {
