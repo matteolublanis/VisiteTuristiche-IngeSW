@@ -1,11 +1,4 @@
 {
-	"18-08-2025": {
-		"percorso_natura_castello": {
-			"luogo": "castello_brescia",
-			"volontari": ["volontario4"],
-			"stato": "confermata"
-		}
-	},
 	"07-08-2025": {
 		"passeggiata_valle_camonica": {
 			"luogo": "parco_incisioni_valle_camonica",

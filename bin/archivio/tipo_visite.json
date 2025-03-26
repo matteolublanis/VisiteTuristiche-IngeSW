@@ -111,21 +111,6 @@
                     "punto-incontro": "Ingresso Museo di Santa Giulia, Brescia",
                     "data-inizio": "05-04-2025"
           },
-          "percorso_natura_castello": {
-                    "titolo": "Percorso Naturalistico",
-                    "ora-inizio": "09:00",
-                    "min-fruitore": 2,
-                    "luogo": "castello_brescia",
-                    "durata-visita": "110",
-                    "volontari": ["volontario4"],
-                    "data-fine": "15-10-2025",
-                    "giorni-prenotabili": ["lun"],
-                    "da-acquistare": false,
-                    "descrizione": "Passeggiata tra i sentieri verdi del parco storico del castello con guida naturalistica.",
-                    "max-fruitore": 25,
-                    "punto-incontro": "Ingresso del Parco del Castello",
-                    "data-inizio": "20-03-2025"
-          },
           "escursione_monte_isola": {
                     "titolo": "Escursione a Monte Isola",
                     "ora-inizio": "09:30",

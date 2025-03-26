@@ -1,5 +1,6 @@
 package utility;
 
+import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -113,6 +114,18 @@ public class Time {
 			}
 		}
 		return s;
+	}
+	
+	public static boolean isTimeBetween(String time, String start, String end) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+		LocalTime targetTime = LocalTime.parse(time, formatter);
+		LocalTime startTime = LocalTime.parse(start, formatter);
+		LocalTime endTime = LocalTime.parse(end, formatter);
+		if (startTime.isBefore(endTime)) {
+			return !targetTime.isBefore(startTime) && !targetTime.isAfter(endTime);
+		} else {
+			return !targetTime.isBefore(startTime) || !targetTime.isAfter(endTime);
+		}
 	}
 	
 	public static boolean isThisDateInMonthiplus3 (String date) { //usato solo per calcolo di date Precluse
