@@ -232,7 +232,6 @@ public class Archivio {
 			if (!Time.isThisDateInMonthiplus3(date)) {
 				return false;
 			}
-			System.out.println(2);
 	        for (int i = 0; i < datePrecluse.length(); i++) {
 	            if (datePrecluse.get(i).equals(date)) { //eccezione?
 	                return false;
