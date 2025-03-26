@@ -83,26 +83,27 @@ public class Time {
 		return s;
 	}
 	
-	public static boolean isThisDateInMonthiplus3 (String date) {
-		String[] d = date.split("-");
-		String[] s = actualDate.split("-");
-		if (Integer.parseInt(d[0]) > 15) { //16 mese i al 31 del mese i
-			if (Integer.parseInt(d[1]) < 10) {
-				return (Integer.parseInt(d[1]) == Integer.parseInt(s[1]) + 3);
+	public static boolean isThisDateInMonthiplus3 (String date) { //usato solo per calcolo di date Precluse
+		String[] inputDateValues = date.split("-");
+		String[] actualDateValues = actualDate.split("-");
+		if (!isValidDate(date)) return false;
+		if (Integer.parseInt(actualDateValues[0]) > 15) { //se giorno di oggi maggiore di 15 quindi mese i rispetto i+3
+			if (Integer.parseInt(actualDateValues[1]) < 10) { //se mese fino a settembre
+				return (Integer.parseInt(inputDateValues[1]) == Integer.parseInt(actualDateValues[1]) + 3); //check se mese input in i+3
 			}
 			else {
-				if (Integer.parseInt(d[2]) != Integer.parseInt(s[2]) + 1) return false;
-				else return (Integer.parseInt(d[1]) == Integer.parseInt(s[1]) + 3 - 12); 
+				if (Integer.parseInt(inputDateValues[2]) != Integer.parseInt(actualDateValues[2]) + 1) return false;
+				else return (Integer.parseInt(inputDateValues[1]) == Integer.parseInt(actualDateValues[1]) + 3 - 12); 
 			}
 		}
-		else { //dall'1 al 15 del mese i+1
-			if (Integer.parseInt(d[0]) < 16) {
-				if (Integer.parseInt(d[1]) < 11) {
-					return (Integer.parseInt(d[1]) == Integer.parseInt(s[1]) + 2);
+		else { //se giorno di oggi minore di 16 quindi mese i+1 rispetto i+3
+			if (Integer.parseInt(actualDateValues[0]) < 16) {
+				if (Integer.parseInt(actualDateValues[1]) < 11) { //se mese fino ottobre
+					return (Integer.parseInt(inputDateValues[1]) == Integer.parseInt(actualDateValues[1]) + 2);
 				}
 				else {
-					if (Integer.parseInt(d[2]) != Integer.parseInt(s[2]) + 1) return false;
-					else return (Integer.parseInt(d[1]) == Integer.parseInt(s[1]) + 2 - 12); 
+					if (Integer.parseInt(inputDateValues[2]) != Integer.parseInt(actualDateValues[2]) + 1) return false;
+					else return (Integer.parseInt(inputDateValues[1]) == Integer.parseInt(actualDateValues[1]) + 2 - 12); 
 				}
 			}
 			else return false;
