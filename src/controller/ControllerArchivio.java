@@ -33,9 +33,9 @@ public class ControllerArchivio {
 	
 	public boolean pubblicaPiano(String username) {
 		if(d.isPrimaPubblicazione()) return d.setPrimaPubblicazione();
-		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE && Time.getActualDayOfTheMonth() >= RELEASE_DAY &&
-				((d.getUltimoMesePubblicazione() == Time.getActualMonth() - 1 && d.getUltimoAnnoPubblicazione() == Time.getActualYear()) ||
-				(d.getUltimoMesePubblicazione() == Time.getActualMonth() - 1 + 12 && d.getUltimoAnnoPubblicazione() == Time.getActualYear() - 1))) {
+		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE && Time.getActualDateValue(Time.DAY) >= RELEASE_DAY &&
+				((d.getUltimoMesePubblicazione() == Time.getActualDateValue(Time.MONTH) - 1 && d.getUltimoAnnoPubblicazione() == Time.getActualDateValue(Time.YEAR)) ||
+				(d.getUltimoMesePubblicazione() == Time.getActualDateValue(Time.MONTH) - 1 + 12 && d.getUltimoAnnoPubblicazione() == Time.getActualDateValue(Time.YEAR) - 1))) {
 			return d.pubblicaPiano();
 		}
 		else return false;
@@ -43,9 +43,9 @@ public class ControllerArchivio {
 	
 	public boolean chiudiRaccoltaDisponibilita (String username) {
 		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE && 
-				!d.isPrimaPubblicazione() && Time.getActualDayOfTheMonth() >= RELEASE_DAY &&
-				((d.getUltimoMesePubblicazione() == Time.getActualMonth() - 1 && d.getUltimoAnnoPubblicazione() == Time.getActualYear()) ||
-				(d.getUltimoMesePubblicazione() == Time.getActualMonth() - 1 + 12 && d.getUltimoAnnoPubblicazione() == Time.getActualYear() - 1))) {
+				!d.isPrimaPubblicazione() && Time.getActualDateValue(Time.DAY) >= RELEASE_DAY &&
+				((d.getUltimoMesePubblicazione() == Time.getActualDateValue(Time.MONTH) - 1 && d.getUltimoAnnoPubblicazione() == Time.getActualDateValue(Time.YEAR)) ||
+				(d.getUltimoMesePubblicazione() == Time.getActualDateValue(Time.MONTH) - 1 + 12 && d.getUltimoAnnoPubblicazione() == Time.getActualDateValue(Time.YEAR) - 1))) {
 			if (d.getPossibileDareDisponibilita()) return d.chiudiRaccoltaDisponibilita(); 
 			else return false;
 		}
@@ -55,8 +55,8 @@ public class ControllerArchivio {
 	}
 	
 	public boolean apriRaccoltaDisponibilita(String username) {
-		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE && !d.isPrimaPubblicazione() && Time.getActualDayOfTheMonth() >= RELEASE_DAY&&
-				((d.getUltimoMesePubblicazione() == Time.getActualMonth() && d.getUltimoAnnoPubblicazione() == Time.getActualYear()))) { //aggiornato quando pubblicato
+		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE && !d.isPrimaPubblicazione() && Time.getActualDateValue(Time.DAY) >= RELEASE_DAY&&
+				((d.getUltimoMesePubblicazione() == Time.getActualDateValue(Time.MONTH) && d.getUltimoAnnoPubblicazione() == Time.getActualDateValue(Time.YEAR)))) { //aggiornato quando pubblicato
 			if (!d.isUltimoPianoPubblicato() || d.getPossibileDareDisponibilita()) return false;
 			else return d.apriRaccoltaDisponibilita();
 		}
@@ -194,7 +194,7 @@ public class ControllerArchivio {
 	}
 	
 	public boolean isReleaseOrLaterDay() {
-		return (RELEASE_DAY <= Time.getActualDayOfTheMonth());
+		return (RELEASE_DAY <= Time.getActualDateValue(Time.DAY));
 	}
 	
 	public boolean isPrimaPubblicazione () {

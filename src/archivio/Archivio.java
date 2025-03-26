@@ -366,8 +366,8 @@ public class Archivio {
 		jsonPianoVisiteDaPubblicare.put(DATE_PRECLUSE_MESEIPLUS3, new JSONArray());
 		jsonPianoVisiteDaPubblicare.put(DISPONIBILITA, new JSONObject());
 		jsonPianoVisiteDaPubblicare.put(ULTIMO_PIANO, true);
-		jsonPianoVisiteDaPubblicare.put(MESE_ULTIMA_PUBBLICAZIONE, Time.getActualMonth());
-		jsonPianoVisiteDaPubblicare.put(ANNO_ULTIMA_PUBBLICAZIONE, Time.getActualYear());
+		jsonPianoVisiteDaPubblicare.put(MESE_ULTIMA_PUBBLICAZIONE, Time.getActualDateValue(Time.MONTH));
+		jsonPianoVisiteDaPubblicare.put(ANNO_ULTIMA_PUBBLICAZIONE, Time.getActualDateValue(Time.YEAR));
 		JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
 		JSONUtility.aggiornaJsonFile(jsonPianoVisite, PATH_VISITE, 10);
 		return true;
@@ -461,8 +461,8 @@ public class Archivio {
 	public boolean setPrimaPubblicazione() {
 		jsonPianoVisiteDaPubblicare.put(PRIMA_PUBBLICAZIONE, false);
 		jsonPianoVisiteDaPubblicare.put(ULTIMO_PIANO, true);
-		jsonPianoVisiteDaPubblicare.put(MESE_ULTIMA_PUBBLICAZIONE, Time.getActualMonth());
-		jsonPianoVisiteDaPubblicare.put(ANNO_ULTIMA_PUBBLICAZIONE, Time.getActualYear());
+		jsonPianoVisiteDaPubblicare.put(MESE_ULTIMA_PUBBLICAZIONE, Time.getActualDateValue(Time.MONTH));
+		jsonPianoVisiteDaPubblicare.put(ANNO_ULTIMA_PUBBLICAZIONE, Time.getActualDateValue(Time.YEAR));
 
 		apriRaccoltaDisponibilita();
 		JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
