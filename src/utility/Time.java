@@ -117,7 +117,6 @@ public class Time {
 	}
 	
 	public static boolean isTimeBetween(String time, String start, String end) {
-		System.out.println(end);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 		LocalTime targetTime = LocalTime.parse(time, formatter);
 		LocalTime startTime = LocalTime.parse(start, formatter);
