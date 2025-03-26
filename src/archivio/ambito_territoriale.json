@@ -17,7 +17,6 @@
                "collocazione": "Via del Castello, 9, 25121 Brescia BS, Italia",
                "nome": "Castello di Brescia",
                "tipo-visita": [
-                    "percorso_natura_castello",
                     "visita_sotterranei",
                     "tour_castello",
                     "museo_armi"
