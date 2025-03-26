@@ -178,7 +178,7 @@ public class Archivio {
 					}
 				}
 				if (tipiVolontario.length() == 0) {
-					rimuoviLuogo((String)m); //TODO vedere se può usare rimuoviVolontario: jsonUsers.remove((String)m)
+					rimuoviVolontario((String)m); 
 				}
 			}
 			jsonTipiVisite.remove((String)s);
