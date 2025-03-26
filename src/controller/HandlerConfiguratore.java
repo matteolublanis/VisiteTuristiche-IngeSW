@@ -290,12 +290,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 				if (!gdb.checkIfPlaceExists(luogo)) a.view("Il luogo inserito è inesistente.");
 			} while (!gdb.checkIfPlaceExists(luogo));
 			
-			if (aggiungiTipoVisitePartendoDaLuogo(a, luogo)) {
-				a.view("Il nuovo tipo di visita è stato aggiunto.");
-			}
-			else {
-				a.view("Il nuovo tipo di visita non è stato aggiunto.");
-			}
+			aggiungiTipoVisitePartendoDaLuogo(a, luogo);
 		}
 		
 	}

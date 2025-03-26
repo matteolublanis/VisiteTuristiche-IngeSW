@@ -117,6 +117,7 @@ public class Time {
 	}
 	
 	public static boolean isTimeBetween(String time, String start, String end) {
+		System.out.println(end);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 		LocalTime targetTime = LocalTime.parse(time, formatter);
 		LocalTime startTime = LocalTime.parse(start, formatter);
@@ -155,11 +156,16 @@ public class Time {
 		}
 	}
 	
-	public static int[] calculateEndTimeWithStartAndDuration (int hour, int minute, int duration) {
-		int endHour, endMinute;
-		endHour = hour + (duration/60); 
-		endMinute = minute + (60*(endHour-hour));
-		return new int[] {endHour, endMinute};
+	public static int[] calculateEndTimeWithStartAndDuration(int hour, int minute, int duration) {
+	    int endHour = hour + (duration / 60); 
+	    int endMinute = minute + (duration % 60); 
+
+	    if (endMinute >= 60) { 
+	        endMinute -= 60;
+	        endHour += 1;
+	    }
+
+	    return new int[]{endHour, endMinute};
 	}
 	
 	public static boolean overTimeLimit (int startHour, int startMinute, int limitHour, int limitMinute, int duration) {

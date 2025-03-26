@@ -1,6 +1,6 @@
 {
           "ultimo-piano-pubblicato": false,
-          "prima-pubblicazione": false,
+          "prima-pubblicazione": true,
           "disponibilita": {
                     "volontario7": {"13-05-2025": "tour_brescia_romana"},
                     "volontario2": {"06-05-2025": "tour_brescia_romana"},
@@ -17,5 +17,5 @@
           "datePrecluseI+3": [],
           "mese-ultima-pubblicazione": 2,
           "anno-ultima-pubblicazione": 2025,
-          "possibile-dare-disponibilita": true
+          "possibile-dare-disponibilita": false
 }
