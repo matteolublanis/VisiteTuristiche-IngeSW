@@ -102,20 +102,6 @@
                               "sab"
                     ]
           },
-          "percorso_natura_castello": {
-                    "da-acquistare": false,
-                    "descrizione": "Passeggiata tra i sentieri verdi del parco storico del castello con guida naturalistica.",
-                    "titolo": "Percorso Naturalistico",
-                    "ora-inizio": "09:00",
-                    "min-fruitore": 2,
-                    "max-fruitore": 25,
-                    "punto-incontro": "Ingresso del Parco del Castello",
-                    "durata-visita": "110",
-                    "volontari": ["volontario4"],
-                    "data-inizio": "20-03-2025",
-                    "data-fine": "15-10-2025",
-                    "giorni-prenotabili": ["lun"]
-          },
           "escursione_monte_isola": {
                     "da-acquistare": false,
                     "descrizione": "Gita guidata alla scoperta dell'isola lacustre più grande d'Europa con panorami mozzafiato.",
