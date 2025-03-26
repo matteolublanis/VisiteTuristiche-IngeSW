@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.ArrayList;
+
 import main.App;
 import utility.CostantiStruttura;
 import utility.MethodName;
@@ -156,91 +158,128 @@ public class HandlerConfiguratore extends ControllerUtente{
 		}
 	}
 	
+	private String richiediTipoVisita(App a) {
+	    String tipoVisita;
+	    do {
+	        tipoVisita = (String) a.richiediVal(CostantiStruttura.STRING, "tag del tipo della visita");
+	        if (gdb.checkIfVisitTypeExists(tipoVisita)) {
+	            a.view("Il tag inserito esiste già.");
+	        }
+	    } while (gdb.checkIfVisitTypeExists(tipoVisita));
+	    return tipoVisita;
+	}
+	
+	private String richiediDataValida(App a, String messaggio) {
+	    String data;
+	    do {
+	        data = (String) a.richiediVal(CostantiStruttura.STRING, messaggio);
+	        if (!Time.isValidDate(data)) {
+	            a.view("Formato data non valido");
+	        }
+	    } while (!Time.isValidDate(data));
+	    return data;
+	}
+	
+	private ArrayList<Integer> richiediGiorniPrenotabili(App a) {
+		ArrayList<Integer> giorni = new ArrayList<>();
+	    boolean continua = true;
+	    do {
+	        int giorno = Integer.parseInt(a.richiediVal(CostantiStruttura.INT, "giorno prenotabile della visita (1-7)"));
+	        if (giorno < 1 || giorno > 7) {
+	            a.view("Numero inserito non valido, deve essere tra 1 e 7.");
+	        } else if (!giorni.contains(giorno)) { //se non contiene
+	            giorni.add(giorno); //aggiungi giorno
+	            continua = chiediSioNo(a, "Vuoi aggiungere un altro giorno prenotabile?");
+	        } else {
+	            a.view("Giorno già inserito!");
+	            continua = true;
+	        }
+	    } while (continua);
+	    return giorni;
+	}
+	
+	private String richiediOraValida(App a) {
+	    String ora;
+	    do {
+	        ora = (String) a.richiediVal(CostantiStruttura.STRING, "ora d'inizio visita (hh-mm)");
+	        if (!Time.isValidHour(ora)) {
+	            a.view("Formato non corretto, inserire tipo 10:30.");
+	        }
+	    } while (!Time.isValidHour(ora));
+	    return ora;
+	}
+	
+	private int richiediNumeroMinimo(App a) {
+	    int min;
+	    do {
+	        min = Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "minimo fruitori per confermare la visita"));
+	        if (min <= 0) {
+	            a.view("Il numero minimo di fruitori non può essere minore o uguale a 0.");
+	        }
+	    } while (min <= 0);
+	    return min;
+	}
+	
+	private int richiediNumeroMassimo(App a, int min) {
+	    int max;
+	    do {
+	        max = Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "massimo fruitori per completare la visita"));
+	        if (max < min) {
+	            a.view("Il numero massimo di fruitori non può essere minore del minimo.");
+	        }
+	    } while (max < min);
+	    return max;
+	}
+	
+	private ArrayList<String> richiediVolontari(App a) {
+		ArrayList<String> volontari = new ArrayList<>();
+	    if (chiediSioNo(a, "Vuoi associare un nuovo volontario per questo tipo di visita?")) {
+	        String volontario;
+	        do {
+	        	volontario = impostaNuovoVolontarioConTipoVisitaScelto(a, "");
+	        } while (volontario.equals(""));
+	        volontari.add(volontario);
+	    } else {
+	        boolean continua;
+	        do {
+	            String volontario = (String) a.richiediVal(CostantiStruttura.STRING, "volontario che gestirà la visita");
+	            if (!gdb.checkIfUserExists(volontario)) {
+	                a.view("L'username inserito non è associato a nessun volontario.");
+	                continua = true;
+	            } else if (!volontari.contains(volontario)) {
+	                volontari.add(volontario);
+	                continua = chiediSioNo(a, "Vuoi inserire un altro volontario?");
+	            } else {
+	                a.view("Volontario già inserito!");
+	                continua = true;
+	            }
+	        } while (continua);
+	    }
+	    return volontari;
+	}
+	
 	private boolean aggiungiTipoVisitePartendoDaLuogo (App a, String luogo) {
-		String tipoVisita = "";
-		do {
-			tipoVisita = (String)a.richiediVal(CostantiStruttura.STRING, "tag del tipo della visita");
-			if (gdb.checkIfVisitTypeExists(tipoVisita)) a.view("Il tag inserito esiste già.");
-		} while (gdb.checkIfVisitTypeExists(tipoVisita));
-		
+		String tipoVisita = richiediTipoVisita(a);
 		String titolo = (String)a.richiediVal(CostantiStruttura.STRING, "titolo della visita");
 		String descrizione = (String)a.richiediVal(CostantiStruttura.STRING, "descrizione riassuntiva della visita");
 		String puntoIncontro = (String)a.richiediVal(CostantiStruttura.STRING, "punto di incontro della visita (locazione geografica)");
-		String dataInizio = "";
-		do {
-			dataInizio = (String)a.richiediVal(CostantiStruttura.STRING, "apertura del periodo della visita");
-			if (!Time.isValidDate(dataInizio)) a.view("Formato data non valido");
-		} while (!Time.isValidDate(dataInizio));
+		String dataInizio = richiediDataValida(a, "apertura del periodo della visita");
 		String dataFine = "";
 		do {
-			dataFine = (String)a.richiediVal(CostantiStruttura.STRING, "chiusura del periodo della visita");
-			if (!Time.isValidDate(dataFine)) a.view("Formato data non valido");
+			dataFine = richiediDataValida(a, "chiusura del periodo della visita");
 			if (Time.comesBefore(dataFine, dataInizio)) a.view("Non può finire prima che inizi.");
-		} while (!Time.isValidDate(dataFine) || Time.comesBefore(dataFine, dataInizio));
+		} while (Time.comesBefore(dataFine, dataInizio));
 		//^\d+(,\d+)*$
-		String giorniPrenotabili = "";
-		boolean b = true;
-		do {
-			String giorno = (a.richiediVal(CostantiStruttura.INT, "giorno prenotabile della visita (da 1 a 7, da lun a dom)"));
-			if (Integer.parseInt(giorno) < 1 || Integer.parseInt(giorno) > 7) {
-				b = true;
-				a.view("Numero inserito non valido, deve essere tra 1 e 7.");
-			}
-			else {
-				if (!giorniPrenotabili.contains(giorno)) giorniPrenotabili += giorno + ",";
-				b = chiediSioNo(a, "Vuoi aggiungere un altro giorno prenotabile?");
-			}
-		} while (b);
-		String oraInizio = "";
-		do {
-			oraInizio = (String)a.richiediVal(CostantiStruttura.STRING, "ora d'inizio visita (hh-mm)");
-			if (!Time.isValidHour(oraInizio)) a.view("Formato non corretto, inserire tipo 10:30.");
-		} while (!Time.isValidHour(oraInizio));
+		ArrayList<Integer> giorniPrenotabili = richiediGiorniPrenotabili(a);
+		String oraInizio = richiediOraValida(a);
 		int durataVisita = Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "durata della visita in minuti (ad esempio 120 sono 120 minuti, quindi 2 ore)"));
 		boolean ticket = chiediSioNo(a, "se è da acquistare o no un biglietto (si/no)");
-		int minFruitore = 0;
-		do {
-			minFruitore =Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "minimo fruitori per confermare la visita"));
-			if (minFruitore <= 0) a.view("Il numero minimo di fruitori non può essere minore o uguale a 0.");
-		} while (minFruitore <= 0);
-		int maxFruitore = 0;
-		do {
-			maxFruitore = Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "massimo fruitori per completare la visita"));
-			if (maxFruitore < minFruitore) a.view("Il numero massimo di fruitori non può essere minore del minimo.");
-		} while (maxFruitore < minFruitore);
-		String volontari = "";
-		if (chiediSioNo(a, "Vuoi associare un nuovo volontario per questo tipo di visita?")) {
-			do {
-				volontari = impostaNuovoVolontarioConTipoVisitaScelto(a, "");
-			} while (volontari.equals(""));
-		}
-		else {
-			volontari = "";
-			String volontario = "";
-			boolean bool = true;
-			do {
-				volontario = (String)a.richiediVal(CostantiStruttura.STRING, "volontario che gestirà la visita");
-				if (!gdb.checkIfUserExists(volontario)) a.view("L'username inserito non è associato a nessun volontario.");
-				else {
-					if (!volontari.contains(volontario)) {
-						volontari += volontario + ",";
-						bool = chiediSioNo(a, "Vuoi inserire un altro volontario?");
-					}
-					else {
-						a.view("Volontario già inserito!");
-						bool = true;
-					}
-				}
-			} while (!gdb.checkIfUserExists(volontario) || bool);
-		}
-		if (gdb.aggiungiTipoVisite(luogo, tipoVisita, titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniPrenotabili, oraInizio, durataVisita, ticket, minFruitore, maxFruitore, volontari)) {
-			a.view("Il nuovo tipo di visita è stato aggiunto.");
-			return true;
-		}
-		else {
-			a.view("Il nuovo tipo di visita non è stato aggiunto.");
-			return false;
-		}
+		int minFruitore = richiediNumeroMinimo(a);
+		int maxFruitore = richiediNumeroMassimo(a, minFruitore);
+		ArrayList<String> volontari = richiediVolontari(a);
+		boolean aggiunto = (gdb.aggiungiTipoVisite(luogo, tipoVisita, titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniPrenotabili, oraInizio, durataVisita, ticket, minFruitore, maxFruitore, volontari));
+		a.view(aggiunto ? "Il nuovo tipo di visita è stato aggiunto." : "Il nuovo tipo di visita non è stato aggiunto.");
+		return aggiunto;
 	}
 	
 	@MethodName("Aggiungi tipo visite")

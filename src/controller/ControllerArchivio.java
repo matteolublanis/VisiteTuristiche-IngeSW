@@ -1,5 +1,6 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -264,13 +265,13 @@ public class ControllerArchivio {
 	}
 	
 	public boolean aggiungiTipoVisite (String luogo, String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
-			String dataInizio, String dataFine, String giorniPrenotabiliVal, String oraInizio,
-			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, String volontariVal) {
+			String dataInizio, String dataFine, ArrayList<Integer> giorniPrenotabiliVal, String oraInizio,
+			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, ArrayList<String> volontariVal) {
 		JSONArray giorniPrenotabili = new JSONArray();
 	    String days = "";
-	    for (String k : giorniPrenotabiliVal.split(SPLIT_REGEX_LISTA)) {
+	    for (Integer k : giorniPrenotabiliVal) {
 	    	try {
-	    		int j = Integer.parseInt(k);
+	    		int j = (k);
 	    		if (!(j < 1 || j > 7) && !days.contains(Archivio.GIORNISETTIMANA[j-1])) {
 		    		giorniPrenotabili.put(Archivio.GIORNISETTIMANA[j-1]);
 		    		days += Archivio.GIORNISETTIMANA[j-1] + ",";
@@ -281,9 +282,8 @@ public class ControllerArchivio {
 	    	}
 	    }
 	    if (intersectOtherEventSamePlace (dataInizio, dataFine, oraInizio, durataVisita, days, d.getJSONAmbitoTerritoriale().getJSONObject(Archivio.LUOGHI).getJSONObject(luogo))) return false;
-	    String[] m = volontariVal.split(SPLIT_REGEX_LISTA);
 	    JSONArray volontari = new JSONArray();
-	    for (String k : m) {
+	    for (String k : volontariVal) {
     		JSONObject volontario = d.getJSONUsers().getJSONObject(k);
     		JSONArray tipi = volontario.getJSONArray(Archivio.TIPO_VISITA);
     		if (volontarioAlreadyLinkedForThatDay(dataInizio, dataFine, oraInizio, durataVisita, days, tipi)) return false;
