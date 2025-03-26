@@ -2,7 +2,9 @@ package utility;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -74,8 +76,8 @@ public class Time {
 		return (Integer.parseInt(s[0]) == day);
 	}
 	
-	public static String getAllDatesSameDayOfTheWeek (String open, String close, int desideredDay) { 
-		String s = "";
+	public static List<String> getAllDatesSameDayOfTheWeek (String open, String close, int desideredDay) { 
+		ArrayList<String> s = new ArrayList<>();
 		String[] start = open.split("-");
 		String[] stop = close.split("-");
 		if (desideredDay < 1 || desideredDay > 7) return null; 
@@ -104,7 +106,7 @@ public class Time {
 						int day = c.get(Calendar.DAY_OF_WEEK);
 						if (day == 1) day = 7;
 						else day -= 1;
-						if (day == desideredDay) s += (nowDate) + " ";
+						if (day == desideredDay) s.add(nowDate);
 					}
 					if (nowDate.equals(close)) break;
 				}

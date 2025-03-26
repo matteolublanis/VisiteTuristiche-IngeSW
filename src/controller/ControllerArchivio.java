@@ -24,29 +24,32 @@ public class ControllerArchivio {
 		this.d = d; 
 	}
 
-	public boolean checkPrimoAvvio () {
+	public boolean checkPrimoAvvio () { //OK
 		return d.checkPrimoAvvio();
 	}
 	
-	public int getTipoUtente (String username) {
+	public int getTipoUtente (String username) { //OK
 		return d.getTipoUtente(username);
 	}
 	
-	public boolean pubblicaPiano(String username) {
-		if(d.isPrimaPubblicazione()) return d.setPrimaPubblicazione();
-		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE && Time.getActualDateValue(Time.DAY) >= RELEASE_DAY &&
-				((d.getUltimoMesePubblicazione() == Time.getActualDateValue(Time.MONTH) - 1 && d.getUltimoAnnoPubblicazione() == Time.getActualDateValue(Time.YEAR)) ||
-				(d.getUltimoMesePubblicazione() == Time.getActualDateValue(Time.MONTH) - 1 + 12 && d.getUltimoAnnoPubblicazione() == Time.getActualDateValue(Time.YEAR) - 1))) {
+	public boolean pubblicaPiano(String username) { //OK
+		if(d.isPrimaPubblicazione()) return d.setPrimaPubblicazione(); 
+		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE && Time.getActualDateValue(Time.DAY) >= RELEASE_DAY && //SE ULTIMO PIANO PUBBLICATO MESE SCORSO PUBBLICA
+				isUltimaPubblicazioneMeseScorso()) {
 			return d.pubblicaPiano();
 		}
 		else return false;
 	}
 	
-	public boolean chiudiRaccoltaDisponibilita (String username) {
+	private boolean isUltimaPubblicazioneMeseScorso () {
+		return ((d.getUltimoMesePubblicazione() == Time.getActualDateValue(Time.MONTH) - 1 && d.getUltimoAnnoPubblicazione() == Time.getActualDateValue(Time.YEAR)) ||
+				(d.getUltimoMesePubblicazione() == Time.getActualDateValue(Time.MONTH) - 1 + 12 && d.getUltimoAnnoPubblicazione() == Time.getActualDateValue(Time.YEAR) - 1));
+	}
+	
+	public boolean chiudiRaccoltaDisponibilita (String username) { //OK
 		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE && 
 				!d.isPrimaPubblicazione() && Time.getActualDateValue(Time.DAY) >= RELEASE_DAY &&
-				((d.getUltimoMesePubblicazione() == Time.getActualDateValue(Time.MONTH) - 1 && d.getUltimoAnnoPubblicazione() == Time.getActualDateValue(Time.YEAR)) ||
-				(d.getUltimoMesePubblicazione() == Time.getActualDateValue(Time.MONTH) - 1 + 12 && d.getUltimoAnnoPubblicazione() == Time.getActualDateValue(Time.YEAR) - 1))) {
+						isUltimaPubblicazioneMeseScorso()) {
 			if (d.getPossibileDareDisponibilita()) return d.chiudiRaccoltaDisponibilita(); 
 			else return false;
 		}
@@ -55,10 +58,10 @@ public class ControllerArchivio {
 		}
 	}
 	
-	public boolean apriRaccoltaDisponibilita(String username) {
+	public boolean apriRaccoltaDisponibilita(String username) {  //OK
 		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE && !d.isPrimaPubblicazione() && Time.getActualDateValue(Time.DAY) >= RELEASE_DAY&&
 				((d.getUltimoMesePubblicazione() == Time.getActualDateValue(Time.MONTH) && d.getUltimoAnnoPubblicazione() == Time.getActualDateValue(Time.YEAR)))) { //aggiornato quando pubblicato
-			if (!d.isUltimoPianoPubblicato() || d.getPossibileDareDisponibilita()) return false;
+			if (!d.isUltimoPianoPubblicato() || d.getPossibileDareDisponibilita()) return false; //SE ULTIMO PIANO NON PUBBLICATO O GIA' APERTA RITORNA FALSO
 			else return d.apriRaccoltaDisponibilita();
 		}
 		else {
@@ -66,7 +69,7 @@ public class ControllerArchivio {
 		}
 	}
 	
-	public boolean associaVolontarioEsistenteATipoVisitaEsistente(String volontario, String tipoVisita) {
+	public boolean associaVolontarioEsistenteATipoVisitaEsistente(String volontario, String tipoVisita) { //OK
 		if (!d.checkIfUserExists(volontario) || !d.checkIfVisitTypeExists(tipoVisita)) {
 			JSONObject v = d.getJSONUsers().getJSONObject(volontario);
 			JSONArray tipi = v.getJSONArray(Archivio.TIPO_VISITA);
@@ -82,7 +85,7 @@ public class ControllerArchivio {
 	}
 	
 	public boolean volontarioAlreadyLinkedForThatDay (String dateStart1, String dateFinish1, String hour1, int duration1, String days1, JSONArray tipiVisitaVolontario) {
-		for (Object k : tipiVisitaVolontario) { 
+		for (Object k : tipiVisitaVolontario) {  //OK
 			JSONObject tipo = d.getJSONTipiVisite().getJSONObject((String)k); //prende ogni tipo dal json dei tipi
 			if (Time.comesBefore(dateStart1, tipo.getString(Archivio.DATA_FINE)) && !Time.comesBefore(dateFinish1, tipo.getString(Archivio.DATA_INIZIO))) { //controlla se periodi intersecano
 				JSONArray days2 = tipo.getJSONArray(Archivio.GIORNI_PRENOTABILI); //prende giorni prenotabili del tipo
@@ -98,7 +101,7 @@ public class ControllerArchivio {
 		return d.getPossibilitaDareDisponibilita();
 	}
 	
-	public boolean inserisciDisponibilita(String data, String username) {
+	public boolean inserisciDisponibilita(String data, String username) { //OK
 		HashMap<String, List<String>> m = getDatePerDisponibilita(username);
 		for (String k : m.keySet()) {
 			if (m.get(k).contains(data)) return d.inserisciDisponibilita(data, username, k);
@@ -106,7 +109,7 @@ public class ControllerArchivio {
 		return false;
 	}
 	
-	public HashMap<String, List<String>> getDatePerDisponibilita(String username) {	
+	public HashMap<String, List<String>> getDatePerDisponibilita(String username) {	 //OK
 		if (getTipoUtente(username) == CostantiStruttura.VOLONTARIO) {
 			HashMap<String, List<String>> result = new HashMap<> () ;
 			JSONArray tipiVisite = d.getTipiVisitaOfVolontario(username);
@@ -116,11 +119,14 @@ public class ControllerArchivio {
 					String[] periodoDaDareDisponibilita = Time.getAvailabilityWindow(tipo.getString(Archivio.DATA_INIZIO), tipo.getString(Archivio.DATA_FINE), Time.getDesideredMonthAndYear(RELEASE_DAY, Time.getActualDate()));
 					JSONArray giorni = tipo.getJSONArray(Archivio.GIORNI_PRENOTABILI);
 					
-					String days = "";
+					List<String> days = new ArrayList<>();
 					for (Object g : giorni) {
-						days += Time.getAllDatesSameDayOfTheWeek(periodoDaDareDisponibilita[0], periodoDaDareDisponibilita[1], Arrays.asList(Archivio.GIORNISETTIMANA).indexOf((String) g) + 1); //calcola giorni disponibili
+						List<String> k = Time.getAllDatesSameDayOfTheWeek(periodoDaDareDisponibilita[0], periodoDaDareDisponibilita[1], Arrays.asList(Archivio.GIORNISETTIMANA).indexOf((String) g) + 1);
+						for (String date : k) {
+							days.add(date);
+						}
 					}
-					result.put((String)s, Arrays.asList(days.split(" ")));
+					result.put((String)s, days);
 				}	
 				catch (Exception e) {
 					//do smth
@@ -131,16 +137,16 @@ public class ControllerArchivio {
 		else return null;
 	}
 	
-	public String getElencoTipiVisite () {
+	public String getElencoTipiVisite () { //OK
  		return d.getElencoTipiVisite();
  	}
  
- 	public String getElencoTipiVisiteVolontario (String username) {
+ 	public String getElencoTipiVisiteVolontario (String username) { //OK
  		return d.getElencoTipiVisiteVolontario(username);
  	}
 	
 	public boolean impostaCredenzialiNuovoVolontario (String username, String password, String tipi_visiteVal, boolean tipiVisitaNecessario) {
-		if (checkIfUserExists(username)) return false;
+		if (checkIfUserExists(username)) return false; //OK
 		JSONArray tipiVisite = new JSONArray();
 	    String[] s = tipi_visiteVal.split(SPLIT_REGEX_LISTA);
 	    for (String k : s) {
@@ -211,7 +217,7 @@ public class ControllerArchivio {
 		else return (d.checkPrimoAccesso(username)); 
 	}
 	
-	public boolean indicaDatePrecluse (String date) {
+	public boolean indicaDatePrecluse (String date) { //ok
 		if (Time.isValidDate(date) && Time.isThisDateInMonthiplus3(date)) return d.indicaDatePrecluse(date);
 		else return false;
 	}
