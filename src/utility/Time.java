@@ -56,13 +56,13 @@ public class Time {
 	
 	public static String[] getAvailabilityWindow (String open, String close, int[] desideredMonthAndYear) {
 		String desideredStartingDate = String.format("%02d-%02d-%04d", 1, desideredMonthAndYear[0], desideredMonthAndYear[1]);
-		if (comesBefore(desideredStartingDate, open) || !comesBefore(desideredStartingDate, close)) {
+		if (!comesBefore(desideredStartingDate, close)) { //se inizio dopo che è finito ritorna null
 			return null;
 		}
 		else {
-			//se la starting date non è errata allora di sicuro inizia dal giorno 1
+			if (comesBefore(desideredStartingDate, open)) desideredStartingDate = open; //se inizio prima che inizi cambio inizioDesiderato
 			String finish = String.format("%02d-%02d-%04d", getMaxDayForMonth(desideredMonthAndYear[0], desideredMonthAndYear[1]), desideredMonthAndYear[0], desideredMonthAndYear[1]);
-			if (comesBefore(close, finish)) {
+			if (comesBefore(close, finish)) { //se finisco prima del desiderato finisco prima 
 				finish = String.format("%02d-%02d-%04d", Integer.parseInt(close.split("-")[0]), desideredMonthAndYear[0], desideredMonthAndYear[1]);
 				return new String[] {desideredStartingDate, finish};
 			}
