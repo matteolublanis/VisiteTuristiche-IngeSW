@@ -65,7 +65,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 		else a.view("Non puoi attuare queste modifiche attualmente.");
 	}
 
-	@MethodName("Aggiungi tipo di visita")
+	@MethodName("Rimuovi tipo di visita")
 	public void rimuoviTipo (App a) {
 		if (gdb.canAddOrRemove(username)) {
 			boolean rimosso = gdb.rimuoviTipo(a.richiediVal(CostantiStruttura.STRING, "tipo da rimuovere"), username);

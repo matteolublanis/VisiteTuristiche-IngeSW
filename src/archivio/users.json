@@ -57,6 +57,12 @@
           "primo-accesso": false,
           "username": "admin"
      },
+     "pierpaolo": {
+          "tipo": 1,
+          "password": "marco",
+          "primo-accesso": true,
+          "username": "pierpaolo"
+     },
      "giovanni": {
           "tipo": 1,
           "password": "pierpaolo",
