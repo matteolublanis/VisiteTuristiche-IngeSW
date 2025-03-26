@@ -91,7 +91,6 @@ public class Time {
 	
 	public static String getAllDatesSameDayOfTheWeek (String open, String close, int desideredDay) { 
 		String s = "";
-		System.out.println(open);
 		String[] start = open.split("-");
 		String[] stop = close.split("-");
 		if (desideredDay < 1 || desideredDay > 7) return s; //TODO ECCEZIONE
