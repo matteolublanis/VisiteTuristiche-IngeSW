@@ -54,11 +54,11 @@ public class Time {
 	
 	public static String[] getAvailabilityWindow (String open, String close, int[] desideredMonthAndYear) {
 		String desideredStartingDate = String.format("%02d-%02d-%04d", 1, desideredMonthAndYear[0], desideredMonthAndYear[1]);
-		if (comesBefore(desideredStartingDate, open) || !comesBefore(desideredStartingDate, close)) {
+		if (!comesBefore(desideredStartingDate, close)) {
 			return null;
 		}
 		else {
-			//se la starting date non è errata allora di sicuro inizia dal giorno 1
+			if (comesBefore(desideredStartingDate, open)) desideredStartingDate = open;
 			String finish = String.format("%02d-%02d-%04d", getMaxDayForMonth(desideredMonthAndYear[0], desideredMonthAndYear[1]), desideredMonthAndYear[0], desideredMonthAndYear[1]);
 			if (comesBefore(close, finish)) {
 				finish = String.format("%02d-%02d-%04d", Integer.parseInt(close.split("-")[0]), desideredMonthAndYear[0], desideredMonthAndYear[1]);
@@ -91,6 +91,7 @@ public class Time {
 	
 	public static String getAllDatesSameDayOfTheWeek (String open, String close, int desideredDay) { 
 		String s = "";
+		System.out.println(open);
 		String[] start = open.split("-");
 		String[] stop = close.split("-");
 		if (desideredDay < 1 || desideredDay > 7) return s; //TODO ECCEZIONE

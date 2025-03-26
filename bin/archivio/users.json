@@ -1,23 +1,21 @@
 {
      "primo_avvio": false,
-     "volontario4": {
+     "volontario5": {
           "password": "admin",
           "tipo": 2,
-          "primo-accesso": true,
-          "tipo-visita": [
-               "museo_santa_giulia"
-          ],
-          "username": "volontario4"
-     },
-     "volontario3": {
-          "password": "admin",
-          "tipo": 2,
-          "primo-accesso": true,
+          "primo-accesso": false,
           "tipo-visita": [
                "visita_sotterranei",
                "franciacorta_wine_tour"
           ],
-          "username": "volontario3"
+          "username": "volontario5"
+     },
+     "volontario4": {
+          "password": "admin",
+          "tipo": 2,
+          "primo-accesso": true,
+          "tipo-visita": ["museo_santa_giulia"],
+          "username": "volontario4"
      },
      "volontario2": {
           "password": "admin",
