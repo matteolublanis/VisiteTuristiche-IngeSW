@@ -10,9 +10,9 @@ public class HandlerFruitore extends ControllerUtente {
 		this.username = username;
 	}
 	
-	@MethodName("Visualizza visite proposte, complete, confermate, cancellate e effettuate")
-	public void getElencoVisiteProposteCompleteConfermateCancellateEffettuate (App a) {
-		a.view(gdb.getElencoVisiteProposteCompleteConfermateCancellateEffettuate());
+	@MethodName("Visualizza visite proposte, confermate e cancellate")
+	public void getElencoVisiteProposteConfermateCancellate (App a) {
+		a.view(gdb.getElencoVisiteProposteConfermateCancellateFruitore());
 	}
 	
 }

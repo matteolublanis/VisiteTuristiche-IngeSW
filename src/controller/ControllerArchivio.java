@@ -222,6 +222,30 @@ public class ControllerArchivio {
 		else return false;
 	}
 	
+	public String getElencoVisiteProposteConfermateCancellateFruitore() { //dovrebbe ritornare un oggetto con tutte le info da stampare
+		String result = "";
+		JSONObject jsonPianoVisite = d.getJSONPianoVisite();
+		JSONObject jsonAmbitoTerritoriale = d.getJSONAmbitoTerritoriale();
+		JSONObject jsonTipiVisite = d.getJSONTipiVisite();
+		for (String k : jsonPianoVisite.keySet()) { //giorno
+			JSONObject j = jsonPianoVisite.getJSONObject(k); //prende le visite associate a quel giorno
+			for (String m : j.keySet()) { //visite del giorno
+				JSONObject visita = j.getJSONObject(m);
+				JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject(Archivio.LUOGHI);
+				JSONObject luogo = luoghi.getJSONObject(visita.getString(Archivio.LUOGO));
+				if (visita.getString(Archivio.STATO_VISITA).equals(Archivio.CONFERMATA) || visita.getString(Archivio.STATO_VISITA).equals(Archivio.CANCELLATA) ||
+						visita.getString(Archivio.STATO_VISITA).equals(Archivio.PROPOSTA)) {
+					result += "Titolo: " + jsonTipiVisite.getJSONObject(m).getString(Archivio.TITOLO) + "\nDescrizione: " + jsonTipiVisite.getJSONObject(m).getString(Archivio.DESCRIPTION) 
+							+  "\nPunto d'incontro: " + jsonTipiVisite.getJSONObject(m).getString(Archivio.PUNTO_INCONTRO) + "\nGiorno: " + k 
+							+ ", ora: " + jsonTipiVisite.getJSONObject(m).getString(Archivio.ORA_INIZIO) 
+							+ "\nDa acquistare biglietto: " + (jsonTipiVisite.getJSONObject(m).getBoolean(Archivio.DA_ACQUISTARE) ? "si" : "no")
+							+ "\nStato: " + visita.getString(Archivio.STATO_VISITA) + "\n";
+				}
+			}
+		}
+		return result;
+	}
+	
 	public String getElencoVisiteProposteCompleteConfermateCancellateEffettuate () {
 		String result = "";
 		JSONObject jsonPianoVisite = d.getJSONPianoVisite();

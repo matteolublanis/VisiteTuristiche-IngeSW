@@ -9,6 +9,8 @@ import utility.Time;
 
 public class Archivio {
 	
+	public static final String PROPOSTA = "proposta", CANCELLATA = "cancellata", CONFERMATA = "confermata", COMPLETA = "completa", EFFETTUATA = "effettuata";
+
 	private static final String ANNO_ULTIMA_PUBBLICAZIONE = "anno-ultima-pubblicazione";
 
 	private static final String MESE_ULTIMA_PUBBLICAZIONE = "mese-ultima-pubblicazione";
@@ -353,7 +355,7 @@ public class Archivio {
 						JSONArray volontariAssociati = new JSONArray();
 						volontariAssociati.put(usernameVol);
 						visita.put(LUOGO, jsonTipiVisite.getJSONObject(tipo).getString(LUOGO));
-						visita.put(STATO_VISITA, "proposta");
+						visita.put(STATO_VISITA, PROPOSTA);
 						visita.put(VOLONTARI2, volontariAssociati);
 						jsonPianoVisite.getJSONObject(data).put(tipo, visita);
 					}
@@ -365,7 +367,7 @@ public class Archivio {
 					JSONArray volontariAssociati = new JSONArray();
 					volontariAssociati.put(usernameVol);
 					visita.put(LUOGO, jsonTipiVisite.getJSONObject(tipo).getString(LUOGO));
-					visita.put(STATO_VISITA, "proposta");
+					visita.put(STATO_VISITA, PROPOSTA);
 					visita.put(VOLONTARI2, volontariAssociati);
 					jsonPianoVisite.getJSONObject(data).put(tipo, visita);
 				}
