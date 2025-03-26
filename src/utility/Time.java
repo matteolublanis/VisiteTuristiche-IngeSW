@@ -1,8 +1,10 @@
 package utility;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -14,6 +16,7 @@ public class Time {
 	public static final int DAY = 1, MONTH = 2, YEAR = 3;
 	private static final String TIMEREGEX = "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$";
     private static final String DATAREGEX = "\\b(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\\d{4})\\b";
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 	private static String fictionalDate = "17-04-2025";
     private static String actualDate = getTodaysDate();
     
@@ -42,82 +45,85 @@ public class Time {
 		return fictionalDate;
 	}
 	
-	public static int[] getDesideredMonthAndYear(int releaseDay, String date) {
-		String[] dateValues = date.split("-");
-		if (Integer.parseInt(dateValues[0]) < releaseDay) { //mese i+1
-			if (Integer.parseInt(dateValues[1]) + 1 > 12) return new int[] {(Integer.parseInt(dateValues[1]) + 1 - 12), (Integer.parseInt(dateValues[2]) + 1)};
-			return new int[] {(Integer.parseInt(dateValues[1]) + 1), (Integer.parseInt(dateValues[2]))};
-		}
-		else { //maggiore del release day, quindi mese i rispetto a i+2
-			if (Integer.parseInt(dateValues[1]) + 2 > 12) return new int[] {(Integer.parseInt(dateValues[1]) + 2 - 12), (Integer.parseInt(dateValues[2]) + 1)};
-			return new int[] {(Integer.parseInt(dateValues[1]) + 2), (Integer.parseInt(dateValues[2]))};
-		}
-	}
+    public static int[] getDesideredMonthAndYear(int releaseDay, String date) {
+    	if (!isValidDate(date)) return null;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate givenDate = LocalDate.parse(date, formatter);
+        int monthsToAdd = (givenDate.getDayOfMonth() < releaseDay) ? 1 : 2;
+        LocalDate newDate = givenDate.plusMonths(monthsToAdd);
+
+        return new int[]{newDate.getMonthValue(), newDate.getYear()};
+    }
 	
-	public static String[] getAvailabilityWindow (String open, String close, int[] desideredMonthAndYear) {
-		String desideredStartingDate = String.format("%02d-%02d-%04d", 1, desideredMonthAndYear[0], desideredMonthAndYear[1]);
-		if (!comesBefore(desideredStartingDate, close)) { //se inizio dopo che è finito ritorna null
-			return null;
-		}
-		else {
-			if (comesBefore(desideredStartingDate, open)) desideredStartingDate = open; //se inizio prima che inizi cambio inizioDesiderato
-			String finish = String.format("%02d-%02d-%04d", getMaxDayForMonth(desideredMonthAndYear[0], desideredMonthAndYear[1]), desideredMonthAndYear[0], desideredMonthAndYear[1]);
-			if (comesBefore(close, finish)) { //se finisco prima del desiderato finisco prima 
-				finish = String.format("%02d-%02d-%04d", Integer.parseInt(close.split("-")[0]), desideredMonthAndYear[0], desideredMonthAndYear[1]);
-				return new String[] {desideredStartingDate, finish};
-			}
-			else {
-				return new String[] {desideredStartingDate, finish};
-			}
-		}
-	}
+    public static String[] getAvailabilityWindow(String open, String close, int[] desiredMonthAndYear) {
+        // Parse the open and close dates
+        if (!isValidDate(open) || !isValidDate(close)) return null;
+        LocalDate openDate = LocalDate.parse(open, FORMATTER);
+        LocalDate closeDate = LocalDate.parse(close, FORMATTER);
+
+        // Construct desired start and end dates for the given month and year
+        LocalDate desiredStart = LocalDate.of(desiredMonthAndYear[1], desiredMonthAndYear[0], 1); // Month is 1-based
+        LocalDate desiredEnd = desiredStart.withDayOfMonth(desiredStart.lengthOfMonth()); // Last day of the month
+
+        // If the desired start date is after the close date, return null (invalid period)
+        if (desiredStart.isAfter(closeDate)) {
+            return null;
+        }
+        
+        if (desiredStart.getYear() < openDate.getYear()) {
+            return null;  // If the desired year is before the open year, it's too early
+        }
+        
+        if (desiredStart.getMonthValue() < openDate.getMonthValue() && desiredStart.getYear() == openDate.getYear()) {
+            return null;  // If it's in the previous month of the same year, it's too early
+        }
+
+        // If the desired start is before the open date, adjust the start to the open date
+        if (desiredStart.isBefore(openDate)) {
+            desiredStart = openDate;
+        }
+
+        // If the desired end is after the close date, adjust the end to the close date
+        if (desiredEnd.isAfter(closeDate)) {
+            desiredEnd = closeDate;
+        }
+
+        // Return the adjusted availability window
+        return new String[]{desiredStart.format(FORMATTER), desiredEnd.format(FORMATTER)};
+    }
 	
 	public static boolean todayIsDay (int day) {
 		String[] s = actualDate.split("-");
 		return (Integer.parseInt(s[0]) == day);
 	}
 	
-	public static List<String> getAllDatesSameDayOfTheWeek (String open, String close, int desideredDay) { 
-		ArrayList<String> s = new ArrayList<>();
-		String[] start = open.split("-");
-		String[] stop = close.split("-");
-		if (desideredDay < 1 || desideredDay > 7) return null; 
-		String stopMonth = stop[1], startMonth = start[1];
-		Calendar c = Calendar.getInstance();
-		if (!isValidDate(open) || !isValidDate(close)) return null;
-		for (int i = Integer.parseInt(start[2]) ; i <= Integer.parseInt(stop[2]) ; i++) { //ciclo anni
-			if (i != Integer.parseInt(stop[2])) { //se anno non finale cicla fino dicembre
-				stopMonth = "12";
-			}
-			else stopMonth = stop[1]; //se anno finale cicla fino stop mese
-			for (int j = 1 ; j <= Integer.parseInt(stopMonth) ; j++) { //ciclo mesi
-				if (i == Integer.parseInt(start[2]) && Integer.parseInt(startMonth) > 1) { //se anno iniziale e mese start dopo gennaio setta
-					j = Integer.parseInt(startMonth);
-					startMonth = "-1"; 
-				}
-				for (int k = 1 ; k <= 31 ; k++) { //ciclo giorni
-					if (Integer.parseInt(start[0]) > 1 && j == Integer.parseInt(start[1]) && i == Integer.parseInt(start[2])) { //se giorno iniziale maggiore di 1 setta
-						k = Integer.parseInt(start[0]);
-						start[0] = "-1";
-					}
-					String nowDate = new String(String.format("%02d-%02d-%04d", k, j, i));
-					if (Time.isValidDate(nowDate)) {
-						String[] a = nowDate.split("-");
-						c.set(Integer.parseInt(a[2]),Integer.parseInt(a[1]) - 1, Integer.parseInt(a[0]));
-						int day = c.get(Calendar.DAY_OF_WEEK);
-						if (day == 1) day = 7;
-						else day -= 1;
-						if (day == desideredDay) s.add(nowDate);
-					}
-					if (nowDate.equals(close)) break;
-				}
-			}
-		}
-		return s;
-	}
+    public static List<String> getAllDatesSameDayOfTheWeek(String open, String close, int desiredDay) {
+    	if (!isValidDate(open) || !isValidDate(close)) return null;
+        List<String> result = new ArrayList<>();
+        
+        // Verifica del formato delle date
+        LocalDate startDate, endDate;
+        try {
+            startDate = LocalDate.parse(open, FORMATTER);
+            endDate = LocalDate.parse(close, FORMATTER);
+        } catch (Exception e) {
+            return null; // Se le date non sono valide, restituisce null
+        }
+
+        if (desiredDay < 1 || desiredDay > 7) return null; // Controllo valore giorno
+
+        // Scorre i giorni tra startDate ed endDate
+        for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
+            int dayOfWeek = date.getDayOfWeek().getValue(); // Lunedì = 1, Domenica = 7
+            if (dayOfWeek == desiredDay) {
+                result.add(date.format(FORMATTER));
+            }
+        }
+        return result;
+    }
 	
 	public static boolean isTimeBetween(String time, String start, String end) {
-		System.out.println(end);
+    	if (!isValidHour(start) || !isValidHour(end) || !isValidHour(time)) return false;
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 		LocalTime targetTime = LocalTime.parse(time, formatter);
 		LocalTime startTime = LocalTime.parse(start, formatter);
@@ -129,49 +135,37 @@ public class Time {
 		}
 	}
 	
-	public static boolean isThisDateInMonthiplus3 (String date) { //usato solo per calcolo di date Precluse
-		String[] inputDateValues = date.split("-");
-		String[] actualDateValues = actualDate.split("-");
-		if (!isValidDate(date)) return false;
-		if (Integer.parseInt(actualDateValues[0]) > 15) { //se giorno di oggi maggiore di 15 quindi mese i rispetto i+3
-			if (Integer.parseInt(actualDateValues[1]) < 10) { //se mese fino a settembre
-				return (Integer.parseInt(inputDateValues[1]) == Integer.parseInt(actualDateValues[1]) + 3); //check se mese input in i+3
-			}
-			else {
-				if (Integer.parseInt(inputDateValues[2]) != Integer.parseInt(actualDateValues[2]) + 1) return false;
-				else return (Integer.parseInt(inputDateValues[1]) == Integer.parseInt(actualDateValues[1]) + 3 - 12); 
-			}
-		}
-		else { //se giorno di oggi minore di 16 quindi mese i+1 rispetto i+3
-			if (Integer.parseInt(actualDateValues[0]) < 16) {
-				if (Integer.parseInt(actualDateValues[1]) < 11) { //se mese fino ottobre
-					return (Integer.parseInt(inputDateValues[1]) == Integer.parseInt(actualDateValues[1]) + 2);
-				}
-				else {
-					if (Integer.parseInt(inputDateValues[2]) != Integer.parseInt(actualDateValues[2]) + 1) return false;
-					else return (Integer.parseInt(inputDateValues[1]) == Integer.parseInt(actualDateValues[1]) + 2 - 12); 
-				}
-			}
-			else return false;
-		}
-	}
-	
-	public static int[] calculateEndTimeWithStartAndDuration(int hour, int minute, int duration) {
-	    int endHour = hour + (duration / 60); 
-	    int endMinute = minute + (duration % 60); 
+    public static boolean isThisDateInMonthPlus3(String date) {
+        if (!isValidDate(date)) return false;
+        LocalDate inputDate;
+        try {
+            inputDate = LocalDate.parse(date, FORMATTER);
+        } catch (Exception e) {
+            return false; // Se la data non è valida, restituisce false
+        }
 
-	    if (endMinute >= 60) { 
-	        endMinute -= 60;
-	        endHour += 1;
-	    }
+        LocalDate today = LocalDate.now();
+        int monthsToAdd = (today.getDayOfMonth() > 15) ? 3 : 2;
+        LocalDate targetMonth = today.plusMonths(monthsToAdd);
 
-	    return new int[]{endHour, endMinute};
-	}
+        return inputDate.getMonthValue() == targetMonth.getMonthValue() &&
+               inputDate.getYear() == targetMonth.getYear();
+    }
 	
-	public static boolean overTimeLimit (int startHour, int startMinute, int limitHour, int limitMinute, int duration) {
-		int[] h = calculateEndTimeWithStartAndDuration(startHour, startMinute, duration);
-		return (h[0] > limitHour || (h[0] == limitHour && h[1] > limitMinute)); 
-	}
+    public static int[] calculateEndTimeWithStartAndDuration(int hour, int minute, int duration) {
+        LocalTime startTime = LocalTime.of(hour, minute);
+        LocalTime endTime = startTime.plusMinutes(duration);
+
+        return new int[]{endTime.getHour(), endTime.getMinute()};
+    }
+	
+    public static boolean overTimeLimit(int startHour, int startMinute, int limitHour, int limitMinute, int duration) {
+        LocalTime startTime = LocalTime.of(startHour, startMinute);
+        LocalTime endTime = startTime.plusMinutes(duration);
+        LocalTime limitTime = LocalTime.of(limitHour, limitMinute);
+
+        return endTime.isAfter(limitTime);
+    }
 	
 	public static boolean isValidDate (String date) {
 		Pattern pattern = Pattern.compile(DATAREGEX); //dd-mm-yyyy
@@ -185,15 +179,17 @@ public class Time {
         return true;
 	}
 	
-	public static boolean comesBefore (String date1, String date2) {
-		if (!Time.isValidDate(date1) || !Time.isValidDate(date2)) return false;
-		String[] date1_vals = date1.split("-"); String[] date2_vals = date2.split("-");
-		for (int i = 2; i >= 0 ; i--) {
-			if (Integer.parseInt(date1_vals[i]) < Integer.parseInt(date2_vals[i])) return true;
-			else if (Integer.parseInt(date1_vals[i]) > Integer.parseInt(date2_vals[i])) return false;
-		}
-		return false; //uguali
-	}
+    public static boolean comesBefore(String date1, String date2) {
+    	if (!isValidDate(date1) || !isValidDate(date2)) return false;
+
+        try {
+            LocalDate d1 = LocalDate.parse(date1, FORMATTER);
+            LocalDate d2 = LocalDate.parse(date2, FORMATTER);
+            return d1.isBefore(d2);
+        } catch (Exception e) {
+            return false; // Se la data non è valida, restituisce false
+        }
+    }
 	
 	public static boolean isValidHour (String time) {
 		Pattern pattern = Pattern.compile(TIMEREGEX); //hh-mm
@@ -232,8 +228,7 @@ public class Time {
 	}
 	
 	public static String getTodaysDate () { //local time
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-		String s = ZonedDateTime.now().format(formatter);
+		String s = ZonedDateTime.now().format(FORMATTER);
 		return s;
 	}
 	

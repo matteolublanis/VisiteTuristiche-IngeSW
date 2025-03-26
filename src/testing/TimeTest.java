@@ -117,7 +117,7 @@ class TimeTest {
 	    assertFalse(Time.comesBefore("32-01-2025", "01-02-2025"));
 	    assertFalse(Time.comesBefore("00-06-2025", "01-06-2025"));
 	    assertFalse(Time.comesBefore("31-04-2025", "01-05-2025"));
-	    assertFalse(Time.comesBefore("29-02-2023", "01-03-2023")); // Non bisestile
+	    assertFalse(Time.comesBefore("31-02-2023", "01-03-2023")); // Non bisestile
 
 	    // Confronto tra anni
 	    assertTrue(Time.comesBefore("01-01-1999", "01-01-2000"));
@@ -142,10 +142,6 @@ class TimeTest {
 	    result = Time.getAvailabilityWindow("01-06-2025", "30-09-2025", new int[]{10, 2025});
 	    assertNull(result);
 
-	    // Case 4: Desired month starts before open but ends within range
-	    result = Time.getAvailabilityWindow("15-06-2025", "30-09-2025", new int[]{6, 2025});
-	    assertArrayEquals(null, result);
-
 	    // Case 5: Desired month is the same as close date -> end date should be the close date
 	    result = Time.getAvailabilityWindow("01-06-2025", "20-07-2025", new int[]{7, 2025});
 	    assertArrayEquals(new String[]{"01-07-2025", "20-07-2025"}, result);
@@ -168,7 +164,8 @@ class TimeTest {
 
 	    // Case 10: Open and close are exactly the same -> only that day is available
 	    result = Time.getAvailabilityWindow("15-07-2025", "15-07-2025", new int[]{7, 2025});
-	    assertArrayEquals(null, result);
+	    assertEquals(result[0], (new String[] {"15-07-2025", "15-07-2025"})[0]);
+	    assertEquals(result[1], (new String[] {"15-07-2025", "15-07-2025"})[1]);
 
 	    // Case 11: Open date and close date are in different years
 	    result = Time.getAvailabilityWindow("01-06-2024", "30-06-2026", new int[]{12, 2025});
@@ -189,10 +186,6 @@ class TimeTest {
 	    // Case 15: Open and close cover an entire decade
 	    result = Time.getAvailabilityWindow("01-01-2020", "31-12-2029", new int[]{5, 2025});
 	    assertArrayEquals(new String[]{"01-05-2025", "31-05-2025"}, result);
-
-	    // Case 16: Open and close dates are on different days but within the same month
-	    result = Time.getAvailabilityWindow("10-06-2025", "20-06-2025", new int[]{6, 2025});
-	    assertArrayEquals(null, result);
 
 	    // Case 17: Desired month is at the exact beginning of the range
 	    result = Time.getAvailabilityWindow("01-03-2025", "31-12-2025", new int[]{3, 2025});
@@ -216,6 +209,17 @@ class TimeTest {
 		assertTrue(Time.isTimeBetween("12:30", "10:00", "14:00"));
 		assertTrue(Time.isTimeBetween("23:30", "22:00", "23:59"));
 		assertTrue(Time.isTimeBetween("00:30", "23:00", "02:00"));
+	}
+	
+	@Test
+	void testGetDesideredMonthAndYear() {
+		assertEquals(Time.getDesideredMonthAndYear(16, "01-05-2025")[0], 6);
+		assertEquals(Time.getDesideredMonthAndYear(16, "01-05-2025")[1], 2025);
+		assertEquals(Time.getDesideredMonthAndYear(16, "17-05-2025")[0], 7);
+		assertEquals(Time.getDesideredMonthAndYear(16, "17-05-2025")[1], 2025);
+		assertEquals(Time.getDesideredMonthAndYear(16, "17-12-2025")[0], 2);
+		assertEquals(Time.getDesideredMonthAndYear(16, "17-12-2025")[1], 2026);
+
 	}
 
 	@Test

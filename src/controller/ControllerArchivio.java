@@ -218,7 +218,7 @@ public class ControllerArchivio {
 	}
 	
 	public boolean indicaDatePrecluse (String date) { //ok
-		if (Time.isValidDate(date) && Time.isThisDateInMonthiplus3(date)) return d.indicaDatePrecluse(date);
+		if (Time.isValidDate(date) && Time.isThisDateInMonthPlus3(date)) return d.indicaDatePrecluse(date);
 		else return false;
 	}
 	

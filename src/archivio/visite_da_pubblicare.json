@@ -14,8 +14,8 @@
                     }
           },
           "date-precluse": [],
-          "datePrecluseI+3": [],
+          "datePrecluseI+3": ["05-06-2025"],
           "mese-ultima-pubblicazione": 2,
           "anno-ultima-pubblicazione": 2025,
-          "possibile-dare-disponibilita": false
+          "possibile-dare-disponibilita": true
 }
