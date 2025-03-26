@@ -301,12 +301,17 @@ public class ControllerArchivio {
 	
 	public boolean intersectOtherEventSamePlace (String dateStart1, String dateFinish1, String hour1, int duration1, String days1, JSONObject luogo) {
 		JSONArray tipiLuogo = luogo.getJSONArray("tipo-visita");
-		for (Object k : tipiLuogo) { //tipiVisita del luogo
-			JSONObject tipo = d.getJSONTipiVisite().getJSONObject((String)k); 
+		for (Object k : tipiLuogo) { //tipiVisita del luogo 
+			JSONObject tipo = d.getJSONTipiVisite().getJSONObject((String)k);  
 			if (Time.comesBefore(dateStart1, tipo.getString(Archivio.DATA_FINE)) && !Time.comesBefore(dateFinish1, tipo.getString(Archivio.DATA_INIZIO))) {
 				JSONArray days2 = tipo.getJSONArray(Archivio.GIORNI_PRENOTABILI); //giorni del tipo già esistente
 				for (Object d : days2) {
-					if (days1.contains((String)d)) return true; 
+					if (days1.contains((String)d)) { //vuol dire che un giorno qualsiasi può intersecare
+						String startHourType = tipo.getString(Archivio.ORA_INIZIO);
+						int[] fValue = Time.calculateEndTimeWithStartAndDuration(Integer.parseInt(startHourType.split(":")[0]), Integer.parseInt(startHourType.split(":")[1]), tipo.getInt(Archivio.DURATA_VISITA));
+						String finishHourType = String.format("%02d:%02d", fValue[0], fValue[1]);
+						if (Time.isTimeBetween(hour1, startHourType, finishHourType)) return true;
+					}
 				}
 			}
 		}
