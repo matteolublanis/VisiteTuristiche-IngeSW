@@ -138,12 +138,16 @@ public class ControllerArchivio {
 		}
 		else return null;
 	}
-	
+	/*
+	 * Dovrebbe ritornare lista
+	 */
 	public String getElencoTipiVisite () { //OK
  		return d.getElencoTipiVisite();
  	}
- 
- 	public String getElencoTipiVisiteVolontario (String username) { //OK
+	/*
+	 * Dovrebbe ritornare lista
+	 */
+ 	public String getElencoTipiVisiteVolontario (String username) { 
  		return d.getElencoTipiVisiteVolontario(username);
  	}
 	
@@ -223,7 +227,9 @@ public class ControllerArchivio {
 		if (Time.isValidDate(date) && Time.isThisDateInMonthPlus3(date)) return d.indicaDatePrecluse(date);
 		else return false;
 	}
-	
+	/*
+	 * Dovrebbe ritornare una lista, vedere come gestire
+	 */
 	public String getElencoVisiteProposteConfermateCancellateFruitore() { //dovrebbe ritornare un oggetto con tutte le info da stampare
 		String result = "";
 		JSONObject jsonPianoVisite = d.getJSONPianoVisite();
@@ -247,7 +253,9 @@ public class ControllerArchivio {
 		}
 		return result;
 	}
-	
+	/*
+	 * Dovrebbe ritornare una lista, vedere come gestire
+	 */
 	public String getElencoVisiteProposteCompleteConfermateCancellateEffettuate () {
 		String result = "";
 		JSONObject jsonPianoVisite = d.getJSONPianoVisite();
@@ -370,7 +378,9 @@ public class ControllerArchivio {
 		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE) return d.impostaMaxPrenotazione(max);
 		else return false;
 	}
-	
+	/*
+	 * Dovrebbe ritornare lista di informazioni riguardo a User
+	 */
 	public String getListaUser(String username, int tipo_user) {
 		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE) {
 			String result = "";
@@ -394,7 +404,13 @@ public class ControllerArchivio {
 		else return "";
 	}
 	
-	public String getElencoLuoghiVisitabili (String username) {
+	/*
+	 * Questo metodo dovrebbe avere un controllo all'interno dell'archivio,
+	 * in quanto in futuro potrei avere un DBMS, qui c'è una dipendenza con i JSON
+	 * che non voglio.
+	 * Dovrebbe ritornare inoltre una lista di stringhe, non una stringa unica
+	 */
+	public String getElencoLuoghiVisitabili (String username) { 
 		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE) {
 			String result = "";
 			JSONObject jsonAmbitoTerritoriale = d.getJSONAmbitoTerritoriale();
@@ -415,6 +431,9 @@ public class ControllerArchivio {
 		else return "";
 	}
 	
+	/*
+	 * Stesso di quello sopra, solo che ritorna HashMap 
+	 */
 	public String getElencoTipiVisiteLuogo (String username) {
 		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE) {
 			String result = "";
