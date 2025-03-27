@@ -1,5 +1,8 @@
 package archivio;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.*;
 
 import utility.CostantiStruttura;
@@ -206,6 +209,15 @@ public class Archivio {
 			JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, RIGHE_USERS);
 			JSONUtility.aggiornaJsonFile(jsonTipiVisite, PATH_TIPI_VISITE, 10);
 			return true;
+	}
+	
+	public List<String> getDatePrecluse () {
+		JSONArray datePrecluse = jsonPianoVisiteDaPubblicare.getJSONArray(DATE_PRECLUSE);
+		List<String> result = new ArrayList<String>();
+		for (Object m : datePrecluse) {
+			result.add((String) m);
+		}
+		return result;
 	}
 	
 	public JSONObject getJSONPianoVisite () {
