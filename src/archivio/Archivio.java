@@ -1,5 +1,8 @@
 package archivio;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.*;
 
 import utility.CostantiStruttura;
@@ -44,7 +47,7 @@ public class Archivio {
 	
 	public boolean getPossibileDareDisponibilita () {
 		return jsonPianoVisiteDaPubblicare.getBoolean(POSSIBILE_DARE_DISPONIBILITA);
-	}
+	} 
 	
 	public boolean apriRaccoltaDisponibilita() {
 		jsonPianoVisiteDaPubblicare.put(POSSIBILE_DARE_DISPONIBILITA, true);
@@ -208,6 +211,15 @@ public class Archivio {
 	
 	public JSONObject getJSONPianoVisite () {
 		return jsonPianoVisite;
+	}
+	
+	public List<String> getDatePrecluse () {
+		JSONArray datePrecluse = jsonPianoVisiteDaPubblicare.getJSONArray(DATE_PRECLUSE);
+		List<String> result = new ArrayList<String>();
+		for (Object m : datePrecluse) {
+			result.add((String) m);
+		}
+		return result;
 	}
 	
 	public JSONObject getJSONUsers () {

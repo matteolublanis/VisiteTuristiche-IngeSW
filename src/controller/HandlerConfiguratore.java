@@ -65,7 +65,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 		else a.view("Non puoi attuare queste modifiche attualmente.");
 	}
 
-	@MethodName("Aggiungi tipo di visita")
+	@MethodName("Rimuovi tipo di visita")
 	public void rimuoviTipo (App a) {
 		if (gdb.canAddOrRemove(username)) {
 			boolean rimosso = gdb.rimuoviTipo(a.richiediVal(CostantiStruttura.STRING, "tipo da rimuovere"), username);
@@ -124,7 +124,8 @@ public class HandlerConfiguratore extends ControllerUtente{
 				gdb.setPossibilitaDareDisponibilitaVolontari(true);
 			}
 			else {
-				gdb.pubblicaPiano(username);
+				a.view(gdb.pubblicaPiano(username) ? "Il piano è stato pubblicato" : "Il piano non è stato pubblicato,"
+						+ " assicurarsi che sia il periodo corretto e di avere chiusa la raccolta delle disponibilità.");
 			}
 		}
 		else a.view("Non è possibile pubblicare adesso il piano.");

@@ -1,9 +1,51 @@
 {
-	"07-08-2025": {
-		"passeggiata_valle_camonica": {
-			"luogo": "parco_incisioni_valle_camonica",
-			"volontari": ["volontario1"],
-			"stato": "cancellata"
-		}
-	}
+          "06-05-2025": {
+                    "tour_brescia_romana": {
+                              "stato": "proposta",
+                              "luogo": "area_archeologica_brescia_romana",
+                              "volontari": ["volontario2"]
+                    },
+                    "museo_armi": {
+                              "stato": "proposta",
+                              "luogo": "castello_brescia",
+                              "volontari": ["volontario1"]
+                    }
+          },
+          "03-05-2025": {"passeggiata_valle_camonica": {
+                    "stato": "proposta",
+                    "luogo": "parco_incisioni_valle_camonica",
+                    "volontari": ["volontario1"]
+          }},
+          "07-08-2025": {"passeggiata_valle_camonica": {
+                    "stato": "cancellata",
+                    "luogo": "parco_incisioni_valle_camonica",
+                    "volontari": ["volontario1"]
+          }},
+          "08-05-2025": {"passeggiata_valle_camonica": {
+                    "stato": "proposta",
+                    "luogo": "parco_incisioni_valle_camonica",
+                    "volontari": ["volontario1"]
+          }},
+          "13-05-2025": {
+                    "tour_brescia_romana": {
+                              "stato": "proposta",
+                              "luogo": "area_archeologica_brescia_romana",
+                              "volontari": ["volontario7"]
+                    },
+                    "museo_armi": {
+                              "stato": "proposta",
+                              "luogo": "castello_brescia",
+                              "volontari": ["volontario1"]
+                    }
+          },
+          "01-05-2025": {"passeggiata_valle_camonica": {
+                    "stato": "proposta",
+                    "luogo": "parco_incisioni_valle_camonica",
+                    "volontari": ["volontario1"]
+          }},
+          "10-05-2025": {"passeggiata_valle_camonica": {
+                    "stato": "proposta",
+                    "luogo": "parco_incisioni_valle_camonica",
+                    "volontari": ["volontario1"]
+          }}
 }
