@@ -1,26 +1,20 @@
 package controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import archivio.Archivio;
+import dto.*;
 import utility.CostantiStruttura;
 import utility.Credenziali;
-import utility.JSONUtility;
 import utility.Time;
 
 public class ControllerArchivio {
 	
-	private static final String SPLIT_REGEX_LISTA = "\\s*,\\s*";
 	private Archivio d;
-	private static int RELEASE_DAY = 16;
-
 	public ControllerArchivio (Archivio d) {
 		this.d = d; 
 	}
@@ -34,68 +28,27 @@ public class ControllerArchivio {
 	}
 	
 	public boolean pubblicaPiano(String username) { //OK
-		if(d.isPrimaPubblicazione()) return d.setPrimaPubblicazione(); 
-		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE && Time.getActualDateValue(Time.DAY) >= RELEASE_DAY && //SE ULTIMO PIANO PUBBLICATO MESE SCORSO PUBBLICA
-				isUltimaPubblicazioneMeseScorso()) {
-			return d.pubblicaPiano();
-		}
-		else return false;
-	}
-	
-	private boolean isUltimaPubblicazioneMeseScorso () {
-		return ((d.getUltimoMesePubblicazione() == Time.getActualDateValue(Time.MONTH) - 1 && d.getUltimoAnnoPubblicazione() == Time.getActualDateValue(Time.YEAR)) ||
-				(d.getUltimoMesePubblicazione() == Time.getActualDateValue(Time.MONTH) - 1 + 12 && d.getUltimoAnnoPubblicazione() == Time.getActualDateValue(Time.YEAR) - 1));
+		return d.tryPubblicaPiano(username);
 	}
 	
 	public boolean chiudiRaccoltaDisponibilita (String username) { //OK
-		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE && 
-				!d.isPrimaPubblicazione() && Time.getActualDateValue(Time.DAY) >= RELEASE_DAY &&
-						isUltimaPubblicazioneMeseScorso()) {
-			if (d.getPossibileDareDisponibilita()) return d.chiudiRaccoltaDisponibilita(); 
-			else return false;
-		}
-		else {
-			return false;
-		}
+		return d.tryChiudiRaccoltaDisponibilita(username);
 	}
 	
 	public boolean apriRaccoltaDisponibilita(String username) {  //OK
-		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE && !d.isPrimaPubblicazione() && Time.getActualDateValue(Time.DAY) >= RELEASE_DAY&&
-				((d.getUltimoMesePubblicazione() == Time.getActualDateValue(Time.MONTH) && d.getUltimoAnnoPubblicazione() == Time.getActualDateValue(Time.YEAR)))) { //aggiornato quando pubblicato
-			if (!d.isUltimoPianoPubblicato() || d.getPossibileDareDisponibilita()) return false; //SE ULTIMO PIANO NON PUBBLICATO O GIA' APERTA RITORNA FALSO
-			else return d.apriRaccoltaDisponibilita();
-		}
-		else {
-			return false;
-		}
+		return d.tryApriRaccoltaDisponibilita(username);
 	}
 	
 	public boolean associaVolontarioEsistenteATipoVisitaEsistente(String volontario, String tipoVisita) { //OK
-		if (!d.checkIfUserExists(volontario) || !d.checkIfVisitTypeExists(tipoVisita)) {
-			JSONObject v = d.getJSONUsers().getJSONObject(volontario);
-			JSONArray tipi = v.getJSONArray(Archivio.TIPO_VISITA);
-			JSONObject tipo = d.getJSONTipiVisite().getJSONObject(tipoVisita);
-			if (volontarioAlreadyLinkedForThatDay(tipo.getString(Archivio.DATA_INIZIO), tipo.getString(Archivio.DATA_FINE), tipo.getString(Archivio.ORA_INIZIO), Integer.parseInt(tipo.getString(Archivio.DURATA_VISITA)), tipo.getJSONArray(Archivio.GIORNI_PRENOTABILI).toString(), tipi)) {
-				return false;
+		if (checkIfUserExists(volontario) && checkIfVisitTypeExists(tipoVisita)) {
+			if (d.checkIfCanLinkVolontario(volontario, tipoVisita)) {
+				return d.associaVolontarioEsistenteATipoVisitaEsistente(volontario, tipoVisita);
 			}
 			else {
-				return d.associaVolontarioEsistenteATipoVisitaEsistente(volontario, tipoVisita, tipi, tipo);
+				return false;
 			}
 		}
 		else return false;
-	}
-	
-	public boolean volontarioAlreadyLinkedForThatDay (String dateStart1, String dateFinish1, String hour1, int duration1, String days1, JSONArray tipiVisitaVolontario) {
-		for (Object k : tipiVisitaVolontario) {  //OK
-			JSONObject tipo = d.getJSONTipiVisite().getJSONObject((String)k); //prende ogni tipo dal json dei tipi
-			if (Time.comesBefore(dateStart1, tipo.getString(Archivio.DATA_FINE)) && !Time.comesBefore(dateFinish1, tipo.getString(Archivio.DATA_INIZIO))) { //controlla se periodi intersecano
-				JSONArray days2 = tipo.getJSONArray(Archivio.GIORNI_PRENOTABILI); //prende giorni prenotabili del tipo
-				for (Object d : days2) { 
-					if (days1.contains((String)d)) return true; //se i giorni intersecano allora volontario linkato per quei giorni
-				}
-			}
-		}
-		return false;
 	}
 	
 	public boolean getPossibilitaDareDisponibilita() { 
@@ -113,31 +66,7 @@ public class ControllerArchivio {
 	}
 	
 	public HashMap<String, List<String>> getDatePerDisponibilita(String username) {	 //OK
-		if (getTipoUtente(username) == CostantiStruttura.VOLONTARIO) {
-			HashMap<String, List<String>> result = new HashMap<> () ;
-			JSONArray tipiVisite = d.getTipiVisitaOfVolontario(username);
-			for (Object s : tipiVisite) { 
-				JSONObject tipo = d.getTipoVisitaJSONObject((String)s);
-				try {
-					String[] periodoDaDareDisponibilita = Time.getAvailabilityWindow(tipo.getString(Archivio.DATA_INIZIO), tipo.getString(Archivio.DATA_FINE), Time.getDesideredMonthAndYear(RELEASE_DAY, Time.getActualDate()));
-					JSONArray giorni = tipo.getJSONArray(Archivio.GIORNI_PRENOTABILI);
-					
-					List<String> days = new ArrayList<>();
-					for (Object g : giorni) {
-						List<String> k = Time.getAllDatesSameDayOfTheWeek(periodoDaDareDisponibilita[0], periodoDaDareDisponibilita[1], Arrays.asList(Archivio.GIORNISETTIMANA).indexOf((String) g) + 1);
-						for (String date : k) {
-							days.add(date);
-						}
-					}
-					result.put((String)s, days);
-				}	
-				catch (Exception e) {
-					//do smth
-				}
-			}
-			return result;
-		}
-		else return null;
+		return d.getDatePerDisponibilita(username);
 	}
 
 	public Set<String> getElencoTipiVisite () { //OK
@@ -148,18 +77,8 @@ public class ControllerArchivio {
  		return d.getElencoTipiVisiteVolontario(username);
  	}
 	
-	public boolean impostaCredenzialiNuovoVolontario (String username, String password, String tipi_visiteVal, boolean tipiVisitaNecessario) {
-		if (checkIfUserExists(username)) return false; //OK
-		JSONArray tipiVisite = new JSONArray();
-	    String[] s = tipi_visiteVal.split(SPLIT_REGEX_LISTA);
-	    for (String k : s) {
-	    	if (!checkIfVisitTypeExists(k) && !k.equals("")) return false;
-	    	else {
-	    		if (!k.equals(""))tipiVisite.put(k);
-	    	}
-	    }
-	    if (tipiVisitaNecessario && tipiVisite.length() == 0) return false;
-		return d.impostaCredenzialiNuovoVolontario(username, password, tipiVisite, tipiVisitaNecessario);
+	public boolean impostaCredenzialiNuovoVolontario (String username, String password, Set<String> tipi_visiteVal, boolean tipiVisitaNecessario) {
+		return d.tryImpostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal, tipiVisitaNecessario);
 	}
 	
 	public boolean rimuoviLuogo (String luogo, String username) {
@@ -204,7 +123,7 @@ public class ControllerArchivio {
 	}
 	
 	public boolean isReleaseOrLaterDay() {
-		return (RELEASE_DAY <= Time.getActualDateValue(Time.DAY));
+		return d.isReleaseOrLaterDay();
 	}
 	
 	public boolean isPrimaPubblicazione () {
@@ -224,59 +143,13 @@ public class ControllerArchivio {
 		if (Time.isValidDate(date) && Time.isThisDateInMonthPlus3(date)) return d.indicaDatePrecluse(date);
 		else return false;
 	}
-	/*
-	 * Dovrebbe ritornare una lista, vedere come gestire
-	 */
-	public String getElencoVisiteProposteConfermateCancellateFruitore() { //dovrebbe ritornare un oggetto con tutte le info da stampare
-		String result = "";
-		JSONObject jsonPianoVisite = d.getJSONPianoVisite();
-		JSONObject jsonAmbitoTerritoriale = d.getJSONAmbitoTerritoriale();
-		JSONObject jsonTipiVisite = d.getJSONTipiVisite();
-		for (String k : jsonPianoVisite.keySet()) { //giorno
-			JSONObject j = jsonPianoVisite.getJSONObject(k); //prende le visite associate a quel giorno
-			for (String m : j.keySet()) { //visite del giorno
-				JSONObject visita = j.getJSONObject(m);
-				JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject(Archivio.LUOGHI);
-				JSONObject luogo = luoghi.getJSONObject(visita.getString(Archivio.LUOGO));
-				if (visita.getString(Archivio.STATO_VISITA).equals(Archivio.CONFERMATA) || visita.getString(Archivio.STATO_VISITA).equals(Archivio.CANCELLATA) ||
-						visita.getString(Archivio.STATO_VISITA).equals(Archivio.PROPOSTA)) {
-					result += "Titolo: " + jsonTipiVisite.getJSONObject(m).getString(Archivio.TITOLO) + "\nDescrizione: " + jsonTipiVisite.getJSONObject(m).getString(Archivio.DESCRIPTION) 
-							+  "\nPunto d'incontro: " + jsonTipiVisite.getJSONObject(m).getString(Archivio.PUNTO_INCONTRO) + "\nGiorno: " + k 
-							+ ", ora: " + jsonTipiVisite.getJSONObject(m).getString(Archivio.ORA_INIZIO) 
-							+ "\nDa acquistare biglietto: " + (jsonTipiVisite.getJSONObject(m).getBoolean(Archivio.DA_ACQUISTARE) ? "si" : "no")
-							+ "\nStato: " + visita.getString(Archivio.STATO_VISITA) + "\n";
-				}
-			}
-		}
-		return result;
+
+	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitore() { //dovrebbe ritornare un oggetto con tutte le info da stampare
+		return d.getElencoVisiteProposteConfermateCancellateFruitore();
 	}
-	/*
-	 * Dovrebbe ritornare una lista, vedere come gestire
-	 */
-	public String getElencoVisiteProposteCompleteConfermateCancellateEffettuate () {
-		String result = "";
-		JSONObject jsonPianoVisite = d.getJSONPianoVisite();
-		JSONObject jsonAmbitoTerritoriale = d.getJSONAmbitoTerritoriale();
-		JSONObject jsonTipiVisite = d.getJSONTipiVisite();
-		JSONObject jsonPianoStorico = d.getJSONPianoStorico();
-		//ciclo sul pianoVisite attuale
-		for (String k : jsonPianoVisite.keySet()) { //giorno
-			JSONObject j = jsonPianoVisite.getJSONObject(k); //prende le visite associate a quel giorno
-			for (String m : j.keySet()) { //visite del giorno
-				JSONObject visita = j.getJSONObject(m);
-				JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject(Archivio.LUOGHI);
-				JSONObject luogo = luoghi.getJSONObject(visita.getString(Archivio.LUOGO));
-				result += "Giorno: " + k + ", Luogo: " + luogo.getString(Archivio.NAME) + ", Visita: " + jsonTipiVisite.getJSONObject(m).getString(Archivio.TITOLO) + ", Stato: " + visita.getString(Archivio.STATO_VISITA) + "\n";
-			}
-		}
-		for (String k : jsonPianoStorico.keySet()) {
-			JSONObject j = jsonPianoStorico.getJSONObject(k); 
-			for (String m : j.keySet()) { 
-				String s = j.getString(m);
-				result += "Giorno: " + k + ", Tag Luogo: " + m + ", Tipo Visita: " + s + ", Stato: effettuata\n";
-			}
-		}
-		return result;
+
+	public List<VisitaDTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate () {
+		return d.getElencoVisiteProposteCompleteConfermateCancellateEffettuate();
 	}
 	
 	public boolean cambiaCredenziali (String username, Credenziali c, ControllerUtente gu) {
@@ -294,7 +167,7 @@ public class ControllerArchivio {
 		return d.checkIfPlaceExists(luogo);
 	}
 	
-	public boolean aggiungiLuogo (String tag, String nome, String collocazione, String tipiVisitaVal) {
+	public boolean aggiungiLuogo (String tag, String nome, String collocazione, Set<String> tipiVisitaVal) {
 		return d.aggiungiLuogo(tag, nome, collocazione, tipiVisitaVal);
 	}
 	
@@ -305,49 +178,7 @@ public class ControllerArchivio {
 	public boolean aggiungiTipoVisite (String luogo, String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
 			String dataInizio, String dataFine, ArrayList<Integer> giorniPrenotabiliVal, String oraInizio,
 			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, ArrayList<String> volontariVal) {
-		JSONArray giorniPrenotabili = new JSONArray();
-	    String days = "";
-	    for (Integer k : giorniPrenotabiliVal) {
-	    	try {
-	    		int j = (k);
-	    		if (!(j < 1 || j > 7) && !days.contains(Archivio.GIORNISETTIMANA[j-1])) {
-		    		giorniPrenotabili.put(Archivio.GIORNISETTIMANA[j-1]);
-		    		days += Archivio.GIORNISETTIMANA[j-1] + ",";
-		    	}
-	    	}
-	    	catch (NumberFormatException e) {
-	    		return false;
-	    	}
-	    }
-	    if (intersectOtherEventSamePlace (dataInizio, dataFine, oraInizio, durataVisita, days, d.getJSONAmbitoTerritoriale().getJSONObject(Archivio.LUOGHI).getJSONObject(luogo))) return false;
-	    JSONArray volontari = new JSONArray();
-	    for (String k : volontariVal) {
-    		JSONObject volontario = d.getJSONUsers().getJSONObject(k);
-    		JSONArray tipi = volontario.getJSONArray(Archivio.TIPO_VISITA);
-    		if (volontarioAlreadyLinkedForThatDay(dataInizio, dataFine, oraInizio, durataVisita, days, tipi)) return false;
-    		tipi.put(tipoVisita); 
-    		volontari.put(k);
-	    }
-		return d.aggiungiTipoVisite(luogo, tipoVisita, titolo, descrizione, puntoIncontro, dataInizio, dataFine, oraInizio, durataVisita, daAcquistare, minFruitore, maxFruitore, giorniPrenotabili, volontari);
-	}
-	
-	public boolean intersectOtherEventSamePlace (String dateStart1, String dateFinish1, String hour1, int duration1, String days1, JSONObject luogo) {
-		JSONArray tipiLuogo = luogo.getJSONArray("tipo-visita");
-		for (Object k : tipiLuogo) { //tipiVisita del luogo 
-			JSONObject tipo = d.getJSONTipiVisite().getJSONObject((String)k);  
-			if (Time.comesBefore(dateStart1, tipo.getString(Archivio.DATA_FINE)) && !Time.comesBefore(dateFinish1, tipo.getString(Archivio.DATA_INIZIO))) {
-				JSONArray days2 = tipo.getJSONArray(Archivio.GIORNI_PRENOTABILI); //giorni del tipo già esistente
-				for (Object d : days2) {
-					if (days1.contains((String)d)) { //vuol dire che un giorno qualsiasi può intersecare
-						String startHourType = tipo.getString(Archivio.ORA_INIZIO);
-						int[] fValue = Time.calculateEndTimeWithStartAndDuration(Integer.parseInt(startHourType.split(":")[0]), Integer.parseInt(startHourType.split(":")[1]), tipo.getInt(Archivio.DURATA_VISITA));
-						String finishHourType = String.format("%02d:%02d", fValue[0], fValue[1]);
-						if (Time.isTimeBetween(hour1, startHourType, finishHourType)) return true;
-					}
-				}
-			}
-		}
-		return false;
+		return d.tryAggiungiVisite(luogo, tipoVisita, titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniPrenotabiliVal, oraInizio, durataVisita, daAcquistare, minFruitore, maxFruitore, volontariVal);
 	}
 	
 	public boolean checkIfUserExists (String username) {
@@ -375,88 +206,17 @@ public class ControllerArchivio {
 		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE) return d.impostaMaxPrenotazione(max);
 		else return false;
 	}
-	/*
-	 * Dovrebbe ritornare lista di informazioni riguardo a User
-	 */
-	public String getListaUser(String username, int tipo_user) {
-		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE) {
-			String result = "";
-			JSONObject jsonUsers = d.getJSONUsers();
-			for (String s : JSONUtility.allObjectsSameIntValue(jsonUsers, tipo_user, Archivio.TIPO_USER)) {
-				JSONObject user = (JSONObject) jsonUsers.get(s);
-				switch (tipo_user) {
-				case CostantiStruttura.CONFIGURATORE:
-					result += "Username: " + user.get(Archivio.USERNAME) + "\n";
-					break;
-				case CostantiStruttura.VOLONTARIO:
-					result += "Username: " + user.get(Archivio.USERNAME) + "\n" +
-								"Tipi visite: " + user.get(Archivio.TIPO_VISITA) + "\n";
-					break;
-				case CostantiStruttura.FRUITORE:
-					result += "Username: " + user.get(Archivio.USERNAME) + "\n";
-				}
-			}
-			return result;
-		}
-		else return "";
+
+	public Set<UserDTO> getListaUser(String username, int tipo_user) {
+		return d.getListaUser(username, tipo_user);
 	}
 	
-	/*
-	 * Questo metodo dovrebbe avere un controllo all'interno dell'archivio,
-	 * in quanto in futuro potrei avere un DBMS, qui c'è una dipendenza con i JSON
-	 * che non voglio.
-	 * Dovrebbe ritornare inoltre una lista di stringhe, non una stringa unica
-	 */
-	public String getElencoLuoghiVisitabili (String username) { 
-		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE) {
-			String result = "";
-			JSONObject jsonAmbitoTerritoriale = d.getJSONAmbitoTerritoriale();
-			try {
-				JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject(Archivio.LUOGHI);
-				for (String k : luoghi.toMap().keySet()) {
-					JSONObject j = luoghi.getJSONObject(k);
-					if (!j.get(Archivio.TIPO_VISITA).equals("[]")) { //[] indica array vuoto tipivisite, quindi no visite
-						result += "Luogo: " + j.get(Archivio.NAME) + "\n";
-					}
-				}
-				return result;
-			}
-			catch (Exception e) {
-				return (e.getMessage());
-			}
-		}
-		else return "";
+	public List<String> getElencoLuoghiVisitabili (String username) { 
+		return d.getElencoLuoghiVisitabili(username);
 	}
 	
-	/*
-	 * Stesso di quello sopra, solo che ritorna HashMap 
-	 */
-	public String getElencoTipiVisiteLuogo (String username) {
-		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE) {
-			String result = "";
-			JSONObject jsonAmbitoTerritoriale = d.getJSONAmbitoTerritoriale();
-			JSONObject jsonTipiVisite = d.getJSONTipiVisite();
-			try {
-				JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject(Archivio.LUOGHI);
-				for (String nomeLuogo : luoghi.toMap().keySet()) {
-					JSONObject infoLuogo = luoghi.getJSONObject(nomeLuogo);
-					if (!infoLuogo.get(Archivio.TIPO_VISITA).equals("[]")) { //[] indica array vuoto tipivisite, quindi no visite
-						JSONArray tipiVisite = infoLuogo.getJSONArray(Archivio.TIPO_VISITA);
-						result += "Luogo: " + infoLuogo.get(Archivio.NAME) + ", tipi visite associati: ";
-						for (int i = 0 ; i < tipiVisite.length() ; i++) 
-						{
-							result += (jsonTipiVisite.getJSONObject(tipiVisite.get(i).toString())).get(Archivio.TITOLO) + ",";
-						}
-						result += "\n";	
-					}
-				}
-				return result;
-			}
-			catch (Exception e) {
-				return (e.getMessage());
-			}
-		}
-		else return "";
+	public Map<String, List<String>> getElencoTipiVisiteLuogo (String username) {
+		return d.getElencoTipiVisiteLuogo(username);
 	}
 	
 }

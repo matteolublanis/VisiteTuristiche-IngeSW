@@ -41,7 +41,7 @@
                               "tipo-visita": ["escursione_monte_isola"]
                     }
           },
-          "max_prenotazione": 5,
+          "max_prenotazione": 13,
           "nome": "Brescia",
           "prima_configurazione": false
 }

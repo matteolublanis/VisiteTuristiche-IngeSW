@@ -13,9 +13,9 @@
                               "10-05-2025": "passeggiata_valle_camonica"
                     }
           },
-          "date-precluse": [],
-          "datePrecluseI+3": [],
+          "date-precluse": ["06-05-2025"],
+          "datePrecluseI+3": ["07-06-2025"],
           "mese-ultima-pubblicazione": 2,
           "anno-ultima-pubblicazione": 2025,
-          "possibile-dare-disponibilita": false
+          "possibile-dare-disponibilita": true
 }

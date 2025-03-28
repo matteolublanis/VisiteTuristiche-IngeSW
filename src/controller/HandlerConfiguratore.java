@@ -1,8 +1,12 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import dto.*;
 import main.App;
 import utility.CostantiStruttura;
 import utility.MethodName;
@@ -35,10 +39,24 @@ public class HandlerConfiguratore extends ControllerUtente{
 		gdb.setPrimaConfigurazione();
 	}
 	
-	private String impostaNuovoVolontarioConTipoVisitaScelto (App a, String tipo) {
+	private String impostaNuovoVolontarioConUnTipoVisitaScelto (App a, String tipo) {
 		String username = (String) a.richiediVal(CostantiStruttura.STRING, "username del nuovo volontario");
 		String password = (String) a.richiediVal(CostantiStruttura.STRING, "password del nuovo volontario");
-		String tipi_visiteVal = tipo;
+		Set<String> tipi_visiteVal = new HashSet<>();
+		tipi_visiteVal.add(tipo);
+		if (gdb.impostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal, false)) {
+			a.view("Inserito nuovo volontario.");
+			return username;
+		}
+		else {
+			a.view("Non è stato inserito il nuovo volontario, username già in uso.");
+			return "";
+		}
+	}
+	
+	private String impostaNuovoVolontarioConTipoVisitaScelto (App a, Set<String> tipi_visiteVal) {
+		String username = (String) a.richiediVal(CostantiStruttura.STRING, "username del nuovo volontario");
+		String password = (String) a.richiediVal(CostantiStruttura.STRING, "password del nuovo volontario");
 		if (gdb.impostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal, false)) {
 			a.view("Inserito nuovo volontario.");
 			return username;
@@ -81,7 +99,10 @@ public class HandlerConfiguratore extends ControllerUtente{
 		if (canAddOrRemove(a)) {
 			String username = (String) a.richiediVal(CostantiStruttura.STRING, "username del nuovo volontario");
 			String password = (String) a.richiediVal(CostantiStruttura.STRING, "password del nuovo volontario");
-			String tipi_visiteVal = (String) a.richiediVal(CostantiStruttura.STRING, "tipi delle visite associate al nuovo volontario (tipo1, tipo2,...)");
+			Set<String> tipi_visiteVal = new HashSet<>();
+			do {
+				tipi_visiteVal.add((String) a.richiediVal(CostantiStruttura.STRING, "tipo delle visite associate al nuovo volontario"));
+			} while (a.chiediSioNo("Vuoi aggiungere altri tipi di visite?"));
 			boolean impostato = gdb.impostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal, true);
 			a.view(impostato ? "Inserito nuovo volontario." : "Non è stato inserito il nuovo volontario, username in uso o non sono stati inseriti tipi di visita esistenti.");
 		}
@@ -103,18 +124,33 @@ public class HandlerConfiguratore extends ControllerUtente{
 	
 	@MethodName("Visualizza lista volontari")
 	public void getListaVolontari(App a) {
-		 a.view(gdb.getListaUser(username, CostantiStruttura.VOLONTARIO));
+		for (UserDTO user : gdb.getListaUser(username, CostantiStruttura.VOLONTARIO)) {
+			a.view("Volontario: " + user.getUsername());
+			List<String> tipiList = user.getTipi_visite();
+			String tipiString = "";
+			for (String tipo : tipiList) tipiString += tipo + " ";
+			a.view("Tipi associati: " + tipiString);
+		}
 	}
 	
 	@MethodName("Visualizza elenco luoghi visitabili")
 	public void getElencoLuoghiVisitabili(App a) {
-		a.view(gdb.getElencoLuoghiVisitabili(username));
+		List<String> luoghiVisitabili = gdb.getElencoLuoghiVisitabili(username);
+		a.view("Luoghi visitabili:");
+		for (String luogo : luoghiVisitabili) a.view(luogo);
 	}
 	
 	@MethodName("Visualizza elenco tipi visite per luogo")
 	public void getElencoTipiVisiteLuogo(App a) {
-		
-		a.view(gdb.getElencoTipiVisiteLuogo(username));
+		Map<String, List<String>> elencoTipiVisiteLuoghi = gdb.getElencoTipiVisiteLuogo(username);
+		for (String luogo : elencoTipiVisiteLuoghi.keySet()) {
+			a.view("Luogo: " + luogo);
+			List<String> tipiVisita = elencoTipiVisiteLuoghi.get(luogo);
+			a.view("Tipi associati:");
+			for (String tipo : tipiVisita) {
+				a.view(tipo);
+			}
+		}
 	}
 	
 	@MethodName("Pubblica il piano delle visite")
@@ -238,7 +274,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	    if (a.chiediSioNo("Vuoi associare un nuovo volontario per questo tipo di visita?")) {
 	        String volontario;
 	        do {
-	        	volontario = impostaNuovoVolontarioConTipoVisitaScelto(a, "");
+	        	volontario = impostaNuovoVolontarioConTipoVisitaScelto(a, null);
 	        } while (volontario.equals(""));
 	        volontari.add(volontario);
 	    } else {
@@ -306,7 +342,13 @@ public class HandlerConfiguratore extends ControllerUtente{
 	}
 	@MethodName("Visualizza visite proposte, complete, confermate, cancellate e effettuate")
 	public void getElencoVisiteProposteCompleteConfermateCancellateEffettuate (App a) {
-		a.view(gdb.getElencoVisiteProposteCompleteConfermateCancellateEffettuate());
+		for (VisitaDTO v : gdb.getElencoVisiteProposteCompleteConfermateCancellateEffettuate()) {
+			a.view("Titolo: " +  v.getTitolo());
+			a.view("Giorno: " +  v.getGiorno());
+			a.view("Luogo: " +  v.getLuogo());
+			a.view("Stato: " +  v.getStato());
+
+		}
 	}
 	
 	private String richiediVisitaEsistente(App a) {
@@ -347,7 +389,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 			boolean continua;
 			do {
 				if (a.chiediSioNo("Vuoi creare un nuovo volontario da associare?")) {
-					while (impostaNuovoVolontarioConTipoVisitaScelto(a, tipo).isEmpty());
+					while (impostaNuovoVolontarioConUnTipoVisitaScelto(a, tipo).isEmpty());
 				}
 				else {
 					associaVolontarioEsistente(a, tipo);
@@ -374,8 +416,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 			String tag = (String)a.richiediVal(CostantiStruttura.STRING, "tag del luogo");
 			String nome = (String)a.richiediVal(CostantiStruttura.STRING, "nome del luogo");
 			String collocazione = (String)a.richiediVal(CostantiStruttura.STRING, "collocazione del luogo");
-			String tipiVisitaVal = ""; //TODO per i luoghi sono da creare i tipi di visita, non da riutilizzare
-			if (gdb.aggiungiLuogo(tag, nome, collocazione, tipiVisitaVal)) a.view("Aggiunto un nuovo luogo.");
+			if (gdb.aggiungiLuogo(tag, nome, collocazione, null)) a.view("Aggiunto un nuovo luogo.");
 			boolean finished = false;
 			do {
 				finished = aggiungiTipoVisitePartendoDaLuogo(a, tag);

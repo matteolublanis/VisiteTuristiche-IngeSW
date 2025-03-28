@@ -1,5 +1,6 @@
 package controller;
 
+import dto.VisitaDTO;
 import main.App;
 import utility.MethodName;
 
@@ -12,7 +13,15 @@ public class HandlerFruitore extends ControllerUtente {
 	
 	@MethodName("Visualizza visite proposte, confermate e cancellate")
 	public void getElencoVisiteProposteConfermateCancellate (App a) {
-		a.view(gdb.getElencoVisiteProposteConfermateCancellateFruitore());
+		for (VisitaDTO v : gdb.getElencoVisiteProposteConfermateCancellateFruitore()) {
+			a.view("Titolo: " +  v.getTitolo());
+			a.view("Descrizione: " +  v.getDescrizione());
+			a.view("Punto d'incontro: " +  v.getPuntoIncontro());
+			a.view("Giorno: " +  v.getGiorno());
+			a.view("Ora d'inizio: " +  v.getOraInizio());
+			a.view("Da acquistare: " +  v.getDaAcquistare());
+			a.view("Stato: " +  v.getStato());
+		}
 	}
 	
 }
