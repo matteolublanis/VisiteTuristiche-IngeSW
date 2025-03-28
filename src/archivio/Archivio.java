@@ -2,6 +2,7 @@ package archivio;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.json.*;
 
@@ -397,8 +398,8 @@ public class Archivio {
 		return true;
 	}
 	
-	public String getElencoTipiVisite () { //TODO non ritornare una stringa ma un oggetto che dia tutte le info da stampare
-		return jsonTipiVisite.keySet().toString();
+	public Set<String> getElencoTipiVisite () { //TODO non ritornare una stringa ma un oggetto che dia tutte le info da stampare
+		return jsonTipiVisite.keySet();
 	}
 	
 	public boolean primoAccessoEseguito (String user) {
@@ -478,8 +479,12 @@ public class Archivio {
 		JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
 	}
 	
-	public String getElencoTipiVisiteVolontario(String v) { 
- 	    return jsonUsers.getJSONObject(v).getJSONArray(TIPO_VISITA).toString();
+	public List<String> getElencoTipiVisiteVolontario(String volontario) { 
+		List<String> result = new ArrayList<>();
+		for (Object tipo : jsonUsers.getJSONObject(volontario).getJSONArray(TIPO_VISITA)) {
+			result.add((String)tipo);
+		}
+ 	    return result;
  	}
 	
 	public boolean setPrimaPubblicazione() {

@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import main.App;
 import utility.CostantiStruttura;
@@ -112,6 +113,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	
 	@MethodName("Visualizza elenco tipi visite per luogo")
 	public void getElencoTipiVisiteLuogo(App a) {
+		
 		a.view(gdb.getElencoTipiVisiteLuogo(username));
 	}
 	
@@ -336,7 +338,11 @@ public class HandlerConfiguratore extends ControllerUtente{
 	@MethodName("Aggiungi volontari ad un tipo di visita esistente")
 	public void aggiungiVolontariATipiVisita (App a) {
 		if (canAddOrRemove(a)) {
-			a.view("Elenco dei tag delle visite esistenti:\n" + gdb.getElencoTipiVisite());
+			Set<String> s = gdb.getElencoTipiVisite();
+			a.view("Elenco dei tag delle visite esistenti:");
+			for(String i : s) {
+				a.view(i);
+			}
 			String tipo = richiediVisitaEsistente(a);
 			boolean continua;
 			do {

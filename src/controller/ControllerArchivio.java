@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -138,16 +139,12 @@ public class ControllerArchivio {
 		}
 		else return null;
 	}
-	/*
-	 * Dovrebbe ritornare lista
-	 */
-	public String getElencoTipiVisite () { //OK
+
+	public Set<String> getElencoTipiVisite () { //OK
  		return d.getElencoTipiVisite();
  	}
-	/*
-	 * Dovrebbe ritornare lista
-	 */
- 	public String getElencoTipiVisiteVolontario (String username) { 
+
+ 	public List<String> getElencoTipiVisiteVolontario (String username) { 
  		return d.getElencoTipiVisiteVolontario(username);
  	}
 	

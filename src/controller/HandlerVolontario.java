@@ -2,6 +2,7 @@ package controller;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import main.App;
 import utility.CostantiStruttura;
@@ -18,7 +19,10 @@ public class HandlerVolontario extends ControllerUtente {
 	
 	@MethodName("Visualizza i tipi di visita a cui sei collegato")
  	public void visualizzaTipiVisita(App a) {
- 		a.view(gdb.getElencoTipiVisiteVolontario(username)); //TODO se la stringa è vuota vuol dire che non ha disponibilità, DA ELIMINARE QUINDI!
+		List<String> listaTipi = gdb.getElencoTipiVisiteVolontario(username);
+		for (String tipo : listaTipi) {
+			a.view(tipo);
+		}
  	}
 	
 	@MethodName("Comunica le tue prossime disponibilità")
