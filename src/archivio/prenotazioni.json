@@ -1,0 +1,26 @@
+{
+	"CODICE1": {
+			"utente": "fruitorex",
+			"giorno": "xx-yy-zzzz",
+			"tipo-visita": "tag-tipo",
+			"numero-iscritti": 0
+		},
+	"CODICE2": {
+			"utente": "fruitorex",
+			"giorno": "xx-yy-zzzz",
+			"tipo-visita": "tag-tipo",
+			"numero-iscritti": 0
+	},
+	"CODICE3": {
+			"utente": "fruitorey",
+			"giorno": "xx-yy-zzzz",
+			"tipo-visita": "tag-tipo",
+			"numero-iscritti": 0
+		},
+	"CODICE4": {
+			"utente": "fruitorey",
+			"giorno": "xx-yy-zzzz",
+			"tipo-visita": "tag-tipo",
+			"numero-iscritti": 0
+		}
+}

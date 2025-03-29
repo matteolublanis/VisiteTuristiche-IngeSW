@@ -19,6 +19,10 @@ import utility.Time;
 
 public class Archivio {
 	
+	private static final String PRENOTAZIONI = "prenotazioni";
+
+	private static final String NUMERO_ISCRITTI = "numero-iscritti";
+
 	public static final String PROPOSTA = "proposta", CANCELLATA = "cancellata", CONFERMATA = "confermata", COMPLETA = "completa", EFFETTUATA = "effettuata";
 
 	private static final String ANNO_ULTIMA_PUBBLICAZIONE = "anno-ultima-pubblicazione";
@@ -544,6 +548,8 @@ public class Archivio {
 						visita.put(LUOGO, jsonTipiVisite.getJSONObject(tipo).getString(LUOGO));
 						visita.put(STATO_VISITA, PROPOSTA);
 						visita.put(VOLONTARI2, volontariAssociati);
+						visita.put(NUMERO_ISCRITTI, 0);
+						visita.put(PRENOTAZIONI, new JSONArray());
 						jsonPianoVisite.getJSONObject(data).put(tipo, visita);
 					}
 				}
@@ -556,6 +562,8 @@ public class Archivio {
 					visita.put(LUOGO, jsonTipiVisite.getJSONObject(tipo).getString(LUOGO));
 					visita.put(STATO_VISITA, PROPOSTA);
 					visita.put(VOLONTARI2, volontariAssociati);
+					visita.put(NUMERO_ISCRITTI, 0);
+					visita.put(PRENOTAZIONI, new JSONArray());
 					jsonPianoVisite.getJSONObject(data).put(tipo, visita);
 				}
 			}

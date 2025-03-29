@@ -3,7 +3,9 @@
 		"passeggiata_valle_camonica": {
 			"luogo": "parco_incisioni_valle_camonica",
 			"volontari": ["volontario1"],
-			"stato": "cancellata"
+			"stato": "proposta",
+			"numero-iscritti": 0,
+			"prenotazioni": ["DAINSERIRECODICI"]
 		}
 	}
 }

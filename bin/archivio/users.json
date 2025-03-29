@@ -28,7 +28,8 @@
           "tipo": 3,
           "password": "paolo",
           "primo-accesso": false,
-          "username": "fruitore1"
+          "username": "fruitore1",
+		  "prenotazioni": ["CODICI"]
      },
      "volontario2": {
           "password": "admin",
