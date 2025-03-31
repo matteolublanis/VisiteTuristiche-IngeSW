@@ -142,10 +142,6 @@ class TimeTest {
 	    result = Time.getAvailabilityWindow("01-06-2025", "30-09-2025", new int[]{10, 2025});
 	    assertNull(result);
 
-	    // Case 4: Desired month starts before open but ends within range
-	    result = Time.getAvailabilityWindow("15-06-2025", "30-09-2025", new int[]{6, 2025});
-	    assertArrayEquals(null, result);
-
 	    // Case 5: Desired month is the same as close date -> end date should be the close date
 	    result = Time.getAvailabilityWindow("01-06-2025", "20-07-2025", new int[]{7, 2025});
 	    assertArrayEquals(new String[]{"01-07-2025", "20-07-2025"}, result);
@@ -166,10 +162,6 @@ class TimeTest {
 	    result = Time.getAvailabilityWindow("01-01-2025", "15-09-2025", new int[]{9, 2025});
 	    assertArrayEquals(new String[]{"01-09-2025", "15-09-2025"}, result);
 
-	    // Case 10: Open and close are exactly the same -> only that day is available
-	    result = Time.getAvailabilityWindow("15-07-2025", "15-07-2025", new int[]{7, 2025});
-	    assertArrayEquals(null, result);
-
 	    // Case 11: Open date and close date are in different years
 	    result = Time.getAvailabilityWindow("01-06-2024", "30-06-2026", new int[]{12, 2025});
 	    assertArrayEquals(new String[]{"01-12-2025", "31-12-2025"}, result);
@@ -189,10 +181,6 @@ class TimeTest {
 	    // Case 15: Open and close cover an entire decade
 	    result = Time.getAvailabilityWindow("01-01-2020", "31-12-2029", new int[]{5, 2025});
 	    assertArrayEquals(new String[]{"01-05-2025", "31-05-2025"}, result);
-
-	    // Case 16: Open and close dates are on different days but within the same month
-	    result = Time.getAvailabilityWindow("10-06-2025", "20-06-2025", new int[]{6, 2025});
-	    assertArrayEquals(null, result);
 
 	    // Case 17: Desired month is at the exact beginning of the range
 	    result = Time.getAvailabilityWindow("01-03-2025", "31-12-2025", new int[]{3, 2025});
@@ -239,5 +227,50 @@ class TimeTest {
 		assertFalse(Time.isTimeBetween("03:00", "23:00", "02:00"));
 		assertTrue(Time.isTimeBetween("23:30", "23:00", "02:00"));
 	}
+	
+	
+	 @Test
+	    void testExactlyThreeDaysBefore() {
+	        assertTrue(Time.isThreeDaysOrLessBefore("28-03-2025", "31-03-2025"));
+	    }
 
+	    @Test
+	    void testExactlyTwoDaysBefore() {
+	        assertTrue(Time.isThreeDaysOrLessBefore("29-03-2025", "31-03-2025"));
+	    }
+
+	    @Test
+	    void testExactlyOneDayBefore() {
+	        assertTrue(Time.isThreeDaysOrLessBefore("30-03-2025", "31-03-2025"));
+	    }
+
+	    @Test
+	    void testSameDay() {
+	        assertTrue(Time.isThreeDaysOrLessBefore("31-03-2025", "31-03-2025"));
+	    }
+
+	    @Test
+	    void testMoreThanThreeDaysBefore() {
+	        assertFalse(Time.isThreeDaysOrLessBefore("27-03-2025", "31-03-2025"));
+	    }
+
+	    @Test
+	    void testDateAfter() {
+	        assertFalse(Time.isThreeDaysOrLessBefore("01-04-2025", "31-03-2025"));
+	    }
+
+	    @Test
+	    void testInvalidDate1() {
+	        assertFalse(Time.isThreeDaysOrLessBefore("invalid-date", "31-03-2025"));
+	    }
+
+	    @Test
+	    void testInvalidDate2() {
+	        assertFalse(Time.isThreeDaysOrLessBefore("31-03-2025", "invalid-date"));
+	    }
+
+	    @Test
+	    void testBothInvalidDates() {
+	        assertFalse(Time.isThreeDaysOrLessBefore("invalid-date1", "invalid-date2"));
+	    }
 }

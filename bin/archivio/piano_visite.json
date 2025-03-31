@@ -1,17 +1,17 @@
 {
 	"last-check": "31-03-2025",
-	"30-03-2025": {
+	"02-04-2025": {
 		"passeggiata_valle_camonica": {
 			"luogo": "parco_incisioni_valle_camonica",
 			"volontari": ["volontario1"],
-			"stato": "cancellata",
-			"numero-iscritti": 0,
+			"stato": "proposta",
+			"numero-iscritti": 10,
 			"prenotazioni": ["DAINSERIRECODICI"]
 		},
-		"banana": {
+		"tour_castello": {
 			"luogo": "parco_incisioni_valle_camonica",
 			"volontari": ["volontario1"],
-			"stato": "effettuata",
+			"stato": "proposta",
 			"numero-iscritti": 0,
 			"prenotazioni": ["DAINSERIRECODICI"]
 		}

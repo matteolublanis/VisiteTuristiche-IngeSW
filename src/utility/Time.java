@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -176,6 +177,19 @@ public class Time {
         }
 
         return true;
+	}
+	
+	public static boolean isThreeDaysOrLessBefore(String date1, String date2) {
+	    if (!isValidDate(date1) || !isValidDate(date2)) return false;
+
+	    try {
+	        LocalDate d1 = LocalDate.parse(date1, FORMATTER);
+	        LocalDate d2 = LocalDate.parse(date2, FORMATTER);
+	        long daysBetween = ChronoUnit.DAYS.between(d1, d2);
+	        return daysBetween >= 0 && daysBetween <= 3;
+	    } catch (Exception e) {
+	        return false; 
+	    }
 	}
 	
     public static boolean comesAfter(String date1, String date2) {

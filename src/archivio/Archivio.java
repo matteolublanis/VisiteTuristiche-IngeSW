@@ -60,6 +60,7 @@ public class Archivio {
 	public Archivio () {
 		System.out.println("Creato archivio.");
 		removeVisiteEffettuateCancellate(); //per come è strutturata l'app, ha senso mettere un controllo ogni volta che avvio
+		setVisiteCancellateConfermate();
 	}
 	
 	public boolean getPossibileDareDisponibilita () {
@@ -511,6 +512,25 @@ public class Archivio {
 	public boolean isUltimoPianoPubblicato () {
 		
 		return jsonPianoVisiteDaPubblicare.getBoolean(ULTIMO_PIANO);
+	}
+	
+	public void setVisiteCancellateConfermate () {
+		for (String day : jsonPianoVisite.keySet()) {
+			if (!day.equals(LAST_CHECK) && Time.isThreeDaysOrLessBefore(Time.getActualDate(), day)) {
+				JSONObject visiteGiorno = jsonPianoVisite.getJSONObject(day);
+				for (String keyVisita : visiteGiorno.keySet()) {
+					JSONObject visita = visiteGiorno.getJSONObject(keyVisita);
+					if (visita.getInt(NUMERO_ISCRITTI) >= jsonTipiVisite.getJSONObject(keyVisita).getInt(MIN_FRUITORE) && 
+							!visita.getString(STATO_VISITA).equals(CANCELLATA)) { //può essere cancellata per altri motivi
+						visita.put(STATO_VISITA, CONFERMATA);
+					}
+					else {
+						visita.put(STATO_VISITA, CANCELLATA);
+					}
+				}
+			}
+		}
+		JSONUtility.aggiornaJsonFile(jsonPianoVisite, PATH_VISITE, 10);
 	}
 	
 	public void removeVisiteEffettuateCancellate () {
