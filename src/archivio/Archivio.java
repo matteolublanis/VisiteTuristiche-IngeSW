@@ -20,6 +20,8 @@ import utility.Time;
 
 public class Archivio {
 	
+	private PianoStoricoJSONManagement pianoStorico = new PianoStoricoJSONManagement();
+	
 	private static final String UTENTE = "utente";
 
 	private static final String GIORNO = "giorno";
@@ -50,7 +52,7 @@ public class Archivio {
 			
 			PATH_USERS = "src/archivio/users.json", PATH_VISITE = "src/archivio/piano_visite.json", PATH_VISITE_DAPUBBLICARE = "src/archivio/visite_da_pubblicare.json",
 			PATH_TIPI_VISITE = "src/archivio/tipo_visite.json", PATH_AMBITO = "src/archivio/ambito_territoriale.json", 
-			PATH_STORICO = "src/archivio/visite_effettuate_storico.json", PATH_PRENOTAZIONI = "src/archivio/prenotazioni.json";
+			PATH_PRENOTAZIONI = "src/archivio/prenotazioni.json";
 	
 	private JSONObject jsonPrenotazioni = JSONUtility.readJsonFile(PATH_PRENOTAZIONI);
 	private JSONObject jsonTipiVisite = JSONUtility.readJsonFile(PATH_TIPI_VISITE);
@@ -58,7 +60,6 @@ public class Archivio {
 	private JSONObject jsonAmbitoTerritoriale = JSONUtility.readJsonFile(PATH_AMBITO);
 	private JSONObject jsonPianoVisite = JSONUtility.readJsonFile(PATH_VISITE); 
 	private JSONObject jsonPianoVisiteDaPubblicare = JSONUtility.readJsonFile(PATH_VISITE_DAPUBBLICARE);
-	private JSONObject jsonPianoStorico = JSONUtility.readJsonFile(PATH_STORICO);
 	public static final String[] GIORNISETTIMANA = new String[] {"lun","mar","mer","gio","ven","sab","dom"};
 	private static final String[] CREDENZIALI_CONF_INIZIALE = new String[] {"admin", "admin"};
 	private static final int RIGHE_USERS = 5;
@@ -241,17 +242,7 @@ public class Archivio {
 				}
 			}
 		}
-		for (String giornoVisite : jsonPianoStorico.keySet()) {
-			JSONObject visiteStoricheGiornoX = jsonPianoStorico.getJSONObject(giornoVisite); 
-			for (String visitaStorica : visiteStoricheGiornoX.keySet()) { 
-				VisitaDTO visitaDTO = new VisitaDTO(
-						visitaStorica,
-						giornoVisite,
-						visiteStoricheGiornoX.getString(visitaStorica), //TODO per salvare anche cancellate, renderlo un JSONObject, o rivedere con DBMS
-						"effettuata");
-                visiteList.add(visitaDTO);
-			}
-		}
+		visiteList.addAll(pianoStorico.getElencoVisiteProposteCompleteConfermateCancellateEffettuate());
 		return visiteList;
 	}
 	
@@ -692,7 +683,6 @@ public class Archivio {
 	}
 	
 	public boolean isUltimoPianoPubblicato () {
-		
 		return jsonPianoVisiteDaPubblicare.getBoolean(ULTIMO_PIANO);
 	}
 	
@@ -727,9 +717,7 @@ public class Archivio {
 							
 						}
 						if (visita.getString(STATO_VISITA).equals(EFFETTUATA)) {
-							JSONObject visitaStorica = new JSONObject();
-							visitaStorica.put(visita.getString(LUOGO), keyVisita);
-							jsonPianoStorico.put(day, visitaStorica);
+							pianoStorico.inserisciVisitaNelloStorico(visita.getString(LUOGO), keyVisita, day);
 						}
 					}
 					daysToRemove.add(day);
@@ -739,7 +727,6 @@ public class Archivio {
 			for (String dayToRemove : daysToRemove) jsonPianoVisite.remove(dayToRemove);
 			jsonPianoVisite.put(LAST_CHECK, Time.getActualDate());
 			JSONUtility.aggiornaJsonFile(jsonPianoVisite, PATH_VISITE, 10);
-			JSONUtility.aggiornaJsonFile(jsonPianoStorico, PATH_STORICO, 10);
 		}
 	}
 	
