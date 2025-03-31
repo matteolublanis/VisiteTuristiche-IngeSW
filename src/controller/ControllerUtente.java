@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import main.App;
 import utility.CostantiStruttura;
 import utility.Credenziali;
+import utility.Time;
 
 public abstract class ControllerUtente {
 	
@@ -43,6 +44,17 @@ public abstract class ControllerUtente {
 			} while (!b);
 			a.view("Credenziali cambiate.");
 		};
+	}
+	
+	protected String richiediDataValida(App a, String messaggio) {
+	    String data;
+	    do {
+	        data = (String) a.richiediVal(CostantiStruttura.STRING, messaggio);
+	        if (!Time.isValidDate(data)) {
+	            a.view("Formato data non valido");
+	        }
+	    } while (!Time.isValidDate(data));
+	    return data;
 	}
 	
 	public boolean cambiaCredenziali(Credenziali c) {

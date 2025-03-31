@@ -147,6 +147,10 @@ public class ControllerArchivio {
 	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitore() { //dovrebbe ritornare un oggetto con tutte le info da stampare
 		return d.getElencoVisiteProposteConfermateCancellateFruitore();
 	}
+	
+	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore (String username) {
+		return d.getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore(username);
+	}
 
 	public List<VisitaDTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate () {
 		return d.getElencoVisiteProposteCompleteConfermateCancellateEffettuate();
@@ -155,7 +159,7 @@ public class ControllerArchivio {
 	public boolean cambiaCredenziali (String username, Credenziali c, ControllerUtente gu) {
 		if (!checkIfUserExists(username)) return false;
 		if (checkIfUserExists(c.getUsername())) return false;
-		if (d.modificaCredenziali(username, c)) {
+		if (d.modificaCredenziali(username, c)) { //Problematico questa funzione, posso cambiare credenziali senza eseguire primo accesso
 			d.primoAccessoEseguito(c.getUsername());
 			gu.setUsername(c.getUsername());
 			return true;

@@ -29,7 +29,7 @@
           "password": "paolo",
           "primo-accesso": false,
           "username": "fruitore1",
-		  "prenotazioni": ["CODICI"]
+		  "prenotazioni": ["1", "2"]
      },
      "volontario2": {
           "password": "admin",

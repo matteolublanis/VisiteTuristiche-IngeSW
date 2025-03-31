@@ -206,17 +206,6 @@ public class HandlerConfiguratore extends ControllerUtente{
 	    return tipoVisita;
 	}
 	
-	private String richiediDataValida(App a, String messaggio) {
-	    String data;
-	    do {
-	        data = (String) a.richiediVal(CostantiStruttura.STRING, messaggio);
-	        if (!Time.isValidDate(data)) {
-	            a.view("Formato data non valido");
-	        }
-	    } while (!Time.isValidDate(data));
-	    return data;
-	}
-	
 	private ArrayList<Integer> richiediGiorniPrenotabili(App a) {
 		ArrayList<Integer> giorni = new ArrayList<>();
 	    boolean continua = true;

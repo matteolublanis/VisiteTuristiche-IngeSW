@@ -1,23 +1,23 @@
 {
-	"CODICE1": {
-			"utente": "fruitorex",
-			"giorno": "xx-yy-zzzz",
-			"tipo-visita": "tag-tipo",
+	"1": {
+			"utente": "fruitore1",
+			"giorno": "02-04-2025",
+			"tipo-visita": "passeggiata_valle_camonica",
 			"numero-iscritti": 0
 		},
-	"CODICE2": {
-			"utente": "fruitorex",
-			"giorno": "xx-yy-zzzz",
-			"tipo-visita": "tag-tipo",
+	"2": {
+			"utente": "fruitore1",
+			"giorno": "02-04-2025",
+			"tipo-visita": "tour_castello",
 			"numero-iscritti": 0
 	},
-	"CODICE3": {
-			"utente": "fruitorey",
+	"3": {
+			"utente": "fruitore2",
 			"giorno": "xx-yy-zzzz",
 			"tipo-visita": "tag-tipo",
 			"numero-iscritti": 0
 		},
-	"CODICE4": {
+	"4": {
 			"utente": "fruitorey",
 			"giorno": "xx-yy-zzzz",
 			"tipo-visita": "tag-tipo",

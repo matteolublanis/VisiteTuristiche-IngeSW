@@ -19,6 +19,8 @@ import utility.Time;
 
 public class Archivio {
 	
+	private static final String GIORNO = "giorno";
+
 	private static final String LAST_CHECK = "last-check";
 
 	private static final String PRENOTAZIONI = "prenotazioni";
@@ -45,8 +47,9 @@ public class Archivio {
 			
 			PATH_USERS = "src/archivio/users.json", PATH_VISITE = "src/archivio/piano_visite.json", PATH_VISITE_DAPUBBLICARE = "src/archivio/visite_da_pubblicare.json",
 			PATH_TIPI_VISITE = "src/archivio/tipo_visite.json", PATH_AMBITO = "src/archivio/ambito_territoriale.json", 
-			PATH_STORICO = "src/archivio/visite_effettuate_storico.json";
-
+			PATH_STORICO = "src/archivio/visite_effettuate_storico.json", PATH_PRENOTAZIONI = "src/archivio/prenotazioni.json";
+	
+	private JSONObject jsonPrenotazioni = JSONUtility.readJsonFile(PATH_PRENOTAZIONI);
 	private JSONObject jsonTipiVisite = JSONUtility.readJsonFile(PATH_TIPI_VISITE);
 	private JSONObject jsonUsers = JSONUtility.readJsonFile(PATH_USERS);
 	private JSONObject jsonAmbitoTerritoriale = JSONUtility.readJsonFile(PATH_AMBITO);
@@ -220,17 +223,19 @@ public class Archivio {
 	    List<VisitaDTO> visiteList = new ArrayList<>();
 
 		for (String k : jsonPianoVisite.keySet()) { //giorno
-			JSONObject j = jsonPianoVisite.getJSONObject(k); //prende le visite associate a quel giorno
-			for (String m : j.keySet()) { //visite del giorno
-				JSONObject visita = j.getJSONObject(m);
-                JSONObject tipoVisita = jsonTipiVisite.getJSONObject(m);
-                VisitaDTO visitaDTO = new VisitaDTO( 
-	                    tipoVisita.getString(TITOLO),
-	                    k,
-	                    visita.getString(Archivio.LUOGO),
-	                    visita.getString(Archivio.STATO_VISITA)
-	                );
-                visiteList.add(visitaDTO);
+			if (!k.equals(LAST_CHECK)) {
+				JSONObject j = jsonPianoVisite.getJSONObject(k); //prende le visite associate a quel giorno
+				for (String m : j.keySet()) { //visite del giorno
+					JSONObject visita = j.getJSONObject(m);
+	                JSONObject tipoVisita = jsonTipiVisite.getJSONObject(m);
+	                VisitaDTO visitaDTO = new VisitaDTO( 
+		                    tipoVisita.getString(TITOLO),
+		                    k,
+		                    visita.getString(Archivio.LUOGO),
+		                    visita.getString(Archivio.STATO_VISITA)
+		                );
+	                visiteList.add(visitaDTO);
+				}
 			}
 		}
 		for (String giornoVisite : jsonPianoStorico.keySet()) {
@@ -247,32 +252,60 @@ public class Archivio {
 		return visiteList;
 	}
 	
-	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitore () {
-		
+	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore (String username) {
 	    List<VisitaDTO> visiteList = new ArrayList<>();
-
-	    for (String k : jsonPianoVisite.keySet()) { // Giorno
-	        JSONObject j = jsonPianoVisite.getJSONObject(k); // Visite del giorno
-	        for (String m : j.keySet()) { // Singola visita
-	            JSONObject visita = j.getJSONObject(m);
-	            String statoVisita = visita.getString(STATO_VISITA);
-	            if (statoVisita.equals(CONFERMATA) || statoVisita.equals(CANCELLATA) || statoVisita.equals(PROPOSTA)) {
-	                JSONObject tipoVisita = jsonTipiVisite.getJSONObject(m);
-	                VisitaDTO visitaDTO = new VisitaDTO(
-	                    tipoVisita.getString(TITOLO),
-	                    tipoVisita.getString(DESCRIPTION),
-	                    tipoVisita.getString(PUNTO_INCONTRO),
-	                    k,
-	                    tipoVisita.getString(ORA_INIZIO),
-	                    tipoVisita.getBoolean(DA_ACQUISTARE),
-	                    statoVisita
-	                );
-	                visiteList.add(visitaDTO);
-	            }
-	        }
+	    if (getTipoUtente(username) != CostantiStruttura.FRUITORE) return null;
+	    JSONObject fruitore = jsonUsers.getJSONObject(username);
+	    for (Object codicePrenotazione : fruitore.getJSONArray(PRENOTAZIONI)) {
+	    	JSONObject prenotazione = jsonPrenotazioni.getJSONObject((String)codicePrenotazione);
+	    	JSONObject visita = (jsonPianoVisite.getJSONObject(prenotazione.getString(GIORNO))).getJSONObject(prenotazione.getString(TIPO_VISITA));
+            String statoVisita = visita.getString(STATO_VISITA);
+            if (statoVisita.equals(CONFERMATA) || statoVisita.equals(CANCELLATA) || statoVisita.equals(PROPOSTA)) { //non completa
+                JSONObject tipoVisita = jsonTipiVisite.getJSONObject(prenotazione.getString(TIPO_VISITA));
+                VisitaDTO visitaDTO = new VisitaDTO(
+                    tipoVisita.getString(TITOLO),
+                    tipoVisita.getString(DESCRIPTION),
+                    tipoVisita.getString(PUNTO_INCONTRO),
+                    prenotazione.getString(GIORNO),
+                    tipoVisita.getString(ORA_INIZIO),
+                    tipoVisita.getBoolean(DA_ACQUISTARE),
+                    statoVisita
+                );
+                visiteList.add(visitaDTO);
+            }
 	    }
 	    return visiteList;
 	}
+	
+	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitore () {	
+	    List<VisitaDTO> visiteList = new ArrayList<>();
+
+	    for (String k : jsonPianoVisite.keySet()) { // Giorno
+	    	if (!k.equals(LAST_CHECK)) {
+		        JSONObject day = jsonPianoVisite.getJSONObject(k); // Visite del giorno
+		        for (String m : day.keySet()) { // Singola visita
+		            JSONObject visita = day.getJSONObject(m);
+		            String statoVisita = visita.getString(STATO_VISITA);
+		            if (statoVisita.equals(CONFERMATA) || statoVisita.equals(CANCELLATA) || statoVisita.equals(PROPOSTA)) { //non completa
+		                JSONObject tipoVisita = jsonTipiVisite.getJSONObject(m);
+		                VisitaDTO visitaDTO = new VisitaDTO(
+		                    tipoVisita.getString(TITOLO),
+		                    tipoVisita.getString(DESCRIPTION),
+		                    tipoVisita.getString(PUNTO_INCONTRO),
+		                    k,
+		                    tipoVisita.getString(ORA_INIZIO),
+		                    tipoVisita.getBoolean(DA_ACQUISTARE),
+		                    statoVisita
+		                );
+		                visiteList.add(visitaDTO);
+		            }
+		        }
+	    	}
+	    }
+	    return visiteList;
+	}
+	
+	
 	
 	public boolean rimuoviLuogo (String k) {
 		

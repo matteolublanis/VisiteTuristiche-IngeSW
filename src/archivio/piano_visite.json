@@ -1,28 +1,26 @@
 {
-	"last-check": "31-03-2025",
-	"02-04-2025": {
-		"passeggiata_valle_camonica": {
-			"luogo": "parco_incisioni_valle_camonica",
-			"volontari": ["volontario1"],
-			"stato": "proposta",
-			"numero-iscritti": 10,
-			"prenotazioni": ["DAINSERIRECODICI"]
-		},
-		"tour_castello": {
-			"luogo": "parco_incisioni_valle_camonica",
-			"volontari": ["volontario1"],
-			"stato": "proposta",
-			"numero-iscritti": 0,
-			"prenotazioni": ["DAINSERIRECODICI"]
-		}
-	},
-	"07-08-2025": {
-		"passeggiata_valle_camonica": {
-			"luogo": "parco_incisioni_valle_camonica",
-			"volontari": ["volontario1"],
-			"stato": "proposta",
-			"numero-iscritti": 0,
-			"prenotazioni": ["DAINSERIRECODICI"]
-		}
-	}
+          "last-check": "31-03-2025",
+          "07-08-2025": {"passeggiata_valle_camonica": {
+                    "stato": "proposta",
+                    "numero-iscritti": 0,
+                    "luogo": "parco_incisioni_valle_camonica",
+                    "volontari": ["volontario1"],
+                    "prenotazioni": ["3"]
+          }},
+          "02-04-2025": {
+                    "passeggiata_valle_camonica": {
+                              "stato": "confermata",
+                              "numero-iscritti": 10,
+                              "luogo": "parco_incisioni_valle_camonica",
+                              "volontari": ["volontario1"],
+                              "prenotazioni": ["1"]
+                    },
+                    "tour_castello": {
+                              "stato": "cancellata",
+                              "numero-iscritti": 0,
+                              "luogo": "parco_incisioni_valle_camonica",
+                              "volontari": ["volontario1"],
+                              "prenotazioni": ["2"]
+                    }
+          }
 }

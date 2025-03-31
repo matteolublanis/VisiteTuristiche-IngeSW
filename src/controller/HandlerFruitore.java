@@ -37,7 +37,27 @@ public class HandlerFruitore extends ControllerUtente {
 	
 	@MethodName("Visualizza tutte le visite proposte/confermate/cancellate/complete che hai prenotato")
 	public void visualizzaVisiteProposteConfermateCancellateCompletePrenotate (App a) {
-
+		a.view("Ecco le visite a cui ti sei prenotato:");
+		for (VisitaDTO v : gdb.getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore(username)) {
+			if (!v.getStato().equals("cancellata")) {
+				a.view("-----------");
+				a.view("Titolo: " +  v.getTitolo());
+				a.view("Descrizione: " +  v.getDescrizione());
+				a.view("Punto d'incontro: " +  v.getPuntoIncontro());
+				a.view("Giorno: " +  v.getGiorno());
+				a.view("Ora d'inizio: " +  v.getOraInizio());
+				a.view("Da acquistare: " +  v.getDaAcquistare());
+				a.view("Stato: " +  v.getStato());
+				a.view("-----------");
+			}
+			else {
+				a.view("-----------");
+				a.view("Titolo: " +  v.getTitolo());
+				a.view("Giorno mancato svolgimento: " +  v.getGiorno());
+				a.view("Stato: " +  v.getStato());
+				a.view("-----------");
+			}
+		}
 	}
 	
 	@MethodName("Effettua iscrizione ad una visita proposta")
