@@ -19,6 +19,8 @@ import utility.Time;
 
 public class Archivio {
 	
+	private static final String LAST_CHECK = "last-check";
+
 	private static final String PRENOTAZIONI = "prenotazioni";
 
 	private static final String NUMERO_ISCRITTI = "numero-iscritti";
@@ -57,6 +59,7 @@ public class Archivio {
 
 	public Archivio () {
 		System.out.println("Creato archivio.");
+		removeVisiteEffettuateCancellate(); //per come è strutturata l'app, ha senso mettere un controllo ogni volta che avvio
 	}
 	
 	public boolean getPossibileDareDisponibilita () {
@@ -508,6 +511,42 @@ public class Archivio {
 	public boolean isUltimoPianoPubblicato () {
 		
 		return jsonPianoVisiteDaPubblicare.getBoolean(ULTIMO_PIANO);
+	}
+	
+	public void removeVisiteEffettuateCancellate () {
+		if (!isTodayLastCheckPianoVisite()) {
+			Set<String> daysToRemove = new HashSet<>();
+			for (String day : jsonPianoVisite.keySet()) { //cicla sui giorni
+				if (!day.equals(LAST_CHECK) && Time.comesAfter(Time.getActualDate(), day)) { //dovrebbe essere strutturato meglio
+					JSONObject visiteGiorno = jsonPianoVisite.getJSONObject(day);
+					for (String keyVisita : visiteGiorno.keySet()) {
+						JSONObject visita = visiteGiorno.getJSONObject(keyVisita);
+						if (visita.getString(STATO_VISITA).equals(CANCELLATA)) {
+							
+						}
+						if (visita.getString(STATO_VISITA).equals(EFFETTUATA)) {
+							JSONObject visitaStorica = new JSONObject();
+							visitaStorica.put(visita.getString(LUOGO), keyVisita);
+							jsonPianoStorico.put(day, visitaStorica);
+						}
+					}
+					daysToRemove.add(day);
+				}
+			}
+			
+			for (String dayToRemove : daysToRemove) jsonPianoVisite.remove(dayToRemove);
+			jsonPianoVisite.put(LAST_CHECK, Time.getActualDate());
+			JSONUtility.aggiornaJsonFile(jsonPianoVisite, PATH_VISITE, 10);
+			JSONUtility.aggiornaJsonFile(jsonPianoStorico, PATH_STORICO, 10);
+		}
+	}
+	
+	public void setTodayLastCheckPianoVisite () {
+		jsonPianoVisite.put(LAST_CHECK, Time.getActualDate());
+	}
+	
+	public boolean isTodayLastCheckPianoVisite () {
+		return (jsonPianoVisite.getString(LAST_CHECK).equals(Time.getActualDate()));
 	}
 	
 	public boolean indicaDatePrecluse (String date) {

@@ -178,6 +178,18 @@ public class Time {
         return true;
 	}
 	
+    public static boolean comesAfter(String date1, String date2) {
+    	if (!isValidDate(date1) || !isValidDate(date2)) return false;
+
+        try {
+            LocalDate d1 = LocalDate.parse(date1, FORMATTER);
+            LocalDate d2 = LocalDate.parse(date2, FORMATTER);
+            return d1.isAfter(d2);
+        } catch (Exception e) {
+            return false; // Se la data non è valida, restituisce false
+        }
+    }
+	
     public static boolean comesBefore(String date1, String date2) {
     	if (!isValidDate(date1) || !isValidDate(date2)) return false;
 
