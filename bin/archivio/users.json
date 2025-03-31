@@ -11,9 +11,7 @@
                     "password": "admin",
                     "tipo": 2,
                     "primo-accesso": false,
-                    "tipo-visita": [
-                              "museo_santa_giulia"
-                    ],
+                    "tipo-visita": ["museo_santa_giulia"],
                     "username": "volontario4"
           },
           "volontario3": {
@@ -25,6 +23,13 @@
                               "franciacorta_wine_tour"
                     ],
                     "username": "volontario3"
+          },
+          "fruitore1": {
+                    "tipo": 3,
+                    "password": "paolo",
+                    "primo-accesso": false,
+                    "username": "fruitore1",
+                    "prenotazioni": ["A24RFAOT"]
           },
           "volontario2": {
                     "password": "admin",
@@ -58,11 +63,5 @@
                     "tipo": 1,
                     "primo-accesso": false,
                     "username": "admin"
-          },
-          "giovanni": {
-                    "tipo": 1,
-                    "password": "pierpaolo",
-                    "primo-accesso": true,
-                    "username": "giovanni"
           }
 }

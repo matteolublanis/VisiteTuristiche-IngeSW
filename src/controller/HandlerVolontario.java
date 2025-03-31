@@ -3,8 +3,8 @@ package controller;
 import java.util.HashMap;
 import java.util.List;
 
+import dto.VisitaDTO;
 import main.App;
-import utility.CostantiStruttura;
 import utility.MethodName;
 import utility.Time;
 
@@ -18,8 +18,38 @@ public class HandlerVolontario extends ControllerUtente {
 	
 	@MethodName("Visualizza i tipi di visita a cui sei collegato")
  	public void visualizzaTipiVisita(App a) {
- 		a.view(gdb.getElencoTipiVisiteVolontario(username)); //TODO se la stringa è vuota vuol dire che non ha disponibilità, DA ELIMINARE QUINDI!
+		List<String> listaTipi = gdb.getElencoTipiVisiteVolontario(username);
+		for (String tipo : listaTipi) {
+			a.view(tipo);
+		}
  	}
+	
+	private void visualListVisitDTO (List<VisitaDTO> visite, App a) {
+		if (visite != null) {
+			for (VisitaDTO v : visite) {
+					a.view("-----------");
+					a.view("Titolo: " +  v.getTitolo());
+					a.view("Descrizione: " +  v.getDescrizione());
+					a.view("Punto d'incontro: " +  v.getPuntoIncontro());
+					a.view("Giorno: " +  v.getGiorno());
+					a.view("Ora d'inizio: " +  v.getOraInizio());
+					a.view("Da acquistare: " +  v.getDaAcquistare());
+					a.view("Stato: " +  v.getStato());
+					a.view("Tag: " +  v.getTag());
+					String codiciPrenotazioni = "";
+					for (int i = 0 ; i < v.getPrenotazioni().size() ; i++) {
+						codiciPrenotazioni = "Codice: " + v.getPrenotazioni().get(i).getCodice() + ", n. iscritti:" + v.getPrenotazioni().get(i).getNum_da_prenotare() + "\n";
+					}
+					a.view(codiciPrenotazioni);
+			}
+		}
+	}
+	
+	@MethodName("Visualizza le visite confermate che gestirai")
+	public void vediVisiteConfermate (App a) {
+		List<VisitaDTO> visite = gdb.visiteConfermateVolontario(username);
+		visualListVisitDTO(visite, a);
+	}
 	
 	@MethodName("Comunica le tue prossime disponibilità")
  	public void comunicaDisponibilita(App a) {
@@ -41,17 +71,17 @@ public class HandlerVolontario extends ControllerUtente {
  				String data = "";
  				boolean b = true;
  				do { //le inserisco
- 					data = a.richiediVal(CostantiStruttura.STRING, "data in cui dai disponibilità"); //inserisco data
+ 					data = a.richiediInput("data in cui dai disponibilità"); //inserisco data
  					if (!Time.isValidDate(data)) a.view("Il formato inserito non è corretto."); //se non valida si rifa
  					else { //se valida
  						b = gdb.inserisciDisponibilita(data, username); //controllo se inserita
  						if (b) { //se inserita chiedo se vuole continuare
  							a.view("La tua disponibilità è stata inserita.");
- 							b = chiediSioNo(a, "Vuoi aggiungere altre disponibilità?");
+ 							b = a.chiediSioNo("Vuoi aggiungere altre disponibilità?");
  						}
  						else { //se non inserita richiedo
  							a.view("La tua disponibilità non è stata inserita, assicurati che sia una data corretta.");
- 							b = chiediSioNo(a, "Vuoi continuare ad aggiungere?"); //do possibilità di chiudere loop
+ 							b = a.chiediSioNo("Vuoi continuare ad aggiungere?"); //do possibilità di chiudere loop
  						}
  					}
  				} while (b); //TODO se viene inserito un formato errato chiude

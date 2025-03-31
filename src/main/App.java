@@ -76,29 +76,37 @@ public class App {
 		return true;
 	}
 	
-	public String richiediVal (int tipo, String s) {
+	public boolean chiediSioNo (String val) {
+		view(val);
+		do {
+			String answer = (String) richiediInput("si o no");
+			switch (answer.toLowerCase()) {
+			case "si":
+				return true;
+			case "no":
+				return false;
+			default:
+				view("Formato non valido, inserire si/no");
+				break;
+			}
+		} while (true);
+
+	}
+	
+	public int richiediInt (String s) {
+		view("Inserisci " + s + ":");
+		while (!sc.hasNextInt()) {
+			view("Formato non valido, reinserire.");
+			sc.nextLine();
+		}
+		return sc.nextInt();
+	}
+	
+	public String richiediInput (String s) {
 		try {
 			view("Inserisci " + s + ":");
-			switch (tipo) {
-			case CostantiStruttura.STRING:
-				s = sc.nextLine();
-				return s;
-			case CostantiStruttura.INT:
-				while (!sc.hasNextInt()) {
-					view("Formato non valido, reinserire.");
-					sc.nextLine();
-				}
-				return sc.nextLine();
-			case CostantiStruttura.BOOLEAN:
-				while (!sc.hasNextBoolean()) {
-					view("Formato non valido, reinserire.");
-					sc.nextLine();
-				}
-				return sc.nextLine();
-			default:
-				view("Tipo non supportato.");
-				return null;
-			}
+			s = sc.nextLine();
+			return s;
 		}
 		catch (NoSuchElementException e) {
 			//premendo CTRL Z si manda un EOF, non ho trovato come gestirlo

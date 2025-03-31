@@ -5,8 +5,8 @@ import java.lang.reflect.Modifier;
 import java.util.LinkedList;
 
 import main.App;
-import utility.CostantiStruttura;
 import utility.Credenziali;
+import utility.Time;
 
 public abstract class ControllerUtente {
 	
@@ -35,14 +35,45 @@ public abstract class ControllerUtente {
 			boolean b = false;
 			do {
 				a.view("Cambia le tue credenziali:");
-				String username = a.richiediVal(CostantiStruttura.STRING, "username");
-				String password = a.richiediVal(CostantiStruttura.STRING, "password");
+				String username = a.richiediInput("username");
+				String password = a.richiediInput("password");
 				Credenziali c = new Credenziali(username, password);
 				b = cambiaCredenziali(c);
 				if (!b) a.view("Credenziali non cambiate, username già presente.");
 			} while (!b);
 			a.view("Credenziali cambiate.");
 		};
+	}
+	
+	protected int richiediIntMaggioreDiZero(App a, String messaggio) {
+		int result = 0;
+		do {
+			result = a.richiediInt(messaggio);
+			if (result < 1) a.view("Almeno uno.");
+		} while (result < 1);
+		return result;
+	}
+	
+	protected String richiediVisitaEsistente(App a, String messaggio) {
+	    String tipo;
+	    do {
+	        tipo = a.richiediInput(messaggio);
+	        if (!gdb.checkIfVisitTypeExists(tipo)) {
+	            a.view("Non esiste il tipo inserito, reinserisci i dati.");
+	        }
+	    } while (!gdb.checkIfVisitTypeExists(tipo));
+	    return tipo;
+	}
+	
+	protected String richiediDataValida(App a, String messaggio) {
+	    String data;
+	    do {
+	        data = (String) a.richiediInput(messaggio);
+	        if (!Time.isValidDate(data)) {
+	            a.view("Formato data non valido");
+	        }
+	    } while (!Time.isValidDate(data));
+	    return data;
 	}
 	
 	public boolean cambiaCredenziali(Credenziali c) {
@@ -55,23 +86,6 @@ public abstract class ControllerUtente {
 	
 	public String getUsername() {
 		return username;
-	}
-	
-	protected boolean chiediSioNo (App a, String val) {
-		a.view(val);
-		do {
-			String answer = (String)a.richiediVal(CostantiStruttura.STRING, "si o no");
-			switch (answer.toLowerCase()) {
-			case "si":
-				return true;
-			case "no":
-				return false;
-			default:
-				a.view("Formato non valido, inserire si/no");
-				break;
-			}
-		} while (true);
-
 	}
 	
     public LinkedList<Method> getAzioniDisponibili() {
