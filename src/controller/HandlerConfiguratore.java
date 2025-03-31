@@ -31,7 +31,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	}
 	
 	private void configuraArchivio(App a) {
-		String ambito = (String)a.richiediVal(CostantiStruttura.STRING, "nome ambito territoriale");
+		String ambito = a.richiediInput("nome ambito territoriale");
 		impostaAmbitoTerritoriale(ambito);
 		modificaMaxPrenotazione(a);
 		a.view("Inizio fase creazione luoghi dell'ambito territoriale.");
@@ -40,8 +40,8 @@ public class HandlerConfiguratore extends ControllerUtente{
 	}
 	
 	private String impostaNuovoVolontarioConUnTipoVisitaScelto (App a, String tipo) {
-		String username = (String) a.richiediVal(CostantiStruttura.STRING, "username del nuovo volontario");
-		String password = (String) a.richiediVal(CostantiStruttura.STRING, "password del nuovo volontario");
+		String username = a.richiediInput("username del nuovo volontario");
+		String password = a.richiediInput("password del nuovo volontario");
 		Set<String> tipi_visiteVal = new HashSet<>();
 		tipi_visiteVal.add(tipo);
 		if (gdb.impostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal, false)) {
@@ -55,8 +55,8 @@ public class HandlerConfiguratore extends ControllerUtente{
 	}
 	
 	private String impostaNuovoVolontarioConTipoVisitaScelto (App a, Set<String> tipi_visiteVal) {
-		String username = (String) a.richiediVal(CostantiStruttura.STRING, "username del nuovo volontario");
-		String password = (String) a.richiediVal(CostantiStruttura.STRING, "password del nuovo volontario");
+		String username = a.richiediInput("username del nuovo volontario");
+		String password = a.richiediInput("password del nuovo volontario");
 		if (gdb.impostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal, false)) {
 			a.view("Inserito nuovo volontario.");
 			return username;
@@ -69,7 +69,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	@MethodName("Rimuovi luogo")
 	public void rimuoviLuogo (App a) {
 		if (gdb.canAddOrRemove(username)) {
-			boolean rimosso = gdb.rimuoviLuogo(a.richiediVal(CostantiStruttura.STRING, "luogo da rimuovere"), username);
+			boolean rimosso = gdb.rimuoviLuogo(a.richiediInput("luogo da rimuovere"), username);
 			a.view(rimosso ? "Luogo rimosso con successo, controllare conseguenze." : "Luogo non rimosso, controllare di aver inserito i dati correttamente.");
 		}
 		else a.view("Non puoi attuare queste modifiche attualmente.");
@@ -78,7 +78,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	@MethodName("Rimuovi volontario")
 	public void rimuoviVolontario (App a) {
 		if (gdb.canAddOrRemove(username)) {
-			boolean rimosso = (gdb.rimuoviVolontario(a.richiediVal(CostantiStruttura.STRING, "username del volontario da rimuovere"), username));
+			boolean rimosso = (gdb.rimuoviVolontario(a.richiediInput("username del volontario da rimuovere"), username));
 			a.view(rimosso ? "Volontario rimosso con successo, controllare conseguenze." : "Volontario non rimosso, controllare di aver inserito i dati correttamente.");
 		}
 		else a.view("Non puoi attuare queste modifiche attualmente.");
@@ -87,7 +87,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	@MethodName("Rimuovi tipo di visita")
 	public void rimuoviTipo (App a) {
 		if (gdb.canAddOrRemove(username)) {
-			boolean rimosso = gdb.rimuoviTipo(a.richiediVal(CostantiStruttura.STRING, "tipo da rimuovere"), username);
+			boolean rimosso = gdb.rimuoviTipo(a.richiediInput("tipo da rimuovere"), username);
 			a.view(rimosso ? "Tipo visita rimosso con successo, controllare conseguenze." : "Tipo visita non rimosso, controllare di aver inserito i dati correttamente.");
 		}
 		else a.view("Non puoi attuare queste modifiche attualmente.");
@@ -97,11 +97,11 @@ public class HandlerConfiguratore extends ControllerUtente{
 	@MethodName("Aggiungi nuovo volontario")
 	public void impostaCredenzialiNuovoVolontario (App a) {
 		if (canAddOrRemove(a)) {
-			String username = (String) a.richiediVal(CostantiStruttura.STRING, "username del nuovo volontario");
-			String password = (String) a.richiediVal(CostantiStruttura.STRING, "password del nuovo volontario");
+			String username = a.richiediInput("username del nuovo volontario");
+			String password = a.richiediInput("password del nuovo volontario");
 			Set<String> tipi_visiteVal = new HashSet<>();
 			do {
-				tipi_visiteVal.add((String) a.richiediVal(CostantiStruttura.STRING, "tipo delle visite associate al nuovo volontario"));
+				tipi_visiteVal.add(a.richiediInput("tipo delle visite associate al nuovo volontario"));
 			} while (a.chiediSioNo("Vuoi aggiungere altri tipi di visite?"));
 			boolean impostato = gdb.impostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal, true);
 			a.view(impostato ? "Inserito nuovo volontario." : "Non è stato inserito il nuovo volontario, username in uso o non sono stati inseriti tipi di visita esistenti.");
@@ -118,7 +118,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	
 	@MethodName("Modifica numero max prenotazione per fruitore")
 	public void modificaMaxPrenotazione (App a) {
-		int max = Integer.parseInt(a.richiediVal(CostantiStruttura.INT, "max prenotazione per fruitore"));
+		int max = a.richiediInt("max prenotazione per fruitore");
 		a.view(impostaMaxPrenotazione(max) ? "Modificato valore max prenotazione." : "Valore max prenotazione non modificato.");
 	}
 	
@@ -170,7 +170,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	
 	@MethodName("Indica date precluse del prossimo piano a quello successivo a questo")
 	public void indicaDatePrecluse(App a) {
-		String data = (String)a.richiediVal(CostantiStruttura.STRING, "data preclusa"); 
+		String data = a.richiediInput("data preclusa"); 
 		if ((gdb.indicaDatePrecluse(data))) a.view("La data preclusa è stata inserita.");
 		else a.view("La data preclusa non è stata inserita, assicurarsi che sia nel formato e nel periodo corretto.");
 	}
@@ -198,7 +198,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	private String richiediTipoVisita(App a) {
 	    String tipoVisita;
 	    do {
-	        tipoVisita = (String) a.richiediVal(CostantiStruttura.STRING, "tag del tipo della visita");
+	        tipoVisita = a.richiediInput("tag del tipo della visita");
 	        if (gdb.checkIfVisitTypeExists(tipoVisita)) {
 	            a.view("Il tag inserito esiste già.");
 	        }
@@ -210,7 +210,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 		ArrayList<Integer> giorni = new ArrayList<>();
 	    boolean continua = true;
 	    do {
-	        int giorno = Integer.parseInt(a.richiediVal(CostantiStruttura.INT, "giorno prenotabile della visita (1-7)"));
+	        int giorno = a.richiediInt("giorno prenotabile della visita (1-7)");
 	        if (giorno < 1 || giorno > 7) {
 	            a.view("Numero inserito non valido, deve essere tra 1 e 7.");
 	        } else if (!giorni.contains(giorno)) { //se non contiene
@@ -228,7 +228,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	private String richiediOraValida(App a) {
 	    String ora;
 	    do {
-	        ora = (String) a.richiediVal(CostantiStruttura.STRING, "ora d'inizio visita (hh-mm)");
+	        ora = a.richiediInput("ora d'inizio visita (hh-mm)");
 	        if (!Time.isValidHour(ora)) {
 	            a.view("Formato non corretto, inserire tipo 10:30.");
 	        }
@@ -239,7 +239,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	private int richiediNumeroMinimo(App a) {
 	    int min;
 	    do {
-	        min = Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "minimo fruitori per confermare la visita"));
+	        min = a.richiediInt("minimo fruitori per confermare la visita");
 	        if (min <= 0) {
 	            a.view("Il numero minimo di fruitori non può essere minore o uguale a 0.");
 	        }
@@ -250,7 +250,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	private int richiediNumeroMassimo(App a, int min) {
 	    int max;
 	    do {
-	        max = Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "massimo fruitori per completare la visita"));
+	        max = a.richiediInt("massimo fruitori per completare la visita");
 	        if (max < min) {
 	            a.view("Il numero massimo di fruitori non può essere minore del minimo.");
 	        }
@@ -269,7 +269,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	    } else {
 	        boolean continua;
 	        do {
-	            String volontario = (String) a.richiediVal(CostantiStruttura.STRING, "volontario che gestirà la visita");
+	            String volontario = a.richiediInput("volontario che gestirà la visita");
 	            if (!gdb.checkIfUserExists(volontario)) {
 	                a.view("L'username inserito non è associato a nessun volontario.");
 	                continua = true;
@@ -287,9 +287,9 @@ public class HandlerConfiguratore extends ControllerUtente{
 	
 	private boolean aggiungiTipoVisitePartendoDaLuogo (App a, String luogo) {
 		String tipoVisita = richiediTipoVisita(a);
-		String titolo = (String)a.richiediVal(CostantiStruttura.STRING, "titolo della visita");
-		String descrizione = (String)a.richiediVal(CostantiStruttura.STRING, "descrizione riassuntiva della visita");
-		String puntoIncontro = (String)a.richiediVal(CostantiStruttura.STRING, "punto di incontro della visita (locazione geografica)");
+		String titolo = a.richiediInput("titolo della visita");
+		String descrizione = a.richiediInput("descrizione riassuntiva della visita");
+		String puntoIncontro = a.richiediInput("punto di incontro della visita (locazione geografica)");
 		String dataInizio = richiediDataValida(a, "apertura del periodo della visita");
 		String dataFine = "";
 		do {
@@ -298,7 +298,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 		} while (Time.comesBefore(dataFine, dataInizio));
 		ArrayList<Integer> giorniPrenotabili = richiediGiorniPrenotabili(a);
 		String oraInizio = richiediOraValida(a);
-		int durataVisita = Integer.parseInt(a.richiediVal(CostantiStruttura.STRING, "durata della visita in minuti (ad esempio 120 sono 120 minuti, quindi 2 ore)"));
+		int durataVisita = a.richiediInt("durata della visita in minuti (ad esempio 120 sono 120 minuti, quindi 2 ore)");
 		boolean ticket = a.chiediSioNo("è da acquistare o no un biglietto?");
 		int minFruitore = richiediNumeroMinimo(a);
 		int maxFruitore = richiediNumeroMassimo(a, minFruitore);
@@ -313,7 +313,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 		if (canAddOrRemove(a)) {
 			String luogo = "";
 			do {
-				luogo = (String)a.richiediVal(CostantiStruttura.STRING, "luogo della visita");
+				luogo = a.richiediInput("luogo della visita");
 				if (!gdb.checkIfPlaceExists(luogo)) a.view("Il luogo inserito è inesistente.");
 			} while (!gdb.checkIfPlaceExists(luogo));
 			
@@ -323,8 +323,8 @@ public class HandlerConfiguratore extends ControllerUtente{
 	}
 	@MethodName("Aggiungi credenziali nuovo configuratore")
 	public void impostaCredenzialiNuovoConfiguratore (App a) {
-		String username = (String)a.richiediVal(CostantiStruttura.STRING, "username del nuovo configuratore");
-		String password = (String)a.richiediVal(CostantiStruttura.STRING, "password del nuovo configuratore");
+		String username = a.richiediInput("username del nuovo configuratore");
+		String password = a.richiediInput("password del nuovo configuratore");
 		if (gdb.impostaCredenzialiNuovoConfiguratore(this.username, username, password)) a.view("Aggiunto nuovo configuratore.");
 		else a.view("Non è stato aggiunto un nuovo configuratore, username già in utilizzo.");
 				
@@ -340,22 +340,11 @@ public class HandlerConfiguratore extends ControllerUtente{
 		}
 	}
 	
-	private String richiediVisitaEsistente(App a) {
-	    String tipo;
-	    do {
-	        tipo = a.richiediVal(CostantiStruttura.STRING, "tag del tipo della visita a cui associare nuovi volontari");
-	        if (!gdb.checkIfVisitTypeExists(tipo)) {
-	            a.view("Non esiste il tipo inserito, reinserisci i dati.");
-	        }
-	    } while (!gdb.checkIfVisitTypeExists(tipo));
-	    return tipo;
-	}
-	
 	private void associaVolontarioEsistente(App a, String tipo) {
 	    getListaVolontari(a);
 	    String volontario;
 	    do {
-	        volontario = a.richiediVal(CostantiStruttura.STRING, "volontari da associare");
+	        volontario = a.richiediInput("volontari da associare");
 	        if (!gdb.checkIfUserExists(volontario)) {
 	            a.view("Il volontario inserito non esiste, reinserire.");
 	        } else if (!gdb.associaVolontarioEsistenteATipoVisitaEsistente(volontario, tipo)) {
@@ -374,7 +363,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 			for(String i : s) {
 				a.view(i);
 			}
-			String tipo = richiediVisitaEsistente(a);
+			String tipo = richiediVisitaEsistente(a, "tag del tipo della visita a cui associare i volontari");
 			boolean continua;
 			do {
 				if (a.chiediSioNo("Vuoi creare un nuovo volontario da associare?")) {
@@ -402,9 +391,9 @@ public class HandlerConfiguratore extends ControllerUtente{
 	@MethodName("Aggiungi luogo")
 	public void aggiungiLuogo (App a) {
 		if (canAddOrRemove(a)) {
-			String tag = (String)a.richiediVal(CostantiStruttura.STRING, "tag del luogo");
-			String nome = (String)a.richiediVal(CostantiStruttura.STRING, "nome del luogo");
-			String collocazione = (String)a.richiediVal(CostantiStruttura.STRING, "collocazione del luogo");
+			String tag = a.richiediInput("tag del luogo");
+			String nome = a.richiediInput("nome del luogo");
+			String collocazione = a.richiediInput("collocazione del luogo");
 			if (gdb.aggiungiLuogo(tag, nome, collocazione, null)) a.view("Aggiunto un nuovo luogo.");
 			boolean finished = false;
 			do {

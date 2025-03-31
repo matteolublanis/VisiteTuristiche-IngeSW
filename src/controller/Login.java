@@ -17,8 +17,8 @@ public class Login {
 		boolean b = true;
 		do {
 			a.view("Inserisci le tue credenziali:");
-			String username = a.richiediVal(CostantiStruttura.STRING, "username");
-			String password = a.richiediVal(CostantiStruttura.STRING, "password");
+			String username = a.richiediInput("username");
+			String password = a.richiediInput("password");
 			credenziali = new Credenziali(username, password);
 			b = !checkCredenzialiCorrette(credenziali);
 			if (b) a.view("Credenziali errate, reinserirle.");
@@ -30,8 +30,8 @@ public class Login {
 		Credenziali credenziali = null;
 		do {
 			a.view("Inserisci le tue nuove credenziali:");
-			String username = a.richiediVal(CostantiStruttura.STRING, "username");
-			String password = a.richiediVal(CostantiStruttura.STRING, "password");
+			String username = a.richiediInput("username");
+			String password = a.richiediInput("password");
 			if (checkUsernameGiaPresente(username)) a.view("Username già in uso, reinserire le credenziali.");
 			else {
 				credenziali = new Credenziali(username, password);

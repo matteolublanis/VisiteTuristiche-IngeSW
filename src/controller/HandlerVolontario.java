@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import main.App;
-import utility.CostantiStruttura;
 import utility.MethodName;
 import utility.Time;
 
@@ -44,7 +43,7 @@ public class HandlerVolontario extends ControllerUtente {
  				String data = "";
  				boolean b = true;
  				do { //le inserisco
- 					data = a.richiediVal(CostantiStruttura.STRING, "data in cui dai disponibilità"); //inserisco data
+ 					data = a.richiediInput("data in cui dai disponibilità"); //inserisco data
  					if (!Time.isValidDate(data)) a.view("Il formato inserito non è corretto."); //se non valida si rifa
  					else { //se valida
  						b = gdb.inserisciDisponibilita(data, username); //controllo se inserita

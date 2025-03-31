@@ -1,26 +1,6 @@
-{
-	"1": {
-			"utente": "fruitore1",
-			"giorno": "02-04-2025",
-			"tipo-visita": "passeggiata_valle_camonica",
-			"numero-iscritti": 0
-		},
-	"2": {
-			"utente": "fruitore1",
-			"giorno": "02-04-2025",
-			"tipo-visita": "tour_castello",
-			"numero-iscritti": 0
-	},
-	"3": {
-			"utente": "fruitore2",
-			"giorno": "xx-yy-zzzz",
-			"tipo-visita": "tag-tipo",
-			"numero-iscritti": 0
-		},
-	"4": {
-			"utente": "fruitorey",
-			"giorno": "xx-yy-zzzz",
-			"tipo-visita": "tag-tipo",
-			"numero-iscritti": 0
-		}
-}
+{"A24RFAOT": {
+          "utente": "fruitore1",
+          "numero-iscritti": 5,
+          "giorno": "04-04-2025",
+          "tipo-visita": "tour_castello"
+}}

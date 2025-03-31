@@ -1,6 +1,7 @@
 package dto;
 
 public class VisitaDTO {
+	private String tag = null;
     private String titolo = null;
     private String descrizione = null;
     private String puntoIncontro = null;
@@ -17,7 +18,8 @@ public class VisitaDTO {
     	this.stato = stato;
     }
     
-    public VisitaDTO(String titolo, String descrizione, String puntoIncontro, String giorno, String oraInizio, boolean daAcquistare, String stato) {
+    public VisitaDTO(String tag, String titolo, String descrizione, String puntoIncontro, String giorno, String oraInizio, boolean daAcquistare, String stato) {
+    	this.tag = tag;
         this.titolo = titolo;
         this.descrizione = descrizione;
         this.puntoIncontro = puntoIncontro;
@@ -35,5 +37,9 @@ public class VisitaDTO {
     public String getDaAcquistare() { return daAcquistare; }
     public String getStato() { return stato; }
     public String getLuogo() { return luogo; }
+
+	public String getTag() {
+		return tag;
+	}
 
 }

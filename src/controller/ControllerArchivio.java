@@ -143,7 +143,15 @@ public class ControllerArchivio {
 		if (Time.isValidDate(date) && Time.isThisDateInMonthPlus3(date)) return d.indicaDatePrecluse(date);
 		else return false;
 	}
-
+	
+	public boolean rimuoviPrenotazione(String username, String codicePrenotazione) {
+		return d.rimuoviPrenotazione(username, codicePrenotazione);
+	}
+	
+	public List<PrenotazioneDTO> getElencoPrenotazioniFruitore (String username) {
+		return d.getElencoPrenotazioniFruitore(username);
+	}
+	
 	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitore() { //dovrebbe ritornare un oggetto con tutte le info da stampare
 		return d.getElencoVisiteProposteConfermateCancellateFruitore();
 	}
@@ -154,6 +162,14 @@ public class ControllerArchivio {
 
 	public List<VisitaDTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate () {
 		return d.getElencoVisiteProposteCompleteConfermateCancellateEffettuate();
+	}
+	
+	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato (String date) {
+		return d.getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato(date);
+	}
+	
+	public String inserisciPrenotazione (String username, PrenotazioneDTO prenotazione) {
+		return d.inserisciPrenotazione(username, prenotazione);
 	}
 	
 	public boolean cambiaCredenziali (String username, Credenziali c, ControllerUtente gu) {
