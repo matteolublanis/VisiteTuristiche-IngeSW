@@ -13,7 +13,7 @@ public class PrenotazioneDTO {
 		this.tag_visita = tag_visita;
 		this.num_da_prenotare = num_da_prenotare;
 	}
-	
+		
 	public PrenotazioneDTO (String giorno, String tag_visita, int num_da_prenotare) {
 		this.giorno = giorno;
 		this.tag_visita = tag_visita;

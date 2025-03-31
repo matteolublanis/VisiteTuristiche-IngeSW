@@ -148,6 +148,10 @@ public class ControllerArchivio {
 		return d.rimuoviPrenotazione(username, codicePrenotazione);
 	}
 	
+	public List<VisitaDTO> visiteConfermateVolontario (String username) {
+		return d.visiteConfermateVolontario(username);
+	}
+	
 	public List<PrenotazioneDTO> getElencoPrenotazioniFruitore (String username) {
 		return d.getElencoPrenotazioniFruitore(username);
 	}

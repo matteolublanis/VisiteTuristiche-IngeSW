@@ -9,7 +9,7 @@
                               "prenotazioni": []
                     },
                     "tour_castello": {
-                              "stato": "proposta",
+                              "stato": "confermata",
                               "numero-iscritti": 5,
                               "luogo": "parco_incisioni_valle_camonica",
                               "volontari": ["volontario1"],

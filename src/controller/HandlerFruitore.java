@@ -7,7 +7,6 @@ import java.util.Set;
 import dto.PrenotazioneDTO;
 import dto.VisitaDTO;
 import main.App;
-import utility.CostantiStruttura;
 import utility.MethodName;
 import utility.Time;
 
@@ -17,6 +16,7 @@ public class HandlerFruitore extends ControllerUtente {
 		this.gdb = gdb;
 		this.username = username;
 	}
+	
 	
 	private void visualListVisitDTO (List<VisitaDTO> visite, App a) {
 		if (visite != null) {
@@ -100,7 +100,7 @@ public class HandlerFruitore extends ControllerUtente {
 			codicePrenotazioneDaEliminare = a.richiediInput("codice della prenotazione da eliminare");
 			if (!k.contains(codicePrenotazioneDaEliminare)) a.view("Il codice inserito non è legato a nessuna prenotazione, reinserirlo.");
 		} while (!k.contains(codicePrenotazioneDaEliminare));
-		a.view(gdb.rimuoviPrenotazione(username, codicePrenotazioneDaEliminare) ? "Si" : "No");
+		a.view(gdb.rimuoviPrenotazione(username, codicePrenotazioneDaEliminare) ? "Prenotazione rimossa." : "Prenotazione non rimossa.");
 	}
 	
 }

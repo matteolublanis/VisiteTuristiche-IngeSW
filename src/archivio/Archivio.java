@@ -381,6 +381,52 @@ public class Archivio {
 		else return null;
 	}
 	
+	public List<VisitaDTO> visiteConfermateVolontario (String username) {
+		List<VisitaDTO> visiteList = new ArrayList<>();
+	    for (String k : jsonPianoVisite.keySet()) { // Giorno
+	    	if (!k.equals(LAST_CHECK)) {
+		        JSONObject day = jsonPianoVisite.getJSONObject(k); // Visite del giorno
+		        for (String m : day.keySet()) { // Singola visita
+		            JSONObject visita = day.getJSONObject(m);
+		            String statoVisita = visita.getString(STATO_VISITA);
+		            if (statoVisita.equals(CONFERMATA)) { 
+		            	JSONArray volontari = visita.getJSONArray(VOLONTARI2);
+		            	boolean linked = false;
+		            	for (int i = 0 ; i < volontari.length() ; i++) {
+		            		if (volontari.getString(i).equals(username)) {
+		            			linked = true;
+		            		}
+		            	}
+		            	if (linked) {
+		            		List<PrenotazioneDTO> prenotazioni = new ArrayList<>();
+		            		for (int i = 0 ; i < visita.getJSONArray(PRENOTAZIONI).length() ; i++) {
+		            			String codicePrenotazione = visita.getJSONArray(PRENOTAZIONI).getString(i);
+		            			JSONObject prenotazione = jsonPrenotazioni.getJSONObject(codicePrenotazione);
+		            			prenotazioni.add(new PrenotazioneDTO(codicePrenotazione, prenotazione.getString(GIORNO), prenotazione.getString(TIPO_VISITA), prenotazione.getInt(NUMERO_ISCRITTI)));
+		            		}
+		            		
+		            		JSONObject tipoVisita = jsonTipiVisite.getJSONObject(m);			                
+			                VisitaDTO visitaDTO = new VisitaDTO(
+			                	m,
+			                    tipoVisita.getString(TITOLO),
+			                    tipoVisita.getString(DESCRIPTION),
+			                    tipoVisita.getString(PUNTO_INCONTRO),
+			                    k,
+			                    tipoVisita.getString(ORA_INIZIO),
+			                    tipoVisita.getBoolean(DA_ACQUISTARE),
+			                    statoVisita,
+			                    prenotazioni
+			                );
+			                visiteList.add(visitaDTO);
+		            	}
+		            	
+		            }
+		        }
+	    	}
+	    }
+	    return visiteList;
+	}
+	
 	public boolean rimuoviPrenotazione (String username, String codicePrenotazione) {
 		if (!jsonPrenotazioni.has(codicePrenotazione)) return false;
 		JSONObject prenotazione = jsonPrenotazioni.getJSONObject(codicePrenotazione);

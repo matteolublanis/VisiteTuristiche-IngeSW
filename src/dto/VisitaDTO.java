@@ -1,5 +1,7 @@
 package dto;
 
+import java.util.List;
+
 public class VisitaDTO {
 	private String tag = null;
     private String titolo = null;
@@ -10,12 +12,26 @@ public class VisitaDTO {
     private String daAcquistare = null;
     private String stato = null;
     private String luogo = null;
+    private List<PrenotazioneDTO> prenotazioni = null;
+    
     
     public VisitaDTO(String titolo, String giorno, String luogo, String stato) {
     	this.titolo = titolo;
     	this.giorno = giorno;
     	this.luogo = luogo;
     	this.stato = stato;
+    }
+    
+    public VisitaDTO(String tag, String titolo, String descrizione, String puntoIncontro, String giorno, String oraInizio, boolean daAcquistare, String stato, List<PrenotazioneDTO> prenotazioni) {
+    	this.tag = tag;
+        this.titolo = titolo;
+        this.descrizione = descrizione;
+        this.puntoIncontro = puntoIncontro;
+        this.giorno = giorno;
+        this.oraInizio = oraInizio;
+        this.daAcquistare = (daAcquistare ? "si" : "no");
+        this.stato = stato;
+        this.prenotazioni = prenotazioni;
     }
     
     public VisitaDTO(String tag, String titolo, String descrizione, String puntoIncontro, String giorno, String oraInizio, boolean daAcquistare, String stato) {
@@ -40,6 +56,10 @@ public class VisitaDTO {
 
 	public String getTag() {
 		return tag;
+	}
+
+	public List<PrenotazioneDTO> getPrenotazioni() {
+		return prenotazioni;
 	}
 
 }
