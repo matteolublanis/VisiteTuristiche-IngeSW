@@ -6,7 +6,6 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 import controller.Login;
 import controller.ControllerUtente;
-import utility.CostantiStruttura;
 import utility.MethodName;
 
 public class App { 

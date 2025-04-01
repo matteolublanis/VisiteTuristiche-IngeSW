@@ -5,13 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.json.*;
-
 import dto.*;
 import utility.CostantiStruttura;
 import utility.Credenziali;
-import utility.JSONUtility;
 import utility.Time;
 
 public class Archivio {
@@ -150,15 +147,15 @@ public class Archivio {
 	    return pianoVisiteJSONManager.getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato(date, tipiVisiteJSONManager);
 	}
 	
+	public List<VisitaDTO> visiteConfermateVolontario (String username) {
+		return pianoVisiteJSONManager.visiteConfermateVolontario(username, prenotazioniJSONManager, tipiVisiteJSONManager);
+	}
+	//Approccio come rimuoviPrenotazione per togliere tutte le dipendenze
 	public String inserisciPrenotazione(String username, PrenotazioneDTO prenotazione) {
 		if (getTipoUtente(username) == CostantiStruttura.FRUITORE) {
 			return pianoVisiteJSONManager.inserisciPrenotazione(username, prenotazione, ambitoJSONManager, tipiVisiteJSONManager, usersJSONManager, prenotazioniJSONManager);
 		}
 		else return null;
-	}
-	
-	public List<VisitaDTO> visiteConfermateVolontario (String username) {
-		return pianoVisiteJSONManager.visiteConfermateVolontario(username, prenotazioniJSONManager, tipiVisiteJSONManager);
 	}
 	
 	public boolean rimuoviPrenotazione (String username, String codicePrenotazione) {
@@ -377,12 +374,6 @@ public class Archivio {
 		return tipiVisiteJSONManager.intersectVisitTypeSamePlace(tipiLuogo, dateStart1, dateFinish1, hour1, duration1, days1);
 	}
 	
-	public JSONObject setNewVisitType (String luogo,String titolo, String descrizione, String puntoIncontro, 
-			String dataInizio, String dataFine, JSONArray giorniPrenotabili, String oraInizio,
-			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, JSONArray volontari) {
-		return tipiVisiteJSONManager.setNewVisitType(luogo, titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniPrenotabili, oraInizio, durataVisita, daAcquistare, minFruitore, maxFruitore, volontari);
-	}
-	
 	public void setPossibilitaDareDisponibilitaVolontari(boolean b) {
 		daPubblicareJSONManager.setPossibilitaDareDisponibilitaVolontari(b);
 	}
@@ -411,10 +402,6 @@ public class Archivio {
 		return usersJSONManager.getTipiVisitaOfVolontario(username);
 	}
 	
-	public JSONArray getGiorniPrenotabiliJSONArray (JSONObject tipo) {
-		return tipiVisiteJSONManager.getGiorniPrenotabiliJSONArray(tipo);
-	}
-	
 	public boolean checkIfLuogoHasNoVisitType (String luogo) {	
 		return ambitoJSONManager.checkIfLuogoHasNoVisitType(luogo);
 	}
@@ -425,16 +412,6 @@ public class Archivio {
 	
 	public boolean inserisciDisponibilita(String data, String username) { //ok
 		return daPubblicareJSONManager.inserisciDisponibilita(data, username, getDatePerDisponibilita(username));
-	}
-
-	public boolean checkValueExistance (String key, String path) { //ok
-		JSONObject json = JSONUtility.readJsonFile(path);
-		try {
-			return !(json.get(key).equals(null)); 
-		}
-		catch (Exception e) {
-			return false;
-		}
 	}
 
 	public Credenziali getCredenzialiConfIniziale() { //ok
