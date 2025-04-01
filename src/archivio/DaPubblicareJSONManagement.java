@@ -82,6 +82,7 @@ public class DaPubblicareJSONManagement {
 		return true;
 	}
 	
+	
 	public boolean inserisciDisponibilita(String data, String username, HashMap<String, List<String>> m) { //ok\
 		List<String> datePrecluse = getDatePrecluse();
 		if (datePrecluse.contains(data)) return false;
