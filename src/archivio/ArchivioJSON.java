@@ -123,7 +123,15 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore (String username) {
 		if (getTipoUtente(username) != CostantiStruttura.FRUITORE) return null;
 		JSONArray codiciPrenotazione = usersJSONManager.getElencoPrenotazioniFruitore(username);
-	    return pianoVisiteJSONManager.getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore(codiciPrenotazione, tipiVisiteJSONManager, prenotazioniJSONManager);
+	    List<VisitaDTO> visiteList = new ArrayList<>();
+	    for (Object codicePrenotazione : codiciPrenotazione) {
+	    	VisitaDTO visita = pianoVisiteJSONManager.getVisitaProposteConfermateCancellatePrenotateDalFruitore(prenotazioniJSONManager.getGiornoPrenotazione((String)codicePrenotazione),
+	    			prenotazioniJSONManager.getTipoVisitaPrenotazione((String)codicePrenotazione), 
+	    			tipiVisiteJSONManager);
+
+	    	if (visita != null) visiteList.add(visita);
+	    }
+	    return visiteList;
 	}
 	
 	public List<PrenotazioneDTO> getElencoPrenotazioniFruitore (String username) {
@@ -148,7 +156,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	}
 	
 	public List<VisitaDTO> visiteConfermateVolontario (String username) {
-		return pianoVisiteJSONManager.visiteConfermateVolontario(username, prenotazioniJSONManager, tipiVisiteJSONManager);
+		return pianoVisiteJSONManager.visiteConfermateVolontario(username, prenotazioniJSONManager.prenotazioniNIscritti(), tipiVisiteJSONManager);
 	}
 
 	public String inserisciPrenotazione(String username, PrenotazioneDTO prenotazione) {

@@ -134,7 +134,7 @@ public class PianoVisiteJSONManagement {
 		JSONUtility.aggiornaJsonFile(jsonPianoVisite, PATH_VISITE, 10);	
 	}
 	
-	public List<VisitaDTO> visiteConfermateVolontario (String username, PrenotazioniJSONManagement prenotazioniJSONManager,
+	public List<VisitaDTO> visiteConfermateVolontario (String username, Map<String, Integer> prenotazioniJSONManager,
 			TipiVisiteJSONManagement tipiVisiteJSONManager) {
 		List<VisitaDTO> visiteList = new ArrayList<>();
 	    for (String giorno : jsonPianoVisite.keySet()) { // Giorno
@@ -156,10 +156,11 @@ public class PianoVisiteJSONManagement {
 		            		for (int i = 0 ; i < visita.getJSONArray(PRENOTAZIONI).length() ; i++) {
 		            			String codicePrenotazione = visita.getJSONArray(PRENOTAZIONI).getString(i);
 		            			prenotazioni.add(new PrenotazioneDTO(codicePrenotazione, 
-		            					prenotazioniJSONManager.getGiornoPrenotazione((String)codicePrenotazione), 
-		                        		prenotazioniJSONManager.getTipoVisitaPrenotazione((String)codicePrenotazione), 
-		                        		prenotazioniJSONManager.getNIscrittiPrenotazione((String)codicePrenotazione)));
+		            					giorno, 
+		            					tagVisita, 
+		                        		prenotazioniJSONManager.get((String)codicePrenotazione)));
 		            		}
+		            		//DIPENDENZA DA GESTIRE, IL METODO DOVREBBE STARE IN QUESTA CLASSE
 			                visiteList.add(tipiVisiteJSONManager.visitaDTOVolontario(tagVisita, giorno, statoVisita, prenotazioni));
 		            	}
 		            	
@@ -221,19 +222,15 @@ public class PianoVisiteJSONManagement {
 		JSONUtility.aggiornaJsonFile(jsonPianoVisite, PATH_VISITE, 10);
 	}
 	
-	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore (JSONArray codiciPrenotazione, TipiVisiteJSONManagement tipiVisiteJSONManager, PrenotazioniJSONManagement prenotazioniJSONManager) {
-	    List<VisitaDTO> visiteList = new ArrayList<>();
-	    for (Object codicePrenotazione : codiciPrenotazione) {
-	    	JSONObject giornoVisita = jsonPianoVisite.getJSONObject(prenotazioniJSONManager.getGiornoPrenotazione((String)codicePrenotazione));
-	    	JSONObject visita = giornoVisita.getJSONObject(prenotazioniJSONManager.getTipoVisitaPrenotazione((String)codicePrenotazione));
-            String statoVisita = visita.getString(STATO_VISITA);
-            if (statoVisita.equals(CONFERMATA) || statoVisita.equals(CANCELLATA) || statoVisita.equals(PROPOSTA)) { //non completa
-                visiteList.add(tipiVisiteJSONManager.visitaDTOFruitore(prenotazioniJSONManager.getTipoVisitaPrenotazione((String)codicePrenotazione), 
-                		prenotazioniJSONManager.getGiornoPrenotazione((String)codicePrenotazione), 
-                		statoVisita));
-            }
-	    }
-	    return visiteList;
+	public VisitaDTO getVisitaProposteConfermateCancellatePrenotateDalFruitore (String giornoPrenotazione, String tipoVisita, TipiVisiteJSONManagement tipiVisiteJSONManager) {
+		JSONObject giornoVisita = jsonPianoVisite.getJSONObject(giornoPrenotazione);
+	   	JSONObject visita = giornoVisita.getJSONObject(tipoVisita);
+        String statoVisita = visita.getString(STATO_VISITA);
+
+        if (statoVisita.equals(CONFERMATA) || statoVisita.equals(CANCELLATA) || statoVisita.equals(PROPOSTA)) { //non completa
+            return (tipiVisiteJSONManager.visitaDTOFruitore(tipoVisita, giornoPrenotazione, statoVisita));
+        }
+        else return null;
 	}
 	
 	public List<VisitaDTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate (Map<String, String> tipiVisiteTitoli) {
