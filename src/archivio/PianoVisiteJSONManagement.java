@@ -114,30 +114,24 @@ public class PianoVisiteJSONManagement {
 			JSONUtility.aggiornaJsonFile(jsonPianoVisite, PATH_VISITE, 10);
 		}
 	}
-	
-	//Questo metodo è estremamente dipendente da altre classi, è da riscrivere e riposizionare
-	/*
-	 * Fa i controlli, inserisce prenotazione in prenotazioni e in user, poi lo mette nella visita
-	 * Il codice viene generato in Prenotazioni
-	 */
-	public String inserisciPrenotazione(String username, PrenotazioneDTO prenotazione,
-			AmbitoTerritorialeJSONManagement ambitoJSONManager, TipiVisiteJSONManagement tipiVisiteJSONManager,
-			UsersJSONManagement usersJSONManager, PrenotazioniJSONManagement prenotazioniJSONManager) {
-			if (prenotazione.getNum_da_prenotare() > ambitoJSONManager.getMaxPrenotazione()) return null;
-			if (!jsonPianoVisite.has(prenotazione.getGiorno())) return null;
+
+	public boolean prenotazioneInseribile(String username, PrenotazioneDTO prenotazione, int maxPrenotazione, int max_fruitore) {
+			if (prenotazione.getNum_da_prenotare() > maxPrenotazione) return false;
+			if (!jsonPianoVisite.has(prenotazione.getGiorno())) return false;
 			JSONObject dayVisits = jsonPianoVisite.getJSONObject(prenotazione.getGiorno());
-			if (!dayVisits.has(prenotazione.getTag_visita())) return null;
+			if (!dayVisits.has(prenotazione.getTag_visita())) return false;
 			JSONObject visita = dayVisits.getJSONObject(prenotazione.getTag_visita());
-			int max_fruitore = tipiVisiteJSONManager.getMaxFruitoreVisita(prenotazione.getTag_visita());
-			if (!visita.getString(STATO_VISITA).equals(PROPOSTA)) return null;
-			if (visita.getInt(NUMERO_ISCRITTI) + prenotazione.getNum_da_prenotare() > max_fruitore) return null;
-			String codicePrenotazione = prenotazioniJSONManager.inserisciPrenotazione(prenotazione, username);
-			visita.put(NUMERO_ISCRITTI, visita.getInt(NUMERO_ISCRITTI) + prenotazione.getNum_da_prenotare());
-			if (visita.getInt(NUMERO_ISCRITTI) == max_fruitore) visita.put(STATO_VISITA, COMPLETA);
-			visita.getJSONArray(PRENOTAZIONI).put(codicePrenotazione);
-			usersJSONManager.inserisciPrenotazioneFruitore(username, codicePrenotazione);
-			JSONUtility.aggiornaJsonFile(jsonPianoVisite, PATH_VISITE, 10);			
-			return codicePrenotazione;
+			if (!visita.getString(STATO_VISITA).equals(PROPOSTA)) return false;
+			if (visita.getInt(NUMERO_ISCRITTI) + prenotazione.getNum_da_prenotare() > max_fruitore) return false;
+			return true;
+	}
+	
+	public void inserisciPrenotazione (String username, PrenotazioneDTO prenotazione, int max_fruitore, String codicePrenotazione) {
+		JSONObject visita = jsonPianoVisite.getJSONObject(prenotazione.getGiorno()).getJSONObject(prenotazione.getTag_visita());
+		visita.put(NUMERO_ISCRITTI, visita.getInt(NUMERO_ISCRITTI) + prenotazione.getNum_da_prenotare());
+		if (visita.getInt(NUMERO_ISCRITTI) == max_fruitore) visita.put(STATO_VISITA, COMPLETA);
+		visita.getJSONArray(PRENOTAZIONI).put(codicePrenotazione);
+		JSONUtility.aggiornaJsonFile(jsonPianoVisite, PATH_VISITE, 10);	
 	}
 	
 	public List<VisitaDTO> visiteConfermateVolontario (String username, PrenotazioniJSONManagement prenotazioniJSONManager,

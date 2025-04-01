@@ -150,10 +150,16 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	public List<VisitaDTO> visiteConfermateVolontario (String username) {
 		return pianoVisiteJSONManager.visiteConfermateVolontario(username, prenotazioniJSONManager, tipiVisiteJSONManager);
 	}
-	//Approccio come rimuoviPrenotazione per togliere tutte le dipendenze
+
 	public String inserisciPrenotazione(String username, PrenotazioneDTO prenotazione) {
 		if (getTipoUtente(username) == CostantiStruttura.FRUITORE) {
-			return pianoVisiteJSONManager.inserisciPrenotazione(username, prenotazione, ambitoJSONManager, tipiVisiteJSONManager, usersJSONManager, prenotazioniJSONManager);
+			if (pianoVisiteJSONManager.prenotazioneInseribile(username, prenotazione, ambitoJSONManager.getMaxPrenotazione(), tipiVisiteJSONManager.getMaxFruitoreVisita(prenotazione.getTag_visita()))) {
+				String codicePrenotazione = prenotazioniJSONManager.inserisciPrenotazione(prenotazione, username);
+				pianoVisiteJSONManager.inserisciPrenotazione(username, prenotazione, tipiVisiteJSONManager.getMaxFruitoreVisita(prenotazione.getTag_visita()), codicePrenotazione);
+				usersJSONManager.inserisciPrenotazioneFruitore(username, codicePrenotazione);		
+				return codicePrenotazione;
+			}
+			else return null;
 		}
 		else return null;
 	}
