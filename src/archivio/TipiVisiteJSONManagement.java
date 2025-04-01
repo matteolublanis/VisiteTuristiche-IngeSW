@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -126,6 +127,12 @@ public class TipiVisiteJSONManagement {
     		vol.put(username);
 	    }
 	    aggiornaJsonTipiVisite();
+	}
+	
+	public Map<String, String> getTipiVisitaTitoli () {
+		Map<String, String> result = new HashMap<>();
+		for (String tag : jsonTipiVisite.keySet()) result.put(tag, getTitoloVisita(tag));
+		return result;
 	}
 	
 	public String getTitoloVisita (String tipo) {

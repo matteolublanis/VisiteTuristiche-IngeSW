@@ -34,7 +34,7 @@ public class AmbitoTerritorialeJSONManagement {
 		return jsonAmbitoTerritoriale.getInt(MAX_PRENOTAZIONE);
 	}
 	
-	public Map<String, List<String>> getElencoTipiVisiteLuogo (String username, TipiVisiteJSONManagement tipiVisiteJSONManager) {
+	public Map<String, List<String>> getElencoTipiVisiteLuogo (String username, Map<String, String> tipiVisiteTitoli) {
 		HashMap<String, List<String>> result = new HashMap<>();
 		try {
 			for (String nomeLuogo : getLuoghi().toMap().keySet()) {
@@ -44,7 +44,7 @@ public class AmbitoTerritorialeJSONManagement {
 				List<String> tipiVisiteAssociati = new ArrayList<>();
 				for (int i = 0 ; i < tipiVisite.length() ; i++) 
 					{
-						tipiVisiteAssociati.add(tipiVisiteJSONManager.getTitoloVisita(tipiVisite.get(i).toString()));
+						tipiVisiteAssociati.add(tipiVisiteTitoli.get(tipiVisite.get(i)));
 					}
 					result.put(infoLuogo.getString(NAME), tipiVisiteAssociati);	
 				}

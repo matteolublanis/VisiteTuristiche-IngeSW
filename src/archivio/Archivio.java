@@ -215,7 +215,7 @@ public class Archivio {
 	
 	public Map<String, List<String>> getElencoTipiVisiteLuogo (String username) {	
 		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE) {
-			return ambitoJSONManager.getElencoTipiVisiteLuogo(username, tipiVisiteJSONManager);
+			return ambitoJSONManager.getElencoTipiVisiteLuogo(username, tipiVisiteJSONManager.getTipiVisitaTitoli());
 		}
 		else return null;
 	}
