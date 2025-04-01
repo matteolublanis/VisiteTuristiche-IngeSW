@@ -59,7 +59,7 @@ public class ControllerArchivio {
     	return d.inserisciDisponibilita(data, username);
 	}
 	
-	public HashMap<String, List<String>> getDatePerDisponibilita(String username) {	 //OK
+	public Map<String, List<String>> getDatePerDisponibilita(String username) {	 //OK
 		return d.getDatePerDisponibilita(username);
 	}
 

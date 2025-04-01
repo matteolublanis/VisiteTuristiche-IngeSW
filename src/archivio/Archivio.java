@@ -1,7 +1,6 @@
 package archivio;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,7 +25,7 @@ public interface Archivio {
 	public boolean associaVolontarioEsistenteATipoVisitaEsistente(String volontario, String tipoVisita);
 	public boolean getPossibileDareDisponibilita();
     public boolean inserisciDisponibilita(String data, String username);
-	public HashMap<String, List<String>> getDatePerDisponibilita(String username);
+	public Map<String, List<String>> getDatePerDisponibilita(String username);
 	public Set<String> getElencoTipiVisite ();
  	public List<String> getElencoTipiVisiteVolontario (String username);
 	public boolean tryImpostaCredenzialiNuovoVolontario (String username, String password, Set<String> tipi_visiteVal, boolean tipiVisitaNecessario);
