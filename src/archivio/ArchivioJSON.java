@@ -115,7 +115,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	}
 	
 	public List<VisitaDTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate () {
-	    List<VisitaDTO> visiteList = pianoVisiteJSONManager.getElencoVisiteProposteCompleteConfermateCancellateEffettuate(tipiVisiteJSONManager);
+	    List<VisitaDTO> visiteList = pianoVisiteJSONManager.getElencoVisiteProposteCompleteConfermateCancellateEffettuate(tipiVisiteJSONManager.getTipiVisitaTitoli());
 		visiteList.addAll(pianoStoricoJSONManager.getElencoVisiteProposteCompleteConfermateCancellateEffettuate());
 		return visiteList;
 	}
@@ -246,7 +246,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	}
 	
 	public void setVisiteCancellateConfermate () {
-		pianoVisiteJSONManager.setVisiteCancellateConfermate(tipiVisiteJSONManager);
+		pianoVisiteJSONManager.setVisiteCancellateConfermate(tipiVisiteJSONManager.getTipiVisitaMinFruitori());
 	}
 	
 	public void removeVisiteEffettuateCancellate () {
@@ -272,7 +272,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	//what a glorious set of stairs we make
 	public boolean pubblicaPiano() {
 		JSONObject disponibilita = daPubblicareJSONManager.getDisponibilita();
-		pianoVisiteJSONManager.pubblicaPiano(disponibilita, tipiVisiteJSONManager);
+		pianoVisiteJSONManager.pubblicaPiano(disponibilita, tipiVisiteJSONManager.getTipiVisitaLuoghi());
 		daPubblicareJSONManager.resetDopoPubblicazione();
 		return true;
 	}

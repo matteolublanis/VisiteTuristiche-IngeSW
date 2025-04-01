@@ -3,6 +3,7 @@ package archivio;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -45,8 +46,7 @@ public class PianoVisiteJSONManagement {
 	    return visiteList;
 	}
 	
-	//what a glorious set of stairs we make
-	public boolean pubblicaPiano(JSONObject disponibilita, TipiVisiteJSONManagement tipiVisiteJSONManager) {
+	public boolean pubblicaPiano(JSONObject disponibilita, Map<String, String> tipiVisiteLuoghi) {
 		for (String usernameVol : disponibilita.keySet()) {
 			JSONObject volontarioDisponibilita = disponibilita.getJSONObject(usernameVol);
 			for (String data : volontarioDisponibilita.keySet()) {
@@ -59,7 +59,7 @@ public class PianoVisiteJSONManagement {
 						JSONObject visita = new JSONObject();
 						JSONArray volontariAssociati = new JSONArray();
 						volontariAssociati.put(usernameVol);
-						visita.put(LUOGO, tipiVisiteJSONManager.getLuogoAssociatoTipo(tipo));
+						visita.put(LUOGO, tipiVisiteLuoghi.get(tipo));
 						visita.put(STATO_VISITA, PROPOSTA);
 						visita.put(VOLONTARI2, volontariAssociati);
 						visita.put(NUMERO_ISCRITTI, 0);
@@ -73,7 +73,7 @@ public class PianoVisiteJSONManagement {
 					JSONObject visita = new JSONObject();
 					JSONArray volontariAssociati = new JSONArray();
 					volontariAssociati.put(usernameVol);
-					visita.put(LUOGO, tipiVisiteJSONManager.getLuogoAssociatoTipo(tipo));
+					visita.put(LUOGO, tipiVisiteLuoghi.get(tipo));
 					visita.put(STATO_VISITA, PROPOSTA);
 					visita.put(VOLONTARI2, volontariAssociati);
 					visita.put(NUMERO_ISCRITTI, 0);
@@ -208,13 +208,13 @@ public class PianoVisiteJSONManagement {
 		jsonPianoVisite.put(LAST_CHECK, Time.getActualDate());
 	}
 	
-	public void setVisiteCancellateConfermate (TipiVisiteJSONManagement tipiVisiteJSONManager) {
+	public void setVisiteCancellateConfermate (Map<String, Integer> tipiVisiteMinFruitori) {
 		for (String day : jsonPianoVisite.keySet()) {
 			if (!day.equals(LAST_CHECK) && Time.isThreeDaysOrLessBefore(Time.getActualDate(), day)) {
 				JSONObject visiteGiorno = jsonPianoVisite.getJSONObject(day);
 				for (String keyVisita : visiteGiorno.keySet()) {
 					JSONObject visita = visiteGiorno.getJSONObject(keyVisita);
-					if (visita.getInt(NUMERO_ISCRITTI) >=  tipiVisiteJSONManager.getMinFruitoreVisita(keyVisita) && 
+					if (visita.getInt(NUMERO_ISCRITTI) >=  tipiVisiteMinFruitori.get(keyVisita) && 
 							!visita.getString(STATO_VISITA).equals(CANCELLATA)) { //può essere cancellata per altri motivi
 						visita.put(STATO_VISITA, CONFERMATA);
 					}
@@ -242,7 +242,7 @@ public class PianoVisiteJSONManagement {
 	    return visiteList;
 	}
 	
-	public List<VisitaDTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate (TipiVisiteJSONManagement tipiVisiteJSONManager) {
+	public List<VisitaDTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate (Map<String, String> tipiVisiteTitoli) {
 	    List<VisitaDTO> visiteList = new ArrayList<>();
 
 		for (String k : jsonPianoVisite.keySet()) { //giorno
@@ -251,7 +251,7 @@ public class PianoVisiteJSONManagement {
 				for (String m : j.keySet()) { //visite del giorno
 					JSONObject visita = j.getJSONObject(m);
 	                VisitaDTO visitaDTO = new VisitaDTO( 
-		                    tipiVisiteJSONManager.getTitoloVisita(m),
+	                		tipiVisiteTitoli.get(m),
 		                    k, 
 		                    visita.getString(LUOGO),
 		                    visita.getString(STATO_VISITA)
