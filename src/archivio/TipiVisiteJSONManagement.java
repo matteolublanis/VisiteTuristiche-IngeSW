@@ -204,36 +204,21 @@ public class TipiVisiteJSONManagement {
 			return result;
 	}
 	
-	public boolean tryAggiungiVisite (String luogo, String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
-			String dataInizio, String dataFine, ArrayList<Integer> giorniPrenotabiliVal, String oraInizio,
-			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, ArrayList<String> volontariVal,
-			UsersJSONManagement usersJSONManager, AmbitoTerritorialeJSONManagement ambitoJSONManager) {
-		
-		JSONArray giorniPrenotabili = new JSONArray();
-	    String days = "";
+	public JSONArray returnGiorniPrenotabili (ArrayList<Integer> giorniPrenotabiliVal) {
+		JSONArray giorniPrenotabili = null;
 	    for (Integer k : giorniPrenotabiliVal) {
 	    	try {
+	    		giorniPrenotabili = new JSONArray();
 	    		int j = (k);
-	    		if (!(j < 1 || j > 7) && !days.contains(GIORNISETTIMANA[j-1])) {
+	    		if (!(j < 1 || j > 7) && !giorniPrenotabili.toString().contains(GIORNISETTIMANA[j-1])) {
 		    		giorniPrenotabili.put(GIORNISETTIMANA[j-1]);
-		    		days += GIORNISETTIMANA[j-1] + ",";
 		    	}
 	    	}
 	    	catch (NumberFormatException e) {
-	    		return false;
+	    		return null;
 	    	}
 	    }
-	    if (intersectVisitTypeSamePlace (ambitoJSONManager.getTipiLuogo(luogo), dataInizio, dataFine, oraInizio, durataVisita, days)) return false;
-	    JSONArray volontari = new JSONArray();
-	    for (String k : volontariVal) {
-    		JSONArray tipi = usersJSONManager.getTipiVisitaOfVolontario(k);
-    		if (visitTypeIntersectsOtherVisitTypes(dataInizio, dataFine, oraInizio, durataVisita, days, tipi)) return false;
-    		volontari.put(k);
-	    }
-	    usersJSONManager.aggiungiTipoVisiteAVolontari(volontari, tipoVisita);
-	    ambitoJSONManager.aggiungiTipoALuogo(luogo, tipoVisita);
-		aggiungiTipoVisite(luogo, tipoVisita, titolo, descrizione, puntoIncontro, dataInizio, dataFine, oraInizio, durataVisita, daAcquistare, minFruitore, maxFruitore, giorniPrenotabili, volontari);
-		return true;
+	    return giorniPrenotabili;
 	}
 	
 	public boolean intersectVisitTypeSamePlace (JSONArray tipiLuogo, String dateStart1, String dateFinish1, String hour1, int duration1, String days1) {

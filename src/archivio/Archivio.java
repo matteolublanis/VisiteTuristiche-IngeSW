@@ -363,11 +363,23 @@ public class Archivio {
 	    if (tipiVisitaNecessario && tipiVisite.length() == 0) return false;
 		return impostaCredenzialiNuovoVolontario(username, password, tipiVisite, tipiVisitaNecessario);
 	}
-	
+
 	public boolean tryAggiungiVisite (String luogo, String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
 			String dataInizio, String dataFine, ArrayList<Integer> giorniPrenotabiliVal, String oraInizio,
-			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, ArrayList<String> volontariVal) {	
-		return (tipiVisiteJSONManager.tryAggiungiVisite(luogo, tipoVisita, titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniPrenotabiliVal, oraInizio, durataVisita, daAcquistare, minFruitore, maxFruitore, volontariVal, usersJSONManager, ambitoJSONManager));
+			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, ArrayList<String> volontariVal) {
+		
+		JSONArray giorniPrenotabili = tipiVisiteJSONManager.returnGiorniPrenotabili(giorniPrenotabiliVal);
+	    if (tipiVisiteJSONManager.intersectVisitTypeSamePlace (ambitoJSONManager.getTipiLuogo(luogo), dataInizio, dataFine, oraInizio, durataVisita, giorniPrenotabili.toString())) return false;
+	    JSONArray volontari = new JSONArray();
+	    for (String k : volontariVal) {
+    		JSONArray tipi = usersJSONManager.getTipiVisitaOfVolontario(k);
+    		if (tipiVisiteJSONManager.visitTypeIntersectsOtherVisitTypes(dataInizio, dataFine, oraInizio, durataVisita, giorniPrenotabili.toString(), tipi)) return false;
+    		volontari.put(k);
+	    }
+	    usersJSONManager.aggiungiTipoVisiteAVolontari(volontari, tipoVisita);
+	    ambitoJSONManager.aggiungiTipoALuogo(luogo, tipoVisita);
+	    tipiVisiteJSONManager.aggiungiTipoVisite(luogo, tipoVisita, titolo, descrizione, puntoIncontro, dataInizio, dataFine, oraInizio, durataVisita, daAcquistare, minFruitore, maxFruitore, giorniPrenotabili, volontari);
+		return true;
 	}
 	
 	public boolean intersectOtherEventSamePlace (String dateStart1, String dateFinish1, String hour1, int duration1, String days1, JSONArray tipiLuogo) {
