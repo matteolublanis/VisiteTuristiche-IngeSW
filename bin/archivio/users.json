@@ -6,6 +6,13 @@
           "tipo-visita": ["tour_brescia_romana"],
           "username": "volontario7"
      },
+     "fruitore2": {
+          "tipo": 3,
+          "password": "admin",
+          "primo-accesso": true,
+          "prenotazioni": [],
+          "username": "fruitore2"
+     },
      "primo_avvio": false,
      "volontario4": {
           "password": "admin",
@@ -29,7 +36,7 @@
           "password": "paolo",
           "primo-accesso": false,
           "username": "fruitore1",
-          "prenotazioni": ["A24RFAOT"]
+          "prenotazioni": ["3"]
      },
      "volontario2": {
           "password": "admin",

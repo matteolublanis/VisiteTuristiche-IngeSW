@@ -134,11 +134,9 @@ public class PianoVisiteJSONManagement {
 			String codicePrenotazione = prenotazioniJSONManager.inserisciPrenotazione(prenotazione, username);
 			visita.put(NUMERO_ISCRITTI, visita.getInt(NUMERO_ISCRITTI) + prenotazione.getNum_da_prenotare());
 			if (visita.getInt(NUMERO_ISCRITTI) == max_fruitore) visita.put(STATO_VISITA, COMPLETA);
-			
 			visita.getJSONArray(PRENOTAZIONI).put(codicePrenotazione);
 			usersJSONManager.inserisciPrenotazioneFruitore(username, codicePrenotazione);
-			JSONUtility.aggiornaJsonFile(jsonPianoVisite, PATH_VISITE, 10);
-
+			JSONUtility.aggiornaJsonFile(jsonPianoVisite, PATH_VISITE, 10);			
 			return codicePrenotazione;
 	}
 	

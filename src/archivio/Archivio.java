@@ -170,7 +170,7 @@ public class Archivio {
 					prenotazioniJSONManager.getTipoVisitaPrenotazione(codicePrenotazione),
 					prenotazioniJSONManager.getNIscrittiPrenotazione(codicePrenotazione));
 			usersJSONManager.rimuoviPrenotazioneFruitore(username, codicePrenotazione);
-			prenotazioniJSONManager.aggiornaJsonPrenotazioni();
+			prenotazioniJSONManager.rimuoviPrenotazione(codicePrenotazione);
 			return true;
 		}
 		else return false;

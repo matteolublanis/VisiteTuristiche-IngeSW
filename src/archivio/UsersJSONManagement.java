@@ -19,7 +19,7 @@ public class UsersJSONManagement {
 	private static final String PRIMO_AVVIO = "primo_avvio";
 	private static final String PASSWORD = "password", TIPO_USER = "tipo", USERNAME = "username", PRIMO_ACCESSO = "primo-accesso";
 	private static final String TIPO_VISITA = "tipo-visita";
-	private static final String PRENOTAZIONI = "";
+	private static final String PRENOTAZIONI = "prenotazioni";
 	
 	public boolean checkPrimoAvvio () {
 		return (jsonUsers.getBoolean(PRIMO_AVVIO));
@@ -73,7 +73,7 @@ public class UsersJSONManagement {
 	}
 	
 	public boolean impostaCredenzialiNuovoFruitore (String username, String password) {
-		JSONObject prenotazioni = new JSONObject();
+		JSONArray prenotazioni = new JSONArray();
 		JSONObject fruitore = putValueInUserObject(username, false, CostantiStruttura.FRUITORE, password);
 		fruitore.put(PRENOTAZIONI, prenotazioni);
 		jsonUsers.put(username, fruitore);
@@ -100,6 +100,7 @@ public class UsersJSONManagement {
 	}
 	
 	public void inserisciPrenotazioneFruitore (String username, String codicePrenotazione) {
+		System.out.println(username);
 		jsonUsers.getJSONObject(username).getJSONArray(PRENOTAZIONI).put(codicePrenotazione);
 		JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, 10);
 	}
