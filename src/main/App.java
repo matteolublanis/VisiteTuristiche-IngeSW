@@ -1,7 +1,7 @@
 package main;
 
 import java.lang.reflect.Method;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import controller.Login;
@@ -40,7 +40,7 @@ public class App {
 	private boolean scegliAzione () {
 		view("Quale operazione desidera (ESC per uscire)?\n");
 		
-		LinkedList<Method> azioniDisponibili = gu.getAzioniDisponibili();
+		List<Method> azioniDisponibili = gu.getAzioniDisponibili();
 		for (int i = 0; i < azioniDisponibili.size(); i++) {
 			try {
 				MethodName annotation = azioniDisponibili.get(i).getAnnotation(MethodName.class);
@@ -57,7 +57,7 @@ public class App {
 		
 	}
 	
-	private boolean eseguiAzione (String input, LinkedList<Method> azioniDisponibili) {
+	private boolean eseguiAzione (String input, List<Method> azioniDisponibili) {
 		try {
 			int scelta = Integer.parseInt(input);
 			if (scelta > 0 && scelta <= azioniDisponibili.size()) {
