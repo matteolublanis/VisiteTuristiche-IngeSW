@@ -52,17 +52,11 @@ public class ControllerArchivio {
 	}
 	
 	public boolean getPossibilitaDareDisponibilita() { 
-		return d.getPossibilitaDareDisponibilita();
+		return d.getPossibileDareDisponibilita();
 	}
 	
     public boolean inserisciDisponibilita(String data, String username) { //OK
-		HashMap<String, List<String>> m = getDatePerDisponibilita(username);
-		List<String> datePrecluse = d.getDatePrecluse();
-		if (datePrecluse.contains(data)) return false;
-		for (String k : m.keySet()) {
-			if (m.get(k).contains(data)) return d.inserisciDisponibilita(data, username, k);
-		}
-		return false;
+    	return d.inserisciDisponibilita(data, username);
 	}
 	
 	public HashMap<String, List<String>> getDatePerDisponibilita(String username) {	 //OK

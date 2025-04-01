@@ -20,7 +20,9 @@ import utility.Time;
 
 public class Archivio {
 	
-	private PianoStoricoJSONManagement pianoStorico = new PianoStoricoJSONManagement();
+	private PianoStoricoJSONManagement pianoStoricoJSONManager = new PianoStoricoJSONManagement();
+	private DaPubblicareJSONManagement daPubblicareJSONManager = new DaPubblicareJSONManagement();
+	
 	
 	private static final String UTENTE = "utente";
 
@@ -34,23 +36,19 @@ public class Archivio {
 
 	public static final String PROPOSTA = "proposta", CANCELLATA = "cancellata", CONFERMATA = "confermata", COMPLETA = "completa", EFFETTUATA = "effettuata";
 
-	private static final String ANNO_ULTIMA_PUBBLICAZIONE = "anno-ultima-pubblicazione";
-
-	private static final String MESE_ULTIMA_PUBBLICAZIONE = "mese-ultima-pubblicazione";
 	private static int RELEASE_DAY = 16;
 
-	public static final String POSSIBILE_DARE_DISPONIBILITA = "possibile-dare-disponibilita",
-			PRIMA_PUBBLICAZIONE = "prima-pubblicazione", VOLONTARI2 = "volontari", MAX_FRUITORE = "max-fruitore", MIN_FRUITORE = "min-fruitore", DA_ACQUISTARE = "da-acquistare",
+	public static final String 
+			VOLONTARI2 = "volontari", MAX_FRUITORE = "max-fruitore", MIN_FRUITORE = "min-fruitore", DA_ACQUISTARE = "da-acquistare",
 			DURATA_VISITA = "durata-visita", ORA_INIZIO = "ora-inizio", GIORNI_PRENOTABILI = "giorni-prenotabili", DATA_FINE = "data-fine", DATA_INIZIO = "data-inizio",
-			PUNTO_INCONTRO = "punto-incontro", DESCRIPTION = "descrizione", COLLOCAZIONE = "collocazione", DATE_PRECLUSE_MESEIPLUS3 = "datePrecluseI+3",
-			MAX_PRENOTAZIONE = "max_prenotazione", STATO_VISITA = "stato", TITOLO = "titolo", LUOGHI = "luoghi", DISPONIBILITA = "disponibilita",
+			PUNTO_INCONTRO = "punto-incontro", DESCRIPTION = "descrizione", COLLOCAZIONE = "collocazione",
+			MAX_PRENOTAZIONE = "max_prenotazione", STATO_VISITA = "stato", TITOLO = "titolo", LUOGHI = "luoghi",
 			TIPO_VISITA = "tipo-visita", PASSWORD = "password", TIPO_USER = "tipo", USERNAME = "username", PRIMO_ACCESSO = "primo-accesso", 
-			PRIMA_CONFIGURAZIONE = "prima_configurazione", PRIMO_AVVIO = "primo_avvio", NAME = "nome", ULTIMO_PIANO = "ultimo-piano-pubblicato", LUOGO = "luogo",
-			DATE_PRECLUSE = "date-precluse",
+			PRIMA_CONFIGURAZIONE = "prima_configurazione", PRIMO_AVVIO = "primo_avvio", NAME = "nome", LUOGO = "luogo",
 			
 			
 			
-			PATH_USERS = "src/archivio/users.json", PATH_VISITE = "src/archivio/piano_visite.json", PATH_VISITE_DAPUBBLICARE = "src/archivio/visite_da_pubblicare.json",
+			PATH_USERS = "src/archivio/users.json", PATH_VISITE = "src/archivio/piano_visite.json",
 			PATH_TIPI_VISITE = "src/archivio/tipo_visite.json", PATH_AMBITO = "src/archivio/ambito_territoriale.json", 
 			PATH_PRENOTAZIONI = "src/archivio/prenotazioni.json";
 	
@@ -59,7 +57,6 @@ public class Archivio {
 	private JSONObject jsonUsers = JSONUtility.readJsonFile(PATH_USERS);
 	private JSONObject jsonAmbitoTerritoriale = JSONUtility.readJsonFile(PATH_AMBITO);
 	private JSONObject jsonPianoVisite = JSONUtility.readJsonFile(PATH_VISITE); 
-	private JSONObject jsonPianoVisiteDaPubblicare = JSONUtility.readJsonFile(PATH_VISITE_DAPUBBLICARE);
 	public static final String[] GIORNISETTIMANA = new String[] {"lun","mar","mer","gio","ven","sab","dom"};
 	private static final String[] CREDENZIALI_CONF_INIZIALE = new String[] {"admin", "admin"};
 	private static final int RIGHE_USERS = 5;
@@ -71,43 +68,30 @@ public class Archivio {
 	}
 	
 	public boolean getPossibileDareDisponibilita () {
-		
-		return jsonPianoVisiteDaPubblicare.getBoolean(POSSIBILE_DARE_DISPONIBILITA);
+		return daPubblicareJSONManager.getPossibileDareDisponibilita();
 	}
 	
 	public boolean apriRaccoltaDisponibilita() {
-		
-		jsonPianoVisiteDaPubblicare.put(POSSIBILE_DARE_DISPONIBILITA, true);
-		JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
-		return true;
+		return daPubblicareJSONManager.apriRaccoltaDisponibilita();
 	}
 	
 	public int getUltimoMesePubblicazione() {
-		
-		return jsonPianoVisiteDaPubblicare.getInt(MESE_ULTIMA_PUBBLICAZIONE);
+		return daPubblicareJSONManager.getUltimoMesePubblicazione();
 	}
 	
 	public int getUltimoAnnoPubblicazione() {
-		
-		return jsonPianoVisiteDaPubblicare.getInt(ANNO_ULTIMA_PUBBLICAZIONE);
+		return daPubblicareJSONManager.getUltimoAnnoPubblicazione();
 	}
 	
 	public boolean canAddOrRemove() {
-		
-		if (jsonPianoVisiteDaPubblicare.getBoolean(PRIMA_PUBBLICAZIONE)) return true;
-		else return (jsonPianoVisiteDaPubblicare.getBoolean(ULTIMO_PIANO) &&
-				!jsonPianoVisiteDaPubblicare.getBoolean(POSSIBILE_DARE_DISPONIBILITA)); //POSSO MODIFICARE SOLO SE TRA PUBBLICAZIONE E RITORNATA POSS DISP
+		return daPubblicareJSONManager.canAddOrRemove();
 	}
 	
 	public boolean chiudiRaccoltaDisponibilita() {
-		jsonPianoVisiteDaPubblicare.put(POSSIBILE_DARE_DISPONIBILITA, false);
-		jsonPianoVisiteDaPubblicare.put(ULTIMO_PIANO, false);
-		JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
-		return true;
+		return daPubblicareJSONManager.chiudiRaccoltaDisponibilita();
 	}
 	
 	public boolean isPrimaConfigurazione () {
-		
 		return jsonAmbitoTerritoriale.getBoolean(PRIMA_CONFIGURAZIONE);
 	}
 	
@@ -242,7 +226,7 @@ public class Archivio {
 				}
 			}
 		}
-		visiteList.addAll(pianoStorico.getElencoVisiteProposteCompleteConfermateCancellateEffettuate());
+		visiteList.addAll(pianoStoricoJSONManager.getElencoVisiteProposteCompleteConfermateCancellateEffettuate());
 		return visiteList;
 	}
 	
@@ -498,13 +482,7 @@ public class Archivio {
 	}
 	
 	public List<String> getDatePrecluse () {
-		
-		JSONArray datePrecluse = jsonPianoVisiteDaPubblicare.getJSONArray(DATE_PRECLUSE);
-		List<String> result = new ArrayList<String>();
-		for (Object m : datePrecluse) {
-			result.add((String) m);
-		}
-		return result;
+		return daPubblicareJSONManager.getDatePrecluse();
 	}
 	
 	public boolean checkIfCanLinkVolontario (String volontario, String tipoVisita) {
@@ -683,7 +661,7 @@ public class Archivio {
 	}
 	
 	public boolean isUltimoPianoPubblicato () {
-		return jsonPianoVisiteDaPubblicare.getBoolean(ULTIMO_PIANO);
+		return daPubblicareJSONManager.isUltimoPianoPubblicato();
 	}
 	
 	public void setVisiteCancellateConfermate () {
@@ -717,7 +695,7 @@ public class Archivio {
 							
 						}
 						if (visita.getString(STATO_VISITA).equals(EFFETTUATA)) {
-							pianoStorico.inserisciVisitaNelloStorico(visita.getString(LUOGO), keyVisita, day);
+							pianoStoricoJSONManager.inserisciVisitaNelloStorico(visita.getString(LUOGO), keyVisita, day);
 						}
 					}
 					daysToRemove.add(day);
@@ -739,16 +717,7 @@ public class Archivio {
 	}
 	
 	public boolean indicaDatePrecluse (String date) {
-		
-		JSONArray datePrecluse = jsonPianoVisiteDaPubblicare.getJSONArray(DATE_PRECLUSE_MESEIPLUS3);
-		for (int i = 0; i < datePrecluse.length(); i++) {
-			if (datePrecluse.get(i).equals(date)) { 
-				return false;
-			}
-		}
-		datePrecluse.put(date);
-		JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10); 
-		return true;
+		return daPubblicareJSONManager.indicaDatePrecluse(date);
 	}
 	
 	public boolean checkPrimoAccesso (String username) {
@@ -760,7 +729,7 @@ public class Archivio {
 	//what a glorious set of stairs we make
 	public boolean pubblicaPiano() {
 		
-		JSONObject disponibilita = jsonPianoVisiteDaPubblicare.getJSONObject(DISPONIBILITA);
+		JSONObject disponibilita = daPubblicareJSONManager.getDisponibilita();
 		for (String usernameVol : disponibilita.keySet()) {
 			JSONObject volontarioDisponibilita = disponibilita.getJSONObject(usernameVol);
 			for (String data : volontarioDisponibilita.keySet()) {
@@ -797,13 +766,7 @@ public class Archivio {
 			}
 		}
 		
-		jsonPianoVisiteDaPubblicare.put(DATE_PRECLUSE, jsonPianoVisiteDaPubblicare.getJSONArray(DATE_PRECLUSE_MESEIPLUS3));
-		jsonPianoVisiteDaPubblicare.put(DATE_PRECLUSE_MESEIPLUS3, new JSONArray());
-		jsonPianoVisiteDaPubblicare.put(DISPONIBILITA, new JSONObject());
-		jsonPianoVisiteDaPubblicare.put(ULTIMO_PIANO, true);
-		jsonPianoVisiteDaPubblicare.put(MESE_ULTIMA_PUBBLICAZIONE, Time.getActualDateValue(Time.MONTH));
-		jsonPianoVisiteDaPubblicare.put(ANNO_ULTIMA_PUBBLICAZIONE, Time.getActualDateValue(Time.YEAR));
-		JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
+		daPubblicareJSONManager.resetDopoPubblicazione();
 		JSONUtility.aggiornaJsonFile(jsonPianoVisite, PATH_VISITE, 10);
 		return true;
 	}
@@ -844,7 +807,6 @@ public class Archivio {
 	}
 	
 	public boolean tryPubblicaPiano(String username) { //OK
-		
 		if(isPrimaPubblicazione()) return setPrimaPubblicazione(); 
 		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE && Time.getActualDateValue(Time.DAY) >= RELEASE_DAY && //SE ULTIMO PIANO PUBBLICATO MESE SCORSO PUBBLICA
 				isUltimaPubblicazioneMeseScorso()) {
@@ -1024,16 +986,8 @@ public class Archivio {
 		return newVisitType;
 	}
 	
-	public boolean getPossibilitaDareDisponibilita() {
-		
-		return jsonPianoVisiteDaPubblicare.getBoolean(POSSIBILE_DARE_DISPONIBILITA);
-	}
-	
 	public void setPossibilitaDareDisponibilitaVolontari(boolean b) {
-		
-		jsonPianoVisiteDaPubblicare.put(POSSIBILE_DARE_DISPONIBILITA, b);
-		jsonPianoVisiteDaPubblicare.put(ULTIMO_PIANO, b);
-		JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
+		daPubblicareJSONManager.setPossibilitaDareDisponibilitaVolontari(b);
 	}
 	
 	public List<String> getElencoTipiVisiteVolontario(String volontario) {
@@ -1046,19 +1000,11 @@ public class Archivio {
  	}
 	
 	public boolean setPrimaPubblicazione() {
-		
-		jsonPianoVisiteDaPubblicare.put(PRIMA_PUBBLICAZIONE, false);
-		jsonPianoVisiteDaPubblicare.put(ULTIMO_PIANO, true);
-		jsonPianoVisiteDaPubblicare.put(MESE_ULTIMA_PUBBLICAZIONE, Time.getActualDateValue(Time.MONTH));
-		jsonPianoVisiteDaPubblicare.put(ANNO_ULTIMA_PUBBLICAZIONE, Time.getActualDateValue(Time.YEAR));
-
-		apriRaccoltaDisponibilita();
-		JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
-		return true;
+		return daPubblicareJSONManager.setPrimaPubblicazione();
 	}
 	
 	public boolean isPrimaPubblicazione() {
-		return jsonPianoVisiteDaPubblicare.getBoolean(PRIMA_PUBBLICAZIONE);
+		return daPubblicareJSONManager.isPrimaPubblicazione();
 	}
 	
 	public boolean checkIfVisitTypeExists (String tipo) {
@@ -1107,27 +1053,8 @@ public class Archivio {
 		return jsonUsers.getJSONObject(username).getJSONArray(TIPO_VISITA).length() == 0;
 	}
 	
-	public boolean inserisciDisponibilita(String data, String username, String tagVisita) { //ok
-		
-		JSONObject disponibilita = jsonPianoVisiteDaPubblicare.getJSONObject(DISPONIBILITA);
-		//TODO assicurarsi che non prenda datePrecluse
-		if (!disponibilita.has(username)) {
-			JSONObject d =  new JSONObject();
-			disponibilita.put(username, d);
-			JSONObject volontario = disponibilita.getJSONObject(username);
-			volontario.put(data, tagVisita);
-			JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
-			return true;
-		}
-		else {
-			JSONObject volontario = disponibilita.getJSONObject(username);
-			if (volontario.has(data)) return true;
-			else {
-				volontario.put(data, tagVisita);
-				JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
-				return true;
-			}
-		}
+	public boolean inserisciDisponibilita(String data, String username) { //ok
+		return daPubblicareJSONManager.inserisciDisponibilita(data, username, getDatePerDisponibilita(username));
 	}
 
 	public boolean checkValueExistance (String key, String path) { //ok
