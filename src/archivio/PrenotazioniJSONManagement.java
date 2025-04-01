@@ -1,5 +1,8 @@
 package archivio;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.json.JSONObject;
 
 import dto.PrenotazioneDTO;
@@ -33,6 +36,12 @@ public class PrenotazioniJSONManagement {
 	
 	public String getTipoVisitaPrenotazione (String codicePrenotazione) {
 		return getPrenotazioneJSONObject(codicePrenotazione).getString(TIPO_VISITA);
+	}
+	
+	public Map<String, Integer> prenotazioniNIscritti () {
+		Map<String, Integer> result = new HashMap<>();
+		for (String tag : jsonPrenotazioni.keySet()) result.put(tag, getNIscrittiPrenotazione(tag));
+		return result;
 	}
 	
 	public void rimuoviPrenotazione (String codicePrenotazione) {

@@ -129,6 +129,18 @@ public class TipiVisiteJSONManagement {
 	    aggiornaJsonTipiVisite();
 	}
 	
+	public Map<String, Integer> getTipiVisitaMinFruitori () {
+		Map<String, Integer> result = new HashMap<>();
+		for (String tag : jsonTipiVisite.keySet()) result.put(tag, getMinFruitoreVisita(tag));
+		return result;
+	}
+	
+	public Map<String, String> getTipiVisitaLuoghi () {
+		Map<String, String> result = new HashMap<>();
+		for (String tag : jsonTipiVisite.keySet()) result.put(tag, getLuogoAssociatoTipo(tag));
+		return result;
+	}
+	
 	public Map<String, String> getTipiVisitaTitoli () {
 		Map<String, String> result = new HashMap<>();
 		for (String tag : jsonTipiVisite.keySet()) result.put(tag, getTitoloVisita(tag));

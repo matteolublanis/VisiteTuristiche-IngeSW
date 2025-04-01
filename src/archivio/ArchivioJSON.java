@@ -115,7 +115,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	}
 	
 	public List<VisitaDTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate () {
-	    List<VisitaDTO> visiteList = pianoVisiteJSONManager.getElencoVisiteProposteCompleteConfermateCancellateEffettuate(tipiVisiteJSONManager);
+	    List<VisitaDTO> visiteList = pianoVisiteJSONManager.getElencoVisiteProposteCompleteConfermateCancellateEffettuate(tipiVisiteJSONManager.getTipiVisitaTitoli());
 		visiteList.addAll(pianoStoricoJSONManager.getElencoVisiteProposteCompleteConfermateCancellateEffettuate());
 		return visiteList;
 	}
@@ -123,7 +123,15 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore (String username) {
 		if (getTipoUtente(username) != CostantiStruttura.FRUITORE) return null;
 		JSONArray codiciPrenotazione = usersJSONManager.getElencoPrenotazioniFruitore(username);
-	    return pianoVisiteJSONManager.getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore(codiciPrenotazione, tipiVisiteJSONManager, prenotazioniJSONManager);
+	    List<VisitaDTO> visiteList = new ArrayList<>();
+	    for (Object codicePrenotazione : codiciPrenotazione) {
+	    	VisitaDTO visita = pianoVisiteJSONManager.getVisitaProposteConfermateCancellatePrenotateDalFruitore(prenotazioniJSONManager.getGiornoPrenotazione((String)codicePrenotazione),
+	    			prenotazioniJSONManager.getTipoVisitaPrenotazione((String)codicePrenotazione), 
+	    			tipiVisiteJSONManager);
+
+	    	if (visita != null) visiteList.add(visita);
+	    }
+	    return visiteList;
 	}
 	
 	public List<PrenotazioneDTO> getElencoPrenotazioniFruitore (String username) {
@@ -148,12 +156,18 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	}
 	
 	public List<VisitaDTO> visiteConfermateVolontario (String username) {
-		return pianoVisiteJSONManager.visiteConfermateVolontario(username, prenotazioniJSONManager, tipiVisiteJSONManager);
+		return pianoVisiteJSONManager.visiteConfermateVolontario(username, prenotazioniJSONManager.prenotazioniNIscritti(), tipiVisiteJSONManager);
 	}
-	//Approccio come rimuoviPrenotazione per togliere tutte le dipendenze
+
 	public String inserisciPrenotazione(String username, PrenotazioneDTO prenotazione) {
 		if (getTipoUtente(username) == CostantiStruttura.FRUITORE) {
-			return pianoVisiteJSONManager.inserisciPrenotazione(username, prenotazione, ambitoJSONManager, tipiVisiteJSONManager, usersJSONManager, prenotazioniJSONManager);
+			if (pianoVisiteJSONManager.prenotazioneInseribile(username, prenotazione, ambitoJSONManager.getMaxPrenotazione(), tipiVisiteJSONManager.getMaxFruitoreVisita(prenotazione.getTag_visita()))) {
+				String codicePrenotazione = prenotazioniJSONManager.inserisciPrenotazione(prenotazione, username);
+				pianoVisiteJSONManager.inserisciPrenotazione(username, prenotazione, tipiVisiteJSONManager.getMaxFruitoreVisita(prenotazione.getTag_visita()), codicePrenotazione);
+				usersJSONManager.inserisciPrenotazioneFruitore(username, codicePrenotazione);		
+				return codicePrenotazione;
+			}
+			else return null;
 		}
 		else return null;
 	}
@@ -246,7 +260,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	}
 	
 	public void setVisiteCancellateConfermate () {
-		pianoVisiteJSONManager.setVisiteCancellateConfermate(tipiVisiteJSONManager);
+		pianoVisiteJSONManager.setVisiteCancellateConfermate(tipiVisiteJSONManager.getTipiVisitaMinFruitori());
 	}
 	
 	public void removeVisiteEffettuateCancellate () {
@@ -272,7 +286,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	//what a glorious set of stairs we make
 	public boolean pubblicaPiano() {
 		JSONObject disponibilita = daPubblicareJSONManager.getDisponibilita();
-		pianoVisiteJSONManager.pubblicaPiano(disponibilita, tipiVisiteJSONManager);
+		pianoVisiteJSONManager.pubblicaPiano(disponibilita, tipiVisiteJSONManager.getTipiVisitaLuoghi());
 		daPubblicareJSONManager.resetDopoPubblicazione();
 		return true;
 	}
