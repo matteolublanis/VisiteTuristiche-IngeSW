@@ -80,9 +80,7 @@
                     "min-fruitore": 3,
                     "luogo": "castello_brescia",
                     "durata-visita": "90",
-                    "volontari": [
-                              "volontario2"
-                    ],
+                    "volontari": ["volontario2"],
                     "data-fine": "30-09-2025",
                     "giorni-prenotabili": [
                               "ven",

@@ -3,13 +3,13 @@ package testing;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
-import archivio.Archivio;
+import archivio.ArchivioJSON;
 
 class ArchivioTest {
 
 	@Test
 	void test() {
-		Archivio d = new Archivio();
+		ArchivioJSON d = new ArchivioJSON();
 		//assertTrue(d.rimuoviVolontario("volontario10"));
 	}
 

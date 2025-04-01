@@ -1,7 +1,7 @@
 package controller;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import dto.VisitaDTO;
 import main.App;
@@ -54,7 +54,7 @@ public class HandlerVolontario extends ControllerUtente {
 	@MethodName("Comunica le tue prossime disponibilità")
  	public void comunicaDisponibilita(App a) {
  		if (gdb.getPossibilitaDareDisponibilita()) { //se posso dare disponibilità	
- 			HashMap<String, List<String>> dateDisponibilita = gdb.getDatePerDisponibilita(username); //prendi disponibilità possibili
+ 			Map<String, List<String>> dateDisponibilita = gdb.getDatePerDisponibilita(username); //prendi disponibilità possibili
  			if (dateDisponibilita == null) { //TODO se null significa che il volontario dovrebbe essere eliminato
  				a.view("I tipi di visita a te associati non richiedono nuove disponibilità o c'è un problema con l'archivio, contatta un configuratore.");
  			}

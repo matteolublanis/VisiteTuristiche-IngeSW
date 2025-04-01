@@ -1,5 +1,7 @@
 {
-    "06-03-2025": {
-		"castello_brescia": "visita_sotterranei"
-	}
+          "30-03-2025": {
+                    "passeggiata_valle_camonica": "parco_incisioni_valle_camonica",
+                    "tour_castello": "parco_incisioni_valle_camonica"
+          },
+          "06-03-2025": {"visita_sotterranei": "castello_brescia"}
 }

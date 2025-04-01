@@ -3,6 +3,7 @@ package controller;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.LinkedList;
+import java.util.List;
 
 import main.App;
 import utility.Credenziali;
@@ -14,7 +15,7 @@ public abstract class ControllerUtente {
 	protected String username;
 	
 	public ControllerUtente () {
-		//do something
+		//i was made to love you, can't you tell?
 	}
 	
 	public ControllerUtente(ControllerArchivio gdb, String username) {
@@ -88,9 +89,8 @@ public abstract class ControllerUtente {
 		return username;
 	}
 	
-    public LinkedList<Method> getAzioniDisponibili() {
-    	
-    	LinkedList<Method> metodiConcreti = new LinkedList<>();
+    public List<Method> getAzioniDisponibili() {
+    	List<Method> metodiConcreti = new LinkedList<>();
         
          Method[] metodi = this.getClass().getDeclaredMethods();
         
@@ -104,12 +104,5 @@ public abstract class ControllerUtente {
          
         metodiConcreti.sort((m1, m2) -> m1.getName().compareTo(m2.getName()));
     	return metodiConcreti;
-    	/*
-    	Metodo più generico per usare più strutture, serve però ordine quindi usiamo linkedlist
-    	return Arrays.stream(this.getClass().getDeclaredMethods())
-                .filter(metodo -> !metodo.getName().equals("getAzioniDisponibili")) //aggiungere altri controlli
-                .toList();
-                
-        */
     }
 }
