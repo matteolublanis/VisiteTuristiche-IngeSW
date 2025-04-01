@@ -74,21 +74,6 @@
                     "punto-incontro": "Centro visitatori di Capo di Ponte",
                     "data-inizio": "15-03-2025"
           },
-          "kebab_sanfa": {
-                    "titolo": "kebab",
-                    "ora-inizio": "12:00",
-                    "min-fruitore": 5,
-                    "luogo": "san_fa",
-                    "durata-visita": 60,
-                    "volontari": ["volontario9"],
-                    "data-fine": "08-12-2026",
-                    "giorni-prenotabili": ["mer"],
-                    "da-acquistare": false,
-                    "descrizione": "kebab",
-                    "max-fruitore": 20,
-                    "punto-incontro": "08-09-2025",
-                    "data-inizio": "08-12-2025"
-          },
           "tour_castello": {
                     "titolo": "Tour del Castello",
                     "ora-inizio": "15:00",
@@ -170,20 +155,5 @@
                     "max-fruitore": 20,
                     "punto-incontro": "Casa di Dilbert",
                     "data-inizio": "01-04-2025"
-          },
-          "tacos_sanfa": {
-                    "titolo": "tacos",
-                    "ora-inizio": "12:00",
-                    "min-fruitore": 5,
-                    "luogo": "san_fa",
-                    "durata-visita": 60,
-                    "volontari": ["volontario9"],
-                    "data-fine": "12-12-2025",
-                    "giorni-prenotabili": ["mar"],
-                    "da-acquistare": true,
-                    "descrizione": "tacos",
-                    "max-fruitore": 20,
-                    "punto-incontro": "tacos",
-                    "data-inizio": "08-09-2025"
           }
 }

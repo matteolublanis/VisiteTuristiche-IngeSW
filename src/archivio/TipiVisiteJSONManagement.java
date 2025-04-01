@@ -185,7 +185,7 @@ public class TipiVisiteJSONManagement {
 			for (Object s : tipiVisite) { 
 				JSONObject tipo = getTipoVisitaJSONObject((String)s);
 				try {
-					String[] periodoDaDareDisponibilita = Time.getAvailabilityWindow(tipo.getString(DATA_INIZIO), tipo.getString(DATA_FINE), Time.getDesideredMonthAndYear(Archivio.RELEASE_DAY, Time.getActualDate()));
+					String[] periodoDaDareDisponibilita = Time.getAvailabilityWindow(tipo.getString(DATA_INIZIO), tipo.getString(DATA_FINE), Time.getDesideredMonthAndYear(ArchivioJSON.RELEASE_DAY, Time.getActualDate()));
 					JSONArray giorni = tipo.getJSONArray(GIORNI_PRENOTABILI);
 					
 					List<String> days = new ArrayList<>();
