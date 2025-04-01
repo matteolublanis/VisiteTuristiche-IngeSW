@@ -162,8 +162,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 				gdb.apriRaccoltaDisponibilita(username);
 			}
 			else {
-				gdb.pubblicaPiano(username);
-				a.view("Piano pubblicato.");
+				a.view(gdb.pubblicaPiano(username) ? "Piano pubblicato." : "Piano non pubblicato.");
 			}
 		}
 		else a.view("Non è possibile pubblicare adesso il piano.");

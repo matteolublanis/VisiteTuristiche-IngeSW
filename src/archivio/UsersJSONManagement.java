@@ -18,7 +18,7 @@ public class UsersJSONManagement {
 	private JSONObject jsonUsers = JSONUtility.readJsonFile(PATH_USERS);
 	private static final String PRIMO_AVVIO = "primo_avvio";
 	private static final String PASSWORD = "password", TIPO_USER = "tipo", USERNAME = "username", PRIMO_ACCESSO = "primo-accesso";
-	private static final String TIPO_VISITA = "TIPO_VISITA";
+	private static final String TIPO_VISITA = "tipo-visita";
 	private static final String PRENOTAZIONI = "";
 	
 	public boolean checkPrimoAvvio () {
@@ -51,7 +51,9 @@ public class UsersJSONManagement {
 					break;
 				case CostantiStruttura.VOLONTARIO:
 					List<String> tipiAssociati = new ArrayList<>();
-					for (Object m : user.getJSONArray(TIPO_VISITA)) tipiAssociati.add((String)m);
+					for (Object m : user.getJSONArray(TIPO_VISITA)) {
+						tipiAssociati.add((String)m);
+					}
 					result.add(new UserDTO(user.getString(USERNAME), tipiAssociati));
 					break;
 				case CostantiStruttura.FRUITORE:
@@ -122,6 +124,7 @@ public class UsersJSONManagement {
 				break;
 			}
 		}
+		aggiornaJsonUsers();
 		if (tipiAssociatiVolontario.length() == 0) rimuoviVolontario(volontarioTipo);
 	}
 	
