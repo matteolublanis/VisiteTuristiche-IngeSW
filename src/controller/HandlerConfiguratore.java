@@ -16,7 +16,7 @@ import utility.Time;
 public class HandlerConfiguratore extends ControllerUtente{	
 		
 	public HandlerConfiguratore () {
-		
+	
 	}
 
 	public HandlerConfiguratore(ControllerArchivio gdb, String username, App a) {
@@ -170,7 +170,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	
 	@MethodName("Indica date precluse del prossimo piano a quello successivo a questo")
 	public void indicaDatePrecluse(App a) {
-		String data = a.richiediInput("data preclusa"); 
+		String data = a.richiediInput("data preclusa (dd-mm-yyyy)"); 
 		if ((gdb.indicaDatePrecluse(data))) a.view("La data preclusa è stata inserita.");
 		else a.view("La data preclusa non è stata inserita, assicurarsi che sia nel formato e nel periodo corretto.");
 	}
@@ -290,10 +290,10 @@ public class HandlerConfiguratore extends ControllerUtente{
 		String titolo = a.richiediInput("titolo della visita");
 		String descrizione = a.richiediInput("descrizione riassuntiva della visita");
 		String puntoIncontro = a.richiediInput("punto di incontro della visita (locazione geografica)");
-		String dataInizio = richiediDataValida(a, "apertura del periodo della visita");
+		String dataInizio = richiediDataValida(a, "apertura del periodo della visita (dd-mm-yyyy)");
 		String dataFine = "";
 		do {
-			dataFine = richiediDataValida(a, "chiusura del periodo della visita");
+			dataFine = richiediDataValida(a, "chiusura del periodo della visita (dd-mm-yyyy)");
 			if (Time.comesBefore(dataFine, dataInizio)) a.view("Non può finire prima che inizi.");
 		} while (Time.comesBefore(dataFine, dataInizio));
 		ArrayList<Integer> giorniPrenotabili = richiediGiorniPrenotabili(a);

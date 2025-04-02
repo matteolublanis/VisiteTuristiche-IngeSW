@@ -71,7 +71,7 @@ public abstract class ControllerUtente {
 	    do {
 	        data = (String) a.richiediInput(messaggio);
 	        if (!Time.isValidDate(data)) {
-	            a.view("Formato data non valido");
+	            a.view("Formato data non valido, deve essere (dd-mm-yyyy)");
 	        }
 	    } while (!Time.isValidDate(data));
 	    return data;

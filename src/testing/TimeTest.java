@@ -273,4 +273,25 @@ class TimeTest {
 	    void testBothInvalidDates() {
 	        assertFalse(Time.isThreeDaysOrLessBefore("invalid-date1", "invalid-date2"));
 	    }
+	    
+	    @Test
+	    void testLeapYears() {
+	        assertTrue(Time.isLeapYear(2000), "Year 2000 should be a leap year");
+	        assertTrue(Time.isLeapYear(2024), "Year 2024 should be a leap year");
+	        assertTrue(Time.isLeapYear(2400), "Year 2400 should be a leap year");
+	    }
+
+	    @Test
+	    void testNonLeapYears() {
+	        assertFalse(Time.isLeapYear(1900), "Year 1900 should NOT be a leap year");
+	        assertFalse(Time.isLeapYear(2023), "Year 2023 should NOT be a leap year");
+	        assertFalse(Time.isLeapYear(2100), "Year 2100 should NOT be a leap year");
+	    }
+
+	    @Test
+	    void testEdgeCases() {
+	        assertTrue(Time.isLeapYear(4), "Year 4 should be a leap year");
+	        assertFalse(Time.isLeapYear(1), "Year 1 should NOT be a leap year");
+	        assertTrue(Time.isLeapYear(400), "Year 400 should be a leap year");
+	    }
 }

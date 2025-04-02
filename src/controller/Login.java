@@ -30,7 +30,8 @@ public class Login {
 		Credenziali credenziali = null;
 		do {
 			a.view("Inserisci le tue nuove credenziali:");
-			String username = a.richiediInput("username");
+			String username = a.richiediInput("username (ESC per tornare indietro)");
+			if (username.equalsIgnoreCase("esc")) avvio(a);
 			String password = a.richiediInput("password");
 			if (checkUsernameGiaPresente(username)) a.view("Username già in uso, reinserire le credenziali.");
 			else {
@@ -84,7 +85,6 @@ public class Login {
 		default: 
 			a.view("Problema setting gu");
 			return;
-
 		}
 	}
 }
