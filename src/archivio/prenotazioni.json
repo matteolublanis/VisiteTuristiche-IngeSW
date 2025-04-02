@@ -1,6 +1,8 @@
-{"3": {
-          "utente": "fruitore1",
-          "numero-iscritti": 5,
-          "giorno": "07-08-2025",
-          "tipo-visita": "passeggiata_valle_camonica"
-}}
+{
+          "3": {
+                    "utente": "fruitore1",
+                    "numero-iscritti": 5,
+                    "giorno": "07-08-2025",
+                    "tipo-visita": "passeggiata_valle_camonica"
+          }
+}

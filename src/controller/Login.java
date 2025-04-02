@@ -53,7 +53,7 @@ public class Login {
 			accesso(a);
 		}
 		else {
-			if (a.chiediSioNo("Sei un nuovo utente?")) {
+			if (a.chiediSioNo("Vuoi registrarti come nuovo utente?")) {
 				registrazione(a);
 			}
 			else {

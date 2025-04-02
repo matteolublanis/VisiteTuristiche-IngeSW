@@ -11,20 +11,20 @@ import utility.MethodName;
 public class App { 
 	
 	private Scanner sc = new Scanner(System.in);
-	private Login gl;
-	private ControllerUtente gu; 
+	private Login gestoreLogin;
+	private ControllerUtente controllerUtente; 
 	
 	public App(Login gl) {
-		this.gl = gl;
+		this.gestoreLogin = gl;
 	}
 	
 	public void setGu (ControllerUtente gu) {
-		this.gu = gu;
+		this.controllerUtente = gu;
 	}
 	
 	public void start() {
 		view("Benvenuto!");
-		gl.avvio(this);
+		gestoreLogin.avvio(this);
 
 		do {
 			
@@ -38,9 +38,9 @@ public class App {
 	}
 	
 	private boolean scegliAzione () {
-		view("Quale operazione desidera (ESC per uscire)?\n");
+		view("Quale operazione desidera (ESC per uscire)?");
 		
-		List<Method> azioniDisponibili = gu.getAzioniDisponibili();
+		List<Method> azioniDisponibili = controllerUtente.getAzioniDisponibili();
 		for (int i = 0; i < azioniDisponibili.size(); i++) {
 			try {
 				MethodName annotation = azioniDisponibili.get(i).getAnnotation(MethodName.class);
@@ -62,14 +62,14 @@ public class App {
 			int scelta = Integer.parseInt(input);
 			if (scelta > 0 && scelta <= azioniDisponibili.size()) {
 				Method metodo = azioniDisponibili.get(scelta - 1);
-				metodo.invoke(gu, this);
+				metodo.invoke(controllerUtente, this);
 
 			} else {
 				view("Scelta non valida.");
 			}
 		} catch (Exception e) { //TODO migliorare gestione eccezioni
 			view("Formato inserito non corretto."); //Tutte le eccezioni vengono catturate qua quando si esegue un metodo, difficile da debuggare
-			view(e.getMessage());
+			System.err.println(e);
 		}
 		
 		return true;
@@ -98,7 +98,9 @@ public class App {
 			view("Formato non valido, reinserire.");
 			sc.nextLine();
 		}
-		return sc.nextInt();
+		int result = sc.nextInt();
+		sc.nextLine();
+		return result;
 	}
 	
 	public String richiediInput (String s) {

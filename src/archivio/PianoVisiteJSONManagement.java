@@ -187,7 +187,8 @@ public class PianoVisiteJSONManagement {
 	}
 	
 	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato (String date, TipiVisiteJSONManagement tipiVisiteJSONManager) {	
-	    List<VisitaDTO> visiteList = new ArrayList<>();
+	    if (!jsonPianoVisite.has(date)) return null;
+		List<VisitaDTO> visiteList = new ArrayList<>();
 		JSONObject day = jsonPianoVisite.getJSONObject(date); // Visite del giorno
         for (String tag : day.keySet()) { // Singola visita
 	            JSONObject visita = day.getJSONObject(tag);
