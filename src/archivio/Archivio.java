@@ -242,11 +242,9 @@ public class Archivio {
 	public boolean indicaDatePrecluse (String date) {
 		if (Time.isValidDate(date)) {
 			JSONArray datePrecluse = jsonPianoVisiteDaPubblicare.getJSONArray(DATE_PRECLUSE_MESEIPLUS3);
-
-			if (!Time.isThisDateInMonthiplus3(date)) {
+			if (!Time.isThisDateInMonthPlus3(date)) {
 				return false;
 			}
-			System.out.println(2);
 	        for (int i = 0; i < datePrecluse.length(); i++) {
 	            if (datePrecluse.get(i).equals(date)) { //eccezione?
 	                return false;
@@ -335,7 +333,7 @@ public class Archivio {
 		
 	}
 	
-	public boolean aggiungiLuogo (String tag, String nome, String collocazione, String tipiVisitaVal) {
+	public boolean aggiungiLuogo (String tag, String nome, String descrizione, String collocazione, String tipiVisitaVal) {
 		if (checkValueExistance(tag, PATH_AMBITO)) return false;
 		JSONObject nuovoLuogo = new JSONObject();
 		String[] s = tipiVisitaVal.split(SPLIT_REGEX_LISTA);
@@ -347,6 +345,7 @@ public class Archivio {
 	    	}
 	    }
 	    nuovoLuogo.put(NAME, nome);
+	    nuovoLuogo.put(DESCRIPTION, descrizione);
 		nuovoLuogo.put(COLLOCAZIONE, collocazione);
 	    nuovoLuogo.put(TIPO_VISITA, tipiVisita);
 	    JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject(LUOGHI);
@@ -372,6 +371,7 @@ public class Archivio {
 		    	}
 	    	}
 	    	catch (NumberFormatException e) {
+	    		System.err.println(e);
 	    		return false;
 	    	}
 	    }

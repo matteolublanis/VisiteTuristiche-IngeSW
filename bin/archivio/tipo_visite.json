@@ -102,6 +102,23 @@
                               "sab"
                     ]
           },
+          "kebab": {
+                    "da-acquistare": false,
+                    "descrizione": "kebab",
+                    "titolo": "kebab",
+                    "ora-inizio": "13:00",
+                    "min-fruitore": 5,
+                    "max-fruitore": 20,
+                    "punto-incontro": "kebab",
+                    "durata-visita": 60,
+                    "volontari": [
+                              "volontario66",
+                              "volontario99"
+                    ],
+                    "data-inizio": "05-05-2025",
+                    "data-fine": "05-12-2025",
+                    "giorni-prenotabili": ["mar"]
+          },
           "escursione_monte_isola": {
                     "da-acquistare": false,
                     "descrizione": "Gita guidata alla scoperta dell'isola lacustre più grande d'Europa con panorami mozzafiato.",
@@ -128,6 +145,20 @@
                     "volontari": ["volontario1"],
                     "data-inizio": "01-04-2025",
                     "data-fine": "01-08-2025",
+                    "giorni-prenotabili": ["mar"]
+          },
+          "tacos_sanfa": {
+                    "da-acquistare": false,
+                    "descrizione": "kebab",
+                    "titolo": "tacos sanfau",
+                    "ora-inizio": "19:00",
+                    "min-fruitore": 5,
+                    "max-fruitore": 20,
+                    "punto-incontro": "kebab",
+                    "durata-visita": 60,
+                    "volontari": ["volontariotacos"],
+                    "data-inizio": "08-05-2025",
+                    "data-fine": "08-12-2025",
                     "giorni-prenotabili": ["mar"]
           }
 }

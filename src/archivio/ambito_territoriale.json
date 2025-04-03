@@ -1,47 +1,47 @@
 {
-     "luoghi": {
-          "cantina_ca_del_bosco": {
-               "descrizione": "Una delle cantine più rinomate della Franciacorta, celebre per la produzione di spumanti metodo classico DOCG.",
-               "collocazione": "Via Albano Zanella, 13, 25030 Erbusco BS, Italia",
-               "nome": "Cantina Ca' del Bosco",
-               "tipo-visita": ["franciacorta_wine_tour"]
+          "luoghi": {
+                    "cantina_ca_del_bosco": {
+                              "descrizione": "Una delle cantine più rinomate della Franciacorta, celebre per la produzione di spumanti metodo classico DOCG.",
+                              "collocazione": "Via Albano Zanella, 13, 25030 Erbusco BS, Italia",
+                              "nome": "Cantina Ca' del Bosco",
+                              "tipo-visita": ["franciacorta_wine_tour"]
+                    },
+                    "area_archeologica_brescia_romana": {
+                              "descrizione": "Sito UNESCO che conserva il Foro Romano, il Capitolium e il Teatro Romano, testimoni dell'antica Brixia.",
+                              "collocazione": "Piazza del Foro, 25121 Brescia BS, Italia",
+                              "nome": "Area Archeologica di Brescia Romana",
+                              "tipo-visita": ["tour_brescia_romana"]
+                    },
+                    "castello_brescia": {
+                              "descrizione": "Antica fortezza medievale situata sul colle Cidneo, con musei, gallerie sotterranee e una vista panoramica sulla città.",
+                              "collocazione": "Via del Castello, 9, 25121 Brescia BS, Italia",
+                              "nome": "Castello di Brescia",
+                              "tipo-visita": [
+                                        "visita_sotterranei",
+                                        "tour_castello",
+                                        "museo_armi"
+                              ]
+                    },
+                    "museo_santa_giulia": {
+                              "descrizione": "Complesso museale patrimonio UNESCO che racconta la storia di Brescia dall\u2019epoca romana al Rinascimento.",
+                              "collocazione": "Via dei Musei, 81/b, 25121 Brescia BS, Italia",
+                              "nome": "Museo di Santa Giulia",
+                              "tipo-visita": ["museo_santa_giulia"]
+                    },
+                    "parco_incisioni_valle_camonica": {
+                              "descrizione": "Area archeologica con incisioni rupestri preistoriche, dichiarata patrimonio dell\u2019umanità dall\u2019UNESCO.",
+                              "collocazione": "Località Naquane, 25044 Capo di Ponte BS, Italia",
+                              "nome": "Parco Nazionale delle Incisioni Rupestri",
+                              "tipo-visita": ["passeggiata_valle_camonica"]
+                    },
+                    "monte_isola": {
+                              "descrizione": "L\u2019isola lacustre più grande d\u2019Europa, situata nel Lago d\u2019Iseo, con borghi pittoreschi e sentieri panoramici.",
+                              "collocazione": "Monte Isola, Lago d'Iseo, Brescia, Italia",
+                              "nome": "Monte Isola",
+                              "tipo-visita": ["escursione_monte_isola"]
+                    }
           },
-          "area_archeologica_brescia_romana": {
-               "descrizione": "Sito UNESCO che conserva il Foro Romano, il Capitolium e il Teatro Romano, testimoni dell'antica Brixia.",
-               "collocazione": "Piazza del Foro, 25121 Brescia BS, Italia",
-               "nome": "Area Archeologica di Brescia Romana",
-               "tipo-visita": ["tour_brescia_romana"]
-          },
-          "castello_brescia": {
-               "descrizione": "Antica fortezza medievale situata sul colle Cidneo, con musei, gallerie sotterranee e una vista panoramica sulla città.",
-               "collocazione": "Via del Castello, 9, 25121 Brescia BS, Italia",
-               "nome": "Castello di Brescia",
-               "tipo-visita": [
-                    "visita_sotterranei",
-                    "tour_castello",
-                    "museo_armi"
-               ]
-          },
-          "museo_santa_giulia": {
-               "descrizione": "Complesso museale patrimonio UNESCO che racconta la storia di Brescia dall\u2019epoca romana al Rinascimento.",
-               "collocazione": "Via dei Musei, 81/b, 25121 Brescia BS, Italia",
-               "nome": "Museo di Santa Giulia",
-               "tipo-visita": ["museo_santa_giulia"]
-          },
-          "parco_incisioni_valle_camonica": {
-               "descrizione": "Area archeologica con incisioni rupestri preistoriche, dichiarata patrimonio dell\u2019umanità dall\u2019UNESCO.",
-               "collocazione": "Località Naquane, 25044 Capo di Ponte BS, Italia",
-               "nome": "Parco Nazionale delle Incisioni Rupestri",
-               "tipo-visita": ["passeggiata_valle_camonica"]
-          },
-          "monte_isola": {
-               "descrizione": "L\u2019isola lacustre più grande d\u2019Europa, situata nel Lago d\u2019Iseo, con borghi pittoreschi e sentieri panoramici.",
-               "collocazione": "Monte Isola, Lago d'Iseo, Brescia, Italia",
-               "nome": "Monte Isola",
-               "tipo-visita": ["escursione_monte_isola"]
-          }
-     },
-     "max_prenotazione": 10,
-     "nome": "Brescia",
-     "prima_configurazione": false
+          "max_prenotazione": 20,
+          "nome": "Brescia",
+          "prima_configurazione": true
 }

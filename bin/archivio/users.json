@@ -1,53 +1,80 @@
 {
-     "primo_avvio": false,
-     "volontario4": {
-          "password": "admin",
-          "tipo": 2,
-          "primo-accesso": true,
-          "tipo-visita": ["museo_santa_giulia"],
-          "username": "volontario4"
-     },
-     "volontario3": {
-          "password": "admin",
-          "tipo": 2,
-          "primo-accesso": true,
-          "tipo-visita": [
-               "visita_sotterranei",
-               "franciacorta_wine_tour"
-          ],
-          "username": "volontario3"
-     },
-     "volontario2": {
-          "password": "admin",
-          "tipo": 2,
-          "primo-accesso": true,
-          "tipo-visita": [
-               "tour_castello",
-               "escursione_monte_isola",
-               "tour_brescia_romana"
-          ],
-          "username": "volontario2"
-     },
-     "volontario1": {
-          "password": "admin",
-          "tipo": 2,
-          "primo-accesso": true,
-          "tipo-visita": [
-               "museo_armi",
-               "passeggiata_valle_camonica"
-          ],
-          "username": "volontario1"
-     },
-     "Dilbert": {
-          "tipo": 1,
-          "password": "koala03",
-          "primo-accesso": false,
-          "username": "Dilbert"
-     },
-     "admin": {
-          "password": "admin",
-          "tipo": 1,
-          "primo-accesso": false,
-          "username": "admin"
-     }
+          "volontariotacos": {
+                    "tipo": 2,
+                    "password": "tacos",
+                    "primo-accesso": true,
+                    "tipo-visita": ["tacos_sanfa"],
+                    "username": "volontariotacos"
+          },
+          "primo_avvio": false,
+          "volontario4": {
+                    "password": "admin",
+                    "tipo": 2,
+                    "primo-accesso": true,
+                    "tipo-visita": ["museo_santa_giulia"],
+                    "username": "volontario4"
+          },
+          "volontario3": {
+                    "password": "admin",
+                    "tipo": 2,
+                    "primo-accesso": true,
+                    "tipo-visita": [
+                              "visita_sotterranei",
+                              "franciacorta_wine_tour"
+                    ],
+                    "username": "volontario3"
+          },
+          "volontario2": {
+                    "password": "admin",
+                    "tipo": 2,
+                    "primo-accesso": true,
+                    "tipo-visita": [
+                              "tour_castello",
+                              "escursione_monte_isola",
+                              "tour_brescia_romana"
+                    ],
+                    "username": "volontario2"
+          },
+          "volontario1": {
+                    "password": "admin",
+                    "tipo": 2,
+                    "primo-accesso": true,
+                    "tipo-visita": [
+                              "museo_armi",
+                              "passeggiata_valle_camonica"
+                    ],
+                    "username": "volontario1"
+          },
+          "Dilbert": {
+                    "tipo": 1,
+                    "password": "koala03",
+                    "primo-accesso": false,
+                    "username": "Dilbert"
+          },
+          "admin": {
+                    "password": "admin",
+                    "tipo": 1,
+                    "primo-accesso": false,
+                    "username": "admin"
+          },
+          "paolo": {
+                    "tipo": 1,
+                    "password": "paolo",
+                    "primo-accesso": true,
+                    "username": "paolo"
+          },
+          "volontario66": {
+                    "tipo": 2,
+                    "password": "admin",
+                    "primo-accesso": true,
+                    "tipo-visita": ["kebab"],
+                    "username": "volontario66"
+          },
+          "volontario99": {
+                    "tipo": 2,
+                    "password": "perdiana",
+                    "primo-accesso": true,
+                    "tipo-visita": ["kebab"],
+                    "username": "volontario99"
+          }
 }

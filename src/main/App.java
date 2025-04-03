@@ -84,11 +84,13 @@ public class App {
 		case CostantiStruttura.INT:
 			while (!sc.hasNextInt()) {
 				view("Formato non valido, reinserire.");
+				sc.nextLine();
 			}
 			return sc.nextLine();
 		case CostantiStruttura.BOOLEAN:
 			while (!sc.hasNextBoolean()) {
 				view("Formato non valido, reinserire.");
+				sc.nextLine();
 			}
 			return sc.nextLine();
 		default:

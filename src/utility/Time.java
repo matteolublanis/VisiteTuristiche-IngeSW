@@ -1,5 +1,6 @@
 package utility;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -10,6 +11,7 @@ import java.util.regex.Pattern;
 
 public class Time {
 	
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 	private static final int DAY = 1, MONTH = 2, YEAR = 3;
 	private static final String TIMEREGEX = "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$";
     private static final String DATAREGEX = "\\b(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\\d{4})\\b";
@@ -83,33 +85,21 @@ public class Time {
 		return s;
 	}
 	
-	public static boolean isThisDateInMonthiplus3 (String date) { //usato solo per calcolo di date Precluse
-		String[] inputDateValues = date.split("-");
-		String[] actualDateValues = actualDate.split("-");
-		if (!isValidDate(date)) return false;
-		if (Integer.parseInt(actualDateValues[0]) > 15) { //se giorno di oggi maggiore di 15 quindi mese i rispetto i+3
-			if (Integer.parseInt(actualDateValues[1]) < 10) { //se mese fino a settembre
-				return (Integer.parseInt(inputDateValues[1]) == Integer.parseInt(actualDateValues[1]) + 3); //check se mese input in i+3
-			}
-			else {
-				if (Integer.parseInt(inputDateValues[2]) != Integer.parseInt(actualDateValues[2]) + 1) return false;
-				else return (Integer.parseInt(inputDateValues[1]) == Integer.parseInt(actualDateValues[1]) + 3 - 12); 
-			}
-		}
-		else { //se giorno di oggi minore di 16 quindi mese i+1 rispetto i+3
-			if (Integer.parseInt(actualDateValues[0]) < 16) {
-				if (Integer.parseInt(actualDateValues[1]) < 11) { //se mese fino ottobre
-					return (Integer.parseInt(inputDateValues[1]) == Integer.parseInt(actualDateValues[1]) + 2);
-				}
-				else {
-					if (Integer.parseInt(inputDateValues[2]) != Integer.parseInt(actualDateValues[2]) + 1) return false;
-					else return (Integer.parseInt(inputDateValues[1]) == Integer.parseInt(actualDateValues[1]) + 2 - 12); 
-				}
-			}
-			else return false;
-		}
-	}
-	
+    public static boolean isThisDateInMonthPlus3(String date) {
+        if (!isValidDate(date)) return false;
+        LocalDate inputDate;
+        try {
+            inputDate = LocalDate.parse(date, FORMATTER);
+        } catch (Exception e) {
+            return false; // Se la data non è valida, restituisce false
+        }
+        LocalDate today = LocalDate.now();
+        int monthsToAdd = (today.getDayOfMonth() > 15) ? 3 : 2;
+        LocalDate targetMonth = today.plusMonths(monthsToAdd);
+
+        return inputDate.getMonthValue() == targetMonth.getMonthValue() &&
+               inputDate.getYear() == targetMonth.getYear();
+    }
 	public static int[] calculateEndTimeWithStartAndDuration(int hour, int minute, int duration) {
 		int endHour = hour + (duration / 60); 
 		int endMinute = minute + (duration % 60); 
@@ -140,28 +130,33 @@ public class Time {
 	}
 	
 	public static boolean isValidDate (String date) {
-		Pattern pattern = Pattern.compile(DATAREGEX); //dd-mm-yyyy
-        Matcher matcher = pattern.matcher(date);
-        if (!matcher.matches()) return false;
-        else {
-        	String[] s = date.split("-");
-        	switch (s[1]) {
-        	case "02":
-        		if (isLeapYear(Integer.parseInt(s[2]))) {
-        			if (Integer.parseInt(s[0]) > 29) return false;
-        		}
-        		else if (Integer.parseInt(s[0]) > 28) return false;
-        		break;
-        	case "04": case "06": case "09": case "11":
-        		if (Integer.parseInt(s[0]) > 30) return false; 
-        		break;
-        	default:
-        		break;
-        	}
-        
-        }
+		try {
+			Pattern pattern = Pattern.compile(DATAREGEX); //dd-mm-yyyy
+	        Matcher matcher = pattern.matcher(date);
+	        if (!matcher.matches()) return false;
+	        else {
+	        	String[] s = date.split("-");
+	        	switch (s[1]) {
+	        	case "02":
+	        		if (isLeapYear(Integer.parseInt(s[2]))) {
+	        			if (Integer.parseInt(s[0]) > 29) return false;
+	        		}
+	        		else if (Integer.parseInt(s[0]) > 28) return false;
+	        		break;
+	        	case "04": case "06": case "09": case "11":
+	        		if (Integer.parseInt(s[0]) > 30) return false; 
+	        		break;
+	        	default:
+	        		break;
+	        	}
+	        
+	        }
 
-        return true;
+	        return true;
+		}
+		catch (Exception e) {
+			return false;
+		}
 	}
 	
 	public static boolean comesBefore (String date1, String date2) {

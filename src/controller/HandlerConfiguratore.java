@@ -126,7 +126,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 			break;
 		case "no":
 			daAcquistare = false;
-			return false;
+			break;
 		default:
 			a.view("Formato acquistabile errato, non è stata aggiunto il nuovo tipo di visita.");
 				return false;
@@ -252,9 +252,10 @@ public class HandlerConfiguratore extends ControllerUtente{
 	public void aggiungiLuogo (App a) {
 		String tag = (String)a.richiediVal(CostantiStruttura.STRING, "tag del luogo");
 		String nome = (String)a.richiediVal(CostantiStruttura.STRING, "nome del luogo");
+		String descrizione = (String)a.richiediVal(CostantiStruttura.STRING, "descrizione del luogo"); 
 		String collocazione = (String)a.richiediVal(CostantiStruttura.STRING, "collocazione del luogo");
 		String tipiVisitaVal = ""; //TODO per i luoghi sono da creare i tipi di visita, non da riutilizzare
-		if (gdb.aggiungiLuogo(tag, nome, collocazione, tipiVisitaVal)) a.view("Aggiunto un nuovo luogo.");
+		if (gdb.aggiungiLuogo(tag, nome, descrizione, collocazione, tipiVisitaVal)) a.view("Aggiunto un nuovo luogo.");
 		boolean notFinished = true;
 		do {
 			notFinished = !aggiungiTipoVisitePartendoDaLuogo(a, tag);
@@ -262,6 +263,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 				a.view("Vuoi inserire altri tipi di visite?");
 				notFinished = chiediSioNo(a, ""); //se si, allora ha finito
 			}
+			else a.view("Tipo visita non inserito.");
 		} while (notFinished);
 		
 	}
