@@ -135,7 +135,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 			break;
 		case "no":
 			daAcquistare = false;
-			return false;
+			break;
 		default:
 			a.view("Formato acquistabile errato, non è stata aggiunto il nuovo tipo di visita.");
 				return false;
