@@ -184,8 +184,8 @@ public class ControllerArchivio {
 		return archivio.checkIfPlaceExists(luogo);
 	}
 	
-	public boolean aggiungiLuogo (String tag, String nome, String collocazione, Set<String> tipiVisitaVal) {
-		return archivio.aggiungiLuogo(tag, nome, collocazione, tipiVisitaVal);
+	public boolean aggiungiLuogo (String tag, String nome, String descrizione, String collocazione, Set<String> tipiVisitaVal) {
+		return archivio.aggiungiLuogo(tag, nome, descrizione, collocazione, tipiVisitaVal);
 	}
 	
 	public void setPrimaConfigurazione() {

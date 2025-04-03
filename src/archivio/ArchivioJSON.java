@@ -350,12 +350,12 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 		else return null;
 	}
 	
-	public boolean aggiungiLuogo (String tag, String nome, String collocazione, Set<String> tipiVisitaVal) {
+	public boolean aggiungiLuogo (String tag, String nome, String luogo, String collocazione, Set<String> tipiVisitaVal) {
 		JSONArray tipiVisita = new JSONArray();
 		if (tipiVisitaVal != null) {
 			if (!checkIfTypeAlreadyExistsInSet(tipiVisitaVal, tipiVisita)) return false;
 	    } 
-		return ambitoJSONManager.aggiungiLuogo(tag, nome, collocazione, tipiVisita);
+		return ambitoJSONManager.aggiungiLuogo(tag, nome, luogo, collocazione, tipiVisita);
 	}
 	
 	public boolean checkIfTypeAlreadyExistsInSet (Set<String> tipiVisitaVal, JSONArray tipiVisita) {

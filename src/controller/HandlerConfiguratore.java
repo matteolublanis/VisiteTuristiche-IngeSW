@@ -393,8 +393,9 @@ public class HandlerConfiguratore extends ControllerUtente{
 		if (canAddOrRemove(a)) {
 			String tag = a.richiediInput("tag del luogo");
 			String nome = a.richiediInput("nome del luogo");
+			String descrizione = a.richiediInput("descrizione del luogo");
 			String collocazione = a.richiediInput("collocazione del luogo");
-			if (gdb.aggiungiLuogo(tag, nome, collocazione, null)) a.view("Aggiunto un nuovo luogo.");
+			if (gdb.aggiungiLuogo(tag, nome, descrizione, collocazione, null)) a.view("Aggiunto un nuovo luogo.");
 			boolean finished = false;
 			do {
 				finished = aggiungiTipoVisitePartendoDaLuogo(a, tag);

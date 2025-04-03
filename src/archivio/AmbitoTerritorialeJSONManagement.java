@@ -18,6 +18,7 @@ public class AmbitoTerritorialeJSONManagement {
 	private static final String TIPO_VISITA = "tipo-visita";
 	private static final String COLLOCAZIONE = "collocazione";
 	private static final String MAX_PRENOTAZIONE = "max_prenotazione";
+	private static final String DESCRIZIONE = "descrizione";
 	
 	
 	public void rimuoviLuogo (String luogo) {
@@ -99,11 +100,12 @@ public class AmbitoTerritorialeJSONManagement {
 		}
 	}
 	
-	public boolean aggiungiLuogo (String tag, String nome, String collocazione, JSONArray tipiVisita) {
+	public boolean aggiungiLuogo (String tag, String nome, String descrizione, String collocazione, JSONArray tipiVisita) {
 		JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject(LUOGHI);
 		if (luoghi.has(tag)) return false; 
 		JSONObject nuovoLuogo = new JSONObject();
 	    nuovoLuogo.put(NAME, nome);
+	    nuovoLuogo.put(DESCRIZIONE, descrizione);
 		nuovoLuogo.put(COLLOCAZIONE, collocazione);
 	    nuovoLuogo.put(TIPO_VISITA, tipiVisita);
 	    luoghi.put(tag, nuovoLuogo);
