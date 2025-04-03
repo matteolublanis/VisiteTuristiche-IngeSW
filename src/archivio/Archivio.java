@@ -320,7 +320,7 @@ public class Archivio {
 		
 	}
 	
-	public boolean aggiungiLuogo (String tag, String nome, String collocazione, String tipiVisitaVal) {
+	public boolean aggiungiLuogo (String tag, String nome, String descrizione, String collocazione, String tipiVisitaVal) {
 		if (checkValueExistance(tag, PATH_AMBITO)) return false;
 		JSONObject nuovoLuogo = new JSONObject();
 		String[] s = tipiVisitaVal.split(SPLIT_REGEX_LISTA);
@@ -332,6 +332,7 @@ public class Archivio {
 	    	}
 	    }
 	    nuovoLuogo.put(NAME, nome);
+		nuovoLuogo.put(DESCRIPTION, descrizione);
 		nuovoLuogo.put(COLLOCAZIONE, collocazione);
 	    nuovoLuogo.put(TIPO_VISITA, tipiVisita);
 	    JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject(LUOGHI);

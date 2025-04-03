@@ -96,8 +96,8 @@ public class ControllerArchivio {
 		return d.checkIfPlaceExists(luogo);
 	}
 	
-	public boolean aggiungiLuogo (String tag, String nome, String collocazione, String tipiVisitaVal) {
-		return d.aggiungiLuogo(tag, nome, collocazione, tipiVisitaVal);
+	public boolean aggiungiLuogo (String tag, String nome, String descrizione, String collocazione, String tipiVisitaVal) {
+		return d.aggiungiLuogo(tag, nome, descrizione, collocazione, tipiVisitaVal);
 	}
 	
 	public void setPrimaConfigurazione() {
