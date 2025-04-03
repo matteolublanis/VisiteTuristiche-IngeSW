@@ -24,7 +24,7 @@ public class App {
 	
 	public void start() {
 		view("Benvenuto!");
-		gestoreLogin.avvio(this);
+		gestoreLogin.avvio(this); 
 
 		do {
 			

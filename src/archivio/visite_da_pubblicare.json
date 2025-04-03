@@ -5,6 +5,8 @@
                     "volontario7": {"13-05-2025": "tour_brescia_romana"},
                     "volontario2": {"02-05-2025": "tour_castello"},
                     "volontario1": {
+                              "03-06-2025": "museo_armi",
+                              "14-06-2025": "passeggiata_valle_camonica",
                               "06-05-2025": "museo_armi",
                               "03-05-2025": "passeggiata_valle_camonica",
                               "08-05-2025": "passeggiata_valle_camonica",
@@ -18,7 +20,7 @@
                     "07-06-2025",
                     "05-06-2025"
           ],
-          "mese-ultima-pubblicazione": 3,
+          "mese-ultima-pubblicazione": 4,
           "anno-ultima-pubblicazione": 2025,
           "possibile-dare-disponibilita": true
 }

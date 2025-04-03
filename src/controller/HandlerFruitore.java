@@ -87,7 +87,7 @@ public class HandlerFruitore extends ControllerUtente {
 			for (PrenotazioneDTO prenotazione : prenotazioni) {
 				a.view("-----------");
 				a.view("Codice: " + prenotazione.getCodice() + ", giorno: " + prenotazione.getGiorno());
-				a.view("Titolo visita: " + prenotazione.getTag_visita());
+				a.view("Tag visita: " + prenotazione.getTag_visita()); //TODO meglio titolo
 			}
 		}
 	}

@@ -46,9 +46,9 @@ public class Login {
 	public boolean checkPrimoAvvio() {
 		return gdb.checkPrimoAvvio();
 	}
-	
+
 	public void avvio (App a) {
-		if (checkPrimoAvvio()) {
+		if (checkPrimoAvvio()) { 
 			Credenziali c = gdb.getCredenzialiIniziali();
 			a.view("PRIMO AVVIO, CREDENZIALI INIZIALI\nUsername: " + c.getUsername() + "\nPassword: " + c.getPassword());
 			accesso(a);
