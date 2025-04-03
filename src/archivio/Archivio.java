@@ -404,7 +404,7 @@ public class Archivio {
 		
 	}
 	
-	public boolean aggiungiLuogo (String tag, String nome, String collocazione, String tipiVisitaVal) {
+	public boolean aggiungiLuogo (String tag, String nome, String descrizione, String collocazione, String tipiVisitaVal) {
 		JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject(LUOGHI);
 		if (luoghi.has(tag)) return false; //TODO da inserire in controller?
 		JSONObject nuovoLuogo = new JSONObject();
@@ -417,6 +417,7 @@ public class Archivio {
 	    	}
 	    }
 	    nuovoLuogo.put(NAME, nome);
+	    nuovoLuogo.put(DESCRIPTION, descrizione);
 		nuovoLuogo.put(COLLOCAZIONE, collocazione);
 	    nuovoLuogo.put(TIPO_VISITA, tipiVisita);
 	    luoghi.put(tag, nuovoLuogo);

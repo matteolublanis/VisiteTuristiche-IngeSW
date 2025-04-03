@@ -368,9 +368,10 @@ public class HandlerConfiguratore extends ControllerUtente{
 		if (canAddOrRemove(a)) {
 			String tag = (String)a.richiediVal(CostantiStruttura.STRING, "tag del luogo");
 			String nome = (String)a.richiediVal(CostantiStruttura.STRING, "nome del luogo");
+			String descrizione = (String)a.richiediVal(CostantiStruttura.STRING, "descrizione del luogo");
 			String collocazione = (String)a.richiediVal(CostantiStruttura.STRING, "collocazione del luogo");
 			String tipiVisitaVal = ""; //TODO per i luoghi sono da creare i tipi di visita, non da riutilizzare
-			if (gdb.aggiungiLuogo(tag, nome, collocazione, tipiVisitaVal)) a.view("Aggiunto un nuovo luogo.");
+			if (gdb.aggiungiLuogo(tag, nome, descrizione, collocazione, tipiVisitaVal)) a.view("Aggiunto un nuovo luogo.");
 			boolean finished = false;
 			do {
 				finished = aggiungiTipoVisitePartendoDaLuogo(a, tag);
