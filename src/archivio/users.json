@@ -41,8 +41,7 @@
                     "primo-accesso": false,
                     "tipo-visita": [
                               "museo_armi",
-                              "passeggiata_valle_camonica",
-                              "giro_sanfa"
+                              "passeggiata_valle_camonica"
                     ],
                     "username": "volontario1"
           },
@@ -58,12 +57,5 @@
                     "primo-accesso": true,
                     "tipo-visita": ["tour_brescia_romana"],
                     "username": "volontario66"
-          },
-          "volontario99": {
-                    "tipo": 2,
-                    "password": "admin",
-                    "primo-accesso": true,
-                    "tipo-visita": ["giro_sanfa"],
-                    "username": "volontario99"
           }
 }

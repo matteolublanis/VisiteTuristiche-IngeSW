@@ -91,7 +91,6 @@ public class ControllerArchivio {
 			if (Time.comesBefore(dateStart1, tipo.getString(Archivio.DATA_FINE)) && !Time.comesBefore(dateFinish1, tipo.getString(Archivio.DATA_INIZIO))) { //controlla se periodi intersecano
 				JSONArray days2 = tipo.getJSONArray(Archivio.GIORNI_PRENOTABILI); //prende giorni prenotabili del tipo
 				for (Object d : days2) { 
-					System.out.println(days1.contains((String)d));
 					if (days1.contains((String)d)) return true; //se i giorni intersecano allora volontario linkato per quei giorni
 				}
 			}
