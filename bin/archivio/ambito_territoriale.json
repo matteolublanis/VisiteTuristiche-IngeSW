@@ -34,6 +34,12 @@
                               "nome": "Parco Nazionale delle Incisioni Rupestri",
                               "tipo-visita": ["passeggiata_valle_camonica"]
                     },
+                    "san_fa": {
+                              "descrizione": "san faustino",
+                              "collocazione": "brescia",
+                              "nome": "san faustino",
+                              "tipo-visita": ["giro_sanfa"]
+                    },
                     "monte_isola": {
                               "descrizione": "L\u2019isola lacustre più grande d\u2019Europa, situata nel Lago d\u2019Iseo, con borghi pittoreschi e sentieri panoramici.",
                               "collocazione": "Monte Isola, Lago d'Iseo, Brescia, Italia",

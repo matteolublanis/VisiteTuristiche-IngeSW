@@ -1,11 +1,4 @@
 {
-          "primo_avvio": false,
-          "admin": {
-                    "password": "admin",
-                    "tipo": 1,
-                    "primo-accesso": false,
-                    "username": "admin"
-          },
           "volontario7": {
                     "tipo": 2,
                     "password": "admin",
@@ -13,6 +6,7 @@
                     "tipo-visita": ["tour_brescia_romana"],
                     "username": "volontario7"
           },
+          "primo_avvio": false,
           "volontario5": {
                     "password": "paolo",
                     "tipo": 2,
@@ -47,8 +41,29 @@
                     "primo-accesso": false,
                     "tipo-visita": [
                               "museo_armi",
-                              "passeggiata_valle_camonica"
+                              "passeggiata_valle_camonica",
+                              "giro_sanfa"
                     ],
                     "username": "volontario1"
+          },
+          "admin": {
+                    "password": "admin",
+                    "tipo": 1,
+                    "primo-accesso": false,
+                    "username": "admin"
+          },
+          "volontario66": {
+                    "tipo": 2,
+                    "password": "paolo",
+                    "primo-accesso": true,
+                    "tipo-visita": ["tour_brescia_romana"],
+                    "username": "volontario66"
+          },
+          "volontario99": {
+                    "tipo": 2,
+                    "password": "admin",
+                    "primo-accesso": true,
+                    "tipo-visita": ["giro_sanfa"],
+                    "username": "volontario99"
           }
 }

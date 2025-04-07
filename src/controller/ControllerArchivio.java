@@ -70,11 +70,12 @@ public class ControllerArchivio {
 	}
 	
 	public boolean associaVolontarioEsistenteATipoVisitaEsistente(String volontario, String tipoVisita) { //OK
-		if (!d.checkIfUserExists(volontario) || !d.checkIfVisitTypeExists(tipoVisita)) {
+		if (d.checkIfUserExists(volontario) && d.checkIfVisitTypeExists(tipoVisita)) {
 			JSONObject v = d.getJSONUsers().getJSONObject(volontario);
 			JSONArray tipi = v.getJSONArray(Archivio.TIPO_VISITA);
 			JSONObject tipo = d.getJSONTipiVisite().getJSONObject(tipoVisita);
-			if (volontarioAlreadyLinkedForThatDay(tipo.getString(Archivio.DATA_INIZIO), tipo.getString(Archivio.DATA_FINE), tipo.getString(Archivio.ORA_INIZIO), Integer.parseInt(tipo.getString(Archivio.DURATA_VISITA)), tipo.getJSONArray(Archivio.GIORNI_PRENOTABILI).toString(), tipi)) {
+
+			if (volontarioAlreadyLinkedForThatDay(tipo.getString(Archivio.DATA_INIZIO), tipo.getString(Archivio.DATA_FINE), tipo.getString(Archivio.ORA_INIZIO), tipo.getInt(Archivio.DURATA_VISITA), tipo.getJSONArray(Archivio.GIORNI_PRENOTABILI).toString(), tipi)) {
 				return false;
 			}
 			else {
@@ -90,6 +91,7 @@ public class ControllerArchivio {
 			if (Time.comesBefore(dateStart1, tipo.getString(Archivio.DATA_FINE)) && !Time.comesBefore(dateFinish1, tipo.getString(Archivio.DATA_INIZIO))) { //controlla se periodi intersecano
 				JSONArray days2 = tipo.getJSONArray(Archivio.GIORNI_PRENOTABILI); //prende giorni prenotabili del tipo
 				for (Object d : days2) { 
+					System.out.println(days1.contains((String)d));
 					if (days1.contains((String)d)) return true; //se i giorni intersecano allora volontario linkato per quei giorni
 				}
 			}

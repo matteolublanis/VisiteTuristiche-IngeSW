@@ -1,16 +1,10 @@
 {
           "ultimo-piano-pubblicato": true,
           "prima-pubblicazione": false,
-          "disponibilita": {"volontario1": {
-                    "08-05-2025": "passeggiata_valle_camonica",
-                    "01-05-2025": "passeggiata_valle_camonica"
-          }},
-          "date-precluse": [
-                    "05-06-2025",
-                    "06-05-2025"
-          ],
+          "disponibilita": {},
+          "date-precluse": [],
           "datePrecluseI+3": [],
-          "mese-ultima-pubblicazione": 3,
+          "mese-ultima-pubblicazione": 4,
           "anno-ultima-pubblicazione": 2025,
-          "possibile-dare-disponibilita": true
+          "possibile-dare-disponibilita": false
 }
