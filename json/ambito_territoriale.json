@@ -1,0 +1,11 @@
+{
+     "luoghi": {"c": {
+          "descrizione": "c",
+          "collocazione": "c",
+          "nome": "c",
+          "tipo-visita": ["c"]
+     }},
+     "max_prenotazione": 5,
+     "nome": "Brescia",
+     "prima_configurazione": false
+}

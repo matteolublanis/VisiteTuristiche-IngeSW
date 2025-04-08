@@ -157,6 +157,7 @@ public class AmbitoTerritorialeJSONManagement {
 	
 	public void impostaAmbitoTerritoriale (String nome) {
 		jsonAmbitoTerritoriale.put(NAME, nome);
+		setPrimaConfigurazione(); 
 		aggiornaJsonAmbito();
 	}
 	

@@ -1,0 +1,16 @@
+{
+          "primo_avvio": false,
+          "volontario1": {
+                    "tipo": 2,
+                    "password": "admin",
+                    "primo-accesso": true,
+                    "tipo-visita": ["c"],
+                    "username": "volontario1"
+          },
+          "conf1": {
+                    "tipo": 1,
+                    "password": "admin",
+                    "primo-accesso": false,
+                    "username": "conf1"
+          }
+}
