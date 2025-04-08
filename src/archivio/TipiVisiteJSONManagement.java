@@ -224,10 +224,9 @@ public class TipiVisiteJSONManagement {
 	}
 	
 	public JSONArray returnGiorniPrenotabili (ArrayList<Integer> giorniPrenotabiliVal) {
-		JSONArray giorniPrenotabili = null;
+		JSONArray giorniPrenotabili = new JSONArray();
 	    for (Integer k : giorniPrenotabiliVal) {
 	    	try {
-	    		giorniPrenotabili = new JSONArray();
 	    		int j = (k);
 	    		if (!(j < 1 || j > 7) && !giorniPrenotabili.toString().contains(GIORNISETTIMANA[j-1])) {
 		    		giorniPrenotabili.put(GIORNISETTIMANA[j-1]);

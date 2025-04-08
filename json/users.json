@@ -1,9 +1,0 @@
-{
-     "primo_avvio": false,
-     "admin": {
-          "tipo": 1,
-          "password": "admin",
-          "primo-accesso": true,
-          "username": "admin"
-     }
-}
