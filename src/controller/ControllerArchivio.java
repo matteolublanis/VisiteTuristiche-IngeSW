@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,9 +14,18 @@ import utility.Time;
 
 public class ControllerArchivio {
 	
+	private Map<ControllerUtente, String> usernameLinkati = new HashMap<>(); 
 	private Archivio archivio;
 	public ControllerArchivio (Archivio archivio) {
 		this.archivio = archivio; 
+	}
+	
+	protected boolean addControllerUtente(ControllerUtente gu, String username) {
+		if (usernameLinkati.values().contains(username)) return false;
+		else {
+			usernameLinkati.put(gu, username);
+			return true;
+		}
 	}
 
 	public boolean checkPrimoAvvio () { //OK
@@ -124,6 +134,7 @@ public class ControllerArchivio {
 	}
 	
 	public boolean checkCredenzialiCorrette (Credenziali c) {
+		if (!checkIfUserExists(c.getUsername())) return false;
 		return archivio.checkCredenzialiCorrette(c);
 	}
 	

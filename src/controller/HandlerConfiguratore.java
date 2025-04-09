@@ -320,7 +320,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	            break;
 	        }
 	    } while (true);
-	} 
+	}
 	
 	@MethodName("Aggiungi volontari ad un tipo di visita esistente")
 	public void aggiungiVolontariATipiVisita (App a) {

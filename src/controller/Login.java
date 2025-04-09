@@ -72,15 +72,22 @@ public class Login {
 	}
 	
 	private void configureHandlerUtente (String username, App a){
+		ControllerUtente gu;
 		switch (gdb.getTipoUtente(username)) {
 		case CostantiStruttura.CONFIGURATORE:
-			a.setGu(new HandlerConfiguratore(gdb, username, a));
+			gu = new HandlerConfiguratore(gdb, username, a);
+			gdb.addControllerUtente(gu, username);
+			a.setGu(gu);
 			break;
 		case CostantiStruttura.VOLONTARIO:
-			a.setGu(new HandlerVolontario(gdb, username, a));
+			gu = new HandlerVolontario(gdb, username, a);
+			gdb.addControllerUtente(gu, username);
+			a.setGu(gu);
 			break;
 		case CostantiStruttura.FRUITORE:
-			a.setGu(new HandlerFruitore(gdb, username));
+			gu = new HandlerFruitore(gdb, username);
+			gdb.addControllerUtente(gu, username);
+			a.setGu(gu);
 			break;
 		default: 
 			a.view("Problema setting gu");

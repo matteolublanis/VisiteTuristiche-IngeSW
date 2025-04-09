@@ -91,14 +91,11 @@ public class UsersJSONManagement {
 		aggiornaJsonUsers ();
 		return true;
 	}
-	
+	//Precondizione: username esiste
 	public boolean checkCredenzialiCorrette (Credenziali c) {	
-		if (!checkIfUserExists(c.getUsername())) return false;
-		else { 
-			JSONObject utente = (JSONObject) jsonUsers.get(c.getUsername());
-			if (utente == (null)) return false;
-			return (utente.get(PASSWORD).equals(c.getPassword()));
-		}
+		JSONObject utente = (JSONObject) jsonUsers.get(c.getUsername());
+		if (utente == (null)) return false;
+		return (utente.get(PASSWORD).equals(c.getPassword()));
 	
 	}
 	
