@@ -395,16 +395,18 @@ public class HandlerConfiguratore extends ControllerUtente{
 			String nome = a.richiediInput("nome del luogo");
 			String descrizione = a.richiediInput("descrizione del luogo");
 			String collocazione = a.richiediInput("collocazione del luogo");
-			if (gdb.aggiungiLuogo(tag, nome, descrizione, collocazione, null)) a.view("Aggiunto un nuovo luogo.");
-			boolean finished = false;
-			do {
-				finished = aggiungiTipoVisitePartendoDaLuogo(a, tag);
-				if (finished) {
-					finished = a.chiediSioNo("Vuoi terminare l'aggiunta di tipi di visite?"); //se non vuole inserire ha finito
-				}
-			} while (!finished);
+			if (gdb.aggiungiLuogo(tag, nome, descrizione, collocazione, null)) {
+				a.view("Aggiunto un nuovo luogo.");
+				boolean finished = false;
+				do {
+					finished = aggiungiTipoVisitePartendoDaLuogo(a, tag);
+					if (finished) {
+						finished = a.chiediSioNo("Vuoi terminare l'aggiunta di tipi di visite?"); //se non vuole inserire ha finito
+					}
+				} while (!finished);
+			}
+			else a.view("Il luogo non è stato aggiunto, controllare il tag inserito.");
 		}
-		
 		
 	}
 	
