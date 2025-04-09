@@ -10,7 +10,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+//Precondizione per ogni metodo: Data e Ora nei formati corretti
 public class Time {
 	
 	public static final int DAY = 1, MONTH = 2, YEAR = 3;
@@ -46,7 +46,6 @@ public class Time {
 	}
 	
     public static int[] getDesideredMonthAndYear(int releaseDay, String date) {
-    	if (!isValidDate(date)) return null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         LocalDate givenDate = LocalDate.parse(date, formatter);
         int monthsToAdd = (givenDate.getDayOfMonth() < releaseDay) ? 1 : 2;
@@ -56,7 +55,6 @@ public class Time {
     }
 	
     public static String[] getAvailabilityWindow(String open, String close, int[] desiredMonthAndYear) {
-        if (!isValidDate(open) || !isValidDate(close)) return null;
         LocalDate openDate = LocalDate.parse(open, FORMATTER);
         LocalDate closeDate = LocalDate.parse(close, FORMATTER);
 
@@ -92,7 +90,6 @@ public class Time {
 	}
 	
     public static List<String> getAllDatesSameDayOfTheWeek(String open, String close, int desiredDay) {
-    	if (!isValidDate(open) || !isValidDate(close)) return null;
         List<String> result = new ArrayList<>();
         
         // Verifica del formato delle date
@@ -117,7 +114,6 @@ public class Time {
     }
 	
 	public static boolean isTimeBetween(String time, String start, String end) {
-    	if (!isValidHour(start) || !isValidHour(end) || !isValidHour(time)) return false;
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 		LocalTime targetTime = LocalTime.parse(time, formatter);
 		LocalTime startTime = LocalTime.parse(start, formatter);
@@ -130,7 +126,6 @@ public class Time {
 	}
 	
     public static boolean isThisDateInMonthPlus3(String date) {
-        if (!isValidDate(date)) return false;
         LocalDate inputDate;
         try {
             inputDate = LocalDate.parse(date, FORMATTER);
@@ -172,10 +167,8 @@ public class Time {
 
         return true;
 	}
-	
-	public static boolean isThreeDaysOrLessBefore(String date1, String date2) {
-	    if (!isValidDate(date1) || !isValidDate(date2)) return false;
 
+	public static boolean isThreeDaysOrLessBefore(String date1, String date2) {
 	    try {
 	        LocalDate d1 = LocalDate.parse(date1, FORMATTER);
 	        LocalDate d2 = LocalDate.parse(date2, FORMATTER);
@@ -185,10 +178,8 @@ public class Time {
 	        return false; 
 	    }
 	}
-	
-    public static boolean comesAfter(String date1, String date2) {
-    	if (!isValidDate(date1) || !isValidDate(date2)) return false;
 
+	public static boolean comesAfter(String date1, String date2) {
         try {
             LocalDate d1 = LocalDate.parse(date1, FORMATTER);
             LocalDate d2 = LocalDate.parse(date2, FORMATTER);
@@ -197,10 +188,8 @@ public class Time {
             return false; // Se la data non è valida, restituisce false
         }
     }
-	
-    public static boolean comesBefore(String date1, String date2) {
-    	if (!isValidDate(date1) || !isValidDate(date2)) return false;
 
+	public static boolean comesBefore(String date1, String date2) {
         try {
             LocalDate d1 = LocalDate.parse(date1, FORMATTER);
             LocalDate d2 = LocalDate.parse(date2, FORMATTER);
@@ -209,7 +198,7 @@ public class Time {
             return false; // Se la data non è valida, restituisce false
         }
     }
-	
+
 	public static boolean isValidHour (String time) {
 		Pattern pattern = Pattern.compile(TIMEREGEX); //hh-mm
         Matcher matcher = pattern.matcher(time);

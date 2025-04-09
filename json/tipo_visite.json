@@ -23,7 +23,10 @@
                     "min-fruitore": 1,
                     "luogo": "castello",
                     "durata-visita": 60,
-                    "volontari": ["volontario2"],
+                    "volontari": [
+                              "volontario2",
+                              "volontario5"
+                    ],
                     "data-fine": "08-12-2025",
                     "giorni-prenotabili": ["mer"],
                     "da-acquistare": false,
