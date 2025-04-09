@@ -1,10 +1,38 @@
 {
           "primo_avvio": false,
+          "volontario5": {
+                    "tipo": 2,
+                    "password": "admin",
+                    "primo-accesso": true,
+                    "tipo-visita": ["esplosione"],
+                    "username": "volontario5"
+          },
+          "volontario4": {
+                    "tipo": 2,
+                    "password": "admin",
+                    "primo-accesso": true,
+                    "tipo-visita": ["esplosione"],
+                    "username": "volontario4"
+          },
+          "volontario3": {
+                    "tipo": 2,
+                    "password": "paolo",
+                    "primo-accesso": true,
+                    "tipo-visita": ["visita_castello"],
+                    "username": "volontario3"
+          },
+          "volontario2": {
+                    "tipo": 2,
+                    "password": "paolo",
+                    "primo-accesso": true,
+                    "tipo-visita": ["kebab"],
+                    "username": "volontario2"
+          },
           "volontario1": {
                     "tipo": 2,
                     "password": "admin",
                     "primo-accesso": true,
-                    "tipo-visita": ["c"],
+                    "tipo-visita": ["visita_castello"],
                     "username": "volontario1"
           },
           "conf1": {

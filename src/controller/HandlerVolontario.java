@@ -70,7 +70,7 @@ public class HandlerVolontario extends ControllerUtente {
  				String data = "";
  				boolean b = true;
  				do { //le inserisco
- 					data = richiediDataValida(a, "data in cui dai disponibilità (dd-mm-yyyy)"); //inserisco data
+ 					data = a.richiediDataValida("data in cui dai disponibilità (dd-mm-yyyy)"); //inserisco data
  					b = gdb.inserisciDisponibilita(data, username); //controllo se inserita
  					if (b) { //se inserita chiedo se vuole continuare
  						a.view("La tua disponibilità è stata inserita.");

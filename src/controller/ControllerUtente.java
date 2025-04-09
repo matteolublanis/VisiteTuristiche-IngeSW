@@ -4,10 +4,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.LinkedList;
 import java.util.List;
-
 import main.App;
 import utility.Credenziali;
-import utility.Time;
 
 public abstract class ControllerUtente {
 	
@@ -23,27 +21,28 @@ public abstract class ControllerUtente {
 		this.username = username;
 	}
 	
-	public int getTipoUtente () {
+	protected int getTipoUtente () {
 		return gdb.getTipoUtente(username);
 	}
 	
-	public boolean checkPrimoAccesso() {
+	protected boolean checkPrimoAccesso() {
 		return gdb.checkPrimoAccesso(username);
 	}
-	public void primoAccesso(App a) {
-		if (checkPrimoAccesso()) {
-			a.view("Primo accesso eseguito.");
-			boolean b = false;
-			do {
-				a.view("Cambia le tue credenziali:");
-				String username = a.richiediInput("username");
-				String password = a.richiediInput("password");
-				Credenziali c = new Credenziali(username, password);
-				b = cambiaCredenziali(c);
-				if (!b) a.view("Credenziali non cambiate, username già presente.");
-			} while (!b);
-			a.view("Credenziali cambiate.");
-		};
+	
+	//Precondizione: isPrimoAccesso == true
+	//Post condizione: credenziali modificate
+	protected void primoAccesso(App a) {
+		a.view("Primo accesso eseguito.");
+		boolean b = false;
+		do {
+			a.view("Cambia le tue credenziali:");
+			String username = a.richiediInput("username");
+			String password = a.richiediInput("password");
+			Credenziali c = new Credenziali(username, password);
+			b = cambiaCredenziali(c);
+			if (!b) a.view("Credenziali non cambiate, username già presente.");
+		} while (!b);
+		a.view("Credenziali cambiate.");
 	}
 	
 	protected int richiediIntMaggioreDiZero(App a, String messaggio) {
@@ -66,26 +65,15 @@ public abstract class ControllerUtente {
 	    return tipo;
 	}
 	
-	protected String richiediDataValida(App a, String messaggio) {
-	    String data;
-	    do {
-	        data = (String) a.richiediInput(messaggio);
-	        if (!Time.isValidDate(data)) {
-	            a.view("Formato data non valido, deve essere (dd-mm-yyyy)");
-	        }
-	    } while (!Time.isValidDate(data));
-	    return data;
-	}
-	
-	public boolean cambiaCredenziali(Credenziali c) {
+	protected boolean cambiaCredenziali(Credenziali c) {
 		return (gdb.cambiaCredenziali(this.username, c, this));
 	}
 	
-	public void setUsername(String username) {
+	protected void setUsername(String username) {
 		this.username = username;
 	}
 	
-	public String getUsername() {
+	protected String getUsername() {
 		return username;
 	}
 	

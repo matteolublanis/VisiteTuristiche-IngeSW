@@ -1,15 +1,53 @@
-{"c": {
-          "titolo": "c",
-          "ora-inizio": "10:30",
-          "min-fruitore": 5,
-          "luogo": "c",
-          "durata-visita": 60,
-          "volontari": ["volontario1"],
-          "data-fine": "08-12-2025",
-          "giorni-prenotabili": ["ven"],
-          "da-acquistare": false,
-          "descrizione": "c",
-          "max-fruitore": 20,
-          "punto-incontro": "c",
-          "data-inizio": "08-09-2025"
-}}
+{
+          "esplosione": {
+                    "titolo": "esplosione",
+                    "ora-inizio": "12:01",
+                    "min-fruitore": 10,
+                    "luogo": "castello",
+                    "durata-visita": 60,
+                    "volontari": [
+                              "volontario4",
+                              "volontario5"
+                    ],
+                    "data-fine": "09-09-2026",
+                    "giorni-prenotabili": ["gio"],
+                    "da-acquistare": false,
+                    "descrizione": "esplosione",
+                    "max-fruitore": 100,
+                    "punto-incontro": "esplosione",
+                    "data-inizio": "09-09-2025"
+          },
+          "kebab": {
+                    "titolo": "kebab",
+                    "ora-inizio": "12:30",
+                    "min-fruitore": 1,
+                    "luogo": "castello",
+                    "durata-visita": 60,
+                    "volontari": ["volontario2"],
+                    "data-fine": "08-12-2025",
+                    "giorni-prenotabili": ["mer"],
+                    "da-acquistare": false,
+                    "descrizione": "kebab",
+                    "max-fruitore": 10,
+                    "punto-incontro": "kebab",
+                    "data-inizio": "08-09-2025"
+          },
+          "visita_castello": {
+                    "titolo": "Visita al castello",
+                    "ora-inizio": "10:30",
+                    "min-fruitore": 10,
+                    "luogo": "castello",
+                    "durata-visita": 90,
+                    "volontari": ["volontario1"],
+                    "data-fine": "08-12-2025",
+                    "giorni-prenotabili": [
+                              "mer",
+                              "gio"
+                    ],
+                    "da-acquistare": true,
+                    "descrizione": "Visita",
+                    "max-fruitore": 50,
+                    "punto-incontro": "Brescia",
+                    "data-inizio": "08-09-2025"
+          }
+}

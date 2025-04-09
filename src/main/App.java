@@ -7,6 +7,7 @@ import java.util.Scanner;
 import controller.Login;
 import controller.ControllerUtente;
 import utility.MethodName;
+import utility.Time;
 
 public class App { 
 	
@@ -63,12 +64,12 @@ public class App {
 			if (scelta > 0 && scelta <= azioniDisponibili.size()) {
 				Method metodo = azioniDisponibili.get(scelta - 1);
 				metodo.invoke(controllerUtente, this);
-
-			} else {
+			} 
+			else {
 				view("Scelta non valida.");
 			}
-		} catch (Exception e) { //TODO migliorare gestione eccezioni
-			view("Formato inserito non corretto."); //Tutte le eccezioni vengono catturate qua quando si esegue un metodo, difficile da debuggare
+		} catch (Exception e) { 
+			view("Formato inserito non corretto."); 
 			System.err.println(e);
 		}
 		
@@ -92,6 +93,39 @@ public class App {
 
 	}
 	
+	public String richiediOraValida(String msg) {
+	    String ora;
+	    do {
+	        ora = richiediInput(msg);
+	        if (!Time.isValidHour(ora)) {
+	            view("Formato non corretto, inserire tipo 10:30.");
+	        }
+	    } while (!Time.isValidHour(ora));
+	    return ora;
+	}
+	
+	public int richiediNumeroConLimite(String msg, int limit) {
+	    int n;
+	    do {
+	        n = richiediInt(msg);
+	        if (n <= limit) {
+	            view("Non può essere più piccolo o uguale di " + limit + ".");
+	        }
+	    } while (n <= limit);
+	    return n;
+	}
+	
+	public String richiediDataValida(String messaggio) {
+	    String data;
+	    do {
+	        data = (String) richiediInput(messaggio);
+	        if (!Time.isValidDate(data)) {
+	            view("Formato data non valido, deve essere (dd-mm-yyyy)");
+	        }
+	    } while (!Time.isValidDate(data));
+	    return data;
+	}
+	
 	public int richiediInt (String s) {
 		view("Inserisci " + s + ":");
 		while (!sc.hasNextInt()) {
@@ -104,13 +138,13 @@ public class App {
 	}
 	
 	public String richiediInput (String s) {
+		
 		try {
 			view("Inserisci " + s + ":");
 			s = sc.nextLine();
 			return s;
 		}
 		catch (NoSuchElementException e) {
-			//premendo CTRL Z si manda un EOF, non ho trovato come gestirlo
 			throw e;
 		}
 

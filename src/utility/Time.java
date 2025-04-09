@@ -56,39 +56,33 @@ public class Time {
     }
 	
     public static String[] getAvailabilityWindow(String open, String close, int[] desiredMonthAndYear) {
-        // Parse the open and close dates
         if (!isValidDate(open) || !isValidDate(close)) return null;
         LocalDate openDate = LocalDate.parse(open, FORMATTER);
         LocalDate closeDate = LocalDate.parse(close, FORMATTER);
 
-        // Construct desired start and end dates for the given month and year
         LocalDate desiredStart = LocalDate.of(desiredMonthAndYear[1], desiredMonthAndYear[0], 1); // Month is 1-based
         LocalDate desiredEnd = desiredStart.withDayOfMonth(desiredStart.lengthOfMonth()); // Last day of the month
 
-        // If the desired start date is after the close date, return null (invalid period)
         if (desiredStart.isAfter(closeDate)) {
             return null;
         }
         
         if (desiredStart.getYear() < openDate.getYear()) {
-            return null;  // If the desired year is before the open year, it's too early
+            return null; 
         }
         
         if (desiredStart.getMonthValue() < openDate.getMonthValue() && desiredStart.getYear() == openDate.getYear()) {
-            return null;  // If it's in the previous month of the same year, it's too early
+            return null; 
         }
 
-        // If the desired start is before the open date, adjust the start to the open date
         if (desiredStart.isBefore(openDate)) {
             desiredStart = openDate;
         }
 
-        // If the desired end is after the close date, adjust the end to the close date
         if (desiredEnd.isAfter(closeDate)) {
             desiredEnd = closeDate;
         }
 
-        // Return the adjusted availability window
         return new String[]{desiredStart.format(FORMATTER), desiredEnd.format(FORMATTER)};
     }
 	

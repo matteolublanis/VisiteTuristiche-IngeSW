@@ -58,7 +58,7 @@ public class HandlerFruitore extends ControllerUtente {
 		String date = "";
 		getElencoVisiteProposteConfermateCancellate(a);
 		do {
-			date = richiediDataValida(a, "data in cui prenotare (dd-mm-yyyy)");
+			date = a.richiediDataValida("data in cui prenotare (dd-mm-yyyy)");
 			if (Time.isThreeDaysOrLessBefore(Time.getActualDate(), date)) a.view("Non è possibile prenotare nei 3 giorni successivi a questo."); //LOGICA DI MODEL!!!
 		} while (Time.isThreeDaysOrLessBefore(Time.getActualDate(), date)); //non voglio che sia nei prossimi tre giorni, non ci sono visite prenotabili
 		if (gdb.getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato(date) != null) {

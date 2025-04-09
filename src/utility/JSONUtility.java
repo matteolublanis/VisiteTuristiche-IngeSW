@@ -81,7 +81,6 @@ public class JSONUtility {
             try {
 				Files.createDirectories(dirPath);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
         } 
