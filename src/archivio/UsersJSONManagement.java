@@ -14,12 +14,23 @@ import utility.Credenziali;
 import utility.JSONUtility;
 
 public class UsersJSONManagement {
-	private static final String PATH_USERS = "src/archivio/users.json";
-	private JSONObject jsonUsers = JSONUtility.readJsonFile(PATH_USERS);
+	private static final String PATH_USERS = "json/users.json";
+	private JSONObject jsonUsers = null;
 	private static final String PRIMO_AVVIO = "primo_avvio";
 	private static final String PASSWORD = "password", TIPO_USER = "tipo", USERNAME = "username", PRIMO_ACCESSO = "primo-accesso";
 	private static final String TIPO_VISITA = "tipo-visita";
 	private static final String PRENOTAZIONI = "prenotazioni";
+	
+	public UsersJSONManagement () {
+		if (JSONUtility.readJsonFile(PATH_USERS) == null) {
+			JSONObject users = new JSONObject();
+			users.put(PRIMO_AVVIO, true);
+			JSONUtility.aggiornaJsonFile(users, PATH_USERS, 10);
+			jsonUsers = JSONUtility.readJsonFile(PATH_USERS);
+			impostaCredenzialiNuovoConfiguratore("admin", "admin");
+		}
+		else jsonUsers = JSONUtility.readJsonFile(PATH_USERS);
+	}
 	
 	public boolean checkPrimoAvvio () {
 		return (jsonUsers.getBoolean(PRIMO_AVVIO));
@@ -80,14 +91,11 @@ public class UsersJSONManagement {
 		aggiornaJsonUsers ();
 		return true;
 	}
-	
+	//Precondizione: username esiste
 	public boolean checkCredenzialiCorrette (Credenziali c) {	
-		if (!checkIfUserExists(c.getUsername())) return false;
-		else { 
-			JSONObject utente = (JSONObject) jsonUsers.get(c.getUsername());
-			if (utente == (null)) return false;
-			return (utente.get(PASSWORD).equals(c.getPassword()));
-		}
+		JSONObject utente = (JSONObject) jsonUsers.get(c.getUsername());
+		if (utente == (null)) return false;
+		return (utente.get(PASSWORD).equals(c.getPassword()));
 	
 	}
 	

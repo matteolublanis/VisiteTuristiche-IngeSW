@@ -17,8 +17,8 @@ import utility.Time;
 public class PianoVisiteJSONManagement {
 	
 	private static final String PROPOSTA = "proposta", CANCELLATA = "cancellata", CONFERMATA = "confermata", COMPLETA = "completa", EFFETTUATA = "effettuata";
-	private static final String PATH_VISITE = "src/archivio/piano_visite.json";
-	private JSONObject jsonPianoVisite = JSONUtility.readJsonFile(PATH_VISITE); 
+	private static final String PATH_VISITE = "json/piano_visite.json";
+	private JSONObject jsonPianoVisite = null; 
 	private static final String LAST_CHECK = "last-check";
 	private static final String STATO_VISITA = "stato";
 	private static final String LUOGO = "luogo";
@@ -27,6 +27,15 @@ public class PianoVisiteJSONManagement {
 	private static final String 
 			VOLONTARI2 = "volontari";
 	
+	public PianoVisiteJSONManagement () {
+		if (JSONUtility.readJsonFile(PATH_VISITE) == null) {
+			JSONObject pianoVisite = new JSONObject();
+			pianoVisite.put(LAST_CHECK, Time.getActualDate());
+			JSONUtility.aggiornaJsonFile(pianoVisite, PATH_VISITE, 10);
+			jsonPianoVisite = JSONUtility.readJsonFile(PATH_VISITE); 
+		}
+		else jsonPianoVisite = JSONUtility.readJsonFile(PATH_VISITE); 
+	}
 	
 	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitore (TipiVisiteJSONManagement tipiVisiteJSONManager) {	
 	    List<VisitaDTO> visiteList = new ArrayList<>();
@@ -187,7 +196,8 @@ public class PianoVisiteJSONManagement {
 	}
 	
 	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato (String date, TipiVisiteJSONManagement tipiVisiteJSONManager) {	
-	    List<VisitaDTO> visiteList = new ArrayList<>();
+	    if (!jsonPianoVisite.has(date)) return null;
+		List<VisitaDTO> visiteList = new ArrayList<>();
 		JSONObject day = jsonPianoVisite.getJSONObject(date); // Visite del giorno
         for (String tag : day.keySet()) { // Singola visita
 	            JSONObject visita = day.getJSONObject(tag);

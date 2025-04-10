@@ -30,7 +30,8 @@ public class Login {
 		Credenziali credenziali = null;
 		do {
 			a.view("Inserisci le tue nuove credenziali:");
-			String username = a.richiediInput("username");
+			String username = a.richiediInput("username (ESC per tornare indietro)");
+			if (username.equalsIgnoreCase("esc")) avvio(a);
 			String password = a.richiediInput("password");
 			if (checkUsernameGiaPresente(username)) a.view("Username già in uso, reinserire le credenziali.");
 			else {
@@ -45,15 +46,15 @@ public class Login {
 	public boolean checkPrimoAvvio() {
 		return gdb.checkPrimoAvvio();
 	}
-	
+
 	public void avvio (App a) {
-		if (checkPrimoAvvio()) {
+		if (checkPrimoAvvio()) { 
 			Credenziali c = gdb.getCredenzialiIniziali();
 			a.view("PRIMO AVVIO, CREDENZIALI INIZIALI\nUsername: " + c.getUsername() + "\nPassword: " + c.getPassword());
 			accesso(a);
 		}
 		else {
-			if (a.chiediSioNo("Sei un nuovo utente?")) {
+			if (a.chiediSioNo("Vuoi registrarti come nuovo utente?")) {
 				registrazione(a);
 			}
 			else {
@@ -71,20 +72,26 @@ public class Login {
 	}
 	
 	private void configureHandlerUtente (String username, App a){
+		ControllerUtente gu;
 		switch (gdb.getTipoUtente(username)) {
 		case CostantiStruttura.CONFIGURATORE:
-			a.setGu(new HandlerConfiguratore(gdb, username, a));
+			gu = new HandlerConfiguratore(gdb, username, a);
+			gdb.addControllerUtente(gu, username);
+			a.setGu(gu);
 			break;
 		case CostantiStruttura.VOLONTARIO:
-			a.setGu(new HandlerVolontario(gdb, username, a));
+			gu = new HandlerVolontario(gdb, username, a);
+			gdb.addControllerUtente(gu, username);
+			a.setGu(gu);
 			break;
 		case CostantiStruttura.FRUITORE:
-			a.setGu(new HandlerFruitore(gdb, username));
+			gu = new HandlerFruitore(gdb, username);
+			gdb.addControllerUtente(gu, username);
+			a.setGu(gu);
 			break;
 		default: 
 			a.view("Problema setting gu");
 			return;
-
 		}
 	}
 }

@@ -1,8 +1,12 @@
 package utility;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -19,10 +23,14 @@ public class JSONUtility {
             JSONTokener  parser = new JSONTokener (reader);
             jsonObject =  new JSONObject(parser);
 
-            reader.close();
+            try {
+				reader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            return null;
         }
 
         return jsonObject;
@@ -67,6 +75,15 @@ public class JSONUtility {
     }
     
     public static void aggiornaJsonFile (JSONObject jsonObject, String path, int righe) {
+        String dirName = "json"; // Scrive tutti i JSON in una cartella dedicata
+        Path dirPath = Paths.get(dirName);
+        if (!Files.exists(dirPath)) {
+            try {
+				Files.createDirectories(dirPath);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+        } 
     	try (FileWriter file = new FileWriter(path)) {
             file.write(jsonObject.toString(righe)); 
         } catch (IOException e) {

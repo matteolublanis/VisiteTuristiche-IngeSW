@@ -16,8 +16,8 @@ import utility.JSONUtility;
 import utility.Time;
 
 public class TipiVisiteJSONManagement {
-	private static final String PATH_TIPI_VISITE = "src/archivio/tipo_visite.json";
-	private JSONObject jsonTipiVisite = JSONUtility.readJsonFile(PATH_TIPI_VISITE);
+	private static final String PATH_TIPI_VISITE = "json/tipo_visite.json";
+	private JSONObject jsonTipiVisite = null;
 	private static final String VOLONTARI2 = "volontari";
 	private static final String LUOGO = "luogo";
 	private static final String[] GIORNISETTIMANA = new String[] {"lun","mar","mer","gio","ven","sab","dom"};
@@ -33,6 +33,13 @@ public class TipiVisiteJSONManagement {
 			TITOLO = "titolo",
 			DESCRIPTION = "descrizione";
 	
+	public TipiVisiteJSONManagement () {
+		if (JSONUtility.readJsonFile(PATH_TIPI_VISITE) == null) {
+			JSONUtility.aggiornaJsonFile(new JSONObject(), PATH_TIPI_VISITE, 10);
+			jsonTipiVisite = JSONUtility.readJsonFile(PATH_TIPI_VISITE);
+		}
+		else jsonTipiVisite = JSONUtility.readJsonFile(PATH_TIPI_VISITE);
+	}
 	
 	public JSONObject getTipoVisitaJSONObject (String tipo) {
 		return jsonTipiVisite.getJSONObject(tipo);
@@ -217,10 +224,9 @@ public class TipiVisiteJSONManagement {
 	}
 	
 	public JSONArray returnGiorniPrenotabili (ArrayList<Integer> giorniPrenotabiliVal) {
-		JSONArray giorniPrenotabili = null;
+		JSONArray giorniPrenotabili = new JSONArray();
 	    for (Integer k : giorniPrenotabiliVal) {
 	    	try {
-	    		giorniPrenotabili = new JSONArray();
 	    		int j = (k);
 	    		if (!(j < 1 || j > 7) && !giorniPrenotabili.toString().contains(GIORNISETTIMANA[j-1])) {
 		    		giorniPrenotabili.put(GIORNISETTIMANA[j-1]);

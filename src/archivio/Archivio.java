@@ -42,7 +42,7 @@ public interface Archivio {
 			String dataInizio, String dataFine, ArrayList<Integer> giorniPrenotabiliVal, String oraInizio,
 			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, ArrayList<String> volontariVal);
 	public boolean checkIfPlaceExists (String luogo);
-	public boolean aggiungiLuogo (String tag, String nome, String collocazione, Set<String> tipiVisitaVal);
+	public boolean aggiungiLuogo (String tag, String nome, String descrizione, String collocazione, Set<String> tipiVisitaVal);
 	public void setPrimaConfigurazione();
 	public boolean modificaCredenziali (String username, Credenziali c);
 	public boolean primoAccessoEseguito (String user);

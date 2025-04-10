@@ -6,7 +6,6 @@ import java.util.Map;
 import dto.VisitaDTO;
 import main.App;
 import utility.MethodName;
-import utility.Time;
 
 public class HandlerVolontario extends ControllerUtente {
 	
@@ -71,18 +70,15 @@ public class HandlerVolontario extends ControllerUtente {
  				String data = "";
  				boolean b = true;
  				do { //le inserisco
- 					data = a.richiediInput("data in cui dai disponibilità"); //inserisco data
- 					if (!Time.isValidDate(data)) a.view("Il formato inserito non è corretto."); //se non valida si rifa
- 					else { //se valida
- 						b = gdb.inserisciDisponibilita(data, username); //controllo se inserita
- 						if (b) { //se inserita chiedo se vuole continuare
- 							a.view("La tua disponibilità è stata inserita.");
- 							b = a.chiediSioNo("Vuoi aggiungere altre disponibilità?");
- 						}
- 						else { //se non inserita richiedo
- 							a.view("La tua disponibilità non è stata inserita, assicurati che sia una data corretta.");
- 							b = a.chiediSioNo("Vuoi continuare ad aggiungere?"); //do possibilità di chiudere loop
- 						}
+ 					data = a.richiediDataValida("data in cui dai disponibilità (dd-mm-yyyy)"); //inserisco data
+ 					b = gdb.inserisciDisponibilita(data, username); //controllo se inserita
+ 					if (b) { //se inserita chiedo se vuole continuare
+ 						a.view("La tua disponibilità è stata inserita.");
+ 						b = a.chiediSioNo("Vuoi aggiungere altre disponibilità?");
+ 					}
+ 					else { //se non inserita richiedo
+ 						a.view("La tua disponibilità non è stata inserita, assicurati che sia una data corretta.");
+ 						b = a.chiediSioNo("Vuoi continuare ad aggiungere?"); //do possibilità di chiudere loop
  					}
  				} while (b); //TODO se viene inserito un formato errato chiude
  				

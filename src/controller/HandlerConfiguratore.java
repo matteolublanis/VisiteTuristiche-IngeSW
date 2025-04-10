@@ -14,11 +14,7 @@ import utility.Time;
 
 
 public class HandlerConfiguratore extends ControllerUtente{	
-		
-	public HandlerConfiguratore () {
-		
-	}
-
+	
 	public HandlerConfiguratore(ControllerArchivio gdb, String username, App a) {
 		this.gdb = gdb;
 		this.username = username;
@@ -36,7 +32,6 @@ public class HandlerConfiguratore extends ControllerUtente{
 		modificaMaxPrenotazione(a);
 		a.view("Inizio fase creazione luoghi dell'ambito territoriale.");
 		aggiungiLuogo(a);
-		gdb.setPrimaConfigurazione();
 	}
 	
 	private String impostaNuovoVolontarioConUnTipoVisitaScelto (App a, String tipo) {
@@ -54,16 +49,15 @@ public class HandlerConfiguratore extends ControllerUtente{
 		}
 	}
 	
-	private String impostaNuovoVolontarioConTipoVisitaScelto (App a, Set<String> tipi_visiteVal) {
+	private boolean impostaNuovoVolontarioConTipoVisitaScelto (App a, Set<String> tipi_visiteVal, List<String> volontari) {
 		String username = a.richiediInput("username del nuovo volontario");
 		String password = a.richiediInput("password del nuovo volontario");
 		if (gdb.impostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal, false)) {
-			a.view("Inserito nuovo volontario.");
-			return username;
+			volontari.add(username);
+			return true;
 		}
 		else {
-			a.view("Non è stato inserito il nuovo volontario, username già in uso.");
-			return "";
+			return false;
 		}
 	}
 	@MethodName("Rimuovi luogo")
@@ -170,7 +164,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	
 	@MethodName("Indica date precluse del prossimo piano a quello successivo a questo")
 	public void indicaDatePrecluse(App a) {
-		String data = a.richiediInput("data preclusa"); 
+		String data = a.richiediDataValida("data preclusa (dd-mm-yyyy)"); 
 		if ((gdb.indicaDatePrecluse(data))) a.view("La data preclusa è stata inserita.");
 		else a.view("La data preclusa non è stata inserita, assicurarsi che sia nel formato e nel periodo corretto.");
 	}
@@ -225,87 +219,59 @@ public class HandlerConfiguratore extends ControllerUtente{
 	    return giorni;
 	}
 	
-	private String richiediOraValida(App a) {
-	    String ora;
-	    do {
-	        ora = a.richiediInput("ora d'inizio visita (hh-mm)");
-	        if (!Time.isValidHour(ora)) {
-	            a.view("Formato non corretto, inserire tipo 10:30.");
-	        }
-	    } while (!Time.isValidHour(ora));
-	    return ora;
-	}
-	
-	private int richiediNumeroMinimo(App a) {
-	    int min;
-	    do {
-	        min = a.richiediInt("minimo fruitori per confermare la visita");
-	        if (min <= 0) {
-	            a.view("Il numero minimo di fruitori non può essere minore o uguale a 0.");
-	        }
-	    } while (min <= 0);
-	    return min;
-	}
-	
-	private int richiediNumeroMassimo(App a, int min) {
-	    int max;
-	    do {
-	        max = a.richiediInt("massimo fruitori per completare la visita");
-	        if (max < min) {
-	            a.view("Il numero massimo di fruitori non può essere minore del minimo.");
-	        }
-	    } while (max < min);
-	    return max;
-	}
-	
 	private ArrayList<String> richiediVolontari(App a) {
 		ArrayList<String> volontari = new ArrayList<>();
-	    if (a.chiediSioNo("Vuoi associare un nuovo volontario per questo tipo di visita?")) {
-	        String volontario;
-	        do {
-	        	volontario = impostaNuovoVolontarioConTipoVisitaScelto(a, null);
-	        } while (volontario.equals(""));
-	        volontari.add(volontario);
-	    } else {
-	        boolean continua;
-	        do {
-	            String volontario = a.richiediInput("volontario che gestirà la visita");
-	            if (!gdb.checkIfUserExists(volontario)) {
-	                a.view("L'username inserito non è associato a nessun volontario.");
-	                continua = true;
-	            } else if (!volontari.contains(volontario)) {
-	                volontari.add(volontario);
-	                continua = a.chiediSioNo("Vuoi inserire un altro volontario?");
-	            } else {
-	                a.view("Volontario già inserito!");
-	                continua = true;
-	            }
-	        } while (continua);
-	    }
+        boolean continua = true;
+		do {
+		    if (a.chiediSioNo("Vuoi associare un nuovo volontario per questo tipo di visita?")) {
+		        boolean volontarioCreato;
+		        do {
+		        	volontarioCreato = impostaNuovoVolontarioConTipoVisitaScelto(a, null, volontari);
+		        	if (volontarioCreato) {
+		        		a.view("Inserito nuovo volontario.");
+		        	}
+		        	else a.view("Non è stato inserito il nuovo volontario, username già in uso.");
+		        } while (!volontarioCreato);
+	    		continua = a.chiediSioNo("Vuoi inserire un altro volontario?");
+		    } 
+		    else {
+		    	String volontario = a.richiediInput("volontario che gestirà la visita");
+		    	if (!gdb.checkIfUserExists(volontario)) {
+		    		a.view("L'username inserito non è associato a nessun volontario.");
+		    		continua = true;
+		    	} else if (!volontari.contains(volontario)) {
+		    		volontari.add(volontario);
+		    		continua = a.chiediSioNo("Vuoi inserire un altro volontario?");
+		    	} else {
+		    		a.view("Volontario già inserito!");
+		    		continua = true;
+		    	}
+		    }
+		} while (continua);
 	    return volontari;
 	}
 	
+	//Precondizione: luogo diverso da null (presente nell'archivio)
+	//Postcondizione: tipo visita inserito e inserito associazione
 	private boolean aggiungiTipoVisitePartendoDaLuogo (App a, String luogo) {
 		String tipoVisita = richiediTipoVisita(a);
 		String titolo = a.richiediInput("titolo della visita");
 		String descrizione = a.richiediInput("descrizione riassuntiva della visita");
 		String puntoIncontro = a.richiediInput("punto di incontro della visita (locazione geografica)");
-		String dataInizio = richiediDataValida(a, "apertura del periodo della visita");
+		String dataInizio = a.richiediDataValida("apertura del periodo della visita (dd-mm-yyyy)");
 		String dataFine = "";
 		do {
-			dataFine = richiediDataValida(a, "chiusura del periodo della visita");
+			dataFine = a.richiediDataValida("chiusura del periodo della visita (dd-mm-yyyy)");
 			if (Time.comesBefore(dataFine, dataInizio)) a.view("Non può finire prima che inizi.");
 		} while (Time.comesBefore(dataFine, dataInizio));
 		ArrayList<Integer> giorniPrenotabili = richiediGiorniPrenotabili(a);
-		String oraInizio = richiediOraValida(a);
+		String oraInizio = a.richiediOraValida("ora d'inizio visita (hh-mm)");
 		int durataVisita = a.richiediInt("durata della visita in minuti (ad esempio 120 sono 120 minuti, quindi 2 ore)");
 		boolean ticket = a.chiediSioNo("è da acquistare o no un biglietto?");
-		int minFruitore = richiediNumeroMinimo(a);
-		int maxFruitore = richiediNumeroMassimo(a, minFruitore);
+		int minFruitore = a.richiediNumeroConLimite("minimo fruitori per confermare la visita", 0);
+		int maxFruitore = a.richiediNumeroConLimite("massimo fruitori per completare la visita", minFruitore);
 		ArrayList<String> volontari = richiediVolontari(a);
-		boolean aggiunto = (gdb.aggiungiTipoVisite(luogo, tipoVisita, titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniPrenotabili, oraInizio, durataVisita, ticket, minFruitore, maxFruitore, volontari));
-		a.view(aggiunto ? "Il nuovo tipo di visita è stato aggiunto." : "Il nuovo tipo di visita non è stato aggiunto.");
-		return aggiunto;
+		return (gdb.aggiungiTipoVisite(luogo, tipoVisita, titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniPrenotabili, oraInizio, durataVisita, ticket, minFruitore, maxFruitore, volontari));
 	}
 	
 	@MethodName("Aggiungi tipo visite")
@@ -317,7 +283,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 				if (!gdb.checkIfPlaceExists(luogo)) a.view("Il luogo inserito è inesistente.");
 			} while (!gdb.checkIfPlaceExists(luogo));
 			
-			aggiungiTipoVisitePartendoDaLuogo(a, luogo);
+			a.view((aggiungiTipoVisitePartendoDaLuogo(a, luogo)) ? "Il nuovo tipo di visita è stato aggiunto." : "Il nuovo tipo di visita non è stato aggiunto.");
 		}
 		
 	}
@@ -344,7 +310,8 @@ public class HandlerConfiguratore extends ControllerUtente{
 	    getListaVolontari(a);
 	    String volontario;
 	    do {
-	        volontario = a.richiediInput("volontari da associare");
+	        volontario = a.richiediInput("volontario da associare (esc per tornare indietro)");
+	        if (volontario.equalsIgnoreCase("esc")) return;
 	        if (!gdb.checkIfUserExists(volontario)) {
 	            a.view("Il volontario inserito non esiste, reinserire.");
 	        } else if (!gdb.associaVolontarioEsistenteATipoVisitaEsistente(volontario, tipo)) {
@@ -353,7 +320,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	            break;
 	        }
 	    } while (true);
-	} 
+	}
 	
 	@MethodName("Aggiungi volontari ad un tipo di visita esistente")
 	public void aggiungiVolontariATipiVisita (App a) {
@@ -393,17 +360,21 @@ public class HandlerConfiguratore extends ControllerUtente{
 		if (canAddOrRemove(a)) {
 			String tag = a.richiediInput("tag del luogo");
 			String nome = a.richiediInput("nome del luogo");
+			String descrizione = a.richiediInput("descrizione del luogo");
 			String collocazione = a.richiediInput("collocazione del luogo");
-			if (gdb.aggiungiLuogo(tag, nome, collocazione, null)) a.view("Aggiunto un nuovo luogo.");
-			boolean finished = false;
-			do {
-				finished = aggiungiTipoVisitePartendoDaLuogo(a, tag);
-				if (finished) {
-					finished = a.chiediSioNo("Vuoi terminare l'aggiunta di tipi di visite?"); //se non vuole inserire ha finito
-				}
-			} while (!finished);
+			if (gdb.aggiungiLuogo(tag, nome, descrizione, collocazione, null)) {
+				a.view("Aggiunto un nuovo luogo.");
+				boolean aggiunto = false;
+				do {
+					aggiunto = aggiungiTipoVisitePartendoDaLuogo(a, tag);
+					a.view(aggiunto ? "Il nuovo tipo di visita è stato aggiunto." : "Il nuovo tipo di visita non è stato aggiunto.");
+					if (aggiunto) {
+						aggiunto = !a.chiediSioNo("Vuoi continuare con l'aggiunta di tipi di visite?"); //se non vuole inserire ha finito
+					}
+				} while (!aggiunto);
+			}
+			else a.view("Il luogo non è stato aggiunto, controllare il tag inserito.");
 		}
-		
 		
 	}
 	

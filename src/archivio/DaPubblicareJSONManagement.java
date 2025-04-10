@@ -13,8 +13,8 @@ import utility.Time;
 public class DaPubblicareJSONManagement {
 	
 	private static final String POSSIBILE_DARE_DISPONIBILITA = "possibile-dare-disponibilita";
-	private JSONObject jsonPianoVisiteDaPubblicare = JSONUtility.readJsonFile(PATH_VISITE_DAPUBBLICARE);
-	private static final String PATH_VISITE_DAPUBBLICARE = "src/archivio/visite_da_pubblicare.json";
+	private JSONObject jsonPianoVisiteDaPubblicare = null;
+	private static final String PATH_VISITE_DAPUBBLICARE = "json/visite_da_pubblicare.json";
 	private static final String ANNO_ULTIMA_PUBBLICAZIONE = "anno-ultima-pubblicazione";
 	private static final String MESE_ULTIMA_PUBBLICAZIONE = "mese-ultima-pubblicazione";
 	private static final String PRIMA_PUBBLICAZIONE = "prima-pubblicazione";
@@ -23,6 +23,27 @@ public class DaPubblicareJSONManagement {
 	private static final String DATE_PRECLUSE_MESEIPLUS3 = "datePrecluseI+3";
 	private static final String DISPONIBILITA = "disponibilita";
 	
+	public DaPubblicareJSONManagement () {
+		if (JSONUtility.readJsonFile(PATH_VISITE_DAPUBBLICARE) == null) {
+			creaDaPubblicareJSON();
+		}
+		else jsonPianoVisiteDaPubblicare = JSONUtility.readJsonFile(PATH_VISITE_DAPUBBLICARE);
+	}
+	
+	private void creaDaPubblicareJSON () {
+		JSONObject daPubblicare = new JSONObject();
+		daPubblicare.put(ULTIMO_PIANO, false);
+		daPubblicare.put(PRIMA_PUBBLICAZIONE, true);
+		daPubblicare.put(DISPONIBILITA, new JSONObject());
+		daPubblicare.put(DATE_PRECLUSE, new JSONArray());
+		daPubblicare.put(DATE_PRECLUSE_MESEIPLUS3, new JSONArray());
+		daPubblicare.put(MESE_ULTIMA_PUBBLICAZIONE, Time.getActualDateValue(Time.MONTH)); //TODO da controllare
+		daPubblicare.put(ANNO_ULTIMA_PUBBLICAZIONE, Time.getActualDateValue(Time.YEAR));
+		daPubblicare.put(POSSIBILE_DARE_DISPONIBILITA, false);
+		JSONUtility.aggiornaJsonFile(daPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
+		jsonPianoVisiteDaPubblicare = JSONUtility.readJsonFile(PATH_VISITE_DAPUBBLICARE);
+		
+	}
 	public JSONObject getDisponibilita () {
 		return jsonPianoVisiteDaPubblicare.getJSONObject(DISPONIBILITA);
 	}

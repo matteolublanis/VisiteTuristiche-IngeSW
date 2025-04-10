@@ -10,20 +10,27 @@ import utility.CodicePrenotazioneGenerator;
 import utility.JSONUtility;
 
 public class PrenotazioniJSONManagement {
-	private static final String PATH_PRENOTAZIONI = "src/archivio/prenotazioni.json";
-	private JSONObject jsonPrenotazioni = JSONUtility.readJsonFile(PATH_PRENOTAZIONI);
+	private static final String PATH_PRENOTAZIONI = "json/prenotazioni.json";
+	private JSONObject jsonPrenotazioni = null;
 	private static final String GIORNO = "giorno";
-	private static final String UTENTE = "utente";
+	private static final String USERNAME = "username";
 	private static final String NUMERO_ISCRITTI = "numero-iscritti";
 	private static final String TIPO_VISITA = "tipo-visita";
 
-
+	public PrenotazioniJSONManagement () {
+		if (JSONUtility.readJsonFile(PATH_PRENOTAZIONI) == null) {
+			JSONUtility.aggiornaJsonFile(new JSONObject(), PATH_PRENOTAZIONI, 10);
+			jsonPrenotazioni = JSONUtility.readJsonFile(PATH_PRENOTAZIONI);
+		}
+		else jsonPrenotazioni = JSONUtility.readJsonFile(PATH_PRENOTAZIONI);
+	}
+	
 	public JSONObject getPrenotazioneJSONObject (String codicePrenotazione) {
 		return jsonPrenotazioni.getJSONObject(codicePrenotazione);
 	}
 	
 	public String getLinkedFruitore (String codicePrenotazione) {
-		return getPrenotazioneJSONObject(codicePrenotazione).getString(UTENTE);
+		return getPrenotazioneJSONObject(codicePrenotazione).getString(USERNAME);
 	}
 	
 	public int getNIscrittiPrenotazione (String codicePrenotazione) {
@@ -56,7 +63,7 @@ public class PrenotazioniJSONManagement {
 	public String inserisciPrenotazione (PrenotazioneDTO prenotazione, String username) {
 		JSONObject prenotazioneJSON = new JSONObject();
 		prenotazioneJSON.put(GIORNO, prenotazione.getGiorno());
-		prenotazioneJSON.put(UTENTE, username);
+		prenotazioneJSON.put(USERNAME, username);
 		prenotazioneJSON.put(NUMERO_ISCRITTI, prenotazione.getNum_da_prenotare());
 		prenotazioneJSON.put(TIPO_VISITA, prenotazione.getTag_visita());
 		String codicePrenotazione = null;

@@ -10,9 +10,19 @@ import utility.JSONUtility;
 
 public class PianoStoricoJSONManagement {
 	
-	private static final String PATH_STORICO = "src/archivio/visite_effettuate_storico.json";
-	private JSONObject jsonPianoStorico = JSONUtility.readJsonFile(PATH_STORICO);
+	private static final String PATH_STORICO = "json/visite_effettuate_storico.json";
+	private JSONObject jsonPianoStorico = null;
 	
+	
+	public PianoStoricoJSONManagement () {
+		if (JSONUtility.readJsonFile(PATH_STORICO) == null) {
+			JSONUtility.aggiornaJsonFile(new JSONObject(), PATH_STORICO, 10);
+			jsonPianoStorico = JSONUtility.readJsonFile(PATH_STORICO);
+		}
+		else {
+			jsonPianoStorico = JSONUtility.readJsonFile(PATH_STORICO);
+		}
+	}
 	
 	public List<VisitaDTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate () {	
 	    List<VisitaDTO> visiteList = new ArrayList<>();

@@ -56,8 +56,9 @@ public class HandlerFruitore extends ControllerUtente {
 	@MethodName("Effettua iscrizione ad una visita proposta")
 	public void effettuaIscrizione (App a) {
 		String date = "";
+		getElencoVisiteProposteConfermateCancellate(a);
 		do {
-			date = richiediDataValida(a, "data in cui prenotare");
+			date = a.richiediDataValida("data in cui prenotare (dd-mm-yyyy)");
 			if (Time.isThreeDaysOrLessBefore(Time.getActualDate(), date)) a.view("Non è possibile prenotare nei 3 giorni successivi a questo."); //LOGICA DI MODEL!!!
 		} while (Time.isThreeDaysOrLessBefore(Time.getActualDate(), date)); //non voglio che sia nei prossimi tre giorni, non ci sono visite prenotabili
 		if (gdb.getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato(date) != null) {
@@ -86,21 +87,26 @@ public class HandlerFruitore extends ControllerUtente {
 			for (PrenotazioneDTO prenotazione : prenotazioni) {
 				a.view("-----------");
 				a.view("Codice: " + prenotazione.getCodice() + ", giorno: " + prenotazione.getGiorno());
-				a.view("Titolo visita: " + prenotazione.getTag_visita());
+				a.view("Tag visita: " + prenotazione.getTag_visita()); //TODO meglio titolo
 			}
 		}
 	}
 	
 	@MethodName("Disdisci una prenotazione")
 	public void disdiciIscrizione (App a) {
-		visualElencoPrenotazioni(a);
-		String codicePrenotazioneDaEliminare = null;
-		Set<String> k = prenotazioniLinkate();
-		if (k != null)do {
-			codicePrenotazioneDaEliminare = a.richiediInput("codice della prenotazione da eliminare");
-			if (!k.contains(codicePrenotazioneDaEliminare)) a.view("Il codice inserito non è legato a nessuna prenotazione, reinserirlo.");
-		} while (!k.contains(codicePrenotazioneDaEliminare));
-		a.view(gdb.rimuoviPrenotazione(username, codicePrenotazioneDaEliminare) ? "Prenotazione rimossa." : "Prenotazione non rimossa.");
+		if (gdb.getElencoPrenotazioniFruitore(username) != null) {
+			visualElencoPrenotazioni(a);
+			String codicePrenotazioneDaEliminare = null;
+			Set<String> k = prenotazioniLinkate();
+			if (k != null)do {
+				codicePrenotazioneDaEliminare = a.richiediInput("codice della prenotazione da eliminare (ESC per annullare)");
+				if (codicePrenotazioneDaEliminare.equalsIgnoreCase("esc")) return;
+				if (!k.contains(codicePrenotazioneDaEliminare)) a.view("Il codice inserito non è legato a nessuna prenotazione, reinserirlo.");
+			} while (!k.contains(codicePrenotazioneDaEliminare));
+			a.view(gdb.rimuoviPrenotazione(username, codicePrenotazioneDaEliminare) ? "Prenotazione rimossa." : "Prenotazione non rimossa.");
+		}
+		else a.view("Non hai prenotazioni.");
+
 	}
 	
 }

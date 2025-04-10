@@ -1,0 +1,15 @@
+{
+          "luoghi": {"castello": {
+                    "descrizione": "Castello",
+                    "collocazione": "Brescia",
+                    "nome": "Castello di Brescia",
+                    "tipo-visita": [
+                              "visita_castello",
+                              "kebab",
+                              "esplosione"
+                    ]
+          }},
+          "max_prenotazione": 5,
+          "nome": "Brescia",
+          "prima_configurazione": false
+}
