@@ -7,5 +7,5 @@
 
 - [@matteolub02](https://github.com/matteolub02) Matteo Lublanis
 - [@SinghSahiljit44](https://github.com/SinghSahiljit44) Singh Sahiljit 
-- [@Davidbrembo](https://github.com/Davidbrembo) Davide Brembati
+- [@Davidbrembo](https://github.com/Davidbrembo) David Brembati
 

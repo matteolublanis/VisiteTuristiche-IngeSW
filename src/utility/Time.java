@@ -114,6 +114,8 @@ public class Time {
     }
 	
 	public static boolean isTimeBetween(String time, String start, String end) {
+    if (!isValidHour(start) || !isValidHour(end) || !isValidHour(time)) return false;
+
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 		LocalTime targetTime = LocalTime.parse(time, formatter);
 		LocalTime startTime = LocalTime.parse(start, formatter);
