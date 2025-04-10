@@ -36,20 +36,27 @@ public class ControllerArchivio {
 		return archivio.getTipoUtente(username);
 	}
 	
-	public boolean pubblicaPiano(String username) { //OK
-		return archivio.tryPubblicaPiano(username);
+	public boolean pubblicaPiano(ControllerUtente gu) { 
+		if (getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.CONFIGURATORE) 
+			return archivio.tryPubblicaPiano();
+		else return false;
 	}
 	
-	public boolean chiudiRaccoltaDisponibilita (String username) { //OK
-		return archivio.tryChiudiRaccoltaDisponibilita(username);
+	public boolean chiudiRaccoltaDisponibilita (ControllerUtente gu) { //OK
+		if (getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.CONFIGURATORE) 
+			return archivio.tryChiudiRaccoltaDisponibilita();
+		else return false;
 	}
 	
-	public boolean apriRaccoltaDisponibilita(String username) {  //OK
-		return archivio.tryApriRaccoltaDisponibilita(username);
+	public boolean apriRaccoltaDisponibilita(ControllerUtente gu) {  //OK
+		if (getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.CONFIGURATORE) 
+			return archivio.tryApriRaccoltaDisponibilita();
+		else return false;
 	}
 	
-	public boolean associaVolontarioEsistenteATipoVisitaEsistente(String volontario, String tipoVisita) { //OK
-		if (checkIfUserExists(volontario) && checkIfVisitTypeExists(tipoVisita)) {
+	public boolean associaVolontarioEsistenteATipoVisitaEsistente(ControllerUtente gu, String volontario, String tipoVisita) { //OK
+		if ( getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.CONFIGURATORE
+				&& checkIfUserExists(volontario) && checkIfVisitTypeExists(tipoVisita)) {
 			if (archivio.checkIfCanLinkVolontario(volontario, tipoVisita)) {
 				return archivio.associaVolontarioEsistenteATipoVisitaEsistente(volontario, tipoVisita);
 			}
@@ -64,38 +71,48 @@ public class ControllerArchivio {
 		return archivio.getPossibileDareDisponibilita();
 	}
 	
-    public boolean inserisciDisponibilita(String data, String username) { //OK
-    	return archivio.inserisciDisponibilita(data, username);
+    public boolean inserisciDisponibilita(ControllerUtente gu, String data, String username) { //OK
+    	 if (getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.VOLONTARIO) 
+    		 return archivio.inserisciDisponibilita(data, username);
+    	 else return false;
 	}
 	
-	public Map<String, List<String>> getDatePerDisponibilita(String username) {	 //OK
-		return archivio.getDatePerDisponibilita(username);
+	public Map<String, List<String>> getDatePerDisponibilita(ControllerUtente gu) {	 //OK
+		if (getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.VOLONTARIO) 
+			return archivio.getDatePerDisponibilita(usernameLinkati.get(gu));
+		else return null;
 	}
 
-	public Set<String> getElencoTipiVisite () { //OK
- 		return archivio.getElencoTipiVisite();
+	public Set<String> getElencoTipiVisite (ControllerUtente gu) { //OK
+		if (getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.CONFIGURATORE) 
+			return archivio.getElencoTipiVisite();
+		else return null;
  	}
 
- 	public List<String> getElencoTipiVisiteVolontario (String username) { 
- 		return archivio.getElencoTipiVisiteVolontario(username);
+ 	public List<String> getElencoTipiVisiteVolontario (ControllerUtente gu) { 
+ 		if (getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.VOLONTARIO) 
+ 			return archivio.getElencoTipiVisiteVolontario(usernameLinkati.get(gu));
+ 		else return null;
  	}
 	
-	public boolean impostaCredenzialiNuovoVolontario (String username, String password, Set<String> tipi_visiteVal, boolean tipiVisitaNecessario) {
-		return archivio.tryImpostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal, tipiVisitaNecessario);
-	}
-	
-	public boolean rimuoviLuogo (String luogo, String username) {
-		if (archivio.checkIfPlaceExists(luogo) && canAddOrRemove(username)) return archivio.rimuoviLuogo(luogo);
+	public boolean impostaCredenzialiNuovoVolontario (ControllerUtente gu, String username, String password, Set<String> tipi_visiteVal, boolean tipiVisitaNecessario) {
+		if (getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.CONFIGURATORE) 
+			return archivio.tryImpostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal, tipiVisitaNecessario);
 		else return false;
 	}
 	
-	public boolean rimuoviVolontario (String volontario, String username) {
-		if (archivio.checkIfUserExists(volontario) && archivio.getTipoUtente(volontario) == CostantiStruttura.VOLONTARIO && canAddOrRemove(username)) return archivio.rimuoviVolontario(volontario);
+	public boolean rimuoviLuogo (String luogo, ControllerUtente gu) {
+		if (archivio.checkIfPlaceExists(luogo) && canAddOrRemove(usernameLinkati.get(gu))) return archivio.rimuoviLuogo(luogo);
 		else return false;
 	}
 	
-	public boolean rimuoviTipo (String tipo, String username) {
-		if (archivio.checkIfVisitTypeExists(tipo) && canAddOrRemove(username)) return archivio.rimuoviTipo(tipo);
+	public boolean rimuoviVolontario (String volontario, ControllerUtente gu) {
+		if (archivio.checkIfUserExists(volontario) && archivio.getTipoUtente(volontario) == CostantiStruttura.VOLONTARIO && canAddOrRemove(usernameLinkati.get(gu))) return archivio.rimuoviVolontario(volontario);
+		else return false;
+	}
+	
+	public boolean rimuoviTipo (String tipo, ControllerUtente gu) {
+		if (archivio.checkIfVisitTypeExists(tipo) && canAddOrRemove(usernameLinkati.get(gu))) return archivio.rimuoviTipo(tipo);
 		else return false;
 	}
 	
@@ -106,8 +123,8 @@ public class ControllerArchivio {
 		else return false;
 	}
 	
-	public boolean checkPrimaConfigurazioneArchivio (String username) {
-		if (archivio.checkIfUserExists(username) && archivio.getTipoUtente(username) == CostantiStruttura.CONFIGURATORE) {
+	public boolean checkPrimaConfigurazioneArchivio (ControllerUtente gu) {
+		if (archivio.getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.CONFIGURATORE) {
 			return archivio.isPrimaConfigurazione();
 		}
 		else return false;
@@ -125,8 +142,10 @@ public class ControllerArchivio {
 		archivio.setPossibilitaDareDisponibilitaVolontari(b);
 	}
 	
-	public boolean isReleaseOrLaterDay() {
-		return archivio.isReleaseOrLaterDay();
+	public boolean isReleaseOrLaterDay(ControllerUtente gu) {
+		if (getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.CONFIGURATORE) 
+			return archivio.isReleaseOrLaterDay();
+		else return false;
 	}
 	
 	public boolean isPrimaPubblicazione () {
@@ -138,54 +157,68 @@ public class ControllerArchivio {
 		return archivio.checkCredenzialiCorrette(c);
 	}
 	
-	public boolean checkPrimoAccesso (String username) {
-		if (!checkIfUserExists(username)) return false;
-		else return (archivio.checkPrimoAccesso(username)); 
+	public boolean checkPrimoAccesso (ControllerUtente gu) {
+		if (!checkIfUserExists(usernameLinkati.get(gu))) return false;
+		else return (archivio.checkPrimoAccesso(usernameLinkati.get(gu))); 
 	}
 	
-	public boolean indicaDatePrecluse (String date) { //ok
+	public boolean indicaDatePrecluse (ControllerUtente gu, String date) { //ok
+		if (archivio.isPrimaPubblicazione() || getTipoUtente(usernameLinkati.get(gu)) != CostantiStruttura.CONFIGURATORE) return false;
 		if (!Time.isValidDate(date)) return false;
 		if (Time.isThisDateInMonthPlus3(date)) return archivio.indicaDatePrecluse(date);
 		else return false;
 	}
 	
-	public boolean rimuoviPrenotazione(String username, String codicePrenotazione) {
-		return archivio.rimuoviPrenotazione(username, codicePrenotazione);
+	public boolean rimuoviPrenotazione(ControllerUtente gu, String codicePrenotazione) {
+		if (getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.FRUITORE)
+			return archivio.rimuoviPrenotazione(usernameLinkati.get(gu), codicePrenotazione);
+		else return false;
 	}
 	
-	public List<VisitaDTO> visiteConfermateVolontario (String username) {
-		return archivio.visiteConfermateVolontario(username);
+	public List<VisitaDTO> visiteConfermateVolontario (ControllerUtente gu) {
+		if (getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.VOLONTARIO) 
+			return archivio.visiteConfermateVolontario(usernameLinkati.get(gu));
+		else return null;
 	}
 	
-	public List<PrenotazioneDTO> getElencoPrenotazioniFruitore (String username) {
-		return archivio.getElencoPrenotazioniFruitore(username);
+	public List<PrenotazioneDTO> getElencoPrenotazioniFruitore (ControllerUtente gu) {
+		if (getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.FRUITORE)
+			return archivio.getElencoPrenotazioniFruitore(usernameLinkati.get(gu));
+		else return null;
 	}
 	
-	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitore() { //dovrebbe ritornare un oggetto con tutte le info da stampare
+	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitore() { 
 		return archivio.getElencoVisiteProposteConfermateCancellateFruitore();
 	}
 	
-	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore (String username) {
-		return archivio.getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore(username);
+	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore (ControllerUtente gu) {
+		if (getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.FRUITORE)
+			return archivio.getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore(usernameLinkati.get(gu));
+		else return null;
 	}
 
-	public List<VisitaDTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate () {
-		return archivio.getElencoVisiteProposteCompleteConfermateCancellateEffettuate();
+	public List<VisitaDTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate (ControllerUtente gu) {
+		if (getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.CONFIGURATORE) 
+			return archivio.getElencoVisiteProposteCompleteConfermateCancellateEffettuate();
+		else return null;
 	}
 	
 	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato (String date) {
 		return archivio.getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato(date);
 	}
 	
-	public String inserisciPrenotazione (String username, PrenotazioneDTO prenotazione) {
-		return archivio.inserisciPrenotazione(username, prenotazione);
+	public String inserisciPrenotazione (ControllerUtente gu, PrenotazioneDTO prenotazione) {
+		if (getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.FRUITORE) 
+			return archivio.inserisciPrenotazione(usernameLinkati.get(gu), prenotazione);
+		else return null;
 	}
 	
-	public boolean cambiaCredenziali (String username, Credenziali c, ControllerUtente gu) {
-		if (!checkIfUserExists(username)) return false;
+	public boolean cambiaCredenziali (ControllerUtente gu, Credenziali c) {
+		if (!checkIfUserExists(usernameLinkati.get(gu))) return false; //non necessario?
 		if (checkIfUserExists(c.getUsername())) return false;
-		if (archivio.modificaCredenziali(username, c)) { //Problematico questa funzione, posso cambiare credenziali senza eseguire primo accesso
+		if (archivio.modificaCredenziali(usernameLinkati.get(gu), c)) { 
 			archivio.primoAccessoEseguito(c.getUsername());
+			usernameLinkati.put(gu, c.getUsername());
 			gu.setUsername(c.getUsername());
 			return true;
 		}	
@@ -196,18 +229,24 @@ public class ControllerArchivio {
 		return archivio.checkIfPlaceExists(luogo);
 	}
 	
-	public boolean aggiungiLuogo (String tag, String nome, String descrizione, String collocazione, Set<String> tipiVisitaVal) {
-		return archivio.aggiungiLuogo(tag, nome, descrizione, collocazione, tipiVisitaVal);
+	public boolean aggiungiLuogo (ControllerUtente gu, String tag, String nome, String descrizione, String collocazione, Set<String> tipiVisitaVal) {
+		if (canAddOrRemove(usernameLinkati.get(gu)))
+			return archivio.aggiungiLuogo(tag, nome, descrizione, collocazione, tipiVisitaVal);
+		else return false;
 	}
 	
 	public void setPrimaConfigurazione() {
 		archivio.setPrimaConfigurazione();
 	}
 	
-	public boolean aggiungiTipoVisite (String luogo, String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
+	public boolean aggiungiTipoVisite (ControllerUtente gu, String luogo, String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
 			String dataInizio, String dataFine, ArrayList<Integer> giorniPrenotabiliVal, String oraInizio,
 			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, ArrayList<String> volontariVal) {
-		return archivio.tryAggiungiVisite(luogo, tipoVisita, titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniPrenotabiliVal, oraInizio, durataVisita, daAcquistare, minFruitore, maxFruitore, volontariVal);
+		if (canAddOrRemove(usernameLinkati.get(gu)))
+			return archivio.tryAggiungiVisite(luogo, tipoVisita, titolo, descrizione, puntoIncontro, 
+					dataInizio, dataFine, giorniPrenotabiliVal, oraInizio, durataVisita, daAcquistare, 
+					minFruitore, maxFruitore, volontariVal);
+		else return false;
 	}
 	
 	public boolean checkIfUserExists (String username) {
@@ -222,30 +261,36 @@ public class ControllerArchivio {
 		return archivio.checkIfVisitTypeExists(tipo);
 	}
 	
-	public void impostaAmbitoTerritoriale (String s, String username) {
-		if (archivio.isPrimaConfigurazione() && getTipoUtente(username) == CostantiStruttura.CONFIGURATORE) archivio.impostaAmbitoTerritoriale(s);
+	public void impostaAmbitoTerritoriale (String s, ControllerUtente gu) {
+		if (archivio.isPrimaConfigurazione() && getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.CONFIGURATORE) archivio.impostaAmbitoTerritoriale(s);
 	}
 	
-	public boolean impostaCredenzialiNuovoConfiguratore(String usernameChiEsegue, String username, String password) {
-		if (getTipoUtente(usernameChiEsegue) == CostantiStruttura.CONFIGURATORE) return archivio.impostaCredenzialiNuovoConfiguratore(username, password);
+	public boolean impostaCredenzialiNuovoConfiguratore(ControllerUtente gu, String username, String password) {
+		if (getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.CONFIGURATORE) return archivio.impostaCredenzialiNuovoConfiguratore(username, password);
 		else return false;
 	}
 	
-	public boolean modificaMaxPrenotazione (String username, int max) {
-		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE) return archivio.impostaMaxPrenotazione(max);
+	public boolean modificaMaxPrenotazione (ControllerUtente gu, int max) {
+		if (getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.CONFIGURATORE) return archivio.impostaMaxPrenotazione(max);
 		else return false;
 	}
 
-	public Set<UserDTO> getListaUser(String username, int tipo_user) {
-		return archivio.getListaUser(username, tipo_user);
+	public Set<UserDTO> getListaUser(ControllerUtente gu, int tipo_user) {
+		if (getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.CONFIGURATORE)
+			return archivio.getListaUser(tipo_user);
+		else return null;
 	}
 	
-	public List<String> getElencoLuoghiVisitabili (String username) { 
-		return archivio.getElencoLuoghiVisitabili(username);
+	public List<String> getElencoLuoghiVisitabili (ControllerUtente gu) { 
+		if (getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.CONFIGURATORE)
+			return archivio.getElencoLuoghiVisitabili();
+		else return null;
 	}
 	
-	public Map<String, List<String>> getElencoTipiVisiteLuogo (String username) {
-		return archivio.getElencoTipiVisiteLuogo(username);
+	public Map<String, List<String>> getElencoTipiVisiteLuogo (ControllerUtente gu) {
+		if (getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.CONFIGURATORE)
+		return archivio.getElencoTipiVisiteLuogo();
+		else return null;
 	}
 	
 }

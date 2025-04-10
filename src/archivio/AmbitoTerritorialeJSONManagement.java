@@ -51,7 +51,7 @@ public class AmbitoTerritorialeJSONManagement {
 		return jsonAmbitoTerritoriale.getInt(MAX_PRENOTAZIONE);
 	}
 	
-	public Map<String, List<String>> getElencoTipiVisiteLuogo (String username, Map<String, String> tipiVisiteTitoli) {
+	public Map<String, List<String>> getElencoTipiVisiteLuogo (Map<String, String> tipiVisiteTitoli) {
 		HashMap<String, List<String>> result = new HashMap<>();
 		try {
 			for (String nomeLuogo : getLuoghi().toMap().keySet()) {
@@ -69,7 +69,7 @@ public class AmbitoTerritorialeJSONManagement {
 			return result;
 		}
 		catch (Exception e) {
-			System.out.println("Errore nella raccolta dei luoghi visitabili:" + e.getMessage());
+			System.err.println("Errore nella raccolta dei luoghi visitabili:" + e.getMessage());
 			return null;
 		}
 	}
@@ -98,7 +98,7 @@ public class AmbitoTerritorialeJSONManagement {
 		return jsonAmbitoTerritoriale.getJSONObject(LUOGHI).getJSONObject(luogo);
 	}
 	
-	public List<String> getElencoLuoghiVisitabili (String username) { 
+	public List<String> getElencoLuoghiVisitabili () { 
 		List<String> result = new ArrayList<>();
 		try {
 			JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject(LUOGHI);
@@ -111,7 +111,7 @@ public class AmbitoTerritorialeJSONManagement {
 			return result;
 		}
 		catch (Exception e) {
-			System.out.println("Errore nella raccolta dei luoghi visitabili:" + e.getMessage());
+			System.err.println("Errore nella raccolta dei luoghi visitabili:" + e.getMessage());
 			return null;
 		}
 	}
@@ -136,7 +136,7 @@ public class AmbitoTerritorialeJSONManagement {
 			return true;
 		}
 		catch (Exception e) {
-			System.out.println("Problema nel setting di max prenotazione> " + e.getMessage());
+			System.err.println("Problema nel setting di max prenotazione> " + e.getMessage());
 			return false;
 		}
 

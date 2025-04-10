@@ -1,1 +1,20 @@
-{}
+{
+          "CWHK3NIV": {
+                    "numero-iscritti": 50,
+                    "giorno": "11-06-2025",
+                    "tipo-visita": "visita_castello",
+                    "username": "fruitore1"
+          },
+          "KGX3TSUI": {
+                    "numero-iscritti": 5,
+                    "giorno": "12-06-2025",
+                    "tipo-visita": "visita_castello",
+                    "username": "fruitore1"
+          },
+          "82C3I2ST": {
+                    "numero-iscritti": 5,
+                    "giorno": "12-06-2025",
+                    "tipo-visita": "visita_castello",
+                    "username": "fruitore1"
+          }
+}

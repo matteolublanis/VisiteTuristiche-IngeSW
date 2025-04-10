@@ -12,12 +12,11 @@ public class HandlerVolontario extends ControllerUtente {
 	public HandlerVolontario(ControllerArchivio gdb, String username, App a) {
 		this.gdb = gdb;
 		this.username = username;
-		if (checkPrimoAccesso()) primoAccesso(a);
 	}
 	
 	@MethodName("Visualizza i tipi di visita a cui sei collegato")
  	public void visualizzaTipiVisita(App a) {
-		List<String> listaTipi = gdb.getElencoTipiVisiteVolontario(username);
+		List<String> listaTipi = gdb.getElencoTipiVisiteVolontario(this);
 		for (String tipo : listaTipi) {
 			a.view(tipo);
 		}
@@ -37,7 +36,7 @@ public class HandlerVolontario extends ControllerUtente {
 					a.view("Tag: " +  v.getTag());
 					String codiciPrenotazioni = "";
 					for (int i = 0 ; i < v.getPrenotazioni().size() ; i++) {
-						codiciPrenotazioni = "Codice: " + v.getPrenotazioni().get(i).getCodice() + ", n. iscritti:" + v.getPrenotazioni().get(i).getNum_da_prenotare() + "\n";
+						codiciPrenotazioni += "Codice: " + v.getPrenotazioni().get(i).getCodice() + ", n. iscritti:" + v.getPrenotazioni().get(i).getNum_da_prenotare() + "\n";
 					}
 					a.view(codiciPrenotazioni);
 			}
@@ -46,14 +45,14 @@ public class HandlerVolontario extends ControllerUtente {
 	
 	@MethodName("Visualizza le visite confermate che gestirai")
 	public void vediVisiteConfermate (App a) {
-		List<VisitaDTO> visite = gdb.visiteConfermateVolontario(username);
+		List<VisitaDTO> visite = gdb.visiteConfermateVolontario(this);
 		visualListVisitDTO(visite, a);
 	}
 	
 	@MethodName("Comunica le tue prossime disponibilità")
  	public void comunicaDisponibilita(App a) {
  		if (gdb.getPossibilitaDareDisponibilita()) { //se posso dare disponibilità	
- 			Map<String, List<String>> dateDisponibilita = gdb.getDatePerDisponibilita(username); //prendi disponibilità possibili
+ 			Map<String, List<String>> dateDisponibilita = gdb.getDatePerDisponibilita(this); //prendi disponibilità possibili
  			if (dateDisponibilita == null) { //TODO se null significa che il volontario dovrebbe essere eliminato
  				a.view("I tipi di visita a te associati non richiedono nuove disponibilità o c'è un problema con l'archivio, contatta un configuratore.");
  			}
@@ -71,7 +70,7 @@ public class HandlerVolontario extends ControllerUtente {
  				boolean b = true;
  				do { //le inserisco
  					data = a.richiediDataValida("data in cui dai disponibilità (dd-mm-yyyy)"); //inserisco data
- 					b = gdb.inserisciDisponibilita(data, username); //controllo se inserita
+ 					b = gdb.inserisciDisponibilita(this, data, username); //controllo se inserita
  					if (b) { //se inserita chiedo se vuole continuare
  						a.view("La tua disponibilità è stata inserita.");
  						b = a.chiediSioNo("Vuoi aggiungere altre disponibilità?");

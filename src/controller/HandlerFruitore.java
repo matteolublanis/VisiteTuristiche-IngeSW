@@ -50,7 +50,7 @@ public class HandlerFruitore extends ControllerUtente {
 	@MethodName("Visualizza tutte le visite proposte/confermate/cancellate/complete che hai prenotato")
 	public void visualizzaVisiteProposteConfermateCancellateCompletePrenotate (App a) {
 		a.view("Ecco le visite a cui ti sei prenotato:");
-		visualListVisitDTO(gdb.getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore(username), a);
+		visualListVisitDTO(gdb.getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore(this), a);
 	}
 	
 	@MethodName("Effettua iscrizione ad una visita proposta")
@@ -65,7 +65,7 @@ public class HandlerFruitore extends ControllerUtente {
 			visualListVisitDTO(gdb.getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato(date), a);
 			String tipoVisita = richiediVisitaEsistente(a, "tag del tipo della visita");
 			int numeroIscrizione = richiediIntMaggioreDiZero(a, "per quante persone vuoi prenotare");
-			String codice = gdb.inserisciPrenotazione(username, new PrenotazioneDTO(date, tipoVisita, numeroIscrizione));
+			String codice = gdb.inserisciPrenotazione(this, new PrenotazioneDTO(date, tipoVisita, numeroIscrizione));
 			a.view(codice != null ? "Prenotazione inserita, codice prenotazione: " + codice : "Prenotazione non inserita.");
 		}
 		else {
@@ -75,26 +75,28 @@ public class HandlerFruitore extends ControllerUtente {
 	}
 	
 	private Set<String> prenotazioniLinkate () {
-		List<PrenotazioneDTO> prenotazioni = gdb.getElencoPrenotazioniFruitore(username);
+		List<PrenotazioneDTO> prenotazioni = gdb.getElencoPrenotazioniFruitore(this);
 		Set<String> codiciPrenotazioni = new HashSet<>();
 		for (PrenotazioneDTO prenotazione : prenotazioni) codiciPrenotazioni.add(prenotazione.getCodice());
 		return codiciPrenotazioni;
 	}
 	
 	private void visualElencoPrenotazioni (App a) {
-		List<PrenotazioneDTO> prenotazioni = gdb.getElencoPrenotazioniFruitore(username);
+		List<PrenotazioneDTO> prenotazioni = gdb.getElencoPrenotazioniFruitore(this);
 		if (prenotazioni != null) {
 			for (PrenotazioneDTO prenotazione : prenotazioni) {
-				a.view("-----------");
-				a.view("Codice: " + prenotazione.getCodice() + ", giorno: " + prenotazione.getGiorno());
-				a.view("Tag visita: " + prenotazione.getTag_visita()); //TODO meglio titolo
+				if (!Time.isThreeDaysOrLessBefore(Time.getActualDate(), prenotazione.getGiorno())) {
+					a.view("-----------");
+					a.view("Codice: " + prenotazione.getCodice() + ", giorno: " + prenotazione.getGiorno());
+					a.view("Tag visita: " + prenotazione.getTag_visita()); //TODO meglio titolo
+				}
 			}
 		}
 	}
 	
 	@MethodName("Disdisci una prenotazione")
 	public void disdiciIscrizione (App a) {
-		if (gdb.getElencoPrenotazioniFruitore(username) != null) {
+		if (gdb.getElencoPrenotazioniFruitore(this) != null) {
 			visualElencoPrenotazioni(a);
 			String codicePrenotazioneDaEliminare = null;
 			Set<String> k = prenotazioniLinkate();
@@ -103,7 +105,7 @@ public class HandlerFruitore extends ControllerUtente {
 				if (codicePrenotazioneDaEliminare.equalsIgnoreCase("esc")) return;
 				if (!k.contains(codicePrenotazioneDaEliminare)) a.view("Il codice inserito non è legato a nessuna prenotazione, reinserirlo.");
 			} while (!k.contains(codicePrenotazioneDaEliminare));
-			a.view(gdb.rimuoviPrenotazione(username, codicePrenotazioneDaEliminare) ? "Prenotazione rimossa." : "Prenotazione non rimossa.");
+			a.view(gdb.rimuoviPrenotazione(this, codicePrenotazioneDaEliminare) ? "Prenotazione rimossa." : "Prenotazione non rimossa.");
 		}
 		else a.view("Non hai prenotazioni.");
 

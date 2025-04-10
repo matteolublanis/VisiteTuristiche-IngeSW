@@ -1,15 +1,22 @@
 {
-          "luoghi": {"castello": {
-                    "descrizione": "Castello",
-                    "collocazione": "Brescia",
-                    "nome": "Castello di Brescia",
-                    "tipo-visita": [
-                              "visita_castello",
-                              "kebab",
-                              "esplosione"
-                    ]
-          }},
-          "max_prenotazione": 5,
-          "nome": "Brescia",
-          "prima_configurazione": false
+     "luoghi": {
+          "castello": {
+               "descrizione": "castellone",
+               "collocazione": "Brescia",
+               "nome": "Castello di Brescia",
+               "tipo-visita": [
+                    "visita_castello",
+                    "museo_armi"
+               ]
+          },
+          "san_fa": {
+               "descrizione": "San Faustino",
+               "collocazione": "Brescia",
+               "nome": "San Faustino",
+               "tipo-visita": ["rissa_sanfaustino"]
+          }
+     },
+     "max_prenotazione": 50,
+     "nome": "Brescia",
+     "prima_configurazione": false
 }

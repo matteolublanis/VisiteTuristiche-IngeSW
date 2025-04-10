@@ -1,47 +1,71 @@
 {
+     "volontario6": {
+          "tipo": 2,
+          "password": "admin",
+          "primo-accesso": true,
+          "tipo-visita": ["rissa_sanfaustino"],
+          "username": "volontario6"
+     },
      "primo_avvio": false,
      "volontario5": {
           "tipo": 2,
           "password": "admin",
           "primo-accesso": true,
-          "tipo-visita": [
-               "esplosione",
-               "kebab"
-          ],
+          "tipo-visita": ["rissa_sanfaustino"],
           "username": "volontario5"
      },
      "volontario4": {
           "tipo": 2,
-          "password": "admin",
+          "password": "giraffa",
           "primo-accesso": true,
-          "tipo-visita": ["esplosione"],
+          "tipo-visita": ["rissa_sanfaustino"],
           "username": "volontario4"
      },
      "volontario3": {
           "tipo": 2,
-          "password": "paolo",
+          "password": "koala",
           "primo-accesso": true,
-          "tipo-visita": ["visita_castello"],
+          "tipo-visita": [
+               "museo_armi",
+               "rissa_sanfaustino"
+          ],
           "username": "volontario3"
      },
-     "volontario2": {
-          "tipo": 2,
-          "password": "paolo",
+     "fruitore1": {
+          "tipo": 3,
+          "password": "fruitore",
           "primo-accesso": true,
-          "tipo-visita": ["kebab"],
-          "username": "volontario2"
+          "username": "fruitore1",
+          "prenotazioni": [
+               "82C3I2ST",
+               "KGX3TSUI",
+			   "CWHK3NIV"
+          ]
      },
-     "volontario1": {
+     "volontario2": {
           "tipo": 2,
           "password": "admin",
           "primo-accesso": true,
           "tipo-visita": ["visita_castello"],
-          "username": "volontario1"
+          "username": "volontario2"
+     },
+     "conf2": {
+          "tipo": 1,
+          "password": "admin",
+          "primo-accesso": true,
+          "username": "conf2"
      },
      "conf1": {
           "tipo": 1,
           "password": "admin",
           "primo-accesso": false,
           "username": "conf1"
+     },
+     "PaoloIlVolontario": {
+          "tipo": 2,
+          "password": "baljeet",
+          "primo-accesso": false,
+          "tipo-visita": ["visita_castello"],
+          "username": "PaoloIlVolontario"
      }
 }

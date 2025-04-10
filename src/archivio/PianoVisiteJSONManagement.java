@@ -110,7 +110,7 @@ public class PianoVisiteJSONManagement {
 						if (visita.getString(STATO_VISITA).equals(CANCELLATA)) {
 							
 						}
-						if (visita.getString(STATO_VISITA).equals(EFFETTUATA)) {
+						if (visita.getString(STATO_VISITA).equals(CONFERMATA)) { 
 							pianoStoricoJSONManager.inserisciVisitaNelloStorico(visita.getString(LUOGO), keyVisita, day);
 						}
 					}
@@ -169,7 +169,6 @@ public class PianoVisiteJSONManagement {
 		            					tagVisita, 
 		                        		prenotazioniJSONManager.get((String)codicePrenotazione)));
 		            		}
-		            		//DIPENDENZA DA GESTIRE, IL METODO DOVREBBE STARE IN QUESTA CLASSE
 			                visiteList.add(tipiVisiteJSONManager.visitaDTOVolontario(tagVisita, giorno, statoVisita, prenotazioni));
 		            	}
 		            	
@@ -191,6 +190,7 @@ public class PianoVisiteJSONManagement {
 			}
 		}
 		visita.put(NUMERO_ISCRITTI, visita.getInt(NUMERO_ISCRITTI) - nIscritti);
+		if (visita.getString(STATO_VISITA) == COMPLETA) visita.put(STATO_VISITA, PROPOSTA);
 		JSONUtility.aggiornaJsonFile(jsonPianoVisite, PATH_VISITE, 10);
 
 	}
@@ -237,7 +237,7 @@ public class PianoVisiteJSONManagement {
 	   	JSONObject visita = giornoVisita.getJSONObject(tipoVisita);
         String statoVisita = visita.getString(STATO_VISITA);
 
-        if (statoVisita.equals(CONFERMATA) || statoVisita.equals(CANCELLATA) || statoVisita.equals(PROPOSTA)) { //non completa
+        if (statoVisita.equals(CONFERMATA) || statoVisita.equals(COMPLETA) || statoVisita.equals(CANCELLATA) || statoVisita.equals(PROPOSTA)) { //non completa
             return (tipiVisiteJSONManager.visitaDTOFruitore(tipoVisita, giornoPrenotazione, statoVisita));
         }
         else return null;

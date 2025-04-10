@@ -46,13 +46,13 @@ public class UsersJSONManagement {
 			utente = jsonUsers.getJSONObject(username);
 		}
 		catch (Exception e) {
-			System.out.println("Utente non trovato: getTipoUtente");
+			System.err.println("Utente non trovato: getTipoUtente");
 			return -1;
 		}
 		return (int) (utente.get(TIPO_USER));
 	}
 	
-	public Set<UserDTO> getListaUser (String username, int tipo_user) {
+	public Set<UserDTO> getListaUser (int tipo_user) {
 			Set<UserDTO> result = new HashSet<>();
 			for (String s : JSONUtility.allObjectsSameIntValue(jsonUsers, tipo_user, TIPO_USER)) {
 				JSONObject user = jsonUsers.getJSONObject(s);
@@ -108,7 +108,6 @@ public class UsersJSONManagement {
 	}
 	
 	public void inserisciPrenotazioneFruitore (String username, String codicePrenotazione) {
-		System.out.println(username);
 		jsonUsers.getJSONObject(username).getJSONArray(PRENOTAZIONI).put(codicePrenotazione);
 		JSONUtility.aggiornaJsonFile(jsonUsers, PATH_USERS, 10);
 	}
@@ -219,7 +218,7 @@ public class UsersJSONManagement {
 	public JSONObject putValueInUserObject (String username, boolean firstAccess, int tipo, String pw) {
 		JSONObject user = new JSONObject();
 		user.put(USERNAME, username);
-		user.put(PRIMO_ACCESSO, true);
+		user.put(PRIMO_ACCESSO, firstAccess);
 		user.put(TIPO_USER, tipo);
 		user.put(PASSWORD, pw);
 		return user;

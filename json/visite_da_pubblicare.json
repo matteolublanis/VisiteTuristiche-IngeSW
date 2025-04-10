@@ -1,10 +1,13 @@
 {
-          "ultimo-piano-pubblicato": false,
-          "prima-pubblicazione": true,
-          "disponibilita": {},
-          "date-precluse": [],
+          "ultimo-piano-pubblicato": true,
+          "prima-pubblicazione": false,
+          "disponibilita": {"PaoloIlVolontario": {"02-07-2025": "visita_castello"}},
+          "date-precluse": [
+                    "03-07-2025",
+                    "08-07-2025"
+          ],
           "datePrecluseI+3": [],
-          "mese-ultima-pubblicazione": 4,
+          "mese-ultima-pubblicazione": 5,
           "anno-ultima-pubblicazione": 2025,
-          "possibile-dare-disponibilita": false
+          "possibile-dare-disponibilita": true
 }
