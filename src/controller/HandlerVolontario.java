@@ -58,7 +58,7 @@ public class HandlerVolontario extends ControllerUtente {
  			}
  			else { //se ho disponibilità
  				for (String k : dateDisponibilita.keySet()) {
- 					a.view("Giorni tipo " + k + ": "); //visualizzo le disponibilità
+ 					a.view(k.equals("Date precluse") ? k + ":" : "Giorni tipo " + k + ":"); //visualizzo le disponibilità
  					String days = "";
  					for (String i : dateDisponibilita.get(k)) {
  						days += i + " ";

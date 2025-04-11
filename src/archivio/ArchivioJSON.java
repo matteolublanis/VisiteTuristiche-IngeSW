@@ -332,7 +332,11 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	}
 	//Precondizione: deve essere chiamato da un volontario
 	public HashMap<String, List<String>> getDatePerDisponibilita(String username) {	 //OK
-		return tipiVisiteJSONManager.getDatePerDisponibilitaFromTipiVisite(username, getTipiVisitaOfVolontario(username));
+		HashMap<String, List<String>> result =
+				tipiVisiteJSONManager.getDatePerDisponibilitaFromTipiVisite(username, getTipiVisitaOfVolontario(username));
+		result.put("Date precluse", getDatePrecluse());
+		return result;
+		
 	}
 	
 	public boolean aggiungiLuogo (String tag, String nome, String luogo, String collocazione, Set<String> tipiVisitaVal) {
