@@ -145,7 +145,9 @@ public class App {
 			return s;
 		}
 		catch (NoSuchElementException e) {
-			throw e;
+			view("EOF individuato, arrivederci!");
+			System.exit(0);
+			return null;
 		}
 
 	}
