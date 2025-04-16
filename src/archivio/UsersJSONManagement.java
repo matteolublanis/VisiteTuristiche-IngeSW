@@ -69,7 +69,10 @@ public class UsersJSONManagement {
 					break;
 				case CostantiStruttura.FRUITORE:
 					result.add(new UserDTO(user.getString(USERNAME)));
+				default:
+					return null;
 				}
+
 			}
 			return result;
 	}

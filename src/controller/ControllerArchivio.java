@@ -234,7 +234,7 @@ public class ControllerArchivio {
 			return archivio.aggiungiLuogo(tag, nome, descrizione, collocazione, tipiVisitaVal);
 		else return false;
 	}
-	
+	//Usato da impostaAmbito, può essere riusato
 	public void setPrimaConfigurazione() {
 		archivio.setPrimaConfigurazione();
 	}
