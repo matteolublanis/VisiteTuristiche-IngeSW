@@ -78,11 +78,15 @@ public class Login {
 			gu = new HandlerConfiguratore(gdb, username, a);
 			gdb.addControllerUtente(gu, username);
 			a.setGu(gu);
+			gu.checkPrimoAccesso(a);
 			break;
 		case CostantiStruttura.VOLONTARIO:
 			gu = new HandlerVolontario(gdb, username, a);
 			gdb.addControllerUtente(gu, username);
 			a.setGu(gu);
+			if (gu.checkPrimoAccesso()) {
+				gu.primoAccesso(a);
+			}
 			break;
 		case CostantiStruttura.FRUITORE:
 			gu = new HandlerFruitore(gdb, username);

@@ -17,7 +17,7 @@ public class Time {
 	private static final String TIMEREGEX = "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$";
     private static final String DATAREGEX = "\\b(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\\d{4})\\b";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-	private static String fictionalDate = "17-04-2025";
+	private static String fictionalDate = "13-06-2025";
     private static String actualDate = getTodaysDate();//getTodaysDate()
     
 	public static Event createEvent (String name,int year, int month, int day, int hour, int minutes, int duration) {
@@ -92,7 +92,6 @@ public class Time {
     public static List<String> getAllDatesSameDayOfTheWeek(String open, String close, int desiredDay) {
         List<String> result = new ArrayList<>();
         
-        // Verifica del formato delle date
         LocalDate startDate, endDate;
         try {
             startDate = LocalDate.parse(open, FORMATTER);
@@ -135,7 +134,7 @@ public class Time {
             return false; // Se la data non è valida, restituisce false
         }
 
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.parse(getActualDate(), FORMATTER);
         int monthsToAdd = (today.getDayOfMonth() > 15) ? 3 : 2;
         LocalDate targetMonth = today.plusMonths(monthsToAdd);
 

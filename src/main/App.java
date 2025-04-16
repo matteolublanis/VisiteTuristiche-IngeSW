@@ -23,9 +23,12 @@ public class App {
 		this.controllerUtente = gu;
 	}
 	
+	/*
+	 * Funzione di start dell'applicazione, esegue il loop principale 
+	 */
 	public void start() {
 		view("Benvenuto!");
-		gestoreLogin.avvio(this); 
+		gestoreLogin.avvio(this); //fase login
 
 		do {
 			
@@ -38,6 +41,10 @@ public class App {
 		sc.close();
 	}
 	
+	/*
+	 * L'app carica i metodi disponibili per il tipo di utente associato, in base all'input
+	 * decide che azione compiere (@see eseguiAzione)
+	 */
 	private boolean scegliAzione () {
 		view("Quale operazione desidera (ESC per uscire)?");
 		
@@ -57,7 +64,10 @@ public class App {
 		else return eseguiAzione(input, azioniDisponibili);
 		
 	}
-	
+	/*
+	 * @param String input, List<Method> azioni
+	 * @throw Exception e Qui vengono catturate tutte le eccezioni all'interno del programma, da cambiare nella raffinatura
+	 */
 	private boolean eseguiAzione (String input, List<Method> azioniDisponibili) {
 		try {
 			int scelta = Integer.parseInt(input);
@@ -69,8 +79,9 @@ public class App {
 				view("Scelta non valida.");
 			}
 		} catch (Exception e) { 
-			view("Formato inserito non corretto."); 
+			//view("Formato inserito non corretto."); 
 			System.err.println(e);
+			System.exit(0);
 		}
 		
 		return true;
@@ -145,7 +156,9 @@ public class App {
 			return s;
 		}
 		catch (NoSuchElementException e) {
-			throw e;
+			view("EOF individuato, arrivederci!");
+			System.exit(0);
+			return null;
 		}
 
 	}

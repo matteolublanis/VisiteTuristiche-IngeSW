@@ -217,7 +217,7 @@ public class TipiVisiteJSONManagement {
 					result.put((String)s, days);
 				}	
 				catch (Exception e) {
-					//do smth
+					return null;
 				}
 			}
 			return result;

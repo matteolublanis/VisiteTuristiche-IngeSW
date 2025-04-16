@@ -13,11 +13,11 @@ import utility.Credenziali;
 public interface Archivio {
 	public boolean checkPrimoAvvio ();
 	public int getTipoUtente (String username);
-	public boolean tryPubblicaPiano(String username);
+	public boolean tryPubblicaPiano();
 	public boolean pubblicaPiano();
-	public boolean tryChiudiRaccoltaDisponibilita (String username);
+	public boolean tryChiudiRaccoltaDisponibilita ();
 	public boolean chiudiRaccoltaDisponibilita();
-	public boolean tryApriRaccoltaDisponibilita(String username);
+	public boolean tryApriRaccoltaDisponibilita();
 	public boolean apriRaccoltaDisponibilita();
 	public boolean checkIfCanLinkVolontario(String volontario, String tipoVisita);
 	public boolean associaVolontarioEsistenteATipoVisitaEsistente(String volontario, String tipoVisita);
@@ -28,9 +28,9 @@ public interface Archivio {
  	public List<String> getElencoTipiVisiteVolontario (String username);
 	public boolean tryImpostaCredenzialiNuovoVolontario (String username, String password, Set<String> tipi_visiteVal, boolean tipiVisitaNecessario);
 	public boolean impostaCredenzialiNuovoVolontario (String username, String password, JSONArray tipi_visite, boolean tipiVisitaNecessari);
-	public Map<String, List<String>> getElencoTipiVisiteLuogo (String username);
-	public List<String> getElencoLuoghiVisitabili (String username);
-	public Set<UserDTO> getListaUser(String username, int tipo_user);
+	public Map<String, List<String>> getElencoTipiVisiteLuogo ();
+	public List<String> getElencoLuoghiVisitabili ();
+	public Set<UserDTO> getListaUser(int tipo_user);
 	public boolean impostaMaxPrenotazione(int max);
 	public boolean impostaCredenzialiNuovoConfiguratore(String username, String password);
 	public boolean isPrimaConfigurazione();

@@ -21,12 +21,12 @@ public abstract class ControllerUtente {
 		this.username = username;
 	}
 	
-	protected int getTipoUtente () {
-		return gdb.getTipoUtente(username);
+	protected void checkPrimoAccesso(App a) {
+		
 	}
 	
 	protected boolean checkPrimoAccesso() {
-		return gdb.checkPrimoAccesso(username);
+		return gdb.checkPrimoAccesso(this);
 	}
 	
 	//Precondizione: isPrimoAccesso == true
@@ -65,16 +65,12 @@ public abstract class ControllerUtente {
 	    return tipo;
 	}
 	
-	protected boolean cambiaCredenziali(Credenziali c) {
-		return (gdb.cambiaCredenziali(this.username, c, this));
-	}
-	
 	protected void setUsername(String username) {
 		this.username = username;
 	}
 	
-	protected String getUsername() {
-		return username;
+	protected boolean cambiaCredenziali(Credenziali c) {
+		return (gdb.cambiaCredenziali(this, c));
 	}
 	
     public List<Method> getAzioniDisponibili() {

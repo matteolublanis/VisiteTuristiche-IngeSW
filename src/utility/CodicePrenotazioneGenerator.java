@@ -6,7 +6,10 @@ public class CodicePrenotazioneGenerator {
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final int CODE_LENGTH = 8; 
     private static final SecureRandom random = new SecureRandom();
-
+    
+    /*
+     * Semplice algoritmo che genera codici alfanumerici casuali
+     */
     public static String generateBookingCode() {
         StringBuilder code = new StringBuilder(CODE_LENGTH);
         for (int i = 0; i < CODE_LENGTH; i++) {
