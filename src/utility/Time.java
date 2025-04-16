@@ -18,7 +18,7 @@ public class Time {
     private static final String DATAREGEX = "\\b(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\\d{4})\\b";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 	private static String fictionalDate = "13-06-2025";
-    private static String actualDate = fictionalDate;//getTodaysDate()
+    private static String actualDate = getTodaysDate();//getTodaysDate()
     
 	public static Event createEvent (String name,int year, int month, int day, int hour, int minutes, int duration) {
 		Calendar start = Calendar.getInstance();
