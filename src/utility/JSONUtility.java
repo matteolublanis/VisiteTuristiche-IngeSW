@@ -14,7 +14,8 @@ import java.util.Iterator;
 import org.json.*;
 
 public class JSONUtility {
-
+	
+	//Precondizione: filePath exists
     public static JSONObject readJsonFile(String filePath) {
         JSONObject jsonObject = null;
 
@@ -45,7 +46,7 @@ public class JSONUtility {
         return false;
     }
     
-	//TODO gestire eccezione
+    //Precondizione: jsonObject != null && keyValue != null 
     public static HashSet<String> allObjectsSameIntValue (JSONObject jsonObject, int tipo, String keyValue) {
     	HashSet<String> result = new HashSet<>();
     	Iterator<String> keys = jsonObject.keys();
@@ -60,7 +61,7 @@ public class JSONUtility {
     	return result;
     }
     
-	//TODO gestire eccezione
+    //Precondizione: jsonObject != null && keyValue != null
     public static HashMap<String, String> getAllSameValsFromObjects (JSONObject jsonObject, String keyValue) {
     	HashMap<String, String> result = new HashMap<>();
     	Iterator<String> keys = jsonObject.keys();
@@ -73,7 +74,7 @@ public class JSONUtility {
     	return result;
 
     }
-    
+    //Precondizione: jsonObject != null && file exists in path 
     public static void aggiornaJsonFile (JSONObject jsonObject, String path, int righe) {
         String dirName = "json"; // Scrive tutti i JSON in una cartella dedicata
         Path dirPath = Paths.get(dirName);

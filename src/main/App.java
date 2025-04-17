@@ -19,6 +19,7 @@ public class App {
 		this.gestoreLogin = gl;
 	}
 	
+	//Precondizione: gu != null
 	public void setGu (ControllerUtente gu) {
 		this.controllerUtente = gu;
 	}
@@ -65,6 +66,7 @@ public class App {
 		
 	}
 	/*
+	 * Precondizione: input != null && azioniDisponibili != null
 	 * @param String input, List<Method> azioni
 	 * @throw Exception e Qui vengono catturate tutte le eccezioni all'interno del programma, da cambiare nella raffinatura
 	 */
@@ -86,7 +88,7 @@ public class App {
 		
 		return true;
 	}
-	
+	//Precondizione: val != null
 	public boolean chiediSioNo (String val) {
 		view(val);
 		do {
@@ -103,7 +105,7 @@ public class App {
 		} while (true);
 
 	}
-	
+	//Precondizione: msg != null
 	public String richiediOraValida(String msg) {
 	    String ora;
 	    do {
@@ -114,7 +116,7 @@ public class App {
 	    } while (!Time.isValidHour(ora));
 	    return ora;
 	}
-	
+	//Precondizione: msg != null
 	public int richiediNumeroConLimite(String msg, int limit) {
 	    int n;
 	    do {
@@ -125,7 +127,7 @@ public class App {
 	    } while (n <= limit);
 	    return n;
 	}
-	
+	//Precondizione: messaggio != null
 	public String richiediDataValida(String messaggio) {
 	    String data;
 	    do {
@@ -136,7 +138,7 @@ public class App {
 	    } while (!Time.isValidDate(data));
 	    return data;
 	}
-	
+	//Precondizione: s != null
 	public int richiediInt (String s) {
 		view("Inserisci " + s + ":");
 		while (!sc.hasNextInt()) {
@@ -147,7 +149,7 @@ public class App {
 		sc.nextLine();
 		return result;
 	}
-	
+	//Precondizione: s != null
 	public String richiediInput (String s) {
 		
 		try {
@@ -162,8 +164,8 @@ public class App {
 		}
 
 	}
-	
-	public void view (String msg) {
+	//Precondizione: msg != null
+	public void view (String msg) throws NullPointerException {
 		if (!msg.equals("")) System.out.println(msg);
 	}
 	

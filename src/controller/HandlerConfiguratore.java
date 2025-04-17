@@ -14,6 +14,7 @@ import utility.Time;
 
 
 public class HandlerConfiguratore extends ControllerUtente{	
+	//Precondizione tutti i metodi: param != null
 	
 	public HandlerConfiguratore(ControllerArchivio gdb, String username, App a) {
 		this.gdb = gdb;
@@ -28,7 +29,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	private boolean checkPrimaConfigurazioneArchivio () {
 		return gdb.checkPrimaConfigurazioneArchivio(this);
 	}
-	
+	//Postcondizione: nome ambito impostato, max prenotazione impostato, luoghi aggiunti, tipi visita aggiunti, volontari nuovi o esistenti associati
 	private void configuraArchivio(App a) {
 		String ambito = null;
 		do {
@@ -39,7 +40,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 		a.view("Inizio fase creazione luoghi dell'ambito territoriale.");
 		aggiungiLuogo(a);
 	}
-	
+	//Postcondizione: volontario creato con tipo visita associato
 	private String impostaNuovoVolontarioConUnTipoVisitaScelto (App a, String tipo) {
 		String username = a.richiediInput("username del nuovo volontario");
 		String password = a.richiediInput("password del nuovo volontario");
@@ -55,6 +56,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 		}
 	}
 	
+	//Postcondizione: volontario creato con tipo visita associato
 	private boolean impostaNuovoVolontarioConTipoVisitaScelto (App a, Set<String> tipi_visiteVal, List<String> volontari) {
 		String username = a.richiediInput("username del nuovo volontario");
 		String password = a.richiediInput("password del nuovo volontario");
@@ -66,6 +68,8 @@ public class HandlerConfiguratore extends ControllerUtente{
 			return false;
 		}
 	}
+	
+	//Postcondizione: luogo rimosso da Archivio, associazioni rimosse
 	@MethodName("Rimuovi luogo")
 	public void rimuoviLuogo (App a) {
 		if (canAddOrRemove(a)) {
@@ -73,7 +77,8 @@ public class HandlerConfiguratore extends ControllerUtente{
 			a.view(rimosso ? "Luogo rimosso con successo, controllare conseguenze." : "Luogo non rimosso, controllare di aver inserito i dati correttamente.");
 		}
 	}
-
+	
+	//Postcondizione: volontario rimosso da Archivio, associazioni rimosse
 	@MethodName("Rimuovi volontario")
 	public void rimuoviVolontario (App a) {
 		if (canAddOrRemove(a)) {
@@ -81,7 +86,8 @@ public class HandlerConfiguratore extends ControllerUtente{
 			a.view(rimosso ? "Volontario rimosso con successo, controllare conseguenze." : "Volontario non rimosso, controllare di aver inserito i dati correttamente.");
 		}
 	}
-
+	
+	//Postcondizione: tipo visita rimosso da Archivio, associazioni rimosse
 	@MethodName("Rimuovi tipo di visita")
 	public void rimuoviTipo (App a) {
 		if (canAddOrRemove(a)) {
@@ -106,10 +112,13 @@ public class HandlerConfiguratore extends ControllerUtente{
 	}
 	*/
 	
+	//Postcondizione: impostato nome ambito territoriale
 	private void impostaAmbitoTerritoriale(String s) {
 		gdb.impostaAmbitoTerritoriale(s, this);
 	}
 	
+	//Precondizione: maxPrenotazione > 0
+	//Postcondizione: impostato max prenotazione
 	private boolean impostaMaxPrenotazione(int maxPrenotazione) {
 		return (gdb.modificaMaxPrenotazione(this, maxPrenotazione));
 	}
@@ -159,7 +168,9 @@ public class HandlerConfiguratore extends ControllerUtente{
 		}
 	}
 	
-	@MethodName("Pubblica il piano delle visite")
+	//Precondizione: isTodays(16) o dopo
+	//Postcondizione: piano pubblicato
+ 	@MethodName("Pubblica il piano delle visite")
 	public void pubblicaPianoVisite(App a) {
 		if (gdb.isReleaseOrLaterDay(this)) {
 			if (gdb.isPrimaPubblicazione()) {

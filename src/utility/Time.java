@@ -88,7 +88,7 @@ public class Time {
 		String[] s = actualDate.split("-");
 		return (Integer.parseInt(s[0]) == day);
 	}
-	
+	//Precondizione: open < close (viene prima) && 1 < desiredDay < 7
     public static List<String> getAllDatesSameDayOfTheWeek(String open, String close, int desiredDay) {
         List<String> result = new ArrayList<>();
         
@@ -111,7 +111,7 @@ public class Time {
         }
         return result;
     }
-	
+	//Precondizione: start < end
 	public static boolean isTimeBetween(String time, String start, String end) {
     if (!isValidHour(start) || !isValidHour(end) || !isValidHour(time)) return false;
 

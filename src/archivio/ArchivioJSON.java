@@ -73,8 +73,8 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 		return usersJSONManager.checkIfUserExists(user);
 	}
 	/*
-	 * Precondizione: tipo visita presente, associazioni esistenti
-	 * Post condizione: rimosso tipo visita e elementi associati se rimasti senza tipi visita
+	 * Precondizione: tipoVisita exists && associazioni esistenti
+	 * Postcondizione: remove tipoVisita && remove associazioni
 	 */
 	public boolean rimuoviTipo (String k) {
 		JSONArray volontariTipo = tipiVisiteJSONManager.getVolontariAssociatiTipoJSONArray(k);
@@ -87,8 +87,8 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 		return true;
 	}
 	/*
-	 * Precondizione: luogo esistente, associazioni esistenti
-	 * Postcondizione: rimosso luogo e associazioni
+	 * Precondizione: luogo in Archivio && associazioni esistenti
+	 * Postcondizione: remove Luogo && remove associazioniLuogo
 	 */
 	public boolean rimuoviLuogo (String k) {
 		JSONArray tipiLuogo = ambitoJSONManager.getTipiLuogo(k);
@@ -104,8 +104,8 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	}
 	
 	/*
-	 * Precondizione: volontario esistente, tipi visita associati esistenti
-	 * Postcondizione: rimosso luogo e tipi visita associati se senza volontari
+	 * Precondizione: callerType = CostantiStruttura.VOLONTARIO && tipiVisitaAssociati esistenti
+	 * Postcondizione: remove Volontario && remove associazioni
 	 */
 	public boolean rimuoviVolontario (String k) {
 		JSONArray tipiVolontario = usersJSONManager.getTipiVisitaOfVolontario(k);
@@ -116,7 +116,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 		return true;
 	}
 	/*
-	 * Precondizione: tipo_user esistente
+	 * Precondizione: 0 < tipo_user < 4
 	 */
 	public Set<UserDTO> getListaUser (int tipo_user) {
 		return usersJSONManager.getListaUser(tipo_user);
@@ -128,7 +128,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 		visiteList.addAll(pianoStoricoJSONManager.getElencoVisiteProposteCompleteConfermateCancellateEffettuate());
 		return visiteList;
 	}
-	//Precondizione: username associato a fruitore esistente
+	//Precondizione: callerType = CostantiStruttura.FRUITORE
 	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore (String username) {
 		JSONArray codiciPrenotazione = usersJSONManager.getElencoPrenotazioniFruitore(username);
 	    List<VisitaDTO> visiteList = new ArrayList<>();
@@ -141,7 +141,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	    }
 	    return visiteList;
 	}
-	//Precondizione: username associato a fruitore esistente
+	//Precondizione: callerType = CostantiStruttura.FRUITORE
 	public List<PrenotazioneDTO> getElencoPrenotazioniFruitore (String username) {
 	    List<PrenotazioneDTO> prenotazioneList = new ArrayList<>();
 	    for (Object codicePrenotazione : usersJSONManager.getElencoPrenotazioniFruitore(username)) {
@@ -162,14 +162,14 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	    return pianoVisiteJSONManager.getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato(date, tipiVisiteJSONManager);
 	}
 	
-	//Precondizione: username associato a volontario esistente
+	//Precondizione: callerType = CostantiStruttura.VOLONTARIO
 	public List<VisitaDTO> visiteConfermateVolontario (String username) {
 		return pianoVisiteJSONManager.visiteConfermateVolontario(username, prenotazioniJSONManager.prenotazioniNIscritti(), tipiVisiteJSONManager);
 	}
 	
 	/*
-	 * Precondizione: username associato a fruitore esistente
-	 * Postcondizione: prenotazione creata
+	 * Precondizione: callerType = CostantiStruttura.FRUITORE
+	 * Postcondizione: new Prenotazione
 	 */
 	public String inserisciPrenotazione(String username, PrenotazioneDTO prenotazione) {
 			if (pianoVisiteJSONManager.prenotazioneInseribile(username, prenotazione, ambitoJSONManager.getMaxPrenotazione(), tipiVisiteJSONManager.getMaxFruitoreVisita(prenotazione.getTag_visita()))) {
@@ -183,8 +183,8 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	}
 	
 	/*
-	 * Precondizione: username associato a volontario
-	 * Postcondizione: prenotazione rimossa
+	 * Precondizione: callerType = CostantiStruttura.VOLONARIO
+	 * Postcondizione: remove Prenotazione
 	 */
 	public boolean rimuoviPrenotazione (String username, String codicePrenotazione) {
 		if (!prenotazioniJSONManager.containsCodicePrenotazione(codicePrenotazione)) return false;
@@ -203,8 +203,8 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	}
 	
 	/*
-	 * Precondizione: chi invoca è un configuratore
-	 * Postcondizione: aggiunte credenziali di un nuovo volontario
+	 * Precondizione: callerType = CostantiStruttura.CONFIGURATORE
+	 * Postcondizione: new Volontario in Archivio
 	 */
 	public boolean impostaCredenzialiNuovoVolontario (String username, String password, JSONArray tipi_visite, boolean tipiVisitaNecessari) {
 			tipiVisiteJSONManager.inserisciNuovoVolontarioAssociatoAVisite(tipi_visite, username);
@@ -215,7 +215,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	public List<String> getDatePrecluse () {
 		return daPubblicareJSONManager.getDatePrecluse();
 	}
-	//Precondizione: username associato a volontario
+	//Precondizione: callerType = CostantiStruttura.VOLONTARIO
 	public boolean checkIfCanLinkVolontario (String volontario, String tipoVisita) {
 		JSONArray tipi = usersJSONManager.getTipiVisitaOfVolontario(volontario);
 		return tipiVisiteJSONManager.otherVisitTypesIntersect(tipoVisita, tipi);
@@ -225,7 +225,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 		return tipiVisiteJSONManager.visitTypeIntersectsOtherVisitTypes(dateStart1, dateFinish1, hour1, duration1, days1, tipiVisitaVolontario);
 	}
 	
-	//Precondizione: username associato a volontario
+	//Precondizione: callerType = CostantiStruttura.VOLONTARIO
 	public boolean associaVolontarioEsistenteATipoVisitaEsistente(String volontario, String tipoVisita) {
 		usersJSONManager.associaVolontarioEsistenteATipoVisitaEsistente(volontario, tipoVisita);
 		tipiVisiteJSONManager.aggiungiVolontarioATipo(tipoVisita, volontario);
@@ -235,7 +235,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	public boolean impostaCredenzialiNuovoFruitore (String username, String password) {
 		return usersJSONManager.impostaCredenzialiNuovoFruitore(username, password);
 	}
-	//Precondizione: chi invoca è un configuratore
+	//Precondizione: callerType = CostantiStruttura.CONFIGURATORE
 	public boolean impostaCredenzialiNuovoConfiguratore(String username, String password) {
 		return usersJSONManager.impostaCredenzialiNuovoConfiguratore(username, password);
 	}
@@ -244,7 +244,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 		return ambitoJSONManager.getElencoLuoghiVisitabili();
 
 	}
-	//Precondizione: chiamato da configuratore
+	//Precondizione: callerType = CostantiStruttura.CONFIGURATORE
 	public Map<String, List<String>> getElencoTipiVisiteLuogo () {	
 		return ambitoJSONManager.getElencoTipiVisiteLuogo(tipiVisiteJSONManager.getTipiVisitaTitoli());
 

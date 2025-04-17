@@ -7,11 +7,12 @@ import utility.Credenziali;
 public class Login {
 	
 	private ControllerArchivio gdb;
-	
+	//Precondizione> gdb != null
 	public Login(ControllerArchivio gdb) {
 		this.gdb = gdb;
 	}
-	
+	//Precondizione: a != null
+	//Postcondizione: utente loggato
 	public void accesso(App a) {
 		Credenziali credenziali;
 		boolean b = true;
@@ -25,7 +26,8 @@ public class Login {
 		} while (b);
 		configureHandlerUtente(credenziali.getUsername(), a);
 	}
-	
+	//Precondizione: a != null
+	//Postcondizione: fruitore registrato
 	public void registrazione(App a) {
 		Credenziali credenziali = null;
 		do {
@@ -46,7 +48,7 @@ public class Login {
 	public boolean checkPrimoAvvio() {
 		return gdb.checkPrimoAvvio();
 	}
-
+	
 	public void avvio (App a) {
 		if (checkPrimoAvvio()) { 
 			Credenziali c = gdb.getCredenzialiIniziali();
@@ -62,15 +64,15 @@ public class Login {
 			}
 		}
 	}
-	
+	//Precondizione: username != null
 	private boolean checkUsernameGiaPresente(String username) {
 		return gdb.checkIfUserExists(username);
 	}
-	
+	//Precondizione: c != null
 	private boolean checkCredenzialiCorrette(Credenziali c) {
 		return gdb.checkCredenzialiCorrette(c);
 	}
-	
+	//Precondizione: username != null && username in Archivio && a != null
 	private void configureHandlerUtente (String username, App a){
 		ControllerUtente gu;
 		switch (gdb.getTipoUtente(username)) {

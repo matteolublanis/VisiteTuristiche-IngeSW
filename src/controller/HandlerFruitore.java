@@ -11,7 +11,8 @@ import utility.MethodName;
 import utility.Time;
 
 public class HandlerFruitore extends ControllerUtente {
-
+	//Precondizioni di tutti i metodi: param != null
+	
 	public HandlerFruitore(ControllerArchivio gdb, String username) {
 		this.gdb = gdb;
 		this.username = username;
@@ -53,6 +54,7 @@ public class HandlerFruitore extends ControllerUtente {
 		visualListVisitDTO(gdb.getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore(this), a);
 	}
 	
+	//Postcondizione: prenotazione in Archivio
 	@MethodName("Effettua iscrizione ad una visita proposta")
 	public void effettuaIscrizione (App a) {
 		String date = "";
@@ -94,6 +96,7 @@ public class HandlerFruitore extends ControllerUtente {
 		}
 	}
 	
+	//Postcondizione: prenotazione rimossa da Archivio
 	@MethodName("Disdisci una prenotazione")
 	public void disdiciIscrizione (App a) {
 		if (gdb.getElencoPrenotazioniFruitore(this) != null) {

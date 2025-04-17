@@ -13,6 +13,8 @@ import utility.Credenziali;
 import utility.Time;
 
 public class ControllerArchivio {
+	//Precondizione per ogni metodo di modifica Archivio del configuratore: canAddOrRemove (a parte aggiungi Configuratore, imposta max prenotazione)
+	//Precondizione per tutto: param != null
 	
 	private Map<ControllerUtente, String> usernameLinkati = new HashMap<>(); 
 	private Archivio archivio;
@@ -162,6 +164,7 @@ public class ControllerArchivio {
 		else return (archivio.checkPrimoAccesso(usernameLinkati.get(gu))); 
 	}
 	
+	//Precondizione: pianoPubblicato prima volta
 	public boolean indicaDatePrecluse (ControllerUtente gu, String date) { //ok
 		if (archivio.isPrimaPubblicazione() || getTipoUtente(usernameLinkati.get(gu)) != CostantiStruttura.CONFIGURATORE) return false;
 		if (!Time.isValidDate(date)) return false;

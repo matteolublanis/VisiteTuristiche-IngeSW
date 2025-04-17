@@ -8,6 +8,7 @@ import main.App;
 import utility.MethodName;
 
 public class HandlerVolontario extends ControllerUtente {
+	//Precondizioni di tutti i metodi: param != null
 	
 	public HandlerVolontario(ControllerArchivio gdb, String username, App a) {
 		this.gdb = gdb;
@@ -48,7 +49,7 @@ public class HandlerVolontario extends ControllerUtente {
 		List<VisitaDTO> visite = gdb.visiteConfermateVolontario(this);
 		visualListVisitDTO(visite, a);
 	}
-	
+	//Postcondizione: disponibilità in Archivio
 	@MethodName("Comunica le tue prossime disponibilità")
  	public void comunicaDisponibilita(App a) {
  		if (gdb.getPossibilitaDareDisponibilita()) { //se posso dare disponibilità	
