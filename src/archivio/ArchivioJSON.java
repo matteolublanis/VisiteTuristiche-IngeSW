@@ -367,7 +367,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 		return result;
 		
 	}
-	
+	//Precondizione: callerTyper = CostantiStruttura.CONFIGURATORE
 	public boolean aggiungiLuogo (String tag, String nome, String luogo, String collocazione, Set<String> tipiVisitaVal) {
 		JSONArray tipiVisita = new JSONArray();
 		if (tipiVisitaVal != null) {
@@ -375,7 +375,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	    } 
 		return ambitoJSONManager.aggiungiLuogo(tag, nome, luogo, collocazione, tipiVisita);
 	}
-	
+
 	public boolean checkIfTypeAlreadyExistsInSet (Set<String> tipiVisitaVal, JSONArray tipiVisita) {
     	for (String tipo : tipiVisitaVal) {
 	    	if (!checkIfVisitTypeExists(tipo) && !tipo.equals("")) return false;
@@ -386,6 +386,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
     	return true;
 	}
 	
+	//Precondizione: callerTyper = CostantiStruttura.CONFIGURATORE
 	public boolean tryImpostaCredenzialiNuovoVolontario (String username, String password, Set<String> tipi_visiteVal, boolean tipiVisitaNecessario) {
 		if (checkIfUserExists(username)) return false; 
 		JSONArray tipiVisite = new JSONArray();
@@ -395,7 +396,8 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	    if (tipiVisitaNecessario && tipiVisite.length() == 0) return false;
 		return impostaCredenzialiNuovoVolontario(username, password, tipiVisite, tipiVisitaNecessario);
 	}
-
+	
+	//Precondizione: callerTyper = CostantiStruttura.CONFIGURATORE
 	public boolean tryAggiungiVisite (String luogo, String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
 			String dataInizio, String dataFine, ArrayList<Integer> giorniPrenotabiliVal, String oraInizio,
 			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, ArrayList<String> volontariVal) {
@@ -418,6 +420,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 		return tipiVisiteJSONManager.intersectVisitTypeSamePlace(tipiLuogo, dateStart1, dateFinish1, hour1, duration1, days1);
 	}
 	
+	//Precondizione: callerTyper = CostantiStruttura.CONFIGURATORE
 	public void setPossibilitaDareDisponibilitaVolontari(boolean b) {
 		daPubblicareJSONManager.setPossibilitaDareDisponibilitaVolontari(b);
 	}
@@ -426,10 +429,11 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 		return usersJSONManager.getElencoTipiVisiteVolontario(volontario);
  	}
 	
+	//Precondizione: callerTyper = CostantiStruttura.CONFIGURATORE
 	public boolean setPrimaPubblicazione() {
 		return daPubblicareJSONManager.setPrimaPubblicazione();
 	}
-	
+	//Precondizione: callerTyper = CostantiStruttura.CONFIGURATORE
 	public boolean isPrimaPubblicazione() {
 		return daPubblicareJSONManager.isPrimaPubblicazione();
 	}
@@ -441,7 +445,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	public boolean checkIfPlaceExists(String luogo) {
 		return ambitoJSONManager.checkIfPlaceExists(luogo);
 	}
-	
+	//Precondizione: callerTyper = CostantiStruttura.VOLONTARIO
 	public JSONArray getTipiVisitaOfVolontario (String username) {
 		return usersJSONManager.getTipiVisitaOfVolontario(username);
 	}
@@ -453,12 +457,13 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	public boolean checkIfVolontarioHasNoVisitType (String username) { 
 		return usersJSONManager.checkIfVolontarioHasNoVisitType(username);
 	}
-	//Precondizione: lo chiama un volontario
-	public boolean inserisciDisponibilita(String data, String username) { //ok
+	//Precondizione: callerTyper = CostantiStruttura.VOLONTARIO
+	public boolean inserisciDisponibilita(String data, String username) { 
 		return daPubblicareJSONManager.inserisciDisponibilita(data, username, getDatePerDisponibilita(username));
 	}
-
-	public Credenziali getCredenzialiConfIniziale() { //ok
+	
+	//Precondizione: isPrimoAvvio
+	public Credenziali getCredenzialiConfIniziale() { 
 		return new Credenziali(CREDENZIALI_CONF_INIZIALE[0], CREDENZIALI_CONF_INIZIALE[1]);
 	}
 
