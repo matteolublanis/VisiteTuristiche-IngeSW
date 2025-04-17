@@ -39,8 +39,11 @@ public abstract class ControllerUtente {
 			String username = a.richiediInput("username");
 			String password = a.richiediInput("password");
 			Credenziali c = new Credenziali(username, password);
-			b = cambiaCredenziali(c);
-			if (!b) a.view("Credenziali non cambiate, username già presente.");
+			if (a.chiediSioNo("Confermi le nuove credenziali?")) {
+				b = cambiaCredenziali(c);
+				if (!b) a.view("Credenziali non cambiate, username già presente.");
+			}
+			else b = false;
 		} while (!b);
 		a.view("Credenziali cambiate.");
 	}

@@ -30,7 +30,10 @@ public class HandlerConfiguratore extends ControllerUtente{
 	}
 	
 	private void configuraArchivio(App a) {
-		String ambito = a.richiediInput("nome ambito territoriale");
+		String ambito = null;
+		do {
+			ambito = a.richiediInput("nome ambito territoriale");
+		} while (!a.chiediSioNo("Confermi di voler chiamare l'ambito " + ambito + " ?"));
 		impostaAmbitoTerritoriale(ambito);
 		modificaMaxPrenotazione(a);
 		a.view("Inizio fase creazione luoghi dell'ambito territoriale.");
@@ -113,7 +116,15 @@ public class HandlerConfiguratore extends ControllerUtente{
 	
 	@MethodName("Modifica numero max prenotazione per fruitore")
 	public void modificaMaxPrenotazione (App a) {
-		int max = a.richiediInt("max prenotazione per fruitore");
+		int max = 0;
+		do {
+			max = a.richiediInt("max prenotazione per fruitore");
+			if (max < 1) a.view("Valore inserito non valido.");
+			else if (a.chiediSioNo("Confermi?")) {
+				break;
+			}
+			else continue;
+		} while (true);
 		a.view(impostaMaxPrenotazione(max) ? "Modificato valore max prenotazione." : "Valore max prenotazione non modificato.");
 	}
 	
@@ -166,8 +177,15 @@ public class HandlerConfiguratore extends ControllerUtente{
 	@MethodName("Indica date precluse del prossimo piano a quello successivo a questo")
 	public void indicaDatePrecluse(App a) {
 		String data = a.richiediDataValida("data preclusa (dd-mm-yyyy)"); 
+		do {
+			data = a.richiediDataValida("data preclusa (dd-mm-yyyy)"); 
+			if (a.chiediSioNo("Confermi di inserire " + data + " come data preclusa?")) {
+				break;
+			}
+			else return;
+		} while (true);
 		if ((gdb.indicaDatePrecluse(this, data))) a.view("La data preclusa è stata inserita.");
-		else a.view("La data preclusa non è stata inserita, assicurarsi che sia nel formato e nel periodo corretto o di aver pubblicato l'app.");
+		else a.view("La data preclusa non è stata inserita, assicurarsi che sia nel periodo corretto o di aver pubblicato l'app.");
 	}
 	
 	@MethodName("Apri la raccolta delle disponibilità dei volontari")
