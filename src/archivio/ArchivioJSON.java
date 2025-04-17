@@ -280,7 +280,8 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	}
 	
 	public void removeVisiteEffettuateCancellate () {
-		pianoVisiteJSONManager.removeVisiteEffettuateCancellate(pianoStoricoJSONManager);
+		pianoVisiteJSONManager.removeVisiteEffettuateCancellate(pianoStoricoJSONManager, prenotazioniJSONManager, usersJSONManager);
+		
 	}
 	
 	public void setTodayLastCheckPianoVisite () {

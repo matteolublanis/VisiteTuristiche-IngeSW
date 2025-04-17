@@ -99,7 +99,8 @@ public class PianoVisiteJSONManagement {
 		return (jsonPianoVisite.getString(LAST_CHECK).equals(Time.getActualDate()));
 	}
 	
-	public void removeVisiteEffettuateCancellate (PianoStoricoJSONManagement pianoStoricoJSONManager) {
+	public void removeVisiteEffettuateCancellate (PianoStoricoJSONManagement pianoStoricoJSONManager, PrenotazioniJSONManagement prenotazioniJSONManager,
+			UsersJSONManagement usersJSONManager) {
 		if (!isTodayLastCheckPianoVisite()) {
 			Set<String> daysToRemove = new HashSet<>();
 			for (String day : jsonPianoVisite.keySet()) { //cicla sui giorni
@@ -108,10 +109,11 @@ public class PianoVisiteJSONManagement {
 					for (String keyVisita : visiteGiorno.keySet()) {
 						JSONObject visita = visiteGiorno.getJSONObject(keyVisita);
 						if (visita.getString(STATO_VISITA).equals(CANCELLATA)) {
-							
+							prenotazioniJSONManager.removePrenotazioni(visita.getJSONArray(PRENOTAZIONI), usersJSONManager);
 						}
 						if (visita.getString(STATO_VISITA).equals(CONFERMATA)) { 
 							pianoStoricoJSONManager.inserisciVisitaNelloStorico(visita.getString(LUOGO), keyVisita, day);
+							prenotazioniJSONManager.removePrenotazioni(visita.getJSONArray(PRENOTAZIONI), usersJSONManager);
 						}
 					}
 					daysToRemove.add(day);
@@ -206,7 +208,7 @@ public class PianoVisiteJSONManagement {
 	                visiteList.add(tipiVisiteJSONManager.visitaDTOFruitore(tag, date, statoVisita));
 	            }
 	    }
-	    return visiteList;
+	    return (visiteList.size() != 0 ? visiteList : null);
 	}
 	
 	public void setTodayLastCheckPianoVisite () {
@@ -233,14 +235,19 @@ public class PianoVisiteJSONManagement {
 	}
 	
 	public VisitaDTO getVisitaProposteConfermateCancellatePrenotateDalFruitore (String giornoPrenotazione, String tipoVisita, TipiVisiteJSONManagement tipiVisiteJSONManager) {
-		JSONObject giornoVisita = jsonPianoVisite.getJSONObject(giornoPrenotazione);
-	   	JSONObject visita = giornoVisita.getJSONObject(tipoVisita);
-        String statoVisita = visita.getString(STATO_VISITA);
+		try {
+			JSONObject giornoVisita = jsonPianoVisite.getJSONObject(giornoPrenotazione);
+			JSONObject visita = giornoVisita.getJSONObject(tipoVisita);
+	        String statoVisita = visita.getString(STATO_VISITA);
 
-        if (statoVisita.equals(CONFERMATA) || statoVisita.equals(COMPLETA) || statoVisita.equals(CANCELLATA) || statoVisita.equals(PROPOSTA)) { //non completa
-            return (tipiVisiteJSONManager.visitaDTOFruitore(tipoVisita, giornoPrenotazione, statoVisita));
-        }
-        else return null;
+	        if (statoVisita.equals(CONFERMATA) || statoVisita.equals(COMPLETA) || statoVisita.equals(CANCELLATA) || statoVisita.equals(PROPOSTA)) { //non completa
+	            return (tipiVisiteJSONManager.visitaDTOFruitore(tipoVisita, giornoPrenotazione, statoVisita));
+	        }
+	        else return null;
+		}
+		catch (Exception e) {
+			return null;
+		}
 	}
 	
 	public List<VisitaDTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate (Map<String, String> tipiVisiteTitoli) {

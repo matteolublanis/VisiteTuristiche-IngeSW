@@ -1,0 +1,22 @@
+{
+          "luoghi": {
+                    "castello_brescia": {
+                              "descrizione": "Il castello di Brescia (denominato il Falcone d'Italia) � una fortezza sorta a partire dall'epoca medievale e arroccata sul colle Cidneo, a ridosso del centro storico della citt� di Brescia.",
+                              "collocazione": "Brescia centro",
+                              "nome": "Castello di Brescia",
+                              "tipo-visita": [
+                                        "museo_armi",
+                                        "sotterranei_castello"
+                              ]
+                    },
+                    "brescia_romana": {
+                              "descrizione": "Brescia vanta la pi� vasta area archeologica romana dell'intero Nord Italia. Un'importantissima eredit� storica nel pieno cuore della citt�, parte integrante del sito dal 2011 Patrimonio Mondiale dell'Umanit� insieme al complesso monumentale San Salvatore - Santa Giulia. Scopri tutto sul sito UNESCO di Brescia.",
+                              "collocazione": "Brescia centro",
+                              "nome": "Parco archeologico di Brixia romana",
+                              "tipo-visita": ["visita_capitolium"]
+                    }
+          },
+          "max_prenotazione": 40,
+          "nome": "Brescia",
+          "prima_configurazione": false
+}

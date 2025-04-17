@@ -3,6 +3,7 @@ package archivio;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import dto.PrenotazioneDTO;
@@ -23,6 +24,15 @@ public class PrenotazioniJSONManagement {
 			jsonPrenotazioni = JSONUtility.readJsonFile(PATH_PRENOTAZIONI);
 		}
 		else jsonPrenotazioni = JSONUtility.readJsonFile(PATH_PRENOTAZIONI);
+	}
+	
+	public void removePrenotazioni (JSONArray prenotazioniDaRimuovere, UsersJSONManagement usersJSONManager) {
+		for (Object codice : prenotazioniDaRimuovere) {
+			String fruitoreAssociato = jsonPrenotazioni.getJSONObject((String) codice).getString(USERNAME);
+			usersJSONManager.rimuoviPrenotazioneFruitore(fruitoreAssociato, (String) codice);
+			jsonPrenotazioni.remove((String) codice);
+		}
+		aggiornaJsonPrenotazioni();
 	}
 	
 	public JSONObject getPrenotazioneJSONObject (String codicePrenotazione) {

@@ -24,7 +24,7 @@ public class HandlerVolontario extends ControllerUtente {
  	}
 	
 	private void visualListVisitDTO (List<VisitaDTO> visite, App a) {
-		if (visite != null) {
+		if (visite.size() != 0) {
 			for (VisitaDTO v : visite) {
 					a.view("-----------");
 					a.view("Titolo: " +  v.getTitolo());
@@ -42,6 +42,7 @@ public class HandlerVolontario extends ControllerUtente {
 					a.view(codiciPrenotazioni);
 			}
 		}
+		else a.view("Nessuna visita confermata.");
 	}
 	
 	@MethodName("Visualizza le visite confermate che gestirai")

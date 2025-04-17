@@ -187,7 +187,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	
 	@MethodName("Indica date precluse del prossimo piano a quello successivo a questo")
 	public void indicaDatePrecluse(App a) {
-		String data = a.richiediDataValida("data preclusa (dd-mm-yyyy)"); 
+		String data = null; 
 		do {
 			data = a.richiediDataValida("data preclusa (dd-mm-yyyy)"); 
 			if (a.chiediSioNo("Confermi di inserire " + data + " come data preclusa?")) {
