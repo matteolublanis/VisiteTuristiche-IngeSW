@@ -1,4 +1,11 @@
 {
+          "gelataio": {
+                    "tipo": 2,
+                    "password": "gelato",
+                    "primo-accesso": true,
+                    "tipo-visita": ["gelato_castello"],
+                    "username": "gelataio"
+          },
           "fruitore2": {
                     "tipo": 3,
                     "password": "fruitore2",

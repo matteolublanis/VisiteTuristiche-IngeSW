@@ -6,7 +6,8 @@
                               "nome": "Castello di Brescia",
                               "tipo-visita": [
                                         "museo_armi",
-                                        "sotterranei_castello"
+                                        "sotterranei_castello",
+                                        "gelato_castello"
                               ]
                     },
                     "brescia_romana": {

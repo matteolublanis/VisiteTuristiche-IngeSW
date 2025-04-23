@@ -387,22 +387,24 @@ public class HandlerConfiguratore extends ControllerUtente{
 	@MethodName("Aggiungi luogo")
 	public void aggiungiLuogo (App a) {
 		if (canAddOrRemove(a)) { 
-			String tag = a.richiediInput("tag del luogo");
-			String nome = a.richiediInput("nome del luogo");
-			String descrizione = a.richiediInput("descrizione del luogo");
-			String collocazione = a.richiediInput("collocazione del luogo");
-			if (gdb.aggiungiLuogo(this, tag, nome, descrizione, collocazione, null)) {
-				a.view("Aggiunto un nuovo luogo.");
-				boolean aggiunto = false;
-				do {
-					aggiunto = aggiungiTipoVisitePartendoDaLuogo(a, tag);
-					a.view(aggiunto ? "Il nuovo tipo di visita è stato aggiunto." : "Il nuovo tipo di visita non è stato aggiunto.");
-					if (aggiunto) {
-						aggiunto = !a.chiediSioNo("Vuoi continuare con l'aggiunta di tipi di visite?"); //se non vuole inserire ha finito
-					}
-				} while (!aggiunto);
-			}
-			else a.view("Il luogo non è stato aggiunto, controllare il tag inserito.");
+			do {
+				String tag = a.richiediInput("tag del luogo");
+				String nome = a.richiediInput("nome del luogo");
+				String descrizione = a.richiediInput("descrizione del luogo");
+				String collocazione = a.richiediInput("collocazione del luogo");
+				if (gdb.aggiungiLuogo(this, tag, nome, descrizione, collocazione, null)) {
+					a.view("Aggiunto un nuovo luogo.");
+					boolean aggiunto = false;
+					do {
+						aggiunto = aggiungiTipoVisitePartendoDaLuogo(a, tag);
+						a.view(aggiunto ? "Il nuovo tipo di visita è stato aggiunto." : "Il nuovo tipo di visita non è stato aggiunto.");
+						if (aggiunto) {
+							aggiunto = !a.chiediSioNo("Vuoi continuare con l'aggiunta di tipi di visite?"); //se non vuole inserire ha finito
+						}
+					} while (!aggiunto);
+				}
+				else a.view("Il luogo non è stato aggiunto, controllare il tag inserito.");
+			} while (a.chiediSioNo("Vuoi aggiungere un altro luogo?"));
 		}
 		
 	}

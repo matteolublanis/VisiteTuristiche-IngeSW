@@ -1,5 +1,5 @@
 {
-          "last-check": "17-04-2025",
+          "last-check": "01-07-2025",
           "29-07-2025": {"sotterranei_castello": {
                     "stato": "proposta",
                     "numero-iscritti": 0,
@@ -8,7 +8,7 @@
                     "prenotazioni": []
           }},
           "02-07-2025": {"museo_armi": {
-                    "stato": "proposta",
+                    "stato": "confermata",
                     "numero-iscritti": 10,
                     "luogo": "castello_brescia",
                     "volontari": ["volontario1"],
@@ -32,7 +32,7 @@
                     "prenotazioni": []
           }},
           "04-07-2025": {"visita_capitolium": {
-                    "stato": "proposta",
+                    "stato": "cancellata",
                     "numero-iscritti": 3,
                     "luogo": "brescia_romana",
                     "volontari": ["volontario1"],
@@ -71,7 +71,7 @@
                     "prenotazioni": []
           }},
           "03-07-2025": {"museo_armi": {
-                    "stato": "proposta",
+                    "stato": "confermata",
                     "numero-iscritti": 10,
                     "luogo": "castello_brescia",
                     "volontari": ["volontario1"],

@@ -1,4 +1,19 @@
 {
+          "gelato_castello": {
+                    "titolo": "Gelato in castello",
+                    "ora-inizio": "08:00",
+                    "min-fruitore": 5,
+                    "luogo": "castello_brescia",
+                    "durata-visita": 30,
+                    "volontari": ["gelataio"],
+                    "data-fine": "01-12-2025",
+                    "giorni-prenotabili": ["mer"],
+                    "da-acquistare": false,
+                    "descrizione": "Gelato.",
+                    "max-fruitore": 10,
+                    "punto-incontro": "Castello",
+                    "data-inizio": "01-01-2025"
+          },
           "sotterranei_castello": {
                     "titolo": "Visita nei sotterranei del castello",
                     "ora-inizio": "14:00",
