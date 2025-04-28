@@ -17,30 +17,12 @@ public class HandlerVolontario extends ControllerUtente {
 	
 	@MethodName("Visualizza i tipi di visita a cui sei collegato")
  	public void visualizzaTipiVisita(App a) {
-		List<String> listaTipi = gdb.getElencoTipiVisiteVolontario(this);
-		for (String tipo : listaTipi) {
-			a.view(tipo);
-		}
+		a.visualListGeneric(gdb.getElencoTipiVisiteVolontario(this));
  	}
 	
 	private void visualListVisitDTO (List<VisitaDTO> visite, App a) {
 		if (visite.size() != 0) {
-			for (VisitaDTO v : visite) {
-					a.view("-----------");
-					a.view("Titolo: " +  v.getTitolo());
-					a.view("Descrizione: " +  v.getDescrizione());
-					a.view("Punto d'incontro: " +  v.getPuntoIncontro());
-					a.view("Giorno: " +  v.getGiorno());
-					a.view("Ora d'inizio: " +  v.getOraInizio());
-					a.view("Da acquistare: " +  v.getDaAcquistare());
-					a.view("Stato: " +  v.getStato());
-					a.view("Tag: " +  v.getTag());
-					String codiciPrenotazioni = "";
-					for (int i = 0 ; i < v.getPrenotazioni().size() ; i++) {
-						codiciPrenotazioni += "Codice: " + v.getPrenotazioni().get(i).getCodice() + ", n. iscritti:" + v.getPrenotazioni().get(i).getNum_da_prenotare() + "\n";
-					}
-					a.view(codiciPrenotazioni);
-			}
+			a.visualListGeneric(visite);
 		}
 		else a.view("Nessuna visita confermata.");
 	}
@@ -59,18 +41,15 @@ public class HandlerVolontario extends ControllerUtente {
  				a.view("I tipi di visita a te associati non richiedono nuove disponibilità o c'è un problema con l'archivio, contatta un configuratore.");
  			}
  			else { //se ho disponibilità
+ 				//
  				for (String k : dateDisponibilita.keySet()) {
- 					a.view(k.equals("Date precluse") ? k + ":" : "Giorni tipo " + k + ":"); //visualizzo le disponibilità
- 					String days = "";
- 					for (String i : dateDisponibilita.get(k)) {
- 						days += i + " ";
- 					}
- 					a.view(days);
+ 					a.view(k.equals("Date precluse") ? k + ":" : "Giorni tipo " + k + ":"); 
+ 					a.visualListGeneric(dateDisponibilita.get(k));
  				}
  				a.view("Indica le tue disponibilità.");
  				String data = "";
  				boolean b = true;
- 				do { //le inserisco
+ 				do { //DA ESTRARRE!
  					data = a.richiediDataValida("data in cui dai disponibilità (dd-mm-yyyy)"); //inserisco data
  					b = gdb.inserisciDisponibilita(this, data, username); //controllo se inserita
  					if (b) { //se inserita chiedo se vuole continuare

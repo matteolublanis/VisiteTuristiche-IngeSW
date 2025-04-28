@@ -141,10 +141,8 @@ public class HandlerConfiguratore extends ControllerUtente{
 	public void getListaVolontari(App a) {
 		for (UserDTO user : gdb.getListaUser(this, CostantiStruttura.VOLONTARIO)) {
 			a.view("Volontario: " + user.getUsername());
-			List<String> tipiList = user.getTipi_visite();
-			String tipiString = "";
-			for (String tipo : tipiList) tipiString += tipo + " ";
-			a.view("Tipi associati: " + tipiString);
+			a.view("Tipi associati:");
+			a.visualListGeneric(user.getTipi_visite());
 		}
 	}
 	
@@ -152,7 +150,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	public void getElencoLuoghiVisitabili(App a) {
 		List<String> luoghiVisitabili = gdb.getElencoLuoghiVisitabili(this);
 		a.view("Luoghi visitabili:");
-		for (String luogo : luoghiVisitabili) a.view(luogo);
+		a.visualListGeneric(luoghiVisitabili);
 	}
 	
 	@MethodName("Visualizza elenco tipi visite per luogo")
@@ -160,11 +158,8 @@ public class HandlerConfiguratore extends ControllerUtente{
 		Map<String, List<String>> elencoTipiVisiteLuoghi = gdb.getElencoTipiVisiteLuogo(this);
 		for (String luogo : elencoTipiVisiteLuoghi.keySet()) {
 			a.view("Luogo: " + luogo);
-			List<String> tipiVisita = elencoTipiVisiteLuoghi.get(luogo);
 			a.view("Tipi associati:");
-			for (String tipo : tipiVisita) {
-				a.view(tipo);
-			}
+			a.visualListGeneric(elencoTipiVisiteLuoghi.get(luogo));
 		}
 	}
 	
@@ -327,12 +322,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	}
 	@MethodName("Visualizza visite proposte, complete, confermate, cancellate e effettuate")
 	public void getElencoVisiteProposteCompleteConfermateCancellateEffettuate (App a) {
-		for (VisitaDTO v : gdb.getElencoVisiteProposteCompleteConfermateCancellateEffettuate(this)) {
-			a.view("Titolo: " +  v.getTitolo());
-			a.view("Giorno: " +  v.getGiorno());
-			a.view("Luogo: " +  v.getLuogo());
-			a.view("Stato: " +  v.getStato());
-		}
+		a.visualListGeneric(gdb.getElencoVisiteProposteCompleteConfermateCancellateEffettuate(this));
 	}
 	
 	private void associaVolontarioEsistente(App a, String tipo) {

@@ -34,4 +34,10 @@ public class PrenotazioneDTO {
 		return codice;
 	}
 	
+	public String toString () {
+		String result = ("-----------") + ("\nCodice: " + getCodice() + ", giorno: " + getGiorno()) +
+				("\nTag visita: " + getTag_visita());
+		return result;
+	}
+	
 }

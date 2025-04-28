@@ -21,25 +21,7 @@ public class HandlerFruitore extends ControllerUtente {
 	
 	private void visualListVisitDTO (List<VisitaDTO> visite, App a) {
 		if (visite != null) {
-			for (VisitaDTO v : visite) {
-				if (!v.getStato().equals("cancellata")) {
-					a.view("-----------");
-					a.view("Titolo: " +  v.getTitolo());
-					a.view("Descrizione: " +  v.getDescrizione());
-					a.view("Punto d'incontro: " +  v.getPuntoIncontro());
-					a.view("Giorno: " +  v.getGiorno());
-					a.view("Ora d'inizio: " +  v.getOraInizio());
-					a.view("Da acquistare: " +  v.getDaAcquistare());
-					a.view("Stato: " +  v.getStato());
-					a.view("Tag: " +  v.getTag());
-				}
-				else {
-					a.view("-----------");
-					a.view("Titolo: " +  v.getTitolo());
-					a.view("Giorno mancato svolgimento: " +  v.getGiorno());
-					a.view("Stato: " +  v.getStato());
-				}
-			}
+			a.visualListGeneric(visite);;
 		}
 	}
 	
@@ -86,13 +68,7 @@ public class HandlerFruitore extends ControllerUtente {
 	private void visualElencoPrenotazioni (App a) {
 		List<PrenotazioneDTO> prenotazioni = gdb.getElencoPrenotazioniFruitore(this);
 		if (prenotazioni != null) {
-			for (PrenotazioneDTO prenotazione : prenotazioni) {
-				if (!Time.isThreeDaysOrLessBefore(Time.getActualDate(), prenotazione.getGiorno())) {
-					a.view("-----------");
-					a.view("Codice: " + prenotazione.getCodice() + ", giorno: " + prenotazione.getGiorno());
-					a.view("Tag visita: " + prenotazione.getTag_visita()); //TODO meglio titolo
-				}
-			}
+			a.visualListGeneric(prenotazioni);;
 		}
 	}
 	

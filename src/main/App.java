@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import controller.Login;
+import dto.PrenotazioneDTO;
+import dto.VisitaDTO;
 import controller.ControllerUtente;
 import utility.MethodName;
 import utility.Time;
@@ -164,6 +166,11 @@ public class App {
 		}
 
 	}
+	
+	public <T> void visualListGeneric (List<T> list) {
+		for (T x : list) view(x.toString());
+	}
+	
 	//Precondizione: msg != null
 	public void view (String msg) throws NullPointerException {
 		if (!msg.equals("")) System.out.println(msg);
