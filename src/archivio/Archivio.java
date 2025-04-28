@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import org.json.JSONArray;
 import dto.PrenotazioneDTO;
-import dto.VolontarioDTO;
+import dto.UserDTO;
 import dto.VisitaDTO;
 import utility.Credenziali;
 
@@ -51,7 +51,7 @@ public interface Archivio {
 	/*
 	 * Precondizione: 0 < tipo_user < 4
 	 */
-	public Set<VolontarioDTO> getListaUser(int tipo_user);
+	public Set<UserDTO> getListaUser(int tipo_user);
 	//Precondizione: max > 0
 	public boolean impostaMaxPrenotazione(int max);
 	//Precondizione: callerType = CostantiStruttura.CONFIGURATORE

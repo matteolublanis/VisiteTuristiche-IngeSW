@@ -41,30 +41,37 @@ public class HandlerVolontario extends ControllerUtente {
  				a.view("I tipi di visita a te associati non richiedono nuove disponibilità o c'è un problema con l'archivio, contatta un configuratore.");
  			}
  			else { //se ho disponibilità
- 				//
- 				for (String k : dateDisponibilita.keySet()) {
- 					a.visualListGeneric(dateDisponibilita.get(k), k.equals("Date precluse") ? k : "Giorni tipo " + k);
- 				}
- 				a.view("Indica le tue disponibilità.");
- 				String data = "";
- 				boolean b = true;
- 				do { //DA ESTRARRE!
- 					data = a.richiediDataValida("data in cui dai disponibilità (dd-mm-yyyy)"); //inserisco data
- 					b = gdb.inserisciDisponibilita(this, data, username); //controllo se inserita
- 					if (b) { //se inserita chiedo se vuole continuare
- 						a.view("La tua disponibilità è stata inserita.");
- 						b = a.chiediSioNo("Vuoi aggiungere altre disponibilità?");
- 					}
- 					else { //se non inserita richiedo
- 						a.view("La tua disponibilità non è stata inserita, assicurati che sia una data corretta.");
- 						b = a.chiediSioNo("Vuoi continuare ad aggiungere?"); //do possibilità di chiudere loop
- 					}
- 				} while (b); //TODO se viene inserito un formato errato chiude
+ 				visualDateDisponibilita(a, dateDisponibilita);
+ 				indicaDisponibilita(a);
  				
  			}
  			
  		}
  		else a.view("Non puoi al momento comunicare le tue disponibilità.");
  	}
+	
+	private void visualDateDisponibilita(App a, Map<String, List<String>> dateDisponibilita) {
+		for (String k : dateDisponibilita.keySet()) {
+				a.visualListGeneric(dateDisponibilita.get(k), k.equals("Date precluse") ? k : "Giorni tipo " + k);
+			}
+	}
+	
+	private void indicaDisponibilita (App a) {
+			a.view("Indica le tue disponibilità.");
+			String data = "";
+			boolean b = true;
+			do { //DA ESTRARRE!
+				data = a.richiediDataValida("data in cui dai disponibilità (dd-mm-yyyy)"); //inserisco data
+				b = gdb.inserisciDisponibilita(this, data, username); //controllo se inserita
+				if (b) { //se inserita chiedo se vuole continuare
+					a.view("La tua disponibilità è stata inserita.");
+					b = a.chiediSioNo("Vuoi aggiungere altre disponibilità?");
+				}
+				else { //se non inserita richiedo
+					a.view("La tua disponibilità non è stata inserita, assicurati che sia una data corretta.");
+					b = a.chiediSioNo("Vuoi continuare ad aggiungere?"); //do possibilità di chiudere loop
+				}
+			} while (b); //TODO se viene inserito un formato errato chiude
+	}
 	
 }

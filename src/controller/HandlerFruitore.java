@@ -23,6 +23,9 @@ public class HandlerFruitore extends ControllerUtente {
 		if (visite != null) {
 			a.visualListGeneric(visite, "Elenco visite");;
 		}
+		else {
+			a.view("Nessuna visita presente.");
+		}
 	}
 	
 	@MethodName("Visualizza visite proposte, confermate e cancellate")

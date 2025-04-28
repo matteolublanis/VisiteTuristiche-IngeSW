@@ -2,7 +2,7 @@ package dto;
 
 import java.util.List;
 
-public class VolontarioDTO {
+public class VolontarioDTO  implements UserDTO {
 	private String username = null;
 	private List<String> tipi_visite = null;
 	

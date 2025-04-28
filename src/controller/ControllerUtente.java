@@ -116,7 +116,7 @@ public abstract class ControllerUtente {
 			if (input.equalsIgnoreCase("esc")) return false;
 			else a.view("Inserire il numero dell'azione o ESC per uscire.");
 		}
-		catch (Exception e) {
+		catch (Exception e) { //TODO gestione migliore delle eccezioni
 			System.err.println(e);
 			return false;
 		}

@@ -62,7 +62,7 @@ public class VisitaDTO {
 		return prenotazioni;
 	}
 	
-	public String toString () {
+	public String toString () { //TODO Pattern 
 		if (!getStato().equals("cancellata")) {
 			if (getDaAcquistare() == null) { //non impostato per configuratore
 				String result = ("-----------") + ("\nTitolo: " +  getTitolo()) + ("\nGiorno: " +  getGiorno()) + 

@@ -8,6 +8,7 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import dto.UserDTO;
 import dto.VolontarioDTO;
 import utility.CostantiStruttura;
 import utility.Credenziali;
@@ -52,8 +53,8 @@ public class UsersJSONManagement {
 		return (int) (utente.get(TIPO_USER));
 	}
 	
-	public Set<VolontarioDTO> getListaUser (int tipo_user) {
-			Set<VolontarioDTO> result = new HashSet<>();
+	public Set<UserDTO> getListaUser (int tipo_user) {
+			Set<UserDTO> result = new HashSet<>();
 			for (String s : JSONUtility.allObjectsSameIntValue(jsonUsers, tipo_user, TIPO_USER)) {
 				JSONObject user = jsonUsers.getJSONObject(s);
 				switch (tipo_user) {
@@ -65,7 +66,7 @@ public class UsersJSONManagement {
 					for (Object m : user.getJSONArray(TIPO_VISITA)) {
 						tipiAssociati.add((String)m);
 					}
-					result.add(new VolontarioDTO(user.getString(USERNAME), tipiAssociati));
+					result.add(new VolontarioDTO(user.getString(USERNAME), tipiAssociati)); //TODO Simple Factory
 					break;
 				case CostantiStruttura.FRUITORE:
 					result.add(new VolontarioDTO(user.getString(USERNAME)));

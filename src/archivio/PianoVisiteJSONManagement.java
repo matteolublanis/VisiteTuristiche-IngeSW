@@ -16,7 +16,7 @@ import utility.Time;
 
 public class PianoVisiteJSONManagement {
 	
-	private static final String PROPOSTA = "proposta", CANCELLATA = "cancellata", CONFERMATA = "confermata", COMPLETA = "completa", EFFETTUATA = "effettuata";
+	private static final String PROPOSTA = "proposta", CANCELLATA = "cancellata", CONFERMATA = "confermata", COMPLETA = "completa"; //EFFETTUATA = "effettuata"
 	private static final String PATH_VISITE = "json/piano_visite.json";
 	private JSONObject jsonPianoVisite = null; 
 	private static final String LAST_CHECK = "last-check";

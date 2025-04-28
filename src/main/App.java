@@ -52,12 +52,9 @@ public class App {
 	 */
 	private boolean scegliAzione () {
 		view("Quale operazione desidera (ESC per uscire)?");
-		
 		visualNumberedListGeneric(controllerUtente.getAzioniDisponibiliConNomi());
-		
 		String input = richiediInput("l'azione da eseguire (da 1 a " + controllerUtente.getAzioniDisponibiliConNomi().size() + " o esc)");
-		if (input.equalsIgnoreCase("ESC")) stop();
-		return controllerUtente.eseguiAzione(input, this);		
+		return controllerUtente.eseguiAzione(input, this);
 	}
 
 	//Precondizione: val != null
