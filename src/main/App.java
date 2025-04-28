@@ -39,9 +39,13 @@ public class App {
 			
 		} while (true); 
 		
+		stop();
+	}
+	
+	public void stop() {
 		view("Arrivederci!");
-		
 		sc.close();
+		System.exit(0);
 	}
 	
 	/*
@@ -51,45 +55,13 @@ public class App {
 	private boolean scegliAzione () {
 		view("Quale operazione desidera (ESC per uscire)?");
 		
-		List<Method> azioniDisponibili = controllerUtente.getAzioniDisponibili();
-		for (int i = 0; i < azioniDisponibili.size(); i++) {
-			try {
-				MethodName annotation = azioniDisponibili.get(i).getAnnotation(MethodName.class);
-				view((i + 1) + ") " + annotation.value());
-			}
-			catch(Exception e){
-				view("Non sono stati definiti correttamente i metodi, non pagare il team di sviluppo.");
-			}
-		}
+		visualNumberedListGeneric(controllerUtente.getAzioniDisponibiliConNomi());
 		
-		String input = sc.nextLine();
-		if (input.equalsIgnoreCase("ESC")) return false;
-		else return eseguiAzione(input, azioniDisponibili);
-		
+		String input = richiediInput("l'azione da eseguire (da 1 a " + controllerUtente.getAzioniDisponibiliConNomi().size() + " o esc)");
+		if (input.equalsIgnoreCase("ESC")) stop();
+		return controllerUtente.eseguiAzione(input, this);		
 	}
-	/*
-	 * Precondizione: input != null && azioniDisponibili != null
-	 * @param String input, List<Method> azioni
-	 * @throw Exception e Qui vengono catturate tutte le eccezioni all'interno del programma, da cambiare nella raffinatura
-	 */
-	private boolean eseguiAzione (String input, List<Method> azioniDisponibili) {
-		try {
-			int scelta = Integer.parseInt(input);
-			if (scelta > 0 && scelta <= azioniDisponibili.size()) {
-				Method metodo = azioniDisponibili.get(scelta - 1);
-				metodo.invoke(controllerUtente, this);
-			} 
-			else {
-				view("Scelta non valida.");
-			}
-		} catch (Exception e) { 
-			//view("Formato inserito non corretto."); 
-			System.err.println(e);
-			System.exit(0);
-		}
-		
-		return true;
-	}
+
 	//Precondizione: val != null
 	public boolean chiediSioNo (String val) {
 		view(val);
@@ -169,6 +141,10 @@ public class App {
 	
 	public <T> void visualListGeneric (List<T> list) {
 		for (T x : list) view(x.toString());
+	}
+	
+	public <T> void visualNumberedListGeneric (List<T> list) {
+		for (int i = 1 ; i <= list.size() ; i++) view(i + ") " + list.get(i-1).toString());
 	}
 	
 	//Precondizione: msg != null

@@ -2,10 +2,12 @@ package controller;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import main.App;
 import utility.Credenziali;
+import utility.MethodName;
 
 public abstract class ControllerUtente {
 	
@@ -74,6 +76,52 @@ public abstract class ControllerUtente {
 	
 	protected boolean cambiaCredenziali(Credenziali c) {
 		return (gdb.cambiaCredenziali(this, c));
+	}
+	
+	public List<String> getAzioniDisponibiliConNomi() {
+	    List<String> nomiAzioni = new ArrayList<>();
+	    List<Method> azioniDisponibili = getAzioniDisponibili();
+
+	    for (int i = 0; i < azioniDisponibili.size(); i++) {
+	        try {
+	            Method metodo = azioniDisponibili.get(i);
+	            MethodName annotation = metodo.getAnnotation(MethodName.class);
+	            String nomeAzione = annotation.value();
+	            nomiAzioni.add(nomeAzione);
+	        } catch (Exception e) {
+	            nomiAzioni.add("Errore nel recupero del nome dell'azione");
+	        }
+	    }
+
+	    return nomiAzioni;
+	}
+	
+	/*
+	 * Precondizione: input != null && azioniDisponibili != null
+	 * @param String input, List<Method> azioni
+	 * @throw Exception e Qui vengono catturate tutte le eccezioni all'interno del programma, da cambiare nella raffinatura
+	 */
+	public boolean eseguiAzione (String input, App a) {
+		try {
+			List<Method> azioniDisponibili = getAzioniDisponibili();
+			int scelta = Integer.parseInt(input);
+			if (scelta > 0 && scelta <= azioniDisponibili.size()) {
+				Method metodo = azioniDisponibili.get(scelta - 1);
+				metodo.invoke(this, a);
+			} 
+			else {
+				a.view("Scelta non valida.");
+			}
+		} catch (NumberFormatException e) { 
+			if (input.equalsIgnoreCase("esc")) return false;
+			else a.view("Inserire il numero dell'azione o ESC per uscire.");
+		}
+		catch (Exception e) {
+			System.err.println(e);
+			return false;
+		}
+		
+		return true;
 	}
 	
     public List<Method> getAzioniDisponibili() {
