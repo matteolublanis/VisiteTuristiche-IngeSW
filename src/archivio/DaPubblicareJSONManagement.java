@@ -106,7 +106,7 @@ public class DaPubblicareJSONManagement {
 	
 	public boolean inserisciDisponibilita(String data, String username, HashMap<String, List<String>> m) { //ok\
 		List<String> datePrecluse = getDatePrecluse();
-		if (datePrecluse.contains(data)) return false;
+		if (datePrecluse.contains(data)) return false; //per precondizione già sistemato
 		for (String tagVisita : m.keySet()) {
 			if (m.get(tagVisita).contains(data)) {
 				JSONObject disponibilita = jsonPianoVisiteDaPubblicare.getJSONObject(DISPONIBILITA);

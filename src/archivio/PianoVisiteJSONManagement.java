@@ -65,29 +65,13 @@ public class PianoVisiteJSONManagement {
 						jsonPianoVisite.getJSONObject(data).getJSONObject(tipo).getJSONArray(VOLONTARI2).put(usernameVol);
 					}
 					else {
-						JSONObject visita = new JSONObject();
-						JSONArray volontariAssociati = new JSONArray();
-						volontariAssociati.put(usernameVol);
-						visita.put(LUOGO, tipiVisiteLuoghi.get(tipo));
-						visita.put(STATO_VISITA, PROPOSTA);
-						visita.put(VOLONTARI2, volontariAssociati);
-						visita.put(NUMERO_ISCRITTI, 0);
-						visita.put(PRENOTAZIONI, new JSONArray());
-						jsonPianoVisite.getJSONObject(data).put(tipo, visita);
+						jsonPianoVisite.getJSONObject(data).put(tipo, newVisita(usernameVol, tipiVisiteLuoghi, tipo));
 					}
 				}
 				else {
 					jsonPianoVisite.put(data, new JSONObject()); //creo data nel piano
-					String tipo = volontarioDisponibilita.getString(data);
-					JSONObject visita = new JSONObject();
-					JSONArray volontariAssociati = new JSONArray();
-					volontariAssociati.put(usernameVol);
-					visita.put(LUOGO, tipiVisiteLuoghi.get(tipo));
-					visita.put(STATO_VISITA, PROPOSTA);
-					visita.put(VOLONTARI2, volontariAssociati);
-					visita.put(NUMERO_ISCRITTI, 0);
-					visita.put(PRENOTAZIONI, new JSONArray());
-					jsonPianoVisite.getJSONObject(data).put(tipo, visita);
+					String tipo = volontarioDisponibilita.getString(data); 
+					jsonPianoVisite.getJSONObject(data).put(tipo, newVisita(usernameVol, tipiVisiteLuoghi, tipo));
 				}
 			}
 		}
@@ -95,6 +79,17 @@ public class PianoVisiteJSONManagement {
 		return true;
 	}
 	
+	public JSONObject newVisita (String usernameVol, Map<String, String> tipiVisiteLuoghi, String tipo) {
+		JSONObject visita = new JSONObject();
+		JSONArray volontariAssociati = new JSONArray();
+		volontariAssociati.put(usernameVol);
+		visita.put(LUOGO, tipiVisiteLuoghi.get(tipo));
+		visita.put(STATO_VISITA, PROPOSTA);
+		visita.put(VOLONTARI2, volontariAssociati);
+		visita.put(NUMERO_ISCRITTI, 0);
+		visita.put(PRENOTAZIONI, new JSONArray());
+		return visita;
+	}
 	public boolean isTodayLastCheckPianoVisite () {
 		return (jsonPianoVisite.getString(LAST_CHECK).equals(Time.getActualDate()));
 	}
