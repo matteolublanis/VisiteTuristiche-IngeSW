@@ -106,7 +106,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 		return true;
 	}
 	
-	public Set<UserDTO> getListaUser (int tipo_user) {
+	public Set<VolontarioDTO> getListaUser (int tipo_user) {
 		return usersJSONManager.getListaUser(tipo_user);
 
 	}

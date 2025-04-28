@@ -278,7 +278,7 @@ public class ControllerArchivio {
 		else return false;
 	}
 
-	public Set<UserDTO> getListaUser(ControllerUtente gu, int tipo_user) {
+	public Set<VolontarioDTO> getListaUser(ControllerUtente gu, int tipo_user) {
 		if (getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.CONFIGURATORE)
 			return archivio.getListaUser(tipo_user);
 		else return null;

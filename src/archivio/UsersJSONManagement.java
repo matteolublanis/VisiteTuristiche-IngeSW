@@ -8,7 +8,7 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import dto.UserDTO;
+import dto.VolontarioDTO;
 import utility.CostantiStruttura;
 import utility.Credenziali;
 import utility.JSONUtility;
@@ -52,23 +52,23 @@ public class UsersJSONManagement {
 		return (int) (utente.get(TIPO_USER));
 	}
 	
-	public Set<UserDTO> getListaUser (int tipo_user) {
-			Set<UserDTO> result = new HashSet<>();
+	public Set<VolontarioDTO> getListaUser (int tipo_user) {
+			Set<VolontarioDTO> result = new HashSet<>();
 			for (String s : JSONUtility.allObjectsSameIntValue(jsonUsers, tipo_user, TIPO_USER)) {
 				JSONObject user = jsonUsers.getJSONObject(s);
 				switch (tipo_user) {
 				case CostantiStruttura.CONFIGURATORE:
-					result.add(new UserDTO(user.getString(USERNAME)));
+					result.add(new VolontarioDTO(user.getString(USERNAME)));
 					break;
 				case CostantiStruttura.VOLONTARIO:
 					List<String> tipiAssociati = new ArrayList<>();
 					for (Object m : user.getJSONArray(TIPO_VISITA)) {
 						tipiAssociati.add((String)m);
 					}
-					result.add(new UserDTO(user.getString(USERNAME), tipiAssociati));
+					result.add(new VolontarioDTO(user.getString(USERNAME), tipiAssociati));
 					break;
 				case CostantiStruttura.FRUITORE:
-					result.add(new UserDTO(user.getString(USERNAME)));
+					result.add(new VolontarioDTO(user.getString(USERNAME)));
 				default:
 					return null;
 				}

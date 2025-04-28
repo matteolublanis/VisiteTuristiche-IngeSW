@@ -21,7 +21,7 @@ public class HandlerFruitore extends ControllerUtente {
 	
 	private void visualListVisitDTO (List<VisitaDTO> visite, App a) {
 		if (visite != null) {
-			a.visualListGeneric(visite);;
+			a.visualListGeneric(visite, "Elenco visite");;
 		}
 	}
 	
@@ -32,7 +32,6 @@ public class HandlerFruitore extends ControllerUtente {
 	
 	@MethodName("Visualizza tutte le visite proposte/confermate/cancellate/complete che hai prenotato")
 	public void visualizzaVisiteProposteConfermateCancellateCompletePrenotate (App a) {
-		a.view("Ecco le visite a cui ti sei prenotato:");
 		visualListVisitDTO(gdb.getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore(this), a);
 	}
 	
@@ -68,7 +67,7 @@ public class HandlerFruitore extends ControllerUtente {
 	private void visualElencoPrenotazioni (App a) {
 		List<PrenotazioneDTO> prenotazioni = gdb.getElencoPrenotazioniFruitore(this);
 		if (prenotazioni != null) {
-			a.visualListGeneric(prenotazioni);;
+			a.visualListGeneric(prenotazioni, "Elenco prenotazioni");
 		}
 	}
 	

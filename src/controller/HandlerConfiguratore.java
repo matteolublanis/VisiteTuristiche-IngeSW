@@ -139,27 +139,20 @@ public class HandlerConfiguratore extends ControllerUtente{
 	
 	@MethodName("Visualizza lista volontari")
 	public void getListaVolontari(App a) {
-		for (UserDTO user : gdb.getListaUser(this, CostantiStruttura.VOLONTARIO)) {
-			a.view("Volontario: " + user.getUsername());
-			a.view("Tipi associati:");
-			a.visualListGeneric(user.getTipi_visite());
-		}
+		a.visualSetGeneric(gdb.getListaUser(this, CostantiStruttura.VOLONTARIO), "Lista volontari");
 	}
 	
 	@MethodName("Visualizza elenco luoghi visitabili")
 	public void getElencoLuoghiVisitabili(App a) {
 		List<String> luoghiVisitabili = gdb.getElencoLuoghiVisitabili(this);
-		a.view("Luoghi visitabili:");
-		a.visualListGeneric(luoghiVisitabili);
+		a.visualListGeneric(luoghiVisitabili, "Luoghi visitabili");
 	}
 	
 	@MethodName("Visualizza elenco tipi visite per luogo")
 	public void getElencoTipiVisiteLuogo(App a) {
 		Map<String, List<String>> elencoTipiVisiteLuoghi = gdb.getElencoTipiVisiteLuogo(this);
 		for (String luogo : elencoTipiVisiteLuoghi.keySet()) {
-			a.view("Luogo: " + luogo);
-			a.view("Tipi associati:");
-			a.visualListGeneric(elencoTipiVisiteLuoghi.get(luogo));
+			a.visualListGeneric(elencoTipiVisiteLuoghi.get(luogo), "Luogo: " + luogo + ", tipi associati");
 		}
 	}
 	
@@ -322,7 +315,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	}
 	@MethodName("Visualizza visite proposte, complete, confermate, cancellate e effettuate")
 	public void getElencoVisiteProposteCompleteConfermateCancellateEffettuate (App a) {
-		a.visualListGeneric(gdb.getElencoVisiteProposteCompleteConfermateCancellateEffettuate(this));
+		a.visualListGeneric(gdb.getElencoVisiteProposteCompleteConfermateCancellateEffettuate(this), "Elenco visite");
 	}
 	
 	private void associaVolontarioEsistente(App a, String tipo) {

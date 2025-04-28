@@ -3,6 +3,8 @@ package main;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.Set;
+
 import controller.Login;
 import controller.ControllerUtente;
 import utility.Time;
@@ -135,7 +137,13 @@ public class App {
 
 	}
 	
-	public <T> void visualListGeneric (List<T> list) {
+	public <T> void visualSetGeneric (Set<T> list, String name) {
+		view(name + ":");
+		for (T x :list) view(x.toString());
+	}
+	
+	public <T> void visualListGeneric (List<T> list, String name) {
+		view(name + ":");
 		for (T x : list) view(x.toString());
 	}
 	

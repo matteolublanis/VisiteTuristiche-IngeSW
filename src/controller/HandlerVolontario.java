@@ -17,12 +17,12 @@ public class HandlerVolontario extends ControllerUtente {
 	
 	@MethodName("Visualizza i tipi di visita a cui sei collegato")
  	public void visualizzaTipiVisita(App a) {
-		a.visualListGeneric(gdb.getElencoTipiVisiteVolontario(this));
+		a.visualListGeneric(gdb.getElencoTipiVisiteVolontario(this), "Tipi visita associati");
  	}
 	
 	private void visualListVisitDTO (List<VisitaDTO> visite, App a) {
 		if (visite.size() != 0) {
-			a.visualListGeneric(visite);
+			a.visualListGeneric(visite, "Elenco visite");
 		}
 		else a.view("Nessuna visita confermata.");
 	}
@@ -43,8 +43,7 @@ public class HandlerVolontario extends ControllerUtente {
  			else { //se ho disponibilità
  				//
  				for (String k : dateDisponibilita.keySet()) {
- 					a.view(k.equals("Date precluse") ? k + ":" : "Giorni tipo " + k + ":"); 
- 					a.visualListGeneric(dateDisponibilita.get(k));
+ 					a.visualListGeneric(dateDisponibilita.get(k), k.equals("Date precluse") ? k : "Giorni tipo " + k);
  				}
  				a.view("Indica le tue disponibilità.");
  				String data = "";
