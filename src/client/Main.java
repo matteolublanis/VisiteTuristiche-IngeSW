@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import javax.sound.sampled.LineUnavailableException;
 
-import client.app.App;
+import client.app.*;
 
 /*
  * Progetto di ingegneria del software: Visite Turistiche
@@ -12,7 +12,7 @@ import client.app.App;
  */
 public class Main {
 	public static void main (String args[]) throws IllegalAccessException, InvocationTargetException, IOException, LineUnavailableException {
-    		App app = new App(); 
+    		App app = new AppUI(); 
     		app.start();
     }
 }

@@ -287,8 +287,8 @@ public class HandlerConfiguratore extends ControllerUtente{
 		String oraInizio = a.richiediOraValida("ora d'inizio visita (hh-mm)");
 		int durataVisita = a.richiediInt("durata della visita in minuti (ad esempio 120 sono 120 minuti, quindi 2 ore)");
 		boolean ticket = a.chiediSioNo("è da acquistare o no un biglietto?");
-		int minFruitore = a.richiediNumeroConLimite("minimo fruitori per confermare la visita", 0);
-		int maxFruitore = a.richiediNumeroConLimite("massimo fruitori per completare la visita", minFruitore);
+		int minFruitore = a.richiediNumeroConLimiteInferiore("minimo fruitori per confermare la visita", 0);
+		int maxFruitore = a.richiediNumeroConLimiteInferiore("massimo fruitori per completare la visita", minFruitore);
 		ArrayList<String> volontari = richiediVolontari();
 		return (archivio.aggiungiTipoVisite(connectionCode, luogo, tipoVisita, titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniPrenotabili, oraInizio, durataVisita, ticket, minFruitore, maxFruitore, volontari));
 	}

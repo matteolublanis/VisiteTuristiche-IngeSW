@@ -57,7 +57,7 @@ public class HandlerFruitore extends ControllerUtente {
 		if (archivio.getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato(date) != null) {
 			visualListVisitDTO(archivio.getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato(date), a);
 			String tipoVisita = richiediVisitaEsistente("tag del tipo della visita");
-			int numeroIscrizione = richiediIntMaggioreDiZero("per quante persone vuoi prenotare");
+			int numeroIscrizione = a.richiediNumeroConLimiteInferiore("per quante persone vuoi prenotare", 0);
 			String codice = archivio.inserisciPrenotazione(connectionCode, new PrenotazioneDTO(date, tipoVisita, numeroIscrizione));
 			a.view(codice != null ? "Prenotazione inserita, codice prenotazione: " + codice : "Prenotazione non inserita.");
 		}

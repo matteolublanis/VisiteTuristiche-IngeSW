@@ -44,15 +44,6 @@ public abstract class ControllerUtente {
 		a.view("Credenziali cambiate.");
 	}
 	
-	protected int richiediIntMaggioreDiZero(String messaggio) {
-		int result = 0;
-		do {
-			result = a.richiediInt(messaggio);
-			if (result < 1) a.view("Almeno uno.");
-		} while (result < 1);
-		return result;
-	}
-	
 	protected String richiediVisitaEsistente(String messaggio) {
 	    String tipo;
 	    do {
