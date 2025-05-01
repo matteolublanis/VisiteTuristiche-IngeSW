@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import archivio.ArchivioFacade;
-import client.App;
+import client.app.App;
 import dto.PrenotazioneDTO;
 import dto.VisitaDTO;
 import utility.MethodName;

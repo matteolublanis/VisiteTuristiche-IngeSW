@@ -2,7 +2,7 @@ package client.login;
 
 import archivio.ArchivioFacade;
 import archivio.ArchivioFactory;
-import client.App;
+import client.app.App;
 import client.controller_utente.ControllerUtente;
 import client.controller_utente.ControllerUtenteFactory;
 import utility.Credenziali;

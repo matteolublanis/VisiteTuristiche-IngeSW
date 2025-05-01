@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import archivio.ArchivioFacade;
-import client.App;
+import client.app.App;
 import utility.Credenziali;
 import utility.MethodName;
 

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import javax.sound.sampled.LineUnavailableException;
 
+import client.app.App;
+
 /*
  * Progetto di ingegneria del software: Visite Turistiche
  * @author David Brembati (741041), Matteo Lublanis(736418), Singh Sahiljit (740552)

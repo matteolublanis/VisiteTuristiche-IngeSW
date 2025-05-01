@@ -1,7 +1,7 @@
 package client.controller_utente;
 
 import archivio.ArchivioFacade;
-import client.App;
+import client.app.App;
 import utility.CostantiStruttura;
 
 public class ControllerUtenteFactory {

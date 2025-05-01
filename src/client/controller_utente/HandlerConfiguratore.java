@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import archivio.ArchivioFacade;
-import client.App;
+import client.app.App;
 import utility.CostantiStruttura;
 import utility.MethodName;
 import utility.Time;

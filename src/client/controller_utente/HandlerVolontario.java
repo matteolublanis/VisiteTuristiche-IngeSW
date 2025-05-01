@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import archivio.ArchivioFacade;
-import client.App;
+import client.app.App;
 import dto.VisitaDTO;
 import utility.MethodName;
 

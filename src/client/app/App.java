@@ -1,4 +1,4 @@
-package client;
+package client.app;
 
 import java.util.List;
 import java.util.NoSuchElementException;
