@@ -1,4 +1,4 @@
-package controller;
+package client.controller_utente;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import archivio.ArchivioFacade;
-import main.App;
+import client.App;
 import utility.CostantiStruttura;
 import utility.MethodName;
 import utility.Time;
@@ -22,7 +22,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 		this.connectionCode = connectionCode;
 	}
 	
-	protected void checkPrimoAccesso () {
+	public void checkPrimoAccesso () {
 		super.checkPrimoAccesso();
 		if (checkPrimaConfigurazioneArchivio()) configuraArchivio();
 	}

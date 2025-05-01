@@ -1,11 +1,11 @@
-package controller;
+package client.controller_utente;
 
 import java.util.List;
 import java.util.Map;
 
 import archivio.ArchivioFacade;
+import client.App;
 import dto.VisitaDTO;
-import main.App;
 import utility.MethodName;
 
 public class HandlerVolontario extends ControllerUtente {

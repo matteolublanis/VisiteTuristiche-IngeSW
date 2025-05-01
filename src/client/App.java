@@ -1,12 +1,12 @@
-package main;
+package client;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.Set;
 
-import controller.Login;
-import controller.ControllerUtente;
+import client.controller_utente.ControllerUtente;
+import client.login.Login;
 import utility.Time;
 
 public class App { 

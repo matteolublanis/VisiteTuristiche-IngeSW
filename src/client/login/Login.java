@@ -1,9 +1,10 @@
-package controller;
+package client.login;
 
 import archivio.ArchivioFacade;
 import archivio.ArchivioFactory;
-import main.App;
-import utility.CostantiStruttura;
+import client.App;
+import client.controller_utente.ControllerUtente;
+import client.controller_utente.ControllerUtenteFactory;
 import utility.Credenziali;
 
 public class Login {
@@ -20,7 +21,6 @@ public class Login {
  		archivio = ArchivioFactory.createArchivio(tipoApp);
  		
  	}
-	
 	
 	//Precondizione: a != null
 	//Postcondizione: utente loggato
@@ -85,28 +85,16 @@ public class Login {
 	private boolean checkCredenzialiCorrette(Credenziali c) {
 		return archivio.checkCredenzialiCorrette(c);
 	}
+	
 	//Precondizione: username != null && username in Archivio && a != null
 	private void configureHandlerUtente (String connectionCode){
-		ControllerUtente gu = null;
-		switch (archivio.getTipoUtente(connectionCode)) {
-		case CostantiStruttura.CONFIGURATORE:
-			if (connectionCode != null) gu = new HandlerConfiguratore(archivio, a, connectionCode);
-			a.setGu(gu);
-			gu.checkPrimoAccesso();
-			break;
-		case CostantiStruttura.VOLONTARIO:
-			if (connectionCode != null) gu = new HandlerVolontario(archivio, a, connectionCode);
-			a.setGu(gu);
-			gu.checkPrimoAccesso();
-			break;
-		case CostantiStruttura.FRUITORE:
-			if (connectionCode != null) gu = new HandlerFruitore(archivio, a, connectionCode);
-			a.setGu(gu);
-			gu.checkPrimoAccesso();
-			break;
-		default: 
+		if (connectionCode == null) {
 			a.view("Problema setting gu");
 			return;
 		}
+		ControllerUtente gu = ControllerUtenteFactory.createControllerUtente(archivio.getTipoUtente(connectionCode), archivio, a, connectionCode);
+		a.setGu(gu);
+		gu.checkPrimoAccesso();
+		
 	}
 }

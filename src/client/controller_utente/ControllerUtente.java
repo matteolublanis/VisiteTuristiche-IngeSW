@@ -1,4 +1,4 @@
-package controller;
+package client.controller_utente;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import archivio.ArchivioFacade;
-import main.App;
+import client.App;
 import utility.Credenziali;
 import utility.MethodName;
 
@@ -20,7 +20,7 @@ public abstract class ControllerUtente {
 		//i was made to love you, can't you tell?
 	}
 	
-	protected void checkPrimoAccesso() {
+	public void checkPrimoAccesso() {
 		if (archivio.checkPrimoAccesso(connectionCode)) primoAccesso();
 	}
 

@@ -1,13 +1,13 @@
-package controller;
+package client.controller_utente;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import archivio.ArchivioFacade;
+import client.App;
 import dto.PrenotazioneDTO;
 import dto.VisitaDTO;
-import main.App;
 import utility.MethodName;
 import utility.Time;
 
@@ -21,7 +21,7 @@ public class HandlerFruitore extends ControllerUtente {
 	}
 	
 	@Override
-	protected void checkPrimoAccesso() {
+	public void checkPrimoAccesso() {
 		
 	}
 
