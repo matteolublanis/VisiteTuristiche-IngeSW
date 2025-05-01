@@ -1,4 +1,4 @@
-package archivio;
+package archivio.repository;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,7 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import dto.PrenotazioneDTO;
-import utility.CodicePrenotazioneGenerator;
+import utility.CodiceGenerator;
 import utility.JSONUtility;
 
 public class PrenotazioniJSONManagement {
@@ -78,7 +78,7 @@ public class PrenotazioniJSONManagement {
 		prenotazioneJSON.put(TIPO_VISITA, prenotazione.getTag_visita());
 		String codicePrenotazione = null;
 		do {
-			codicePrenotazione = CodicePrenotazioneGenerator.generateBookingCode();
+			codicePrenotazione = CodiceGenerator.generateCode();
 		} while (jsonPrenotazioni.has(codicePrenotazione));
 		jsonPrenotazioni.put(codicePrenotazione, prenotazioneJSON);
 		aggiornaJsonPrenotazioni ();

@@ -2,7 +2,7 @@ package utility;
 
 import java.security.SecureRandom;
 
-public class CodicePrenotazioneGenerator {
+public class CodiceGenerator {
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final int CODE_LENGTH = 8; 
     private static final SecureRandom random = new SecureRandom();
@@ -10,7 +10,7 @@ public class CodicePrenotazioneGenerator {
     /*
      * Semplice algoritmo che genera codici alfanumerici casuali
      */
-    public static String generateBookingCode() {
+    public static String generateCode() {
         StringBuilder code = new StringBuilder(CODE_LENGTH);
         for (int i = 0; i < CODE_LENGTH; i++) {
             code.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));

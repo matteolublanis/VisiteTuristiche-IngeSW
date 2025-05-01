@@ -25,17 +25,20 @@ public class Login {
 	//Precondizione: a != null
 	//Postcondizione: utente loggato
 	public void accesso() {
-		Credenziali credenziali;
 		boolean b = true;
 		do {
+			Credenziali credenziali;
 			a.view("Inserisci le tue credenziali:");
 			String username = a.richiediInput("username");
 			String password = a.richiediInput("password");
 			credenziali = new Credenziali(username, password);
-			b = !checkCredenzialiCorrette(credenziali);
-			if (b) a.view("Credenziali errate, reinserirle.");
+			if(!checkCredenzialiCorrette(credenziali)) a.view("Credenziali errate, reinserirle.");
+			else {
+				configureHandlerUtente(archivio.makeConnection(credenziali));
+				break;
+			}
 		} while (b);
-		configureHandlerUtente(credenziali.getUsername());
+		
 	}
 	//Precondizione: a != null
 	//Postcondizione: fruitore registrato
@@ -49,11 +52,10 @@ public class Login {
 			if (checkUsernameGiaPresente(username)) a.view("Username già in uso, reinserire le credenziali.");
 			else {
 				credenziali = new Credenziali(username, password);
-				archivio.createNewFruitore(credenziali);
+				configureHandlerUtente(archivio.makeConnection(credenziali));
 				break;
 			}
 		} while (true);
-		configureHandlerUtente(credenziali.getUsername());
 	}
 	
 	public boolean checkPrimoAvvio() {
@@ -84,27 +86,23 @@ public class Login {
 		return archivio.checkCredenzialiCorrette(c);
 	}
 	//Precondizione: username != null && username in Archivio && a != null
-	private void configureHandlerUtente (String username){
-		ControllerUtente gu;
-		switch (archivio.getTipoUtente(username)) {
+	private void configureHandlerUtente (String connectionCode){
+		ControllerUtente gu = null;
+		switch (archivio.getTipoUtente(connectionCode)) {
 		case CostantiStruttura.CONFIGURATORE:
-			gu = new HandlerConfiguratore(archivio, username, a);
-			archivio.addControllerUtente(gu, username);
+			if (connectionCode != null) gu = new HandlerConfiguratore(archivio, a, connectionCode);
 			a.setGu(gu);
-			gu.checkPrimoAccesso(a);
+			gu.checkPrimoAccesso();
 			break;
 		case CostantiStruttura.VOLONTARIO:
-			gu = new HandlerVolontario(archivio, username, a);
-			archivio.addControllerUtente(gu, username);
+			if (connectionCode != null) gu = new HandlerVolontario(archivio, a, connectionCode);
 			a.setGu(gu);
-			if (gu.checkPrimoAccesso()) {
-				gu.primoAccesso(a);
-			}
+			gu.checkPrimoAccesso();
 			break;
 		case CostantiStruttura.FRUITORE:
-			gu = new HandlerFruitore(archivio, username);
-			archivio.addControllerUtente(gu, username);
+			if (connectionCode != null) gu = new HandlerFruitore(archivio, a, connectionCode);
 			a.setGu(gu);
+			gu.checkPrimoAccesso();
 			break;
 		default: 
 			a.view("Problema setting gu");

@@ -1,74 +1,81 @@
 {
-          "gelataio": {
-                    "tipo": 2,
-                    "password": "gelato",
-                    "primo-accesso": true,
-                    "tipo-visita": ["gelato_castello"],
-                    "username": "gelataio"
-          },
-          "fruitore2": {
-                    "tipo": 3,
-                    "password": "fruitore2",
-                    "primo-accesso": false,
-                    "username": "fruitore2",
-                    "prenotazioni": [
-                              "J4MPHIVV",
-                              "284BS9EE"
-                    ]
-          },
-          "primo_avvio": false,
-          "fruitore3": {
-                    "tipo": 3,
-                    "password": "fruitore3",
-                    "primo-accesso": false,
-                    "username": "fruitore3",
-                    "prenotazioni": [
-                              "9PD2BPNE",
-                              "P4JU8VHL",
-                              "SXFUR9DO"
-                    ]
-          },
-          "fruitore1": {
-                    "tipo": 3,
-                    "password": "fruitore1",
-                    "primo-accesso": false,
-                    "username": "fruitore1",
-                    "prenotazioni": [
-                              "1XBZKPSH",
-                              "OE7L58GA",
-                              "98EYF34U"
-                    ]
-          },
-          "volontario2": {
-                    "tipo": 2,
-                    "password": "volontario2",
-                    "primo-accesso": false,
-                    "tipo-visita": [
-                              "sotterranei_castello",
-                              "visita_capitolium"
-                    ],
-                    "username": "volontario2"
-          },
-          "volontario1": {
-                    "tipo": 2,
-                    "password": "volontario1",
-                    "primo-accesso": false,
-                    "tipo-visita": [
-                              "museo_armi",
-                              "visita_capitolium"
-                    ],
-                    "username": "volontario1"
-          },
-          "conf2": {
-                    "tipo": 1,
-                    "password": "admin",
-                    "primo-accesso": true,
-                    "username": "conf2"
-          },
-          "conf1": {
-                    "tipo": 1,
-                    "password": "admin",
-                    "primo-accesso": false,
-                    "username": "conf1"
-          }
+     "gelataio": {
+          "tipo": 2,
+          "password": "gelato",
+          "primo-accesso": true,
+          "tipo-visita": ["gelato_castello"],
+          "username": "gelataio"
+     },
+     "fruitore2": {
+          "tipo": 3,
+          "password": "fruitore2",
+          "primo-accesso": false,
+          "username": "fruitore2",
+          "prenotazioni": [
+               "J4MPHIVV",
+               "284BS9EE"
+          ]
+     },
+     "primo_avvio": false,
+     "fruitore3": {
+          "tipo": 3,
+          "password": "fruitore3",
+          "primo-accesso": false,
+          "username": "fruitore3",
+          "prenotazioni": [
+               "9PD2BPNE",
+               "P4JU8VHL",
+               "SXFUR9DO"
+          ]
+     },
+     "fruitore1": {
+          "tipo": 3,
+          "password": "fruitore1",
+          "primo-accesso": false,
+          "username": "fruitore1",
+          "prenotazioni": [
+               "1XBZKPSH",
+               "OE7L58GA",
+               "98EYF34U"
+          ]
+     },
+     "volontario2": {
+          "tipo": 2,
+          "password": "volontario2",
+          "primo-accesso": false,
+          "tipo-visita": [
+               "sotterranei_castello",
+               "visita_capitolium"
+          ],
+          "username": "volontario2"
+     },
+     "volontario1": {
+          "tipo": 2,
+          "password": "volontario1",
+          "primo-accesso": false,
+          "tipo-visita": [
+               "museo_armi",
+               "visita_capitolium"
+          ],
+          "username": "volontario1"
+     },
+     "conf2": {
+          "tipo": 1,
+          "password": "admin",
+          "primo-accesso": true,
+          "username": "conf2"
+     },
+     "fruitore99": {
+          "tipo": 3,
+          "password": "fruitore99",
+          "primo-accesso": false,
+          "username": "fruitore99",
+          "prenotazioni": []
+     },
+     "conf1": {
+          "tipo": 1,
+          "password": "admin",
+          "primo-accesso": false,
+          "username": "conf1"
+     }
 }

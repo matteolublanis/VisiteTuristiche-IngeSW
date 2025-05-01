@@ -54,7 +54,7 @@ public class App {
 		view("Quale operazione desidera (ESC per uscire)?");
 		visualNumberedListGeneric(controllerUtente.getAzioniDisponibiliConNomi());
 		String input = richiediInput("l'azione da eseguire (da 1 a " + controllerUtente.getAzioniDisponibiliConNomi().size() + " o esc)");
-		return controllerUtente.eseguiAzione(input, this);
+		return controllerUtente.eseguiAzione(input);
 	}
 
 	//Precondizione: val != null

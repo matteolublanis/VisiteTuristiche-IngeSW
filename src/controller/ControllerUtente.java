@@ -13,28 +13,21 @@ import utility.MethodName;
 public abstract class ControllerUtente {
 	
 	protected ArchivioFacade archivio;
-	protected String username;
+	protected String connectionCode;
+	protected App a;
 	
 	public ControllerUtente () {
 		//i was made to love you, can't you tell?
 	}
 	
-	public ControllerUtente(ArchivioFacade gdb, String username) {
-		this.archivio = gdb;
-		this.username = username;
+	protected void checkPrimoAccesso() {
+		if (archivio.checkPrimoAccesso(connectionCode)) primoAccesso();
 	}
-	
-	protected void checkPrimoAccesso(App a) {
-		
-	}
-	
-	protected boolean checkPrimoAccesso() {
-		return archivio.checkPrimoAccesso(this);
-	}
+
 	
 	//Precondizione: isPrimoAccesso == true
 	//Post condizione: credenziali modificate
-	protected void primoAccesso(App a) {
+	protected void primoAccesso() {
 		a.view("Primo accesso eseguito.");
 		boolean b = false;
 		do {
@@ -51,7 +44,7 @@ public abstract class ControllerUtente {
 		a.view("Credenziali cambiate.");
 	}
 	
-	protected int richiediIntMaggioreDiZero(App a, String messaggio) {
+	protected int richiediIntMaggioreDiZero(String messaggio) {
 		int result = 0;
 		do {
 			result = a.richiediInt(messaggio);
@@ -60,7 +53,7 @@ public abstract class ControllerUtente {
 		return result;
 	}
 	
-	protected String richiediVisitaEsistente(App a, String messaggio) {
+	protected String richiediVisitaEsistente(String messaggio) {
 	    String tipo;
 	    do {
 	        tipo = a.richiediInput(messaggio);
@@ -71,12 +64,8 @@ public abstract class ControllerUtente {
 	    return tipo;
 	}
 	
-	protected void setUsername(String username) {
-		this.username = username;
-	}
-	
 	protected boolean cambiaCredenziali(Credenziali c) {
-		return (archivio.cambiaCredenziali(this, c));
+		return (archivio.cambiaCredenziali(connectionCode, c));
 	}
 	
 	public List<String> getAzioniDisponibiliConNomi() {
@@ -102,7 +91,7 @@ public abstract class ControllerUtente {
 	 * @param String input, List<Method> azioni
 	 * @throw Exception e Qui vengono catturate tutte le eccezioni all'interno del programma, da cambiare nella raffinatura
 	 */
-	public boolean eseguiAzione (String input, App a) {
+	public boolean eseguiAzione (String input) {
 		try {
 			List<Method> azioniDisponibili = getAzioniDisponibili();
 			int scelta = Integer.parseInt(input);

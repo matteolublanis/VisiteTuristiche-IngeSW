@@ -1,4 +1,4 @@
-package archivio;
+package archivio.repository;
 
 import java.util.ArrayList;
 import java.util.HashSet;

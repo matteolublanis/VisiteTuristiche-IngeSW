@@ -1,7 +1,7 @@
 package archivio;
  
  import utility.CostantiStruttura;
- import controller.ControllerArchivio;
+import archivio.repository.ArchivioJSON;
  
  public class ArchivioFactory {
  	public static ArchivioFacade createArchivio(int tipo) {
