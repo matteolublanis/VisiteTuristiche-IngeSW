@@ -3,6 +3,7 @@ package controller;
 import java.util.List;
 import java.util.Map;
 
+import archivio.ArchivioFacade;
 import dto.VisitaDTO;
 import main.App;
 import utility.MethodName;
@@ -10,14 +11,14 @@ import utility.MethodName;
 public class HandlerVolontario extends ControllerUtente {
 	//Precondizioni di tutti i metodi: param != null
 	
-	public HandlerVolontario(ControllerArchivio gdb, String username, App a) {
-		this.gdb = gdb;
+	public HandlerVolontario(ArchivioFacade gdb, String username, App a) {
+		this.archivio = gdb;
 		this.username = username;
 	}
 	
 	@MethodName("Visualizza i tipi di visita a cui sei collegato")
  	public void visualizzaTipiVisita(App a) {
-		a.visualListGeneric(gdb.getElencoTipiVisiteVolontario(this), "Tipi visita associati");
+		a.visualListGeneric(archivio.getElencoTipiVisiteVolontario(this), "Tipi visita associati");
  	}
 	
 	private void visualListVisitDTO (List<VisitaDTO> visite, App a) {
@@ -29,14 +30,14 @@ public class HandlerVolontario extends ControllerUtente {
 	
 	@MethodName("Visualizza le visite confermate che gestirai")
 	public void vediVisiteConfermate (App a) {
-		List<VisitaDTO> visite = gdb.visiteConfermateVolontario(this);
+		List<VisitaDTO> visite = archivio.visiteConfermateVolontario(this);
 		visualListVisitDTO(visite, a);
 	}
 	//Postcondizione: disponibilità in Archivio
 	@MethodName("Comunica le tue prossime disponibilità")
  	public void comunicaDisponibilita(App a) {
- 		if (gdb.getPossibilitaDareDisponibilita()) { //se posso dare disponibilità	
- 			Map<String, List<String>> dateDisponibilita = gdb.getDatePerDisponibilita(this); //prendi disponibilità possibili
+ 		if (archivio.getPossibilitaDareDisponibilita()) { //se posso dare disponibilità	
+ 			Map<String, List<String>> dateDisponibilita = archivio.getDatePerDisponibilita(this); //prendi disponibilità possibili
  			if (dateDisponibilita == null) { //TODO se null significa che il volontario dovrebbe essere eliminato
  				a.view("I tipi di visita a te associati non richiedono nuove disponibilità o c'è un problema con l'archivio, contatta un configuratore.");
  			}
@@ -62,7 +63,7 @@ public class HandlerVolontario extends ControllerUtente {
 			boolean b = true;
 			do { //DA ESTRARRE!
 				data = a.richiediDataValida("data in cui dai disponibilità (dd-mm-yyyy)"); //inserisco data
-				b = gdb.inserisciDisponibilita(this, data, username); //controllo se inserita
+				b = archivio.inserisciDisponibilita(this, data, username); //controllo se inserita
 				if (b) { //se inserita chiedo se vuole continuare
 					a.view("La tua disponibilità è stata inserita.");
 					b = a.chiediSioNo("Vuoi aggiungere altre disponibilità?");

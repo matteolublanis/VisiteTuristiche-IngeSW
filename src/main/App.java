@@ -15,8 +15,8 @@ public class App {
 	private Login gestoreLogin;
 	private ControllerUtente controllerUtente; 
 	
-	public App(Login gl) {
-		this.gestoreLogin = gl;
+	public App() {
+		this.gestoreLogin = new Login(this, 0);
 	}
 	
 	//Precondizione: gu != null
@@ -29,7 +29,7 @@ public class App {
 	 */
 	public void start() {
 		view("Benvenuto!");
-		gestoreLogin.avvio(this); //fase login
+		gestoreLogin.avvio(); //fase login
 
 		do {
 			
@@ -128,7 +128,7 @@ public class App {
 		}
 		catch (NoSuchElementException e) {
 			view("EOF individuato, arrivederci!");
-			System.exit(0);
+			stop();
 			return null;
 		}
 

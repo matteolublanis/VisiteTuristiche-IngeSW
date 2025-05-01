@@ -16,10 +16,7 @@ import controller.Login;
  */
 public class Main {
 	public static void main (String args[]) throws IllegalAccessException, InvocationTargetException, UnsupportedAudioFileException, IOException, LineUnavailableException {
-    		ArchivioJSON d = new ArchivioJSON();
-    		ControllerArchivio gdb = new ControllerArchivio(d);
-    		Login gl = new Login(gdb);
-    		App app = new App(gl); 
+    		App app = new App(); 
     		app.start();
     }
 }

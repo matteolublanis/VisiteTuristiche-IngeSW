@@ -5,21 +5,22 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import archivio.ArchivioFacade;
 import main.App;
 import utility.Credenziali;
 import utility.MethodName;
 
 public abstract class ControllerUtente {
 	
-	protected ControllerArchivio gdb;
+	protected ArchivioFacade archivio;
 	protected String username;
 	
 	public ControllerUtente () {
 		//i was made to love you, can't you tell?
 	}
 	
-	public ControllerUtente(ControllerArchivio gdb, String username) {
-		this.gdb = gdb;
+	public ControllerUtente(ArchivioFacade gdb, String username) {
+		this.archivio = gdb;
 		this.username = username;
 	}
 	
@@ -28,7 +29,7 @@ public abstract class ControllerUtente {
 	}
 	
 	protected boolean checkPrimoAccesso() {
-		return gdb.checkPrimoAccesso(this);
+		return archivio.checkPrimoAccesso(this);
 	}
 	
 	//Precondizione: isPrimoAccesso == true
@@ -63,10 +64,10 @@ public abstract class ControllerUtente {
 	    String tipo;
 	    do {
 	        tipo = a.richiediInput(messaggio);
-	        if (!gdb.checkIfVisitTypeExists(tipo)) {
+	        if (!archivio.checkIfVisitTypeExists(tipo)) {
 	            a.view("Non esiste il tipo inserito, reinserisci i dati.");
 	        }
-	    } while (!gdb.checkIfVisitTypeExists(tipo));
+	    } while (!archivio.checkIfVisitTypeExists(tipo));
 	    return tipo;
 	}
 	
@@ -75,7 +76,7 @@ public abstract class ControllerUtente {
 	}
 	
 	protected boolean cambiaCredenziali(Credenziali c) {
-		return (gdb.cambiaCredenziali(this, c));
+		return (archivio.cambiaCredenziali(this, c));
 	}
 	
 	public List<String> getAzioniDisponibiliConNomi() {

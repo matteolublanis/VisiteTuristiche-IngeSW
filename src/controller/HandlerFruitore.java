@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import archivio.ArchivioFacade;
 import dto.PrenotazioneDTO;
 import dto.VisitaDTO;
 import main.App;
@@ -13,8 +14,8 @@ import utility.Time;
 public class HandlerFruitore extends ControllerUtente {
 	//Precondizioni di tutti i metodi: param != null
 	
-	public HandlerFruitore(ControllerArchivio gdb, String username) {
-		this.gdb = gdb;
+	public HandlerFruitore(ArchivioFacade gdb, String username) {
+		this.archivio = gdb;
 		this.username = username;
 	}
 	
@@ -30,12 +31,12 @@ public class HandlerFruitore extends ControllerUtente {
 	
 	@MethodName("Visualizza visite proposte, confermate e cancellate")
 	public void getElencoVisiteProposteConfermateCancellate (App a) {
-		visualListVisitDTO(gdb.getElencoVisiteProposteConfermateCancellateFruitore(), a);
+		visualListVisitDTO(archivio.getElencoVisiteProposteConfermateCancellateFruitore(), a);
 	}
 	
 	@MethodName("Visualizza tutte le visite proposte/confermate/cancellate/complete che hai prenotato")
 	public void visualizzaVisiteProposteConfermateCancellateCompletePrenotate (App a) {
-		visualListVisitDTO(gdb.getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore(this), a);
+		visualListVisitDTO(archivio.getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore(this), a);
 	}
 	
 	//Postcondizione: prenotazione in Archivio
@@ -47,11 +48,11 @@ public class HandlerFruitore extends ControllerUtente {
 			date = a.richiediDataValida("data in cui prenotare (dd-mm-yyyy)");
 			if (Time.isThreeDaysOrLessBefore(Time.getActualDate(), date)) a.view("Non è possibile prenotare nei 3 giorni successivi a questo."); //LOGICA DI MODEL!!!
 		} while (Time.isThreeDaysOrLessBefore(Time.getActualDate(), date)); //non voglio che sia nei prossimi tre giorni, non ci sono visite prenotabili
-		if (gdb.getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato(date) != null) {
-			visualListVisitDTO(gdb.getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato(date), a);
+		if (archivio.getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato(date) != null) {
+			visualListVisitDTO(archivio.getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato(date), a);
 			String tipoVisita = richiediVisitaEsistente(a, "tag del tipo della visita");
 			int numeroIscrizione = richiediIntMaggioreDiZero(a, "per quante persone vuoi prenotare");
-			String codice = gdb.inserisciPrenotazione(this, new PrenotazioneDTO(date, tipoVisita, numeroIscrizione));
+			String codice = archivio.inserisciPrenotazione(this, new PrenotazioneDTO(date, tipoVisita, numeroIscrizione));
 			a.view(codice != null ? "Prenotazione inserita, codice prenotazione: " + codice : "Prenotazione non inserita.");
 		}
 		else {
@@ -61,14 +62,14 @@ public class HandlerFruitore extends ControllerUtente {
 	}
 	
 	private Set<String> prenotazioniLinkate () {
-		List<PrenotazioneDTO> prenotazioni = gdb.getElencoPrenotazioniFruitore(this);
+		List<PrenotazioneDTO> prenotazioni = archivio.getElencoPrenotazioniFruitore(this);
 		Set<String> codiciPrenotazioni = new HashSet<>();
 		for (PrenotazioneDTO prenotazione : prenotazioni) codiciPrenotazioni.add(prenotazione.getCodice());
 		return codiciPrenotazioni;
 	}
 	
 	private void visualElencoPrenotazioni (App a) {
-		List<PrenotazioneDTO> prenotazioni = gdb.getElencoPrenotazioniFruitore(this);
+		List<PrenotazioneDTO> prenotazioni = archivio.getElencoPrenotazioniFruitore(this);
 		if (prenotazioni != null) {
 			a.visualListGeneric(prenotazioni, "Elenco prenotazioni");
 		}
@@ -77,7 +78,7 @@ public class HandlerFruitore extends ControllerUtente {
 	//Postcondizione: prenotazione rimossa da Archivio
 	@MethodName("Disdisci una prenotazione")
 	public void disdiciIscrizione (App a) {
-		if (gdb.getElencoPrenotazioniFruitore(this) != null) {
+		if (archivio.getElencoPrenotazioniFruitore(this) != null) {
 			visualElencoPrenotazioni(a);
 			String codicePrenotazioneDaEliminare = null;
 			Set<String> k = prenotazioniLinkate();
@@ -86,7 +87,7 @@ public class HandlerFruitore extends ControllerUtente {
 				if (codicePrenotazioneDaEliminare.equalsIgnoreCase("esc")) return;
 				if (!k.contains(codicePrenotazioneDaEliminare)) a.view("Il codice inserito non è legato a nessuna prenotazione, reinserirlo.");
 			} while (!k.contains(codicePrenotazioneDaEliminare));
-			a.view(gdb.rimuoviPrenotazione(this, codicePrenotazioneDaEliminare) ? "Prenotazione rimossa." : "Prenotazione non rimossa.");
+			a.view(archivio.rimuoviPrenotazione(this, codicePrenotazioneDaEliminare) ? "Prenotazione rimossa." : "Prenotazione non rimossa.");
 		}
 		else a.view("Non hai prenotazioni.");
 

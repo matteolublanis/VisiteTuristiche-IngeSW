@@ -7,12 +7,13 @@ import java.util.Map;
 import java.util.Set;
 
 import archivio.Archivio;
+import archivio.ArchivioFacade;
 import dto.*;
 import utility.CostantiStruttura;
 import utility.Credenziali;
 import utility.Time;
 
-public class ControllerArchivio {
+public class ControllerArchivio implements ArchivioFacade {
 	//Precondizione per ogni metodo di modifica Archivio del configuratore: canAddOrRemove (a parte aggiungi Configuratore, imposta max prenotazione)
 	//Precondizione per tutto: param != null
 	
@@ -22,7 +23,7 @@ public class ControllerArchivio {
 		this.archivio = archivio; 
 	}
 	
-	protected boolean addControllerUtente(ControllerUtente gu, String username) {
+	public boolean addControllerUtente(ControllerUtente gu, String username) {
 		if (usernameLinkati.values().contains(username)) return false;
 		else {
 			usernameLinkati.put(gu, username);
@@ -256,10 +257,6 @@ public class ControllerArchivio {
 		return archivio.checkIfUserExists(username);
 	}
 	
-	public boolean createNewFruitore(String username, String password) {
-		return archivio.impostaCredenzialiNuovoFruitore(username, password);
-	}
-	
 	public boolean checkIfVisitTypeExists (String tipo) {
 		return archivio.checkIfVisitTypeExists(tipo);
 	}
@@ -294,6 +291,11 @@ public class ControllerArchivio {
 		if (getTipoUtente(usernameLinkati.get(gu)) == CostantiStruttura.CONFIGURATORE)
 		return archivio.getElencoTipiVisiteLuogo();
 		else return null;
+	}
+
+	@Override
+	public boolean createNewFruitore(Credenziali c) {
+		return archivio.impostaCredenzialiNuovoFruitore(c.getUsername(), c.getPassword());
 	}
 	
 }
