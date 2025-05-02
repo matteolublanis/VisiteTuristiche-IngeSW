@@ -153,7 +153,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	}
 	
 
-	public List<VisitaDTO> visiteConfermateVolontario (String username) {
+	public List<DTO> visiteConfermateVolontario (String username) {
 		return pianoVisiteJSONManager.visiteConfermateVolontario(username, prenotazioniJSONManager.prenotazioniNIscritti(), tipiVisiteJSONManager);
 	}
 
@@ -334,10 +334,10 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 				(getUltimoMesePubblicazione() == Time.getActualDateValue(Time.MONTH) - 1 + 12 && getUltimoAnnoPubblicazione() == Time.getActualDateValue(Time.YEAR) - 1));
 	}
 
-	public HashMap<String, List<String>> getDatePerDisponibilita(String username) {	 //OK
-		HashMap<String, List<String>> result =
+	public List<DTO> getDatePerDisponibilita(String username) {	 //OK
+		List<DTO> result =
 				tipiVisiteJSONManager.getDatePerDisponibilitaFromTipiVisite(username, getTipiVisitaOfVolontario(username));
-		result.put("Date precluse", getDatePrecluse());
+		result.add(new DataDisponibilitaDTO("Date precluse", getDatePrecluse()));
 		return result;
 		
 	}
@@ -396,8 +396,8 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 		daPubblicareJSONManager.setPossibilitaDareDisponibilitaVolontari(b);
 	}
 	
-	public List<String> getElencoTipiVisiteVolontario(String volontario) {
-		return usersJSONManager.getElencoTipiVisiteVolontario(volontario);
+	public List<DTO> getElencoTipiVisiteVolontario(String volontario) {
+		return usersJSONManager.getElencoTipiVisiteVolontario(volontario, tipiVisiteJSONManager.getJSONTipiVisite());
  	}
 
 	public boolean setPrimaPubblicazione() {

@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import archivio.ArchivioFacade;
 import client.app.App;
+import client.log_events.AppEvent;
 import utility.Credenziali;
 import utility.MethodName;
 
@@ -22,26 +23,20 @@ public abstract class ControllerUtente {
 	
 	public void checkPrimoAccesso() {
 		if (archivio.checkPrimoAccesso(connectionCode)) primoAccesso();
+		else ; //A livello grafico, potrebbe chiudere schermata di Login e aprire una nuova roba, il controller dà comando
 	}
 
 	
 	//Precondizione: isPrimoAccesso == true
 	//Post condizione: credenziali modificate
 	protected void primoAccesso() {
-		a.view("Primo accesso eseguito.");
-		boolean b = false;
+		a.viewPrimoAccesso();
 		do {
-			a.view("Cambia le tue credenziali:");
-			String username = a.richiediInput("username");
-			String password = a.richiediInput("password");
-			Credenziali c = new Credenziali(username, password);
-			if (a.chiediSioNo("Confermi le nuove credenziali?")) {
-				b = cambiaCredenziali(c);
-				if (!b) a.view("Credenziali non cambiate, username già presente.");
-			}
-			else b = false;
-		} while (!b);
-		a.view("Credenziali cambiate.");
+			Credenziali c = a.richiediCredenziali();
+			if (cambiaCredenziali(c)) a.catchEvent(AppEvent.USERNAME_ALREADY_IN_USE);
+			else break;
+		} while (true);
+		a.catchEvent(AppEvent.CHANGED_CREDENTIALS);
 	}
 	
 	protected String richiediVisitaEsistente(String messaggio) {
@@ -49,7 +44,7 @@ public abstract class ControllerUtente {
 	    do {
 	        tipo = a.richiediInput(messaggio);
 	        if (!archivio.checkIfVisitTypeExists(tipo)) {
-	            a.view("Non esiste il tipo inserito, reinserisci i dati.");
+	            a.catchEvent(AppEvent.VISITTYPE_NON_EXISTENT);
 	        }
 	    } while (!archivio.checkIfVisitTypeExists(tipo));
 	    return tipo;
@@ -70,7 +65,8 @@ public abstract class ControllerUtente {
 	            String nomeAzione = annotation.value();
 	            nomiAzioni.add(nomeAzione);
 	        } catch (Exception e) {
-	            nomiAzioni.add("Errore nel recupero del nome dell'azione");
+	        	a.catchEvent(AppEvent.ERROR_CATCHING_ACTIONS);
+	        	a.log("Incriminated method: " + azioniDisponibili.get(i).getName());
 	        }
 	    }
 
@@ -91,11 +87,11 @@ public abstract class ControllerUtente {
 				metodo.invoke(this, a);
 			} 
 			else {
-				a.view("Scelta non valida.");
+				a.catchEvent(AppEvent.INVALID_CHOICE_ACTION);
 			}
 		} catch (NumberFormatException e) { 
 			if (input.equalsIgnoreCase("esc")) return false;
-			else a.view("Inserire il numero dell'azione o ESC per uscire.");
+			else a.catchEvent(AppEvent.INVALID_CHOICE_ACTION);
 		}
 		catch (Exception e) { //TODO gestione migliore delle eccezioni
 			System.err.println(e);

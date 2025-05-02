@@ -10,6 +10,8 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import dto.DTO;
+import dto.DataDisponibilitaDTO;
 import dto.PrenotazioneDTO;
 import dto.VisitaDTO;
 import utility.JSONUtility;
@@ -39,6 +41,10 @@ public class TipiVisiteJSONManagement {
 			jsonTipiVisite = JSONUtility.readJsonFile(PATH_TIPI_VISITE);
 		}
 		else jsonTipiVisite = JSONUtility.readJsonFile(PATH_TIPI_VISITE);
+	}
+	
+	public JSONObject getJSONTipiVisite() {
+		return jsonTipiVisite;
 	}
 	
 	public JSONObject getTipoVisitaJSONObject (String tipo) {
@@ -199,8 +205,8 @@ public class TipiVisiteJSONManagement {
 		return jsonTipiVisite.keySet();
 	}
 	
-	public HashMap<String, List<String>> getDatePerDisponibilitaFromTipiVisite(String username, JSONArray tipiVisite) {	 //OK
-		HashMap<String, List<String>> result = new HashMap<> () ;
+	public List<DTO> getDatePerDisponibilitaFromTipiVisite(String username, JSONArray tipiVisite) {	 //OK
+		List<DTO> result = new ArrayList<>();
 			for (Object s : tipiVisite) { 
 				JSONObject tipo = getTipoVisitaJSONObject((String)s);
 				try {
@@ -214,7 +220,7 @@ public class TipiVisiteJSONManagement {
 							days.add(date);
 						}
 					}
-					result.put((String)s, days);
+					result.add(new DataDisponibilitaDTO((String)s, days));
 				}	
 				catch (Exception e) {
 					return null;

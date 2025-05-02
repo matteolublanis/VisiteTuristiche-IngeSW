@@ -28,7 +28,7 @@ public class HandlerFruitore extends ControllerUtente {
 	
 	private void visualListVisitDTO (List<VisitaDTO> visite, App a) {
 		if (visite != null) {
-			a.visualListGeneric(visite, "Elenco visite");;
+			a.viewListDTO(visite);
 		}
 		else {
 			a.view("Nessuna visita presente.");

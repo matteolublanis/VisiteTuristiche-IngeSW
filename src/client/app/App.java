@@ -1,6 +1,11 @@
 package client.app;
 
+import java.util.List;
+
 import client.controller_utente.ControllerUtente;
+import client.log_events.AppEvent;
+import dto.DTO;
+import utility.Credenziali;
 
 public interface App {
 	public void start();
@@ -12,4 +17,10 @@ public interface App {
 	public int richiediInt(String msg);
 	public String richiediOraValida(String msg);
 	public int richiediNumeroConLimiteInferiore(String msg, int limite);
+	public void viewLogin(Credenziali primeCredenziali);
+	public Credenziali richiediCredenziali();
+	public void catchEvent(AppEvent e);
+	public void log(String msg);
+	public void viewPrimoAccesso();
+	public void viewListDTO(List<DTO> list);
 }

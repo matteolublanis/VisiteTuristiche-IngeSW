@@ -1,8 +1,9 @@
 package dto;
 
 import java.util.List;
+import java.util.Map;
 
-public class VolontarioDTO  implements UserDTO {
+public class VolontarioDTO  implements UserDTO, DTO {
 	private String username = null;
 	private List<String> tipi_visite = null;
 	
@@ -26,6 +27,12 @@ public class VolontarioDTO  implements UserDTO {
 	public String toString() {
 		String result = "Volontario: " + getUsername() + "\nTipi associati: " + getTipi_visite().toString();
 		return result;
+	}
+
+	@Override
+	public Map<String, List<String>> infoDTO() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

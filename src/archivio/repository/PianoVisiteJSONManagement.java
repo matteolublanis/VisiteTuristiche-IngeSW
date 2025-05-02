@@ -9,6 +9,7 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import dto.DTO;
 import dto.PrenotazioneDTO;
 import dto.VisitaDTO;
 import utility.JSONUtility;
@@ -140,9 +141,9 @@ public class PianoVisiteJSONManagement {
 		JSONUtility.aggiornaJsonFile(jsonPianoVisite, PATH_VISITE, 10);	
 	}
 	
-	public List<VisitaDTO> visiteConfermateVolontario (String username, Map<String, Integer> prenotazioniJSONManager,
+	public List<DTO> visiteConfermateVolontario (String username, Map<String, Integer> prenotazioniJSONManager,
 			TipiVisiteJSONManagement tipiVisiteJSONManager) {
-		List<VisitaDTO> visiteList = new ArrayList<>();
+		List<DTO> visiteList = new ArrayList<>();
 	    for (String giorno : jsonPianoVisite.keySet()) { // Giorno
 	    	if (!giorno.equals(LAST_CHECK)) {
 		        JSONObject day = jsonPianoVisite.getJSONObject(giorno); // Visite del giorno

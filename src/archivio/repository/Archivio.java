@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.json.JSONArray;
+
+import dto.DTO;
 import dto.PrenotazioneDTO;
+import dto.TipoVisitaDTO;
 import dto.UserDTO;
 import dto.VisitaDTO;
 import utility.Credenziali;
@@ -34,9 +37,9 @@ public interface Archivio {
 	//Precondizione: callerTyper = CostantiStruttura.VOLONTARIO
     public boolean inserisciDisponibilita(String data, String username);
 	//Precondizione: callerType = CostantiStruttura.VOLONTARIO
-    public Map<String, List<String>> getDatePerDisponibilita(String username);
+    public List<DTO> getDatePerDisponibilita(String username);
 	public Set<String> getElencoTipiVisite ();
- 	public List<String> getElencoTipiVisiteVolontario (String username);
+ 	public List<DTO> getElencoTipiVisiteVolontario (String username);
 	//Precondizione: callerTyper = CostantiStruttura.CONFIGURATORE
 	public boolean tryImpostaCredenzialiNuovoVolontario (String username, String password, Set<String> tipi_visiteVal, boolean tipiVisitaNecessario);
 	
@@ -78,7 +81,7 @@ public interface Archivio {
 	 */
 	public boolean rimuoviPrenotazione(String username, String codicePrenotazione);
 	//Precondizione: callerType = CostantiStruttura.VOLONTARIO
-	public List<VisitaDTO> visiteConfermateVolontario (String username);
+	public List<DTO> visiteConfermateVolontario (String username);
 	//Precondizione: callerType = CostantiStruttura.FRUITORE
 	public List<PrenotazioneDTO> getElencoPrenotazioniFruitore (String username);
 	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitore();

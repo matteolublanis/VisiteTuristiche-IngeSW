@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import dto.DTO;
 import dto.PrenotazioneDTO;
 import dto.UserDTO;
 import dto.VisitaDTO;
@@ -29,11 +30,11 @@ public interface ArchivioFacade {
 	
     public boolean inserisciDisponibilita(String connectionCode, String data);
 	
-	public Map<String, List<String>> getDatePerDisponibilita(String connectionCode);
+	public List<DTO> getDatePerDisponibilita(String connectionCode);
 
 	public Set<String> getElencoTipiVisite (String connectionCode);
 
- 	public List<String> getElencoTipiVisiteVolontario (String connectionCode);
+ 	public List<DTO> getElencoTipiVisiteVolontario (String connectionCode);
 	
 	public boolean impostaCredenzialiNuovoVolontario (String connectionCode, String username, String password, Set<String> tipi_visiteVal, boolean tipiVisitaNecessario);
 	
@@ -54,6 +55,7 @@ public interface ArchivioFacade {
 	public boolean isReleaseOrLaterDay(String connectionCode);
 	
 	public boolean isPrimaPubblicazione ();
+	
 	public boolean checkCredenzialiCorrette (Credenziali c);
 	
 	public boolean checkPrimoAccesso (String connectionCode);
@@ -62,7 +64,7 @@ public interface ArchivioFacade {
 	
 	public boolean rimuoviPrenotazione(String connectionCode, String codicePrenotazione);
 	
-	public List<VisitaDTO> visiteConfermateVolontario (String connectionCode);
+	public List<DTO> visiteConfermateVolontario (String connectionCode);
 	
 	public List<PrenotazioneDTO> getElencoPrenotazioniFruitore (String connectionCode);
 	

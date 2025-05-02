@@ -90,7 +90,7 @@ public class ControllerArchivio implements ArchivioFacade {
     	 else return false;
 	}
 	
-	public Map<String, List<String>> getDatePerDisponibilita(String connectionCode) {	 //OK
+	public List<DTO> getDatePerDisponibilita(String connectionCode) {	 //OK
 		if (getTipoUtente(usernameLinkati.get(connectionCode)) == CostantiStruttura.VOLONTARIO) 
 			return archivio.getDatePerDisponibilita(usernameLinkati.get(connectionCode));
 		else return null;
@@ -102,7 +102,7 @@ public class ControllerArchivio implements ArchivioFacade {
 		else return null;
  	}
 
- 	public List<String> getElencoTipiVisiteVolontario (String connectionCode) { 
+ 	public List<DTO> getElencoTipiVisiteVolontario (String connectionCode) { 
  		if (getTipoUtente(usernameLinkati.get(connectionCode)) == CostantiStruttura.VOLONTARIO) 
  			return archivio.getElencoTipiVisiteVolontario(usernameLinkati.get(connectionCode));
  		else return null;
@@ -189,7 +189,7 @@ public class ControllerArchivio implements ArchivioFacade {
 		else return false;
 	}
 	
-	public List<VisitaDTO> visiteConfermateVolontario (String connectionCode) {
+	public List<DTO> visiteConfermateVolontario (String connectionCode) {
 		if (getTipoUtente(usernameLinkati.get(connectionCode)) == CostantiStruttura.VOLONTARIO) 
 			return archivio.visiteConfermateVolontario(usernameLinkati.get(connectionCode));
 		else return null;

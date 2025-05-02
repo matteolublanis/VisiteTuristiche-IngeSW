@@ -1,12 +1,15 @@
 package client.app;
 
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.Set;
-
 import client.controller_utente.ControllerUtente;
+import client.log_events.AppEvent;
 import client.login.Login;
+import dto.DTO;
+import utility.Credenziali;
 import utility.Time;
 
 public class AppUI implements App{ 
@@ -134,6 +137,15 @@ public class AppUI implements App{
 
 	}
 	
+	public Credenziali richiediCredenziali () {
+		String username = richiediInput("username (ESC per tornare indietro)");
+		if (username.equalsIgnoreCase("esc")) return null;
+		String password = richiediInput("password");
+		if (chiediSioNo("Confermi?")) { 
+			return new Credenziali(username, password);
+		}
+		else return richiediCredenziali();
+	}
 	public <T> void visualSetGeneric (Set<T> list, String name) {
 		view(name + ":");
 		for (T x :list) view(x.toString());
@@ -151,6 +163,63 @@ public class AppUI implements App{
 	//Precondizione: msg != null
 	public void view (String msg) throws NullPointerException {
 		if (!msg.equals("")) System.out.println(msg);
+	}
+
+	@Override
+	public void viewLogin(Credenziali credenzialiIniziali) {
+		if (credenzialiIniziali != null) { 
+			gestoreLogin.accesso();
+		}
+		else {
+			if (chiediSioNo("Vuoi registrarti come nuovo utente?")) {
+				gestoreLogin.registrazione();
+			}
+			else {
+				gestoreLogin.accesso();
+			}
+		}
+	}
+
+	@Override
+	public void catchEvent(AppEvent e) {
+		view(e.toString()); //TODO questo toString è momentaneo, sto controllando come renderlo più mantenibile sfruttando i ResourceBundle
+		switch (e.getSeverity()) {
+		case ERROR:
+			stop();
+			break;
+		case INFO:
+			break;
+		case WARNING:
+			break;
+		default:
+			break;
+		}
+		
+	}
+
+	@Override
+	public void log(String msg) {
+		view(msg);
+	}
+
+	@Override
+	public void viewPrimoAccesso() {
+		view("Primo accesso eseguito.");
+		view("Cambia le tue credenziali:");
+		
+	}
+
+	@Override
+	public void viewListDTO(List<DTO> list) {
+		for (DTO dto : list) {
+			Map<String, List<String>> info = dto.infoDTO();
+			for (String dettaglio : info.keySet()) {
+				List<String> attributi = info.get(dettaglio);
+				view(dettaglio + ": ");
+				for (String val : attributi) view(val);
+			}
+		}
+		
 	}
 	
 }

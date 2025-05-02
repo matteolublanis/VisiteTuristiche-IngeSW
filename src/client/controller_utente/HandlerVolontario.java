@@ -5,6 +5,8 @@ import java.util.Map;
 
 import archivio.ArchivioFacade;
 import client.app.App;
+import client.log_events.AppEvent;
+import dto.DTO;
 import dto.VisitaDTO;
 import utility.MethodName;
 
@@ -18,33 +20,33 @@ public class HandlerVolontario extends ControllerUtente {
 	}
 	
 	@MethodName("Visualizza i tipi di visita a cui sei collegato")
- 	public void visualizzaTipiVisita(App a) {
-		a.visualListGeneric(archivio.getElencoTipiVisiteVolontario(connectionCode), "Tipi visita associati");
+ 	public void visualizzaTipiVisita() {
+		a.viewListDTO(archivio.getElencoTipiVisiteVolontario(connectionCode));
  	}
 	
-	private void visualListVisitDTO (List<VisitaDTO> visite, App a) {
+	private void visualListVisitDTO (List<DTO> visite) {
 		if (visite.size() != 0) {
-			a.visualListGeneric(visite, "Elenco visite");
+			a.viewListDTO(visite);
 		}
-		else a.view("Nessuna visita confermata.");
+		else a.catchEvent(AppEvent.NO_CONFIRMED_VISIT);
 	}
 	
 	@MethodName("Visualizza le visite confermate che gestirai")
-	public void vediVisiteConfermate (App a) {
-		List<VisitaDTO> visite = archivio.visiteConfermateVolontario(connectionCode);
-		visualListVisitDTO(visite, a);
+	public void vediVisiteConfermate () {
+		List<DTO> visite = archivio.visiteConfermateVolontario(connectionCode);
+		visualListVisitDTO(visite);
 	}
 	//Postcondizione: disponibilità in Archivio
 	@MethodName("Comunica le tue prossime disponibilità")
- 	public void comunicaDisponibilita(App a) {
+ 	public void comunicaDisponibilita() {
  		if (archivio.getPossibilitaDareDisponibilita()) { //se posso dare disponibilità	
- 			Map<String, List<String>> dateDisponibilita = archivio.getDatePerDisponibilita(connectionCode); //prendi disponibilità possibili
+ 			List<DTO> dateDisponibilita = archivio.getDatePerDisponibilita(connectionCode); //prendi disponibilità possibili
  			if (dateDisponibilita == null) { //TODO se null significa che il volontario dovrebbe essere eliminato
  				a.view("I tipi di visita a te associati non richiedono nuove disponibilità o c'è un problema con l'archivio, contatta un configuratore.");
  			}
  			else { //se ho disponibilità
- 				visualDateDisponibilita(a, dateDisponibilita);
- 				indicaDisponibilita(a);
+ 				visualDateDisponibilita(dateDisponibilita);
+ 				indicaDisponibilita();
  				
  			}
  			
@@ -52,13 +54,11 @@ public class HandlerVolontario extends ControllerUtente {
  		else a.view("Non puoi al momento comunicare le tue disponibilità.");
  	}
 	
-	private void visualDateDisponibilita(App a, Map<String, List<String>> dateDisponibilita) {
-		for (String k : dateDisponibilita.keySet()) {
-				a.visualListGeneric(dateDisponibilita.get(k), k.equals("Date precluse") ? k : "Giorni tipo " + k);
-			}
+	private void visualDateDisponibilita(List<DTO> dateDisponibilita) {
+		a.viewListDTO(dateDisponibilita);
 	}
 	
-	private void indicaDisponibilita (App a) {
+	private void indicaDisponibilita () {
 			a.view("Indica le tue disponibilità.");
 			String data = "";
 			boolean b = true;

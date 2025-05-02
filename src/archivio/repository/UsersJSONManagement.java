@@ -8,6 +8,8 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import dto.DTO;
+import dto.TipoVisitaDTO;
 import dto.UserDTO;
 import dto.VolontarioDTO;
 import utility.CostantiStruttura;
@@ -149,11 +151,12 @@ public class UsersJSONManagement {
 		return jsonUsers.getJSONObject(username).getJSONArray(TIPO_VISITA).length() == 0;
 	}
 	
-	public List<String> getElencoTipiVisiteVolontario(String volontario) {
-		
-		List<String> result = new ArrayList<>();
+	public List<DTO> getElencoTipiVisiteVolontario(String volontario, JSONObject tipiVisite) {
+		List<DTO> result = new ArrayList<>();
 		for (Object tipo : jsonUsers.getJSONObject(volontario).getJSONArray(TIPO_VISITA)) {
-			result.add((String)tipo);
+			JSONObject tipoVisita = tipiVisite.getJSONObject((String) tipo);
+			String titolo = tipoVisita.getString("titolo");
+			result.add(new TipoVisitaDTO(titolo, (String) tipo));
 		}
  	    return result;
  	}

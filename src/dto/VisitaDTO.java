@@ -1,8 +1,9 @@
 package dto;
 
 import java.util.List;
+import java.util.Map;
 
-public class VisitaDTO {
+public class VisitaDTO implements DTO{
 	private String tag = null;
     private String titolo = null;
     private String descrizione = null;
@@ -89,6 +90,12 @@ public class VisitaDTO {
 					+ ("Stato: " +  getStato());
 			return result;
 		}
+	}
+
+	@Override
+	public Map<String, List<String>> infoDTO() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

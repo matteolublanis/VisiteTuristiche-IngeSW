@@ -1,6 +1,9 @@
 package dto;
 
-public class PrenotazioneDTO {
+import java.util.List;
+import java.util.Map;
+
+public class PrenotazioneDTO implements DTO{
 	
 	private int num_da_prenotare = 0;
 	private String tag_visita = null;
@@ -38,6 +41,12 @@ public class PrenotazioneDTO {
 		String result = ("-----------") + ("\nCodice: " + getCodice() + ", giorno: " + getGiorno()) +
 				("\nTag visita: " + getTag_visita());
 		return result;
+	}
+
+	@Override
+	public Map<String, List<String>> infoDTO() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

@@ -5,6 +5,7 @@ import archivio.ArchivioFactory;
 import client.app.App;
 import client.controller_utente.ControllerUtente;
 import client.controller_utente.ControllerUtenteFactory;
+import client.log_events.AppEvent;
 import utility.Credenziali;
 
 public class Login {
@@ -27,12 +28,9 @@ public class Login {
 	public void accesso() {
 		boolean b = true;
 		do {
-			Credenziali credenziali;
-			a.view("Inserisci le tue credenziali:");
-			String username = a.richiediInput("username");
-			String password = a.richiediInput("password");
-			credenziali = new Credenziali(username, password);
-			if(!checkCredenzialiCorrette(credenziali)) a.view("Credenziali errate, reinserirle.");
+			Credenziali credenziali = a.richiediCredenziali();
+			if (credenziali == null) avvio();
+			if(!checkCredenzialiCorrette(credenziali)) a.catchEvent(AppEvent.WRONG_CREDENTIALS);
 			else {
 				configureHandlerUtente(archivio.makeConnection(credenziali));
 				break;
@@ -43,15 +41,11 @@ public class Login {
 	//Precondizione: a != null
 	//Postcondizione: fruitore registrato
 	public void registrazione() {
-		Credenziali credenziali = null;
 		do {
-			a.view("Inserisci le tue nuove credenziali:");
-			String username = a.richiediInput("username (ESC per tornare indietro)");
-			if (username.equalsIgnoreCase("esc")) avvio();
-			String password = a.richiediInput("password");
-			if (checkUsernameGiaPresente(username)) a.view("Username già in uso, reinserire le credenziali.");
+			Credenziali credenziali = a.richiediCredenziali();
+			if (credenziali == null) avvio();
+			if (checkUsernameGiaPresente(credenziali.getUsername()))  a.catchEvent(AppEvent.USERNAME_ALREADY_IN_USE); 
 			else {
-				credenziali = new Credenziali(username, password);
 				configureHandlerUtente(archivio.makeConnection(credenziali));
 				break;
 			}
@@ -64,17 +58,10 @@ public class Login {
 	
 	public void avvio () {
 		if (checkPrimoAvvio()) { 
-			Credenziali c = archivio.getCredenzialiIniziali();
-			a.view("PRIMO AVVIO, CREDENZIALI INIZIALI\nUsername: " + c.getUsername() + "\nPassword: " + c.getPassword());
-			accesso();
+			a.viewLogin(archivio.getCredenzialiIniziali());
 		}
 		else {
-			if (a.chiediSioNo("Vuoi registrarti come nuovo utente?")) {
-				registrazione();
-			}
-			else {
-				accesso();
-			}
+			a.viewLogin(null);
 		}
 	}
 	//Precondizione: username != null
@@ -89,7 +76,7 @@ public class Login {
 	//Precondizione: username != null && username in Archivio && a != null
 	private void configureHandlerUtente (String connectionCode){
 		if (connectionCode == null) {
-			a.view("Problema setting gu");
+			a.catchEvent(AppEvent.WEIRD_SETTING_USERHANDLER);
 			return;
 		}
 		ControllerUtente gu = ControllerUtenteFactory.createControllerUtente(archivio.getTipoUtente(connectionCode), archivio, a, connectionCode);

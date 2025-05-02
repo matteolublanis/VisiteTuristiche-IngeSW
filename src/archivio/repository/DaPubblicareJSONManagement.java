@@ -7,6 +7,8 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import dto.DTO;
+import dto.DataDisponibilitaDTO;
 import utility.JSONUtility;
 import utility.Time;
 
@@ -104,11 +106,11 @@ public class DaPubblicareJSONManagement {
 	}
 	
 	
-	public boolean inserisciDisponibilita(String data, String username, HashMap<String, List<String>> m) { //ok\
+	public boolean inserisciDisponibilita(String data, String username, List<DTO> m) { //ok\
 		List<String> datePrecluse = getDatePrecluse();
 		if (datePrecluse.contains(data)) return false; //per precondizione già sistemato
-		for (String tagVisita : m.keySet()) {
-			if (m.get(tagVisita).contains(data)) {
+		for (DTO tagVisita : m) {
+			if (((DataDisponibilitaDTO)m).getTag().contains(data)) {
 				JSONObject disponibilita = jsonPianoVisiteDaPubblicare.getJSONObject(DISPONIBILITA);
 				if (!disponibilita.has(username)) {
 					JSONObject d =  new JSONObject();
