@@ -7,6 +7,9 @@ import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import dto.DTO;
+import dto.LuogoDTO;
 import utility.JSONUtility;
 
 public class AmbitoTerritorialeJSONManagement {
@@ -51,8 +54,8 @@ public class AmbitoTerritorialeJSONManagement {
 		return jsonAmbitoTerritoriale.getInt(MAX_PRENOTAZIONE);
 	}
 	
-	public Map<String, List<String>> getElencoTipiVisiteLuogo (Map<String, String> tipiVisiteTitoli) {
-		HashMap<String, List<String>> result = new HashMap<>();
+	public List<DTO> getElencoTipiVisiteLuogo (Map<String, String> tipiVisiteTitoli) {
+		List<DTO> result = new ArrayList<>();
 		try {
 			for (String nomeLuogo : getLuoghi().toMap().keySet()) {
 				JSONObject infoLuogo = getLuogo(nomeLuogo);
@@ -63,7 +66,7 @@ public class AmbitoTerritorialeJSONManagement {
 					{
 						tipiVisiteAssociati.add(tipiVisiteTitoli.get(tipiVisite.get(i)));
 					}
-					result.put(infoLuogo.getString(NAME), tipiVisiteAssociati);	
+					result.add(new LuogoDTO(infoLuogo.getString(NAME), tipiVisiteAssociati));	
 				}
 			}
 			return result;
@@ -98,14 +101,14 @@ public class AmbitoTerritorialeJSONManagement {
 		return jsonAmbitoTerritoriale.getJSONObject(LUOGHI).getJSONObject(luogo);
 	}
 	
-	public List<String> getElencoLuoghiVisitabili () { 
-		List<String> result = new ArrayList<>();
+	public List<DTO> getElencoLuoghiVisitabili () { 
+		List<DTO> result = new ArrayList<>();
 		try {
 			JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject(LUOGHI);
 			for (String k : luoghi.toMap().keySet()) {
 				JSONObject j = luoghi.getJSONObject(k);
-				if (!j.get(TIPO_VISITA).equals("[]")) {
-					result.add(j.getString(NAME));
+				if (!j.get(TIPO_VISITA).equals("[]")) { //if empty should delete
+					result.add(new LuogoDTO(j.getString(NAME), null));
 				}
 			}
 			return result;

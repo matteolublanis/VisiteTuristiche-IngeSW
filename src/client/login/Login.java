@@ -79,7 +79,8 @@ public class Login {
 			a.catchEvent(AppEvent.WEIRD_SETTING_USERHANDLER);
 			return;
 		}
-		ControllerUtente gu = ControllerUtenteFactory.createControllerUtente(archivio.getTipoUtente(connectionCode), archivio, a, connectionCode);
+		int tipoUtente = archivio.getTipoUtente(connectionCode);
+		ControllerUtente gu = ControllerUtenteFactory.createControllerUtente(tipoUtente, archivio, a, connectionCode);
 		a.setGu(gu);
 		gu.checkPrimoAccesso();
 		

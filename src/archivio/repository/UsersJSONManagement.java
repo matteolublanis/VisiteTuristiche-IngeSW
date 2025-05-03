@@ -55,8 +55,8 @@ public class UsersJSONManagement {
 		return (int) (utente.get(TIPO_USER));
 	}
 	
-	public Set<UserDTO> getListaUser (int tipo_user) {
-			Set<UserDTO> result = new HashSet<>();
+	public List<DTO> getListaUser (int tipo_user) {
+			List<DTO> result = new ArrayList<>();
 			for (String s : JSONUtility.allObjectsSameIntValue(jsonUsers, tipo_user, TIPO_USER)) {
 				JSONObject user = jsonUsers.getJSONObject(s);
 				switch (tipo_user) {

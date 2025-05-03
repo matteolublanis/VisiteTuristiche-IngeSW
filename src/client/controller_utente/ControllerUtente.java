@@ -25,7 +25,6 @@ public abstract class ControllerUtente {
 		if (archivio.checkPrimoAccesso(connectionCode)) primoAccesso();
 		else ; //A livello grafico, potrebbe chiudere schermata di Login e aprire una nuova roba, il controller dà comando
 	}
-
 	
 	//Precondizione: isPrimoAccesso == true
 	//Post condizione: credenziali modificate
@@ -37,17 +36,6 @@ public abstract class ControllerUtente {
 			else break;
 		} while (true);
 		a.catchEvent(AppEvent.CHANGED_CREDENTIALS);
-	}
-	
-	protected String richiediVisitaEsistente(String messaggio) {
-	    String tipo;
-	    do {
-	        tipo = a.richiediInput(messaggio);
-	        if (!archivio.checkIfVisitTypeExists(tipo)) {
-	            a.catchEvent(AppEvent.VISITTYPE_NON_EXISTENT);
-	        }
-	    } while (!archivio.checkIfVisitTypeExists(tipo));
-	    return tipo;
 	}
 	
 	protected boolean cambiaCredenziali(Credenziali c) {
@@ -101,7 +89,11 @@ public abstract class ControllerUtente {
 		return true;
 	}
 	
-    public List<Method> getAzioniDisponibili() {
+	public boolean checkIfVisitTypeExists(String tipoVisita) {
+	    return archivio.checkIfVisitTypeExists(tipoVisita);
+	}
+	
+    private List<Method> getAzioniDisponibili() {
     	List<Method> metodiConcreti = new LinkedList<>();
         
          Method[] metodi = this.getClass().getDeclaredMethods();

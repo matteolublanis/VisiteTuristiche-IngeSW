@@ -2,12 +2,10 @@ package archivio;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-
 import dto.DTO;
 import dto.PrenotazioneDTO;
-import dto.UserDTO;
+import dto.TipoVisitaDTO;
 import dto.VisitaDTO;
 import utility.Credenziali;
 
@@ -24,6 +22,8 @@ public interface ArchivioFacade {
 	
 	public boolean apriRaccoltaDisponibilita(String connectionCode);
 	
+	public boolean associaVolontariATipoVisitaEsistente(String connectionCode, List<String> volontari, String tipoVisita);
+	
 	public boolean associaVolontarioEsistenteATipoVisitaEsistente(String connectionCode, String volontario, String tipoVisita);
 	
 	public boolean getPossibilitaDareDisponibilita();
@@ -32,7 +32,7 @@ public interface ArchivioFacade {
 	
 	public List<DTO> getDatePerDisponibilita(String connectionCode);
 
-	public Set<String> getElencoTipiVisite (String connectionCode);
+	public List<DTO> getElencoTipiVisite (String connectionCode);
 
  	public List<DTO> getElencoTipiVisiteVolontario (String connectionCode);
 	
@@ -66,15 +66,15 @@ public interface ArchivioFacade {
 	
 	public List<DTO> visiteConfermateVolontario (String connectionCode);
 	
-	public List<PrenotazioneDTO> getElencoPrenotazioniFruitore (String connectionCode);
+	public List<DTO> getElencoPrenotazioniFruitore (String connectionCode);
 	
-	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitore();
+	public List<DTO> getElencoVisiteProposteConfermateCancellateFruitore();
 	
-	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore (String connectionCode);
+	public List<DTO> getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore (String connectionCode);
 
-	public List<VisitaDTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate (String connectionCode);
+	public List<DTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate (String connectionCode);
 	
-	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato (String date);
+	public List<DTO> getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato (String date);
 	
 	public String inserisciPrenotazione (String connectionCode, PrenotazioneDTO prenotazione);
 	
@@ -87,9 +87,7 @@ public interface ArchivioFacade {
 	public void setPrimaConfigurazione();
 	
 	//TODO assolutamente da refattorizzare
-	public boolean aggiungiTipoVisite (String connectionCode, String luogo, String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
-			String dataInizio, String dataFine, ArrayList<Integer> giorniPrenotabiliVal, String oraInizio,
-			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, ArrayList<String> volontariVal);
+	public boolean aggiungiTipoVisite (TipoVisitaDTO tipoVisita, String connectionCode);
 	
 	public boolean checkIfUserExists (String username);
 	
@@ -103,9 +101,9 @@ public interface ArchivioFacade {
 	
 	public boolean modificaMaxPrenotazione (String connectionCode, int max);
 
-	public Set<UserDTO> getListaUser(String connectionCode, int tipo_user);
+	public List<DTO> getListaUser(String connectionCode, int tipo_user);
 	
-	public List<String> getElencoLuoghiVisitabili (String connectionCode);
+	public List<DTO> getElencoLuoghiVisitabili (String connectionCode);
 	
-	public Map<String, List<String>> getElencoTipiVisiteLuogo (String connectionCode);
+	public List<DTO> getElencoTipiVisiteLuogo (String connectionCode);
 }

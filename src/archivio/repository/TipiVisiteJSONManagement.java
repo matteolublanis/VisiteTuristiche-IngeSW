@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import dto.DTO;
 import dto.DataDisponibilitaDTO;
 import dto.PrenotazioneDTO;
+import dto.TipoVisitaDTO;
 import dto.VisitaDTO;
 import utility.JSONUtility;
 import utility.Time;
@@ -201,8 +202,12 @@ public class TipiVisiteJSONManagement {
 		return newVisitType;
 	}
 	
-	public Set<String> getElencoTipiVisite () {
-		return jsonTipiVisite.keySet();
+	public List<DTO> getElencoTipiVisite () {
+		List<DTO> result = new ArrayList<>();
+		for (String key : jsonTipiVisite.keySet()) {
+			result.add(new TipoVisitaDTO(key, jsonTipiVisite.getJSONObject(key).getString(TITOLO)));
+		}
+		return result;
 	}
 	
 	public List<DTO> getDatePerDisponibilitaFromTipiVisite(String username, JSONArray tipiVisite) {	 //OK

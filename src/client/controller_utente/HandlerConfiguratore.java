@@ -8,7 +8,10 @@ import java.util.Set;
 
 import archivio.ArchivioFacade;
 import client.app.App;
+import client.log_events.AppEvent;
+import dto.TipoVisitaDTO;
 import utility.CostantiStruttura;
+import utility.Credenziali;
 import utility.MethodName;
 import utility.Time;
 
@@ -38,31 +41,31 @@ public class HandlerConfiguratore extends ControllerUtente{
 		} while (!a.chiediSioNo("Confermi di voler chiamare l'ambito " + ambito + " ?"));
 		impostaAmbitoTerritoriale(ambito);
 		modificaMaxPrenotazione(a);
-		a.view("Inizio fase creazione luoghi dell'ambito territoriale.");
+		a.catchEvent(AppEvent.STARTING_ADDING_PLACES_NEW_TERRITORY);
 		aggiungiLuogo();
 	}
 	//Postcondizione: volontario creato con tipo visita associato
 	private String impostaNuovoVolontarioConUnTipoVisitaScelto (String tipo) {
-		String username = a.richiediInput("username del nuovo volontario");
-		String password = a.richiediInput("password del nuovo volontario");
+		a.catchEvent(AppEvent.STARTING_CREATING_VOLUNTEER);
+		Credenziali c = a.richiediCredenziali();
 		Set<String> tipi_visiteVal = new HashSet<>();
 		tipi_visiteVal.add(tipo);
-		if (archivio.impostaCredenzialiNuovoVolontario(connectionCode, username, password, tipi_visiteVal, false)) {
-			a.view("Inserito nuovo volontario.");
-			return username;
+		if (archivio.impostaCredenzialiNuovoVolontario(connectionCode, c.getUsername(), c.getPassword(), tipi_visiteVal, false)) {
+			a.catchEvent(AppEvent.NEW_VOLUNTEER_INSERTED);
+			return c.getUsername();
 		}
 		else {
-			a.view("Non è stato inserito il nuovo volontario, username già in uso.");
+			a.catchEvent(AppEvent.NOT_INSERTED_VOLUNTEER);
 			return "";
 		}
 	}
 	
 	//Postcondizione: volontario creato con tipo visita associato
 	private boolean impostaNuovoVolontarioConTipoVisitaScelto (App a, Set<String> tipi_visiteVal, List<String> volontari) {
-		String username = a.richiediInput("username del nuovo volontario");
-		String password = a.richiediInput("password del nuovo volontario");
-		if (archivio.impostaCredenzialiNuovoVolontario(connectionCode, username, password, tipi_visiteVal, false)) {
-			volontari.add(username);
+		a.catchEvent(AppEvent.STARTING_CREATING_VOLUNTEER);
+		Credenziali c = a.richiediCredenziali();
+		if (archivio.impostaCredenzialiNuovoVolontario(connectionCode, c.getUsername(), c.getPassword(), tipi_visiteVal, false)) {
+			volontari.add(c.getUsername());
 			return true;
 		}
 		else {
@@ -74,8 +77,12 @@ public class HandlerConfiguratore extends ControllerUtente{
 	@MethodName("Rimuovi luogo")
 	public void rimuoviLuogo () {
 		if (canAddOrRemove()) {
-			boolean rimosso = archivio.rimuoviLuogo(a.richiediInput("luogo da rimuovere"), connectionCode);
-			a.view(rimosso ? "Luogo rimosso con successo, controllare conseguenze." : "Luogo non rimosso, controllare di aver inserito i dati correttamente.");
+			if (archivio.rimuoviLuogo(a.richiediInput("luogo da rimuovere"), connectionCode)) {
+				a.catchEvent(AppEvent.PLACE_REMOVED_SUCCESFULLY);
+			}
+			else {
+				a.catchEvent(AppEvent.PLACE_NOT_REMOVED);
+			}
 		}
 	}
 	
@@ -83,8 +90,13 @@ public class HandlerConfiguratore extends ControllerUtente{
 	@MethodName("Rimuovi volontario")
 	public void rimuoviVolontario () {
 		if (canAddOrRemove()) {
-			boolean rimosso = (archivio.rimuoviVolontario(a.richiediInput("username del volontario da rimuovere"), connectionCode));
-			a.view(rimosso ? "Volontario rimosso con successo, controllare conseguenze." : "Volontario non rimosso, controllare di aver inserito i dati correttamente.");
+			if (archivio.rimuoviVolontario(a.richiediInput("username del volontario da rimuovere"), connectionCode)) {
+				a.catchEvent(AppEvent.VOLUNTEER_REMOVED);
+			}
+			else {
+				a.catchEvent(AppEvent.VOLUNTEER_NOT_REMOVED);
+
+			}
 		}
 	}
 	
@@ -92,26 +104,15 @@ public class HandlerConfiguratore extends ControllerUtente{
 	@MethodName("Rimuovi tipo di visita")
 	public void rimuoviTipo () {
 		if (canAddOrRemove()) {
-			boolean rimosso = archivio.rimuoviTipo(a.richiediInput("tipo da rimuovere"), connectionCode);
-			a.view(rimosso ? "Tipo visita rimosso con successo, controllare conseguenze." : "Tipo visita non rimosso, controllare di aver inserito i dati correttamente.");
+			if (archivio.rimuoviTipo(a.richiediInput("tipo da rimuovere"), connectionCode)) {
+				a.catchEvent(AppEvent.VISIT_TYPE_REMOVED);
+			}
+			else {
+				a.catchEvent(AppEvent.VISIT_TYPE_NOT_REMOVED);
+
+			}
 		}
 	}
-	
-	/*
-	@MethodName("Aggiungi nuovo volontario")
-	public void impostaCredenzialiNuovoVolontario (App a) {
-		if (canAddOrRemove(a)) {
-			String username = a.richiediInput("username del nuovo volontario");
-			String password = a.richiediInput("password del nuovo volontario");
-			Set<String> tipi_visiteVal = new HashSet<>();
-			do {
-				tipi_visiteVal.add(a.richiediInput("tipo delle visite associate al nuovo volontario"));
-			} while (a.chiediSioNo("Vuoi aggiungere altri tipi di visite?"));
-			boolean impostato = gdb.impostaCredenzialiNuovoVolontario(connectionCode, username, password, tipi_visiteVal, true);
-			a.view(impostato ? "Inserito nuovo volontario." : "Non è stato inserito il nuovo volontario, username in uso o non sono stati inseriti tipi di visita esistenti.");
-		}
-	}
-	*/
 	
 	//Postcondizione: impostato nome ambito territoriale
 	private void impostaAmbitoTerritoriale(String s) {
@@ -129,32 +130,34 @@ public class HandlerConfiguratore extends ControllerUtente{
 		int max = 0;
 		do {
 			max = a.richiediInt("max prenotazione per fruitore");
-			if (max < 1) a.view("Valore inserito non valido.");
+			if (max < 1) a.catchEvent(AppEvent.NOT_VALID_VALUE);
 			else if (a.chiediSioNo("Confermi?")) {
 				break;
 			}
 			else continue;
 		} while (true);
-		a.view(impostaMaxPrenotazione(max) ? "Modificato valore max prenotazione." : "Valore max prenotazione non modificato.");
+		if (impostaMaxPrenotazione(max)) {
+			a.catchEvent(AppEvent.MAX_VALUE_SET);
+		}
+		else {
+			a.catchEvent(AppEvent.MAX_VALUE_NOT_SET);
+
+		}
 	}
 	
 	@MethodName("Visualizza lista volontari")
 	public void getListaVolontari(App a) {
-		a.visualSetGeneric(archivio.getListaUser(connectionCode, CostantiStruttura.VOLONTARIO), "Lista volontari");
+		a.viewListDTO(archivio.getListaUser(connectionCode, CostantiStruttura.VOLONTARIO));
 	}
 	
 	@MethodName("Visualizza elenco luoghi visitabili")
 	public void getElencoLuoghiVisitabili(App a) {
-		List<String> luoghiVisitabili = archivio.getElencoLuoghiVisitabili(connectionCode);
-		a.visualListGeneric(luoghiVisitabili, "Luoghi visitabili");
+		a.viewListDTO(archivio.getElencoLuoghiVisitabili(connectionCode));
 	}
 	
 	@MethodName("Visualizza elenco tipi visite per luogo")
 	public void getElencoTipiVisiteLuogo(App a) {
-		Map<String, List<String>> elencoTipiVisiteLuoghi = archivio.getElencoTipiVisiteLuogo(connectionCode);
-		for (String luogo : elencoTipiVisiteLuoghi.keySet()) {
-			a.visualListGeneric(elencoTipiVisiteLuoghi.get(luogo), "Luogo: " + luogo + ", tipi associati");
-		}
+		a.viewListDTO(archivio.getElencoTipiVisiteLuogo(connectionCode));
 	}
 	
 	//Precondizione: isTodays(16) o dopo
@@ -163,79 +166,122 @@ public class HandlerConfiguratore extends ControllerUtente{
 	public void pubblicaPianoVisite(App a) {
 		if (archivio.isReleaseOrLaterDay(connectionCode)) {
 			if (archivio.isPrimaPubblicazione()) {
-				a.view("Applicazione ufficialmente aperta.");
+				a.catchEvent(AppEvent.PROJECT_STARTED);
 				archivio.pubblicaPiano(connectionCode);
 				archivio.apriRaccoltaDisponibilita(connectionCode);
 			}
 			else {
-				a.view(archivio.pubblicaPiano(connectionCode) ? "Piano pubblicato." : "Piano non pubblicato.");
+				if (archivio.pubblicaPiano(connectionCode)) {
+					a.catchEvent(AppEvent.SCHEDULE_PUBLISHED);
+				}
+				else {
+					a.catchEvent(AppEvent.SCHEDULE_NOT_PUBLISHED);
+
+				}
+					
 			}
 		}
-		else a.view("Non è possibile pubblicare adesso il piano.");
+		else a.catchEvent(AppEvent.CANT_PUBLISH_NOW);
 	}
 	
 	@MethodName("Indica date precluse del prossimo piano a quello successivo a questo")
 	public void indicaDatePrecluse() {
 		String data = null; 
 		do {
-			data = a.richiediDataValida("data preclusa (dd-mm-yyyy)"); 
+			data = a.richiediDataValida("data preclusa"); 
 			if (a.chiediSioNo("Confermi di inserire " + data + " come data preclusa?")) {
 				break;
 			}
 			else return;
 		} while (true);
-		if ((archivio.indicaDatePrecluse(connectionCode, data))) a.view("La data preclusa è stata inserita.");
-		else a.view("La data preclusa non è stata inserita, assicurarsi che sia nel periodo corretto o di aver pubblicato l'app.");
+		if ((archivio.indicaDatePrecluse(connectionCode, data))) {
+			a.catchEvent(AppEvent.PRECLUDED_DATE_INSERTED);
+		}
+		else {
+			a.catchEvent(AppEvent.PRECLUDED_DATE_NOT_INSERTED);
+		}
 	}
 	
 	@MethodName("Apri la raccolta delle disponibilità dei volontari")
 	public void apriRaccoltaDisponibilita () {
 		if (archivio.apriRaccoltaDisponibilita(connectionCode)) {
-			a.view("La raccolta delle disponibilità è stata aperta.");
+			a.catchEvent(AppEvent.DISPONIBILITIES_OPENED);
 		}
 		else {
-			a.view("La raccolta delle disponibilità non è stata aperta, bisogna prima pubblicare il piano.");
+			a.catchEvent(AppEvent.DISPONIBILITIES_NOT_OPENED);
 		}
 	}
 	
 	@MethodName("Chiudi la raccolta delle disponibilità dei volontari")
 	public void chiudiRaccoltaDisponibilita () {
 		if (archivio.chiudiRaccoltaDisponibilita(connectionCode)) {
-			a.view("La raccolta delle disponibilità è stata chiusa.");
+			a.catchEvent(AppEvent.DISPONIBILITIES_CLOSED);
 		}
 		else {
-			a.view("La raccolta delle disponibilità non è stata chiusa, non è ancora il momento.");
+			a.catchEvent(AppEvent.DISPONIBILITIES_NOT_CLOSED);
 		}
 	}
 	
-	private String richiediTipoVisita() {
-	    String tipoVisita;
-	    do {
-	        tipoVisita = a.richiediInput("tag del tipo della visita");
-	        if (archivio.checkIfVisitTypeExists(tipoVisita)) {
-	            a.view("Il tag inserito esiste già.");
-	        }
-	    } while (archivio.checkIfVisitTypeExists(tipoVisita));
-	    return tipoVisita;
+	//Precondizione: luogo diverso da null (presente nell'archivio)
+	//Postcondizione: tipo visita inserito e inserito associazione
+	private boolean aggiungiTipoVisitePartendoDaLuogo (String luogo) {
+		TipoVisitaDTO tipoVisita = a.richiediTipoVisita();
+		return (archivio.aggiungiTipoVisite(tipoVisita, connectionCode));
 	}
 	
-	private ArrayList<Integer> richiediGiorniPrenotabili() {
-		ArrayList<Integer> giorni = new ArrayList<>();
-	    boolean continua = true;
+	@MethodName("Aggiungi tipo visite")
+	public void aggiungiTipoVisite() {
+		if (canAddOrRemove()) {
+			String luogo = "";
+			do {
+				luogo = a.richiediInput("luogo della visita");
+				if (!archivio.checkIfPlaceExists(luogo)) a.view("Il luogo inserito è inesistente.");
+			} while (!archivio.checkIfPlaceExists(luogo));
+			
+			a.view((aggiungiTipoVisitePartendoDaLuogo(luogo)) ? "Il nuovo tipo di visita è stato aggiunto." : "Il nuovo tipo di visita non è stato aggiunto.");
+		}
+		
+	}
+	@MethodName("Aggiungi credenziali nuovo configuratore")
+	public void impostaCredenzialiNuovoConfiguratore () {
+		//Event Add Configuratore
+		Credenziali c = a.richiediCredenziali();
+		if (archivio.impostaCredenzialiNuovoConfiguratore(connectionCode, c.getUsername(), c.getPassword())) {
+			a.view("Aggiunto nuovo configuratore."); //Event
+		}
+		else {
+			a.view("Non è stato aggiunto un nuovo configuratore, username già in utilizzo."); //Event
+		}
+				
+	}
+	@MethodName("Visualizza visite proposte, complete, confermate, cancellate e effettuate")
+	public void getElencoVisiteProposteCompleteConfermateCancellateEffettuate (App a) {
+		a.viewListDTO(archivio.getElencoVisiteProposteCompleteConfermateCancellateEffettuate(connectionCode));
+	}
+	
+	private void associaVolontarioEsistente(String tipo) {
+	    getListaVolontari(a);
+	    String volontario;
 	    do {
-	        int giorno = a.richiediInt("giorno prenotabile della visita (1-7)");
-	        if (giorno < 1 || giorno > 7) {
-	            a.view("Numero inserito non valido, deve essere tra 1 e 7.");
-	        } else if (!giorni.contains(giorno)) { //se non contiene
-	            giorni.add(giorno); //aggiungi giorno
-	            continua = a.chiediSioNo("Vuoi aggiungere un altro giorno prenotabile?");
+	        volontario = a.richiediInput("volontario da associare (esc per tornare indietro)");
+	        if (volontario.equalsIgnoreCase("esc")) return;
+	        if (!archivio.checkIfUserExists(volontario)) {
+	            a.view("Il volontario inserito non esiste, reinserire.");
+	        } else if (!archivio.associaVolontarioEsistenteATipoVisitaEsistente(connectionCode, volontario, tipo)) {
+	            a.view("Problema nell'inserimento del volontario, potrebbe esserci un conflitto con i giorni.");
 	        } else {
-	            a.view("Giorno già inserito!");
-	            continua = true;
+	            break;
 	        }
-	        if (giorni.size() == 7) continua = false; //inseriti TUTTI i giorni della settimana
-	    } while (continua);
-	    return giorni;
+	    } while (true);
+	}
+	
+	@MethodName("Aggiungi volontari ad un tipo di visita esistente")
+	public void aggiungiVolontariATipiVisita () {
+		if (canAddOrRemove()) {
+			a.viewListDTO(archivio.getElencoTipiVisite(connectionCode));
+			String tipo = richiediVisitaEsistente("tag del tipo della visita a cui associare i volontari");
+			List<String> volontari = a.richiediVolontari();
+		}
 	}
 	
 	private ArrayList<String> richiediVolontari() {
@@ -270,100 +316,12 @@ public class HandlerConfiguratore extends ControllerUtente{
 	    return volontari;
 	}
 	
-	//Precondizione: luogo diverso da null (presente nell'archivio)
-	//Postcondizione: tipo visita inserito e inserito associazione
-	private boolean aggiungiTipoVisitePartendoDaLuogo (String luogo) {
-		String tipoVisita = richiediTipoVisita();
-		String titolo = a.richiediInput("titolo della visita");
-		String descrizione = a.richiediInput("descrizione riassuntiva della visita");
-		String puntoIncontro = a.richiediInput("punto di incontro della visita (locazione geografica)");
-		String dataInizio = a.richiediDataValida("apertura del periodo della visita (dd-mm-yyyy)");
-		String dataFine = "";
-		do {
-			dataFine = a.richiediDataValida("chiusura del periodo della visita (dd-mm-yyyy)");
-			if (Time.comesBefore(dataFine, dataInizio)) a.view("Non può finire prima che inizi.");
-		} while (Time.comesBefore(dataFine, dataInizio));
-		ArrayList<Integer> giorniPrenotabili = richiediGiorniPrenotabili();
-		String oraInizio = a.richiediOraValida("ora d'inizio visita (hh-mm)");
-		int durataVisita = a.richiediInt("durata della visita in minuti (ad esempio 120 sono 120 minuti, quindi 2 ore)");
-		boolean ticket = a.chiediSioNo("è da acquistare o no un biglietto?");
-		int minFruitore = a.richiediNumeroConLimiteInferiore("minimo fruitori per confermare la visita", 0);
-		int maxFruitore = a.richiediNumeroConLimiteInferiore("massimo fruitori per completare la visita", minFruitore);
-		ArrayList<String> volontari = richiediVolontari();
-		return (archivio.aggiungiTipoVisite(connectionCode, luogo, tipoVisita, titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniPrenotabili, oraInizio, durataVisita, ticket, minFruitore, maxFruitore, volontari));
-	}
-	
-	@MethodName("Aggiungi tipo visite")
-	public void aggiungiTipoVisite() {
-		if (canAddOrRemove()) {
-			String luogo = "";
-			do {
-				luogo = a.richiediInput("luogo della visita");
-				if (!archivio.checkIfPlaceExists(luogo)) a.view("Il luogo inserito è inesistente.");
-			} while (!archivio.checkIfPlaceExists(luogo));
-			
-			a.view((aggiungiTipoVisitePartendoDaLuogo(luogo)) ? "Il nuovo tipo di visita è stato aggiunto." : "Il nuovo tipo di visita non è stato aggiunto.");
-		}
-		
-	}
-	@MethodName("Aggiungi credenziali nuovo configuratore")
-	public void impostaCredenzialiNuovoConfiguratore () {
-		String username = a.richiediInput("username del nuovo configuratore");
-		String password = a.richiediInput("password del nuovo configuratore");
-		if (archivio.impostaCredenzialiNuovoConfiguratore(connectionCode, username, password)) a.view("Aggiunto nuovo configuratore.");
-		else a.view("Non è stato aggiunto un nuovo configuratore, username già in utilizzo.");
-				
-	}
-	@MethodName("Visualizza visite proposte, complete, confermate, cancellate e effettuate")
-	public void getElencoVisiteProposteCompleteConfermateCancellateEffettuate (App a) {
-		a.visualListGeneric(archivio.getElencoVisiteProposteCompleteConfermateCancellateEffettuate(connectionCode), "Elenco visite");
-	}
-	
-	private void associaVolontarioEsistente(String tipo) {
-	    getListaVolontari(a);
-	    String volontario;
-	    do {
-	        volontario = a.richiediInput("volontario da associare (esc per tornare indietro)");
-	        if (volontario.equalsIgnoreCase("esc")) return;
-	        if (!archivio.checkIfUserExists(volontario)) {
-	            a.view("Il volontario inserito non esiste, reinserire.");
-	        } else if (!archivio.associaVolontarioEsistenteATipoVisitaEsistente(connectionCode, volontario, tipo)) {
-	            a.view("Problema nell'inserimento del volontario, potrebbe esserci un conflitto con i giorni.");
-	        } else {
-	            break;
-	        }
-	    } while (true);
-	}
-	
-	@MethodName("Aggiungi volontari ad un tipo di visita esistente")
-	public void aggiungiVolontariATipiVisita () {
-		if (canAddOrRemove()) {
-			Set<String> s = archivio.getElencoTipiVisite(connectionCode);
-			a.view("Elenco dei tag delle visite esistenti:");
-			for(String i : s) {
-				a.view(i);
-			}
-			String tipo = richiediVisitaEsistente("tag del tipo della visita a cui associare i volontari");
-			boolean continua;
-			do {
-				if (a.chiediSioNo("Vuoi creare un nuovo volontario da associare?")) {
-					while (impostaNuovoVolontarioConUnTipoVisitaScelto(tipo).isEmpty());
-				}
-				else {
-					associaVolontarioEsistente(tipo);
-				}
-				continua = a.chiediSioNo("Vuoi aggiungere altri volontari?");
-			} while (continua);
-		}
-		else a.view("Non puoi apportare modifiche al momento.");
-	}
-	
 	private boolean canAddOrRemove() {
 		if (archivio.canAddOrRemove(connectionCode)) {
 			return true;
 		}
 		else {
-			a.view("Al momento non puoi aggiungere o rimuovere nulla, quando verrà pubblicato il piano sarà possibile intervenire sull'archivio.");
+			a.catchEvent(AppEvent.CANT_ADD_OR_REMOVE);
 			return false;
 		}
 	}

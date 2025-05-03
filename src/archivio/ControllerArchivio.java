@@ -96,7 +96,7 @@ public class ControllerArchivio implements ArchivioFacade {
 		else return null;
 	}
 
-	public Set<String> getElencoTipiVisite (String connectionCode) { //OK
+	public List<DTO> getElencoTipiVisite (String connectionCode) { //OK
 		if (getTipoUtente(usernameLinkati.get(connectionCode)) == CostantiStruttura.CONFIGURATORE) 
 			return archivio.getElencoTipiVisite();
 		else return null;
@@ -195,29 +195,29 @@ public class ControllerArchivio implements ArchivioFacade {
 		else return null;
 	}
 	
-	public List<PrenotazioneDTO> getElencoPrenotazioniFruitore (String connectionCode) {
+	public List<DTO> getElencoPrenotazioniFruitore (String connectionCode) {
 		if (getTipoUtente(usernameLinkati.get(connectionCode)) == CostantiStruttura.FRUITORE)
 			return archivio.getElencoPrenotazioniFruitore(usernameLinkati.get(connectionCode));
 		else return null;
 	}
 	
-	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitore() { 
+	public List<DTO> getElencoVisiteProposteConfermateCancellateFruitore() { 
 		return archivio.getElencoVisiteProposteConfermateCancellateFruitore();
 	}
 	
-	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore (String connectionCode) {
+	public List<DTO> getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore (String connectionCode) {
 		if (getTipoUtente(usernameLinkati.get(connectionCode)) == CostantiStruttura.FRUITORE)
 			return archivio.getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore(usernameLinkati.get(connectionCode));
 		else return null;
 	}
 
-	public List<VisitaDTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate (String connectionCode) {
+	public List<DTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate (String connectionCode) {
 		if (getTipoUtente(usernameLinkati.get(connectionCode)) == CostantiStruttura.CONFIGURATORE) 
 			return archivio.getElencoVisiteProposteCompleteConfermateCancellateEffettuate();
 		else return null;
 	}
 	
-	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato (String date) {
+	public List<DTO> getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato (String date) {
 		return archivio.getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato(date);
 	}
 	
@@ -284,19 +284,19 @@ public class ControllerArchivio implements ArchivioFacade {
 		else return false;
 	}
 
-	public Set<UserDTO> getListaUser(String connectionCode, int tipo_user) {
+	public List<DTO> getListaUser(String connectionCode, int tipo_user) {
 		if (getTipoUtente(usernameLinkati.get(connectionCode)) == CostantiStruttura.CONFIGURATORE)
 			return archivio.getListaUser(tipo_user);
 		else return null;
 	}
 	
-	public List<String> getElencoLuoghiVisitabili (String connectionCode) { 
+	public List<DTO> getElencoLuoghiVisitabili (String connectionCode) { 
 		if (getTipoUtente(usernameLinkati.get(connectionCode)) == CostantiStruttura.CONFIGURATORE)
 			return archivio.getElencoLuoghiVisitabili();
 		else return null;
 	}
 	
-	public Map<String, List<String>> getElencoTipiVisiteLuogo (String connectionCode) {
+	public List<DTO> getElencoTipiVisiteLuogo (String connectionCode) {
 		if (getTipoUtente(usernameLinkati.get(connectionCode)) == CostantiStruttura.CONFIGURATORE)
 		return archivio.getElencoTipiVisiteLuogo();
 		else return null;

@@ -6,8 +6,9 @@ import java.util.Set;
 
 import archivio.ArchivioFacade;
 import client.app.App;
+import client.log_events.AppEvent;
+import dto.DTO;
 import dto.PrenotazioneDTO;
-import dto.VisitaDTO;
 import utility.MethodName;
 import utility.Time;
 
@@ -26,23 +27,23 @@ public class HandlerFruitore extends ControllerUtente {
 	}
 
 	
-	private void visualListVisitDTO (List<VisitaDTO> visite, App a) {
+	private void visualListVisitDTO (List<DTO> visite) {
 		if (visite != null) {
 			a.viewListDTO(visite);
 		}
 		else {
-			a.view("Nessuna visita presente.");
+			a.catchEvent(AppEvent.NO_VISIT);
 		}
 	}
 	
 	@MethodName("Visualizza visite proposte, confermate e cancellate")
 	public void getElencoVisiteProposteConfermateCancellate () {
-		visualListVisitDTO(archivio.getElencoVisiteProposteConfermateCancellateFruitore(), a);
+		visualListVisitDTO(archivio.getElencoVisiteProposteConfermateCancellateFruitore());
 	}
 	
 	@MethodName("Visualizza tutte le visite proposte/confermate/cancellate/complete che hai prenotato")
 	public void visualizzaVisiteProposteConfermateCancellateCompletePrenotate () {
-		visualListVisitDTO(archivio.getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore(connectionCode), a);
+		visualListVisitDTO(archivio.getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore(connectionCode));
 	}
 	
 	//Postcondizione: prenotazione in Archivio
@@ -51,33 +52,38 @@ public class HandlerFruitore extends ControllerUtente {
 		String date = "";
 		getElencoVisiteProposteConfermateCancellate();
 		do {
-			date = a.richiediDataValida("data in cui prenotare (dd-mm-yyyy)");
-			if (Time.isThreeDaysOrLessBefore(Time.getActualDate(), date)) a.view("Non è possibile prenotare nei 3 giorni successivi a questo."); //LOGICA DI MODEL!!!
-		} while (Time.isThreeDaysOrLessBefore(Time.getActualDate(), date)); //non voglio che sia nei prossimi tre giorni, non ci sono visite prenotabili
+			date = a.richiediDataValida("data in cui prenotare");
+			if (Time.isThreeDaysOrLessBefore(Time.getActualDate(), date)) a.catchEvent(AppEvent.CANT_ADD_RESERVATION_ON_DAY); 
+		} while (Time.isThreeDaysOrLessBefore(Time.getActualDate(), date)); 
 		if (archivio.getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato(date) != null) {
-			visualListVisitDTO(archivio.getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato(date), a);
-			String tipoVisita = richiediVisitaEsistente("tag del tipo della visita");
+			visualListVisitDTO(archivio.getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato(date));
+			String tipoVisita = a.richiediTipoVisitaEsistente();
 			int numeroIscrizione = a.richiediNumeroConLimiteInferiore("per quante persone vuoi prenotare", 0);
 			String codice = archivio.inserisciPrenotazione(connectionCode, new PrenotazioneDTO(date, tipoVisita, numeroIscrizione));
-			a.view(codice != null ? "Prenotazione inserita, codice prenotazione: " + codice : "Prenotazione non inserita.");
+			if (codice != null) {
+				a.catchEvent(AppEvent.RESERVATION_INSERTED, codice);
+			}
+			else {
+				a.catchEvent(AppEvent.RESERVATION_NOT_INSERTED);
+			}
 		}
 		else {
-			a.view("Nessuna visita segnata per questo giorno.");
+			a.catchEvent(AppEvent.NO_VISIT_ON_DAY);
 		}
 		
 	}
 	
 	private Set<String> prenotazioniLinkate () {
-		List<PrenotazioneDTO> prenotazioni = archivio.getElencoPrenotazioniFruitore(connectionCode);
+		List<DTO> prenotazioni = archivio.getElencoPrenotazioniFruitore(connectionCode);
 		Set<String> codiciPrenotazioni = new HashSet<>();
-		for (PrenotazioneDTO prenotazione : prenotazioni) codiciPrenotazioni.add(prenotazione.getCodice());
+		for (DTO prenotazione : prenotazioni) codiciPrenotazioni.add(((PrenotazioneDTO) prenotazione).getCodice());
 		return codiciPrenotazioni;
 	}
 	
 	private void visualElencoPrenotazioni (App a) {
-		List<PrenotazioneDTO> prenotazioni = archivio.getElencoPrenotazioniFruitore(connectionCode);
+		List<DTO> prenotazioni = archivio.getElencoPrenotazioniFruitore(connectionCode);
 		if (prenotazioni != null) {
-			a.visualListGeneric(prenotazioni, "Elenco prenotazioni");
+			a.viewListDTO(prenotazioni);
 		}
 	}
 	
@@ -91,11 +97,14 @@ public class HandlerFruitore extends ControllerUtente {
 			if (k != null)do {
 				codicePrenotazioneDaEliminare = a.richiediInput("codice della prenotazione da eliminare (ESC per annullare)");
 				if (codicePrenotazioneDaEliminare.equalsIgnoreCase("esc")) return;
-				if (!k.contains(codicePrenotazioneDaEliminare)) a.view("Il codice inserito non è legato a nessuna prenotazione, reinserirlo.");
+				if (!k.contains(codicePrenotazioneDaEliminare)) a.catchEvent(AppEvent.WRONG_RESERVATION_CODE);
 			} while (!k.contains(codicePrenotazioneDaEliminare));
-			a.view(archivio.rimuoviPrenotazione(connectionCode, codicePrenotazioneDaEliminare) ? "Prenotazione rimossa." : "Prenotazione non rimossa.");
+			if (archivio.rimuoviPrenotazione(connectionCode, codicePrenotazioneDaEliminare)) {
+				a.catchEvent(AppEvent.RESERVATION_REMOVED);
+			}
+			else a.catchEvent(AppEvent.RESERVATION_NOT_REMOVED);
 		}
-		else a.view("Non hai prenotazioni.");
+		else a.catchEvent(AppEvent.NO_RESERVATION_MADE);
 
 	}
 	

@@ -1,9 +1,7 @@
 package archivio.repository;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import org.json.*;
 
@@ -108,20 +106,20 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 		return true;
 	}
 	
-	public Set<UserDTO> getListaUser (int tipo_user) {
+	public List<DTO> getListaUser (int tipo_user) {
 		return usersJSONManager.getListaUser(tipo_user);
 
 	}
 	
-	public List<VisitaDTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate () {
-	    List<VisitaDTO> visiteList = pianoVisiteJSONManager.getElencoVisiteProposteCompleteConfermateCancellateEffettuate(tipiVisiteJSONManager.getTipiVisitaTitoli());
+	public List<DTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate () {
+	    List<DTO> visiteList = pianoVisiteJSONManager.getElencoVisiteProposteCompleteConfermateCancellateEffettuate(tipiVisiteJSONManager.getTipiVisitaTitoli());
 		visiteList.addAll(pianoStoricoJSONManager.getElencoVisiteProposteCompleteConfermateCancellateEffettuate());
 		return visiteList;
 	}
 
-	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore (String username) {
+	public List<DTO> getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore (String username) {
 		JSONArray codiciPrenotazione = usersJSONManager.getElencoPrenotazioniFruitore(username);
-	    List<VisitaDTO> visiteList = new ArrayList<>();
+	    List<DTO> visiteList = new ArrayList<>();
 	    for (Object codicePrenotazione : codiciPrenotazione) {
 	    	VisitaDTO visita = pianoVisiteJSONManager.getVisitaProposteConfermateCancellatePrenotateDalFruitore(prenotazioniJSONManager.getGiornoPrenotazione((String)codicePrenotazione),
 	    			prenotazioniJSONManager.getTipoVisitaPrenotazione((String)codicePrenotazione), 
@@ -132,8 +130,8 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	    return visiteList;
 	}
 
-	public List<PrenotazioneDTO> getElencoPrenotazioniFruitore (String username) {
-	    List<PrenotazioneDTO> prenotazioneList = new ArrayList<>();
+	public List<DTO> getElencoPrenotazioniFruitore (String username) {
+	    List<DTO> prenotazioneList = new ArrayList<>();
 	    for (Object codicePrenotazione : usersJSONManager.getElencoPrenotazioniFruitore(username)) {
                 prenotazioneList.add(new PrenotazioneDTO((String)codicePrenotazione, 
                 		prenotazioniJSONManager.getGiornoPrenotazione((String)codicePrenotazione), 
@@ -144,11 +142,11 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	    
 	}
 
-	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitore () {	
+	public List<DTO> getElencoVisiteProposteConfermateCancellateFruitore () {	
 	    return pianoVisiteJSONManager.getElencoVisiteProposteConfermateCancellateFruitore(tipiVisiteJSONManager);
 	}
 
-	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato (String date) {	
+	public List<DTO> getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato (String date) {	
 	    return pianoVisiteJSONManager.getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato(date, tipiVisiteJSONManager);
 	}
 	
@@ -217,12 +215,12 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 		return usersJSONManager.impostaCredenzialiNuovoConfiguratore(username, password);
 	}
 	
-	public List<String> getElencoLuoghiVisitabili () { 	
+	public List<DTO> getElencoLuoghiVisitabili () { 	
 		return ambitoJSONManager.getElencoLuoghiVisitabili();
 
 	}
 
-	public Map<String, List<String>> getElencoTipiVisiteLuogo () {	
+	public List<DTO> getElencoTipiVisiteLuogo () {	
 		return ambitoJSONManager.getElencoTipiVisiteLuogo(tipiVisiteJSONManager.getTipiVisitaTitoli());
 
 	}
@@ -284,7 +282,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 		return true;
 	}
 	
-	public Set<String> getElencoTipiVisite () {
+	public List<DTO> getElencoTipiVisite () {
 		return tipiVisiteJSONManager.getElencoTipiVisite();
 	}
 	
@@ -435,6 +433,18 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 
 	public Credenziali getCredenzialiConfIniziale() { 
 		return new Credenziali(CREDENZIALI_CONF_INIZIALE[0], CREDENZIALI_CONF_INIZIALE[1]);
+	}
+
+	@Override
+	public boolean associaVolontariATipoVisita(String connectionCode, List<String> volontari, String tipoVisita) {
+		for (String volontario : volontari) {
+			if (!usersJSONManager.checkIfUserExists(tipoVisita)) {
+				//do something
+			}
+			else {
+				
+			}
+		}
 	}
 
 }
