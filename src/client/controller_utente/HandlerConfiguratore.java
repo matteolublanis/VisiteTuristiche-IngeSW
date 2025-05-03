@@ -9,6 +9,7 @@ import java.util.Set;
 import archivio.ArchivioFacade;
 import client.app.App;
 import client.log_events.AppEvent;
+import dto.LuogoDTO;
 import dto.TipoVisitaDTO;
 import utility.CostantiStruttura;
 import utility.Credenziali;
@@ -48,7 +49,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	private String impostaNuovoVolontarioConUnTipoVisitaScelto (String tipo) {
 		a.catchEvent(AppEvent.STARTING_CREATING_VOLUNTEER);
 		Credenziali c = a.richiediCredenziali();
-		Set<String> tipi_visiteVal = new HashSet<>();
+		List<String> tipi_visiteVal = new ArrayList<>();
 		tipi_visiteVal.add(tipo);
 		if (archivio.impostaCredenzialiNuovoVolontario(connectionCode, c.getUsername(), c.getPassword(), tipi_visiteVal, false)) {
 			a.catchEvent(AppEvent.NEW_VOLUNTEER_INSERTED);
@@ -61,7 +62,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	}
 	
 	//Postcondizione: volontario creato con tipo visita associato
-	private boolean impostaNuovoVolontarioConTipoVisitaScelto (App a, Set<String> tipi_visiteVal, List<String> volontari) {
+	private boolean impostaNuovoVolontarioConTipoVisitaScelto (App a, List<String> tipi_visiteVal, List<String> volontari) {
 		a.catchEvent(AppEvent.STARTING_CREATING_VOLUNTEER);
 		Credenziali c = a.richiediCredenziali();
 		if (archivio.impostaCredenzialiNuovoVolontario(connectionCode, c.getUsername(), c.getPassword(), tipi_visiteVal, false)) {
@@ -279,8 +280,9 @@ public class HandlerConfiguratore extends ControllerUtente{
 	public void aggiungiVolontariATipiVisita () {
 		if (canAddOrRemove()) {
 			a.viewListDTO(archivio.getElencoTipiVisite(connectionCode));
-			String tipo = richiediVisitaEsistente("tag del tipo della visita a cui associare i volontari");
+			String tipo = a.richiediVisitaEsistente();
 			List<String> volontari = a.richiediVolontari();
+			archivio.associaVolontariATipoVisitaEsistente(tipo, volontari, tipo);
 			
 		}
 	}
@@ -299,11 +301,8 @@ public class HandlerConfiguratore extends ControllerUtente{
 	public void aggiungiLuogo () {
 		if (canAddOrRemove()) { 
 			do {
-				String tag = a.richiediInput("tag del luogo");
-				String nome = a.richiediInput("nome del luogo");
-				String descrizione = a.richiediInput("descrizione del luogo");
-				String collocazione = a.richiediInput("collocazione del luogo");
-				if (archivio.aggiungiLuogo(connectionCode, tag, nome, descrizione, collocazione, null)) {
+				LuogoDTO luogo = a.richiediLuogo();
+				if (archivio.aggiungiLuogo(connectionCode, luogo)) {
 					a.view("Aggiunto un nuovo luogo.");
 					boolean aggiunto = false;
 					do {

@@ -10,6 +10,7 @@ import client.controller_utente.ControllerUtente;
 import client.log_events.AppEvent;
 import client.login.Login;
 import dto.DTO;
+import dto.LuogoDTO;
 import dto.TipoVisitaDTO;
 import utility.Credenziali;
 import utility.Time;
@@ -286,6 +287,25 @@ public class AppUI implements App{
 	    return volontari;
 	}
 	
+	public LuogoDTO richiediLuogo () {
+		String tag = richiediInput("tag del luogo");
+		String nome = richiediInput("nome del luogo");
+		String descrizione = richiediInput("descrizione del luogo");
+		String collocazione = richiediInput("collocazione del luogo");
+		return new LuogoDTO(tag, nome, descrizione, collocazione);
+	}
+	
+	@Override
+	public String richiediVisitaEsistente() {
+	    String tipo;
+	    do {
+	        tipo = richiediInput("tag della visita da associare");
+	        if (!gdb.checkIfVisitTypeExists(tipo)) {
+	            view("Non esiste il tipo inserito, reinserisci i dati.");
+	        }
+	    } while (!gdb.checkIfVisitTypeExists(tipo));
+	    return tipo;
+	}
 	
 	
 	private String richiediNuovoTipoVisita() {

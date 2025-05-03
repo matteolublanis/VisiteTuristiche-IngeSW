@@ -1,4 +1,4 @@
-package archivio;
+package archivio.repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -119,15 +119,17 @@ public class AmbitoTerritorialeJSONManagement {
 		}
 	}
 	
-	public boolean aggiungiLuogo (String tag, String nome, String descrizione, String collocazione, JSONArray tipiVisita) {
+	public boolean aggiungiLuogo (LuogoDTO luogo) {
 		JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject(LUOGHI);
-		if (luoghi.has(tag)) return false; 
+		if (luoghi.has(luogo.getTag())) return false; 
 		JSONObject nuovoLuogo = new JSONObject();
-	    nuovoLuogo.put(NAME, nome);
-	    nuovoLuogo.put(DESCRIZIONE, descrizione);
-		nuovoLuogo.put(COLLOCAZIONE, collocazione);
+	    nuovoLuogo.put(NAME, luogo.getTitolo());
+	    nuovoLuogo.put(DESCRIZIONE, luogo.getDescrizione());
+		nuovoLuogo.put(COLLOCAZIONE, luogo.getCollocazione());
+		JSONArray tipiVisita = new JSONArray();
+		for (String l : luogo.getTipiAssociati()) tipiVisita.put(l);
 	    nuovoLuogo.put(TIPO_VISITA, tipiVisita);
-	    luoghi.put(tag, nuovoLuogo);
+	    luoghi.put(luogo.getTag(), nuovoLuogo);
 	    JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, PATH_AMBITO, 10); 
 	    return true;
 	}

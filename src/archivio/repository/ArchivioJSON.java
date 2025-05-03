@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Set;
 import org.json.*;
 
-import archivio.AmbitoTerritorialeJSONManagement;
 import dto.*;
 import utility.Credenziali;
 import utility.Time;
@@ -340,15 +339,15 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 		
 	}
 	
-	public boolean aggiungiLuogo (String tag, String nome, String luogo, String collocazione, Set<String> tipiVisitaVal) {
+	public boolean aggiungiLuogo (LuogoDTO luogo) {
 		JSONArray tipiVisita = new JSONArray();
-		if (tipiVisitaVal != null) {
-			if (!checkIfTypeAlreadyExistsInSet(tipiVisitaVal, tipiVisita)) return false;
+		if (luogo.getTipiAssociati() != null) {
+			if (!checkIfTypeAlreadyExistsInSet(luogo.getTipiAssociati(), tipiVisita)) return false;
 	    } 
-		return ambitoJSONManager.aggiungiLuogo(tag, nome, luogo, collocazione, tipiVisita);
+		return ambitoJSONManager.aggiungiLuogo(luogo);
 	}
 
-	public boolean checkIfTypeAlreadyExistsInSet (Set<String> tipiVisitaVal, JSONArray tipiVisita) {
+	public boolean checkIfTypeAlreadyExistsInSet (List<String> tipiVisitaVal, JSONArray tipiVisita) {
     	for (String tipo : tipiVisitaVal) {
 	    	if (!checkIfVisitTypeExists(tipo) && !tipo.equals("")) return false;
 	    	else {
@@ -358,7 +357,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
     	return true;
 	}
 	
-	public boolean tryImpostaCredenzialiNuovoVolontario (String username, String password, Set<String> tipi_visiteVal, boolean tipiVisitaNecessario) {
+	public boolean tryImpostaCredenzialiNuovoVolontario (String username, String password, List<String> tipi_visiteVal, boolean tipiVisitaNecessario) {
 		if (checkIfUserExists(username)) return false; 
 		JSONArray tipiVisite = new JSONArray();
 	    if (tipi_visiteVal != null) {

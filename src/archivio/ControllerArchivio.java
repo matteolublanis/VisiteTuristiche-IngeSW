@@ -108,7 +108,7 @@ public class ControllerArchivio implements ArchivioFacade {
  		else return null;
  	}
 	
-	public boolean impostaCredenzialiNuovoVolontario (String connectionCode, String username, String password, Set<String> tipi_visiteVal, boolean tipiVisitaNecessario) {
+	public boolean impostaCredenzialiNuovoVolontario (String connectionCode, String username, String password, List<String> tipi_visiteVal, boolean tipiVisitaNecessario) {
 		if (getTipoUtente(usernameLinkati.get(connectionCode)) == CostantiStruttura.CONFIGURATORE) 
 			return archivio.tryImpostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal, tipiVisitaNecessario);
 		else return false;
@@ -242,9 +242,9 @@ public class ControllerArchivio implements ArchivioFacade {
 		return archivio.checkIfPlaceExists(luogo);
 	}
 	
-	public boolean aggiungiLuogo (String connectionCode, String tag, String nome, String descrizione, String collocazione, Set<String> tipiVisitaVal) {
+	public boolean aggiungiLuogo (String connectionCode, LuogoDTO luogo) {
 		if (canAddOrRemove(usernameLinkati.get(connectionCode)))
-			return archivio.aggiungiLuogo(tag, nome, descrizione, collocazione, tipiVisitaVal);
+			return archivio.aggiungiLuogo(luogo);
 		else return false;
 	}
 	//Usato da impostaAmbito, può essere riusato

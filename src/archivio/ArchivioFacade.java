@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import dto.DTO;
+import dto.LuogoDTO;
 import dto.PrenotazioneDTO;
 import dto.TipoVisitaDTO;
 import dto.VisitaDTO;
@@ -36,7 +37,7 @@ public interface ArchivioFacade {
 
  	public List<DTO> getElencoTipiVisiteVolontario (String connectionCode);
 	
-	public boolean impostaCredenzialiNuovoVolontario (String connectionCode, String username, String password, Set<String> tipi_visiteVal, boolean tipiVisitaNecessario);
+	public boolean impostaCredenzialiNuovoVolontario (String connectionCode, String username, String password, List<String> tipi_visiteVal, boolean tipiVisitaNecessario);
 	
 	public boolean rimuoviLuogo (String luogo, String connectionCode);
 	
@@ -82,7 +83,7 @@ public interface ArchivioFacade {
 	
 	public boolean checkIfPlaceExists (String luogo);
 	//Da refattorizzare
-	public boolean aggiungiLuogo (String connectionCode, String tag, String nome, String descrizione, String collocazione, Set<String> tipiVisitaVal);
+	public boolean aggiungiLuogo (String connectionCode, LuogoDTO luogo);
 
 	public void setPrimaConfigurazione();
 	

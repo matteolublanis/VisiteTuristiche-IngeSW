@@ -7,6 +7,7 @@ import java.util.Set;
 import org.json.JSONArray;
 
 import dto.DTO;
+import dto.LuogoDTO;
 import dto.PrenotazioneDTO;
 import dto.TipoVisitaDTO;
 import dto.UserDTO;
@@ -42,7 +43,7 @@ public interface Archivio {
 	public List<DTO> getElencoTipiVisite ();
  	public List<DTO> getElencoTipiVisiteVolontario (String username);
 	//Precondizione: callerTyper = CostantiStruttura.CONFIGURATORE
-	public boolean tryImpostaCredenzialiNuovoVolontario (String username, String password, Set<String> tipi_visiteVal, boolean tipiVisitaNecessario);
+	public boolean tryImpostaCredenzialiNuovoVolontario (String username, String password, List<String> tipi_visiteVal, boolean tipiVisitaNecessario);
 	
 	/*
 	 * Precondizione: callerType = CostantiStruttura.CONFIGURATORE
@@ -69,7 +70,7 @@ public interface Archivio {
 	public boolean tryAggiungiVisite (TipoVisitaDTO tipoVisita);
 	public boolean checkIfPlaceExists (String luogo);
 	//Precondizione: callerTyper = CostantiStruttura.CONFIGURATORE
-	public boolean aggiungiLuogo (String tag, String nome, String descrizione, String collocazione, Set<String> tipiVisitaVal);
+	public boolean aggiungiLuogo (LuogoDTO luogo);
 	public void setPrimaConfigurazione();
 	public boolean modificaCredenziali (String username, Credenziali c);
 	public boolean primoAccessoEseguito (String user);

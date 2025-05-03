@@ -6,6 +6,7 @@ import java.util.List;
 import client.controller_utente.ControllerUtente;
 import client.log_events.AppEvent;
 import dto.DTO;
+import dto.LuogoDTO;
 import dto.TipoVisitaDTO;
 import utility.Credenziali;
 
@@ -29,4 +30,6 @@ public interface App {
 	public TipoVisitaDTO richiediTipoVisita(String luogo);
 	public String richiediTipoVisitaEsistente();
 	public ArrayList<String> richiediVolontari();
+	public String richiediVisitaEsistente();
+	public LuogoDTO richiediLuogo();
 }
