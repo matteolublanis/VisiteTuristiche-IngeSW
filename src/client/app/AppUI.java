@@ -229,7 +229,7 @@ public class AppUI implements App{
 	}
 
 	@Override
-	public TipoVisitaDTO richiediTipoVisita() {
+	public TipoVisitaDTO richiediTipoVisita(String luogo) {
 		String tipoVisita = richiediNuovoTipoVisita(); 
 		String titolo = richiediInput("titolo della visita");
 		String descrizione = richiediInput("descrizione riassuntiva della visita");
@@ -247,7 +247,9 @@ public class AppUI implements App{
 		int minFruitore = richiediNumeroConLimiteInferiore("minimo fruitori per confermare la visita", 0);
 		int maxFruitore = richiediNumeroConLimiteInferiore("massimo fruitori per completare la visita", minFruitore);
 		ArrayList<String> volontari = richiediVolontari();
-		TipoVisitaDTO result = new TipoVisitaDTO(tipoVisita, );
+		TipoVisitaDTO result = new TipoVisitaDTO(tipoVisita, titolo, luogo, descrizione, puntoIncontro, dataInizio,
+				dataFine, giorniPrenotabili, oraInizio, durataVisita, ticket, minFruitore,
+				maxFruitore, volontari);
 		return result;
 	}
 	
@@ -269,7 +271,7 @@ public class AppUI implements App{
 		    } 
 		    else {
 		    	String volontario = richiediInput("volontario che gestirà la visita");
-		    	if (!archivio.checkIfUserExists(volontario)) {
+		    	if (!controllerUtente.checkIfUserExists(volontario)) {
 		    		view("L'username inserito non è associato a nessun volontario.");
 		    		continua = true;
 		    	} else if (!volontari.contains(volontario)) {

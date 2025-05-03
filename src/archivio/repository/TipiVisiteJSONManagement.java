@@ -268,13 +268,15 @@ public class TipiVisiteJSONManagement {
 		return false;
 	}
 	
-	public void aggiungiTipoVisite(String luogo, String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
-			String dataInizio, String dataFine,  String oraInizio,
-			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, JSONArray giorniPrenotabili, JSONArray volontari) {
-		
-	    JSONObject nuovoTipoVisita = setNewVisitType(luogo, titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniPrenotabili, 
-	    		oraInizio, durataVisita, daAcquistare, minFruitore, maxFruitore, volontari);
-	    jsonTipiVisite.put(tipoVisita, nuovoTipoVisita);
+	public void aggiungiTipoVisite(TipoVisitaDTO tipoVisita) {
+		JSONArray giorniPrenotabili = returnGiorniPrenotabili(tipoVisita.getGiorniPrenotabiliVal());
+		JSONArray volontari = new JSONArray();
+	    for (String k : tipoVisita.getVolontariVal()) { volontari.put(k); }
+	    JSONObject nuovoTipoVisita = setNewVisitType(tipoVisita.getLuogo(), tipoVisita.getTitolo(), tipoVisita.getDescrizione(), 
+	    		tipoVisita.getPuntoIncontro(), tipoVisita.getDataInizio(), tipoVisita.getDataFine(), giorniPrenotabili, 
+	    		tipoVisita.getOraInizio(), tipoVisita.getDurataVisita()
+	    		, tipoVisita.isDaAcquistare(), tipoVisita.getMinFruitore(), tipoVisita.getMaxFruitore(), volontari);
+	    jsonTipiVisite.put(tipoVisita.getTag(), nuovoTipoVisita);
 	    aggiornaJsonTipiVisite();
 	}
 	

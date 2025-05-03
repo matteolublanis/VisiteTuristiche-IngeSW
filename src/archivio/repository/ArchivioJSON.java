@@ -368,21 +368,26 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 		return impostaCredenzialiNuovoVolontario(username, password, tipiVisite, tipiVisitaNecessario);
 	}
 	
-	public boolean tryAggiungiVisite (String luogo, String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
+	public boolean tryAggiungiVisite (TipoVisitaDTO tipoVisita) {
+		/*
+		 * String luogo, String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
 			String dataInizio, String dataFine, ArrayList<Integer> giorniPrenotabiliVal, String oraInizio,
-			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, ArrayList<String> volontariVal) {
+			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, ArrayList<String> volontariVal
+		 */
 		
-		JSONArray giorniPrenotabili = tipiVisiteJSONManager.returnGiorniPrenotabili(giorniPrenotabiliVal);
-	    if (tipiVisiteJSONManager.intersectVisitTypeSamePlace (ambitoJSONManager.getTipiLuogo(luogo), dataInizio, dataFine, oraInizio, durataVisita, giorniPrenotabili.toString())) return false; //da rimuovere volontari nuovi
+		JSONArray giorniPrenotabili = tipiVisiteJSONManager.returnGiorniPrenotabili(tipoVisita.getGiorniPrenotabiliVal());
+	    if (tipiVisiteJSONManager.intersectVisitTypeSamePlace (ambitoJSONManager.getTipiLuogo(tipoVisita.getLuogo()),
+	    		tipoVisita.getDataInizio(), tipoVisita.getDataFine(), tipoVisita.getOraInizio(), tipoVisita.getDurataVisita(), giorniPrenotabili.toString())) return false; //da rimuovere volontari nuovi
 	    JSONArray volontari = new JSONArray();
-	    for (String k : volontariVal) {
+	    for (String k : tipoVisita.getVolontariVal()) {
     		JSONArray tipi = usersJSONManager.getTipiVisitaOfVolontario(k);
-    		if (tipiVisiteJSONManager.visitTypeIntersectsOtherVisitTypes(dataInizio, dataFine, oraInizio, durataVisita, giorniPrenotabili.toString(), tipi)) return false; //da rimuovere volontari nuovi
+    		if (tipiVisiteJSONManager.visitTypeIntersectsOtherVisitTypes(tipoVisita.getDataInizio(), tipoVisita.getDataFine(), tipoVisita.getOraInizio(), 
+    				tipoVisita.getDurataVisita(), giorniPrenotabili.toString(), tipi)) return false; //da rimuovere volontari nuovi
     		volontari.put(k);
 	    }
-	    usersJSONManager.aggiungiTipoVisiteAVolontari(volontari, tipoVisita);
-	    ambitoJSONManager.aggiungiTipoALuogo(luogo, tipoVisita);
-	    tipiVisiteJSONManager.aggiungiTipoVisite(luogo, tipoVisita, titolo, descrizione, puntoIncontro, dataInizio, dataFine, oraInizio, durataVisita, daAcquistare, minFruitore, maxFruitore, giorniPrenotabili, volontari);
+	    usersJSONManager.aggiungiTipoVisiteAVolontari(volontari, tipoVisita.getTag());
+	    ambitoJSONManager.aggiungiTipoALuogo(tipoVisita.getLuogo(), tipoVisita.getTag());
+	    tipiVisiteJSONManager.aggiungiTipoVisite(tipoVisita);
 		return true;
 	}
 	
@@ -436,15 +441,20 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	}
 
 	@Override
-	public boolean associaVolontariATipoVisita(String connectionCode, List<String> volontari, String tipoVisita) {
+	public boolean associaVolontariATipoVisita(List<String> volontari, String tipoVisita) {
 		for (String volontario : volontari) {
 			if (!usersJSONManager.checkIfUserExists(tipoVisita)) {
 				//do something
 			}
 			else {
-				
+				if (checkIfCanLinkVolontario(volontario, tipoVisita)) {
+					associaVolontarioEsistenteATipoVisitaEsistente(volontario, tipoVisita);
+					volontari.remove(volontario);
+				}
 			}
 		}
+		if (volontari.size() == 0) return true;
+		else return false;
 	}
 
 }

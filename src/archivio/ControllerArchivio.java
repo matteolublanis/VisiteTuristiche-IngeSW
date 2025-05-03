@@ -252,13 +252,9 @@ public class ControllerArchivio implements ArchivioFacade {
 		archivio.setPrimaConfigurazione();
 	}
 	
-	public boolean aggiungiTipoVisite (String connectionCode, String luogo, String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
-			String dataInizio, String dataFine, ArrayList<Integer> giorniPrenotabiliVal, String oraInizio,
-			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, ArrayList<String> volontariVal) {
+	public boolean aggiungiTipoVisite (TipoVisitaDTO tipoVisita, String connectionCode) {
 		if (canAddOrRemove(usernameLinkati.get(connectionCode)))
-			return archivio.tryAggiungiVisite(luogo, tipoVisita, titolo, descrizione, puntoIncontro, 
-					dataInizio, dataFine, giorniPrenotabiliVal, oraInizio, durataVisita, daAcquistare, 
-					minFruitore, maxFruitore, volontariVal);
+			return archivio.tryAggiungiVisite(tipoVisita);
 		else return false;
 	}
 	
@@ -305,6 +301,13 @@ public class ControllerArchivio implements ArchivioFacade {
 	@Override
 	public boolean createNewFruitore(Credenziali c) {
 		return archivio.impostaCredenzialiNuovoFruitore(c.getUsername(), c.getPassword());
+	}
+
+	@Override
+	public boolean associaVolontariATipoVisitaEsistente(String connectionCode, List<String> volontari,
+			String tipoVisita) {
+		if (canAddOrRemove(connectionCode)) return archivio.associaVolontariATipoVisita(volontari, tipoVisita);
+		else return false;
 	}
 	
 }

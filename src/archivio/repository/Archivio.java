@@ -33,7 +33,7 @@ public interface Archivio {
 	
 	//Precondizione: callerType = CostantiStruttura.CONFIGURATORE
 	public boolean associaVolontarioEsistenteATipoVisitaEsistente(String volontario, String tipoVisita);
-	public boolean associaVolontariATipoVisita(String connectionCode, List<String> volontari, String tipoVisita);
+	public boolean associaVolontariATipoVisita(List<String> volontari, String tipoVisita);
 	public boolean getPossibileDareDisponibilita();
 	//Precondizione: callerTyper = CostantiStruttura.VOLONTARIO
     public boolean inserisciDisponibilita(String data, String username);
@@ -66,9 +66,7 @@ public interface Archivio {
 	public boolean impostaCredenzialiNuovoFruitore(String username, String password);
 	public boolean checkIfVisitTypeExists (String tipo);
 	//Precondizione: callerTyper = CostantiStruttura.CONFIGURATORE
-	public boolean tryAggiungiVisite (String luogo, String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
-			String dataInizio, String dataFine, ArrayList<Integer> giorniPrenotabiliVal, String oraInizio,
-			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, ArrayList<String> volontariVal);
+	public boolean tryAggiungiVisite (TipoVisitaDTO tipoVisita);
 	public boolean checkIfPlaceExists (String luogo);
 	//Precondizione: callerTyper = CostantiStruttura.CONFIGURATORE
 	public boolean aggiungiLuogo (String tag, String nome, String descrizione, String collocazione, Set<String> tipiVisitaVal);

@@ -89,6 +89,10 @@ public abstract class ControllerUtente {
 		return true;
 	}
 	
+	public boolean checkIfUserExists(String username) {
+		return archivio.checkIfUserExists(username);
+	}
+	
 	public boolean checkIfVisitTypeExists(String tipoVisita) {
 	    return archivio.checkIfVisitTypeExists(tipoVisita);
 	}

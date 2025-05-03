@@ -281,39 +281,8 @@ public class HandlerConfiguratore extends ControllerUtente{
 			a.viewListDTO(archivio.getElencoTipiVisite(connectionCode));
 			String tipo = richiediVisitaEsistente("tag del tipo della visita a cui associare i volontari");
 			List<String> volontari = a.richiediVolontari();
+			
 		}
-	}
-	
-	private ArrayList<String> richiediVolontari() {
-		ArrayList<String> volontari = new ArrayList<>();
-        boolean continua = true;
-		do {
-		    if (a.chiediSioNo("Vuoi associare un nuovo volontario per questo tipo di visita?")) {
-		        boolean volontarioCreato;
-		        do {
-		        	volontarioCreato = impostaNuovoVolontarioConTipoVisitaScelto(a, null, volontari);
-		        	if (volontarioCreato) {
-		        		a.view("Inserito nuovo volontario.");
-		        	}
-		        	else a.view("Non è stato inserito il nuovo volontario, username già in uso.");
-		        } while (!volontarioCreato);
-	    		continua = a.chiediSioNo("Vuoi inserire un altro volontario?");
-		    } 
-		    else {
-		    	String volontario = a.richiediInput("volontario che gestirà la visita");
-		    	if (!archivio.checkIfUserExists(volontario)) {
-		    		a.view("L'username inserito non è associato a nessun volontario.");
-		    		continua = true;
-		    	} else if (!volontari.contains(volontario)) {
-		    		volontari.add(volontario);
-		    		continua = a.chiediSioNo("Vuoi inserire un altro volontario?");
-		    	} else {
-		    		a.view("Volontario già inserito!");
-		    		continua = true;
-		    	}
-		    }
-		} while (continua);
-	    return volontari;
 	}
 	
 	private boolean canAddOrRemove() {

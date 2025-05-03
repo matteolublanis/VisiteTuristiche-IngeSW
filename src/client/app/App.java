@@ -26,7 +26,7 @@ public interface App {
 	public void log(String msg);
 	public void viewPrimoAccesso();
 	public void viewListDTO(List<DTO> list);
-	public TipoVisitaDTO richiediTipoVisita();
+	public TipoVisitaDTO richiediTipoVisita(String luogo);
 	public String richiediTipoVisitaEsistente();
 	public ArrayList<String> richiediVolontari();
 }
