@@ -1,6 +1,5 @@
-package testing;
+package utility;
 
-import utility.Time;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;

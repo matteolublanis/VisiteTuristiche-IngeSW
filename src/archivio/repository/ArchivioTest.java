@@ -1,18 +1,14 @@
-package testing;
+package archivio.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.json.JSONArray;
 import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runners.MethodSorters;
-
 import java.util.ArrayList;
 import java.util.List;
 
-//import static org.junit.jupiter.api.Assertions.*;
-import archivio.repository.ArchivioJSON;
 import dto.LuogoDTO;
 import dto.TipoVisitaDTO;
 import utility.CostantiStruttura;
@@ -21,7 +17,7 @@ import utility.Credenziali;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class ArchivioTest {
 	
-	ArchivioJSON arch = new ArchivioJSON();
+	Archivio arch = new ArchivioJSON(); //TODO ArchivioFactory
 	
 	@BeforeEach
 	void setUp() {
@@ -48,8 +44,8 @@ class ArchivioTest {
 	void testB_RimozioneVolontari() {
 		assertTrue(arch.checkIfUserExists("volontariotest1"));
 		assertTrue(arch.checkIfUserExists("volontariotest2"));
-		JSONArray j = arch.getTipiVisitaOfVolontario("volontariotest1");
-        assertTrue(j.get(0).equals("sushi"));
+		List<TipoVisitaDTO> j = arch.getElencoTipiVisiteVolontario("volontariotest1");
+        assertTrue(j.get(0).getTag().equals("sushi"));
         arch.rimuoviVolontario("volontariotest1"); 
         arch.rimuoviVolontario("volontariotest2");
         assertFalse(arch.checkIfUserExists("volontariotest1"));

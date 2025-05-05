@@ -1,12 +1,9 @@
-package testing;
+package client.app;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import archivio.repository.ArchivioJSON;
-import client.app.AppUI;
 import client.controller_utente.*;
 import utility.Credenziali;
 
