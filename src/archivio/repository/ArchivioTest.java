@@ -17,7 +17,7 @@ import utility.Credenziali;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class ArchivioTest {
 	
-	Archivio arch = new ArchivioJSON(); //TODO ArchivioFactory
+	ArchivioJSON arch = new ArchivioJSON(); //TODO ArchivioFactory
 	
 	@BeforeEach
 	void setUp() {

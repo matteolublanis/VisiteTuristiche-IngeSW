@@ -1,7 +1,8 @@
 package client.login;
 
-import archivio.ArchivioFacade;
-import archivio.ArchivioFactory;
+import archivio.AppManager;
+import archivio.CredenzialiManager;
+import archivio.UserInfoManager;
 import client.app.App;
 import client.controller_utente.ControllerUtente;
 import client.controller_utente.ControllerUtenteFactory;
@@ -11,15 +12,20 @@ import utility.Credenziali;
 public class Login {
 	
 	private App a;
-	private ArchivioFacade archivio;
+	private UserInfoManager userManager;
+	private AppManager appManager;
+	private CredenzialiManager credenzialiManager;
+	private int tipoApp;
+	
 	//Precondizione> archivio != null
 	public Login(App a, int tipoApp) {
  		this.a = a;
  		linkWithArchive(tipoApp);
+ 		this.tipoApp = tipoApp;
  	}
  	
  	private void linkWithArchive(int tipoApp) {
- 		archivio = ArchivioFactory.createArchivio(tipoApp);
+ 		//archivio = ArchivioFactory.createArchivio(tipoApp);
  		
  	}
 	
@@ -40,7 +46,7 @@ public class Login {
 	}
 	
 	public void inviaCredenziali(Credenziali credenziali) {
-		configureHandlerUtente(archivio.makeConnection(credenziali));
+		configureHandlerUtente(credenzialiManager.makeConnection(credenziali));
 	}
 	//Precondizione: a != null
 	//Postcondizione: fruitore registrato
@@ -57,12 +63,12 @@ public class Login {
 	}
 	
 	public boolean checkPrimoAvvio() {
-		return archivio.checkPrimoAvvio();
+		return appManager.checkPrimoAvvio();
 	}
 	
 	public void avvio () {
 		if (checkPrimoAvvio()) { 
-			a.viewLogin(archivio.getCredenzialiIniziali());
+			a.viewLogin(credenzialiManager.getCredenzialiIniziali());
 		}
 		else {
 			a.viewLogin(null);
@@ -70,11 +76,11 @@ public class Login {
 	}
 	//Precondizione: username != null
 	private boolean checkUsernameGiaPresente(String username) {
-		return archivio.checkIfUserExists(username);
+		return credenzialiManager.checkIfUserExists(username);
 	}
 	//Precondizione: c != null
 	private boolean checkCredenzialiCorrette(Credenziali c) {
-		return archivio.checkCredenzialiCorrette(c);
+		return credenzialiManager.checkCredenzialiCorrette(c);
 	}
 	
 	//Precondizione: username != null && username in Archivio && a != null
@@ -83,8 +89,8 @@ public class Login {
 			a.catchEvent(AppEvent.WEIRD_SETTING_USERHANDLER);
 			return;
 		}
-		int tipoUtente = archivio.getTipoLinkato(connectionCode);
-		ControllerUtente gu = ControllerUtenteFactory.createControllerUtente(tipoUtente, archivio, a, connectionCode);
+		int tipoUtente = userManager.getTipoLinkato(connectionCode);
+		ControllerUtente gu = ControllerUtenteFactory.createControllerUtente(tipoUtente, tipoApp,a, connectionCode);
 		a.setGu(gu);
 		gu.checkPrimoAccesso();
 		

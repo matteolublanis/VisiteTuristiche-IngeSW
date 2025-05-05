@@ -1,7 +1,10 @@
 package client.controller_utente;
 
 import java.util.List;
-import archivio.ArchivioFacade;
+import archivio.AmbitoManager;
+import archivio.AppManager;
+import archivio.CredenzialiManager;
+import archivio.UserInfoManager;
 import client.app.App;
 import client.log_events.AppEvent;
 import dto.LuogoDTO;
@@ -14,8 +17,12 @@ import utility.MethodName;
 public class HandlerConfiguratore extends ControllerUtente{	
 	//Precondizione tutti i metodi: param != null
 	
-	public HandlerConfiguratore(ArchivioFacade archivio, App a, String connectionCode) {
-		this.archivio = archivio;
+	private AmbitoManager archivio;
+	private AppManager appPlan;
+	private UserInfoManager userInfo;
+	private CredenzialiManager credenzialiInfo;
+	
+	public HandlerConfiguratore(App a, String connectionCode) {
 		this.a = a;
 		this.connectionCode = connectionCode;
 	}
@@ -57,7 +64,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	@MethodName("Rimuovi volontario")
 	public void rimuoviVolontario () {
 		if (canAddOrRemove()) {
-			if (archivio.rimuoviVolontario(a.richiediInput("username del volontario da rimuovere"), connectionCode)) {
+			if (userInfo.rimuoviVolontario(a.richiediInput("username del volontario da rimuovere"), connectionCode)) {
 				a.catchEvent(AppEvent.VOLUNTEER_REMOVED);
 			}
 			else {
@@ -114,7 +121,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	
 	@MethodName("Visualizza lista volontari")
 	public void getListaVolontari() {
-		a.viewListUserDTO(archivio.getListaUser(connectionCode, CostantiStruttura.VOLONTARIO));
+		a.viewListUserDTO(userInfo.getListaUser(connectionCode, CostantiStruttura.VOLONTARIO));
 	}
 	
 	@MethodName("Visualizza elenco luoghi visitabili")
@@ -131,14 +138,14 @@ public class HandlerConfiguratore extends ControllerUtente{
 	//Postcondizione: piano pubblicato
  	@MethodName("Pubblica il piano delle visite")
 	public void pubblicaPianoVisite() {
-		if (archivio.isReleaseOrLaterDay(connectionCode)) {
-			if (archivio.isPrimaPubblicazione()) {
+		if (appPlan.isReleaseOrLaterDay(connectionCode)) {
+			if (appPlan.isPrimaPubblicazione()) {
 				a.catchEvent(AppEvent.PROJECT_STARTED);
-				archivio.pubblicaPiano(connectionCode);
-				archivio.apriRaccoltaDisponibilita(connectionCode);
+				appPlan.pubblicaPiano(connectionCode);
+				appPlan.apriRaccoltaDisponibilita(connectionCode);
 			}
 			else {
-				if (archivio.pubblicaPiano(connectionCode)) {
+				if (appPlan.pubblicaPiano(connectionCode)) {
 					a.catchEvent(AppEvent.SCHEDULE_PUBLISHED);
 				}
 				else {
@@ -171,7 +178,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	
 	@MethodName("Apri la raccolta delle disponibilità dei volontari")
 	public void apriRaccoltaDisponibilita () {
-		if (archivio.apriRaccoltaDisponibilita(connectionCode)) {
+		if (appPlan.apriRaccoltaDisponibilita(connectionCode)) {
 			a.catchEvent(AppEvent.DISPONIBILITIES_OPENED);
 		}
 		else {
@@ -181,7 +188,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	
 	@MethodName("Chiudi la raccolta delle disponibilità dei volontari")
 	public void chiudiRaccoltaDisponibilita () {
-		if (archivio.chiudiRaccoltaDisponibilita(connectionCode)) {
+		if (appPlan.chiudiRaccoltaDisponibilita(connectionCode)) {
 			a.catchEvent(AppEvent.DISPONIBILITIES_CLOSED);
 		}
 		else {
@@ -213,7 +220,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	public void impostaCredenzialiNuovoConfiguratore () {
 		//Event Add Configuratore
 		Credenziali c = a.richiediCredenziali();
-		if (archivio.impostaCredenzialiNuovoConfiguratore(connectionCode, c.getUsername(), c.getPassword())) {
+		if (credenzialiInfo.impostaCredenzialiNuovoConfiguratore(connectionCode, c.getUsername(), c.getPassword())) {
 			a.catchEvent(AppEvent.NEW_CONFIGURATOR_ADDED); //Event
 		}
 		else {
@@ -232,13 +239,13 @@ public class HandlerConfiguratore extends ControllerUtente{
 			a.viewListTipoVisitaDTO(archivio.getElencoTipiVisite(connectionCode));
 			String tipo = a.richiediVisitaEsistente();
 			List<Credenziali> volontari = a.richiediVolontari();
-			archivio.associaVolontariATipoVisitaEsistente(connectionCode, volontari, tipo);
+			userInfo.associaVolontariATipoVisitaEsistente(connectionCode, volontari, tipo);
 			
 		}
 	}
 	
 	private boolean canAddOrRemove() {
-		if (archivio.canAddOrRemove(connectionCode)) {
+		if (userInfo.canAddOrRemove(connectionCode)) {
 			return true;
 		}
 		else {

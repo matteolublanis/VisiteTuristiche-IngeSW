@@ -5,7 +5,8 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import archivio.ArchivioFacade;
+import archivio.AmbitoManager;
+import archivio.CredenzialiManager;
 import client.app.App;
 import client.log_events.AppEvent;
 import utility.Credenziali;
@@ -13,16 +14,17 @@ import utility.MethodName;
 
 public abstract class ControllerUtente {
 	
-	protected ArchivioFacade archivio;
+	private AmbitoManager archivio;
+	private CredenzialiManager credenzialiInfo;
 	protected String connectionCode;
 	protected App a;
 	
 	public ControllerUtente () {
-		//i was made to love you, can't you tell?
+		
 	}
 	
 	public void checkPrimoAccesso() {
-		if (archivio.checkPrimoAccesso(connectionCode)) primoAccesso();
+		if (credenzialiInfo.checkPrimoAccesso(connectionCode)) primoAccesso();
 		else ; //A livello grafico, potrebbe chiudere schermata di Login e aprire una nuova roba, il controller dà comando
 	}
 	
@@ -39,7 +41,7 @@ public abstract class ControllerUtente {
 	}
 	
 	protected boolean cambiaCredenziali(Credenziali c) {
-		return (archivio.cambiaCredenziali(connectionCode, c));
+		return (credenzialiInfo.cambiaCredenziali(connectionCode, c));
 	}
 	
 	public List<String> getAzioniDisponibiliConNomi() {
@@ -90,7 +92,7 @@ public abstract class ControllerUtente {
 	}
 	
 	public boolean checkIfUserExists(String username) {
-		return archivio.checkIfUserExists(username);
+		return credenzialiInfo.checkIfUserExists(username);
 	}
 	
 	public boolean checkIfVisitTypeExists(String tipoVisita) {

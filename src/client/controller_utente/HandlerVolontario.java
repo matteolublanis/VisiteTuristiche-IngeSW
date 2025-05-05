@@ -1,7 +1,8 @@
 package client.controller_utente;
 
 import java.util.List;
-import archivio.ArchivioFacade;
+import archivio.AppManager;
+import archivio.UserInfoManager;
 import client.app.App;
 import client.log_events.AppEvent;
 import dto.DataDisponibilitaDTO;
@@ -11,15 +12,17 @@ import utility.MethodName;
 public class HandlerVolontario extends ControllerUtente {
 	//Precondizioni di tutti i metodi: param != null
 	
-	public HandlerVolontario(ArchivioFacade gdb, App a, String connectionCode) {
-		this.archivio = gdb;
+	private AppManager appPlan;
+	private UserInfoManager userInfo;
+	
+	public HandlerVolontario(App a, String connectionCode) {
 		this.a = a;
 		this.connectionCode = connectionCode;
 	}
 	
 	@MethodName("Visualizza i tipi di visita a cui sei collegato")
  	public void visualizzaTipiVisita() {
-		a.viewListTipoVisitaDTO(archivio.getElencoTipiVisiteVolontario(connectionCode));
+		a.viewListTipoVisitaDTO(userInfo.getElencoTipiVisiteVolontario(connectionCode));
  	}
 	
 	private void visualListVisitDTO (List<VisitaDTO> visite) {
@@ -31,14 +34,14 @@ public class HandlerVolontario extends ControllerUtente {
 	
 	@MethodName("Visualizza le visite confermate che gestirai")
 	public void vediVisiteConfermate () {
-		List<VisitaDTO> visite = archivio.visiteConfermateVolontario(connectionCode);
+		List<VisitaDTO> visite = userInfo.visiteConfermateVolontario(connectionCode);
 		visualListVisitDTO(visite);
 	}
 	//Postcondizione: disponibilità in Archivio
 	@MethodName("Comunica le tue prossime disponibilità")
  	public void comunicaDisponibilita() {
- 		if (archivio.getPossibilitaDareDisponibilita()) { //se posso dare disponibilità	
- 			List<DataDisponibilitaDTO> dateDisponibilita = archivio.getDatePerDisponibilita(connectionCode); //prendi disponibilità possibili
+ 		if (appPlan.getPossibilitaDareDisponibilita()) { //se posso dare disponibilità	
+ 			List<DataDisponibilitaDTO> dateDisponibilita = userInfo.getDatePerDisponibilita(connectionCode); //prendi disponibilità possibili
  			if (dateDisponibilita == null) { //TODO se null significa che il volontario dovrebbe essere eliminato
  				a.catchEvent(AppEvent.NO_AVAILABILITY);
  			}
@@ -46,7 +49,7 @@ public class HandlerVolontario extends ControllerUtente {
  				visualDateDisponibilita(dateDisponibilita);
  				do {
  					String data = a.richiediDataValida("data in cui dai disponibilità"); //inserisco data
- 					if (archivio.inserisciDisponibilita(connectionCode, data)) {
+ 					if (userInfo.inserisciDisponibilita(connectionCode, data)) {
  						a.catchEvent(AppEvent.INSERTED_DISPONIBILITY);
  					}
  					else {

@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import archivio.ArchivioFacade;
+import archivio.UserInfoManager;
 import client.app.App;
 import client.log_events.AppEvent;
 import dto.DTO;
@@ -16,8 +16,10 @@ import utility.Time;
 public class HandlerFruitore extends ControllerUtente {
 	//Precondizioni di tutti i metodi: param != null
 	
-	public HandlerFruitore(ArchivioFacade gdb, App a, String connectionCode) {
-		this.archivio = gdb;
+	private UserInfoManager userInfo;
+
+	
+	public HandlerFruitore(App a, String connectionCode) {
 		this.a = a;
 		this.connectionCode = connectionCode;
 	}
@@ -39,12 +41,12 @@ public class HandlerFruitore extends ControllerUtente {
 	
 	@MethodName("Visualizza visite proposte, confermate e cancellate")
 	public void getElencoVisiteProposteConfermateCancellate () {
-		visualListVisitDTO(archivio.getElencoVisiteProposteConfermateCancellateFruitore());
+		visualListVisitDTO(userInfo.getElencoVisiteProposteConfermateCancellateFruitore());
 	}
 	
 	@MethodName("Visualizza tutte le visite proposte/confermate/cancellate/complete che hai prenotato")
 	public void visualizzaVisiteProposteConfermateCancellateCompletePrenotate () {
-		visualListVisitDTO(archivio.getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore(connectionCode));
+		visualListVisitDTO(userInfo.getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore(connectionCode));
 	}
 	
 	//Postcondizione: prenotazione in Archivio
@@ -56,11 +58,11 @@ public class HandlerFruitore extends ControllerUtente {
 			date = a.richiediDataValida("data in cui prenotare");
 			if (Time.isThreeDaysOrLessBefore(Time.getActualDate(), date)) a.catchEvent(AppEvent.CANT_ADD_RESERVATION_ON_DAY); 
 		} while (Time.isThreeDaysOrLessBefore(Time.getActualDate(), date)); 
-		if (archivio.getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato(date) != null) {
-			visualListVisitDTO(archivio.getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato(date));
+		if (userInfo.getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato(date) != null) {
+			visualListVisitDTO(userInfo.getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato(date));
 			String tipoVisita = a.richiediTipoVisitaEsistente();
 			int numeroIscrizione = a.richiediNumeroConLimiteInferiore("per quante persone vuoi prenotare", 0);
-			String codice = archivio.inserisciPrenotazione(connectionCode, new PrenotazioneDTO(date, tipoVisita, numeroIscrizione));
+			String codice = userInfo.inserisciPrenotazione(connectionCode, new PrenotazioneDTO(date, tipoVisita, numeroIscrizione));
 			if (codice != null) {
 				a.catchEvent(AppEvent.RESERVATION_INSERTED, codice);
 			}
@@ -75,14 +77,14 @@ public class HandlerFruitore extends ControllerUtente {
 	}
 	
 	private Set<String> prenotazioniLinkate () {
-		List<PrenotazioneDTO> prenotazioni = archivio.getElencoPrenotazioniFruitore(connectionCode);
+		List<PrenotazioneDTO> prenotazioni = userInfo.getElencoPrenotazioniFruitore(connectionCode);
 		Set<String> codiciPrenotazioni = new HashSet<>();
 		for (DTO prenotazione : prenotazioni) codiciPrenotazioni.add(((PrenotazioneDTO) prenotazione).getCodice());
 		return codiciPrenotazioni;
 	}
 	
 	private void visualElencoPrenotazioni (App a) {
-		List<PrenotazioneDTO> prenotazioni = archivio.getElencoPrenotazioniFruitore(connectionCode);
+		List<PrenotazioneDTO> prenotazioni = userInfo.getElencoPrenotazioniFruitore(connectionCode);
 		if (prenotazioni != null) {
 			a.viewListPrenotazioneDTO(prenotazioni);
 		}
@@ -91,7 +93,7 @@ public class HandlerFruitore extends ControllerUtente {
 	//Postcondizione: prenotazione rimossa da Archivio
 	@MethodName("Disdisci una prenotazione")
 	public void disdiciIscrizione (App a) {
-		if (archivio.getElencoPrenotazioniFruitore(connectionCode) != null) {
+		if (userInfo.getElencoPrenotazioniFruitore(connectionCode) != null) {
 			visualElencoPrenotazioni(a);
 			String codicePrenotazioneDaEliminare = null;
 			Set<String> k = prenotazioniLinkate();
@@ -100,7 +102,7 @@ public class HandlerFruitore extends ControllerUtente {
 				if (codicePrenotazioneDaEliminare.equalsIgnoreCase("esc")) return;
 				if (!k.contains(codicePrenotazioneDaEliminare)) a.catchEvent(AppEvent.WRONG_RESERVATION_CODE);
 			} while (!k.contains(codicePrenotazioneDaEliminare));
-			if (archivio.rimuoviPrenotazione(connectionCode, codicePrenotazioneDaEliminare)) {
+			if (userInfo.rimuoviPrenotazione(connectionCode, codicePrenotazioneDaEliminare)) {
 				a.catchEvent(AppEvent.RESERVATION_REMOVED);
 			}
 			else a.catchEvent(AppEvent.RESERVATION_NOT_REMOVED);

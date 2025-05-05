@@ -8,7 +8,7 @@ import dto.*;
 import utility.Credenziali;
 import utility.Time;
 
-public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
+public class ArchivioJSON implements AmbitoRepository, UserRepository, VisitsRepository{ //appelle-moi si tu te perds
 	
 	private PianoStoricoJSONManagement pianoStoricoJSONManager = new PianoStoricoJSONManagement();
 	private DaPubblicareJSONManagement daPubblicareJSONManager = new DaPubblicareJSONManagement();
