@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import archivio.AmbitoManager;
+import archivio.ArchivioFactory;
 import archivio.CredenzialiManager;
 import client.app.App;
 import client.log_events.AppEvent;
@@ -14,13 +15,14 @@ import utility.MethodName;
 
 public abstract class ControllerUtente {
 	
-	private AmbitoManager archivio;
-	private CredenzialiManager credenzialiInfo;
+	protected AmbitoManager archivio;
+	protected CredenzialiManager credenzialiInfo;
 	protected String connectionCode;
 	protected App a;
 	
-	public ControllerUtente () {
-		
+	public ControllerUtente (int tipoApp) {
+		this.archivio = ArchivioFactory.createAmbitoManager(tipoApp);
+		this.credenzialiInfo = ArchivioFactory.createCredenzialiManager(tipoApp);
 	}
 	
 	public void checkPrimoAccesso() {

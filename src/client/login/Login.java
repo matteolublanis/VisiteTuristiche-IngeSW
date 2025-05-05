@@ -1,6 +1,7 @@
 package client.login;
 
 import archivio.AppManager;
+import archivio.ArchivioFactory;
 import archivio.CredenzialiManager;
 import archivio.UserInfoManager;
 import client.app.App;
@@ -25,7 +26,9 @@ public class Login {
  	}
  	
  	private void linkWithArchive(int tipoApp) {
- 		//archivio = ArchivioFactory.createArchivio(tipoApp);
+ 		userManager = ArchivioFactory.createUserInfoManager(tipoApp);
+ 		appManager = ArchivioFactory.createAppManager(tipoApp);
+ 		credenzialiManager = ArchivioFactory.createCredenzialiManager(tipoApp);
  		
  	}
 	

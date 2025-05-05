@@ -7,7 +7,7 @@ import archivio.repository.json.ArchivioJSON;
  public class ArchivioFactory {
 	
 	private static final int RELEASE_DAY = 16;
-	private static Archivio archivio = new Archivio(new ArchivioJSON(RELEASE_DAY));
+	private static final Archivio archivio = new Archivio(new ArchivioJSON(RELEASE_DAY));
 	
 	
  	public static CredenzialiManager createCredenzialiManager(int tipo) {
@@ -40,7 +40,7 @@ import archivio.repository.json.ArchivioJSON;
  	public static AmbitoManager createAmbitoManager(int tipo) {
  		switch (tipo) {
  		case CostantiStruttura.STANDALONE:
- 			return new Archivio(new ArchivioJSON(RELEASE_DAY));
+ 			return archivio;
  		default:
  			return null;
  		}

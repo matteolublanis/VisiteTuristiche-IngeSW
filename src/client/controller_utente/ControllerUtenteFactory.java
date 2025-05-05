@@ -10,11 +10,11 @@ public class ControllerUtenteFactory {
 		case CostantiStruttura.STANDALONE:
 			switch (tipo) {
 			case CostantiStruttura.CONFIGURATORE:
-				return new HandlerConfiguratore(a, connectionCode);
+				return new HandlerConfiguratore(a, connectionCode, tipoApp);
 			case CostantiStruttura.VOLONTARIO:
-				return new HandlerVolontario(a, connectionCode);
+				return new HandlerVolontario(a, connectionCode, tipoApp);
 			case CostantiStruttura.FRUITORE:
-				return new HandlerFruitore(a, connectionCode);
+				return new HandlerFruitore(a, connectionCode, tipoApp);
 			default: 
 				return null;
 			}

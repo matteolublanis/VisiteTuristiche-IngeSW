@@ -1,5 +1,5 @@
 {
-          "ultimo-piano-pubblicato": true,
+          "ultimo-piano-pubblicato": false,
           "prima-pubblicazione": false,
           "disponibilita": {
                     "volontario2": {
@@ -20,9 +20,10 @@
           "datePrecluseI+3": [
                     "05-09-2025",
                     "06-09-2025",
-                    "08-09-2025"
+                    "08-09-2025",
+                    "15-09-2025"
           ],
           "mese-ultima-pubblicazione": 6,
           "anno-ultima-pubblicazione": 2025,
-          "possibile-dare-disponibilita": true
+          "possibile-dare-disponibilita": false
 }

@@ -3,6 +3,7 @@ package client.controller_utente;
 import java.util.List;
 import archivio.AmbitoManager;
 import archivio.AppManager;
+import archivio.ArchivioFactory;
 import archivio.CredenzialiManager;
 import archivio.UserInfoManager;
 import client.app.App;
@@ -17,14 +18,15 @@ import utility.MethodName;
 public class HandlerConfiguratore extends ControllerUtente{	
 	//Precondizione tutti i metodi: param != null
 	
-	private AmbitoManager archivio;
 	private AppManager appPlan;
 	private UserInfoManager userInfo;
-	private CredenzialiManager credenzialiInfo;
 	
-	public HandlerConfiguratore(App a, String connectionCode) {
+	public HandlerConfiguratore(App a, String connectionCode, int tipoApp) {
+		super(tipoApp);
 		this.a = a;
 		this.connectionCode = connectionCode;
+		userInfo = ArchivioFactory.createUserInfoManager(tipoApp);
+		appPlan = ArchivioFactory.createAppManager(tipoApp);
 	}
 	
 	public void checkPrimoAccesso () {

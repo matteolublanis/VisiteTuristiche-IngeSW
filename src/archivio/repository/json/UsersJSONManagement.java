@@ -234,6 +234,7 @@ public class UsersJSONManagement {
 	
 	public boolean checkIfUserExists(String user) {
 		loadJSONUsers();
+		
 		try {
 			return (jsonUsers.has(user)); 
 		}

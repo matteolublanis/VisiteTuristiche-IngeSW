@@ -2,6 +2,7 @@ package client.controller_utente;
 
 import java.util.List;
 import archivio.AppManager;
+import archivio.ArchivioFactory;
 import archivio.UserInfoManager;
 import client.app.App;
 import client.log_events.AppEvent;
@@ -15,9 +16,12 @@ public class HandlerVolontario extends ControllerUtente {
 	private AppManager appPlan;
 	private UserInfoManager userInfo;
 	
-	public HandlerVolontario(App a, String connectionCode) {
+	public HandlerVolontario(App a, String connectionCode, int tipoApp) {
+		super(tipoApp);
 		this.a = a;
 		this.connectionCode = connectionCode;
+		userInfo = ArchivioFactory.createUserInfoManager(tipoApp);
+		appPlan = ArchivioFactory.createAppManager(tipoApp);
 	}
 	
 	@MethodName("Visualizza i tipi di visita a cui sei collegato")

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import archivio.ArchivioFactory;
 import archivio.UserInfoManager;
 import client.app.App;
 import client.log_events.AppEvent;
@@ -19,9 +20,11 @@ public class HandlerFruitore extends ControllerUtente {
 	private UserInfoManager userInfo;
 
 	
-	public HandlerFruitore(App a, String connectionCode) {
+	public HandlerFruitore(App a, String connectionCode, int tipoApp) {
+		super(tipoApp);
 		this.a = a;
 		this.connectionCode = connectionCode;
+		userInfo = ArchivioFactory.createUserInfoManager(tipoApp);
 	}
 	
 	@Override

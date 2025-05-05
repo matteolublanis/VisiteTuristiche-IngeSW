@@ -17,7 +17,7 @@
                "tipo-visita": ["visita_capitolium"]
           }
      },
-     "max_prenotazione": 40,
+     "max_prenotazione": 36,
      "nome": "Brescia",
      "prima_configurazione": false
 }
