@@ -2,7 +2,7 @@ package archivio;
  
  import utility.CostantiStruttura;
 import archivio.model.ControllerArchivio;
-import archivio.repository.ArchivioJSON;
+import archivio.repository.json.ArchivioJSON;
  
  public class ArchivioFactory {
  	public static CredenzialiManager createCredenzialiManager(int tipo) {

@@ -1,4 +1,4 @@
-package archivio.repository;
+package archivio.repository.json;
 
 import java.util.ArrayList;
 import java.util.HashSet;

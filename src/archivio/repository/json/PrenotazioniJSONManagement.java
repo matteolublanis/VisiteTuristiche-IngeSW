@@ -1,4 +1,4 @@
-package archivio.repository;
+package archivio.repository.json;
 
 import java.util.HashMap;
 import java.util.Map;

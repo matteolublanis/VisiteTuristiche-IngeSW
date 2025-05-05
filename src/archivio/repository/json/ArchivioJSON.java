@@ -1,9 +1,12 @@
-package archivio.repository;
+package archivio.repository.json;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.json.*;
 
+import archivio.repository.AmbitoRepository;
+import archivio.repository.UserRepository;
+import archivio.repository.VisitsRepository;
 import dto.*;
 import utility.Credenziali;
 import utility.Time;
