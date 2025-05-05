@@ -16,6 +16,13 @@
                "284BS9EE"
           ]
      },
+     "volontariotest2": {
+          "tipo": 2,
+          "password": "test",
+          "primo-accesso": true,
+          "tipo-visita": ["visita_capitolium"],
+          "username": "volontariotest2"
+     },
      "primo_avvio": false,
      "fruitore3": {
           "tipo": 3,
@@ -28,6 +35,13 @@
                "SXFUR9DO"
           ]
      },
+     "volontariotest1": {
+          "tipo": 2,
+          "password": "test",
+          "primo-accesso": true,
+          "tipo-visita": ["visita_capitolium"],
+          "username": "volontariotest1"
+     },
      "fruitore1": {
           "tipo": 3,
           "password": "fruitore1",
@@ -38,6 +52,18 @@
                "OE7L58GA",
                "98EYF34U"
           ]
+     },
+     "conf2": {
+          "tipo": 1,
+          "password": "admin",
+          "primo-accesso": true,
+          "username": "conf2"
+     },
+     "conf1": {
+          "tipo": 1,
+          "password": "admin",
+          "primo-accesso": false,
+          "username": "conf1"
      },
      "volontario2": {
           "tipo": 2,
@@ -59,23 +85,11 @@
           ],
           "username": "volontario1"
      },
-     "conf2": {
-          "tipo": 1,
-          "password": "admin",
-          "primo-accesso": true,
-          "username": "conf2"
-     },
      "fruitore99": {
           "tipo": 3,
           "password": "fruitore99",
           "primo-accesso": false,
           "username": "fruitore99",
           "prenotazioni": []
-     },
-     "conf1": {
-          "tipo": 1,
-          "password": "admin",
-          "primo-accesso": false,
-          "username": "conf1"
      }
 }

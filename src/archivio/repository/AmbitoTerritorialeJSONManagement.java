@@ -1,7 +1,6 @@
 package archivio.repository;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -127,8 +126,10 @@ public class AmbitoTerritorialeJSONManagement {
 	    nuovoLuogo.put(DESCRIZIONE, luogo.getDescrizione());
 		nuovoLuogo.put(COLLOCAZIONE, luogo.getCollocazione());
 		JSONArray tipiVisita = new JSONArray();
-		for (String l : luogo.getTipiAssociati()) tipiVisita.put(l);
-	    nuovoLuogo.put(TIPO_VISITA, tipiVisita);
+		if (luogo.getTipiAssociati() != null) {
+			for (String l : luogo.getTipiAssociati()) tipiVisita.put(l);
+		}
+		nuovoLuogo.put(TIPO_VISITA, tipiVisita);
 	    luoghi.put(luogo.getTag(), nuovoLuogo);
 	    JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, PATH_AMBITO, 10); 
 	    return true;

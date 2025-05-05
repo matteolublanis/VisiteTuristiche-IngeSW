@@ -53,8 +53,8 @@ public abstract class ControllerUtente {
 	            String nomeAzione = annotation.value();
 	            nomiAzioni.add(nomeAzione);
 	        } catch (Exception e) {
-	        	a.catchEvent(AppEvent.ERROR_CATCHING_ACTIONS);
 	        	a.log("Incriminated method: " + azioniDisponibili.get(i).getName());
+	        	a.catchEvent(AppEvent.ERROR_CATCHING_ACTIONS);
 	        }
 	    }
 
@@ -72,7 +72,7 @@ public abstract class ControllerUtente {
 			int scelta = Integer.parseInt(input);
 			if (scelta > 0 && scelta <= azioniDisponibili.size()) {
 				Method metodo = azioniDisponibili.get(scelta - 1);
-				metodo.invoke(this, a);
+				metodo.invoke(this);
 			} 
 			else {
 				a.catchEvent(AppEvent.INVALID_CHOICE_ACTION);
@@ -105,7 +105,8 @@ public abstract class ControllerUtente {
          for (Method metodo : metodi) {
              if (!metodo.getName().equals("getAzioniDisponibili")
             		 && !metodo.getName().startsWith("lambda$")
-            		 && (Modifier.isPublic(metodo.getModifiers()))) { 
+            		 && (Modifier.isPublic(metodo.getModifiers()))
+            		 && !metodo.getName().equals("checkPrimoAccesso")) { 
              metodiConcreti.add(metodo);
          		}
     	}

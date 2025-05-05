@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -15,6 +13,7 @@ import dto.DataDisponibilitaDTO;
 import dto.PrenotazioneDTO;
 import dto.TipoVisitaDTO;
 import dto.VisitaDTO;
+import utility.Credenziali;
 import utility.JSONUtility;
 import utility.Time;
 
@@ -131,6 +130,8 @@ public class TipiVisiteJSONManagement {
 	}
 	
 	public void aggiungiVolontarioATipo (String tipoVisita, String volontario) {
+		for (Object o : getVolontariAssociatiTipoJSONArray(tipoVisita)) 
+			if (((String)o).equals(volontario)) return;
 		getVolontariAssociatiTipoJSONArray(tipoVisita).put(volontario);
 		JSONUtility.aggiornaJsonFile(jsonTipiVisite, PATH_TIPI_VISITE, 10);
 	}
@@ -234,7 +235,7 @@ public class TipiVisiteJSONManagement {
 			return result;
 	}
 	
-	public JSONArray returnGiorniPrenotabili (ArrayList<Integer> giorniPrenotabiliVal) {
+	public JSONArray returnGiorniPrenotabili (List<Integer> giorniPrenotabiliVal) {
 		JSONArray giorniPrenotabili = new JSONArray();
 	    for (Integer k : giorniPrenotabiliVal) {
 	    	try {
@@ -271,7 +272,7 @@ public class TipiVisiteJSONManagement {
 	public void aggiungiTipoVisite(TipoVisitaDTO tipoVisita) {
 		JSONArray giorniPrenotabili = returnGiorniPrenotabili(tipoVisita.getGiorniPrenotabiliVal());
 		JSONArray volontari = new JSONArray();
-	    for (String k : tipoVisita.getVolontariVal()) { volontari.put(k); }
+	    for (Credenziali k : tipoVisita.getVolontariVal()) { volontari.put(k.getUsername()); }
 	    JSONObject nuovoTipoVisita = setNewVisitType(tipoVisita.getLuogo(), tipoVisita.getTitolo(), tipoVisita.getDescrizione(), 
 	    		tipoVisita.getPuntoIncontro(), tipoVisita.getDataInizio(), tipoVisita.getDataFine(), giorniPrenotabili, 
 	    		tipoVisita.getOraInizio(), tipoVisita.getDurataVisita()

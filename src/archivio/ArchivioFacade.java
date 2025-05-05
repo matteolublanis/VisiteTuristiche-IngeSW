@@ -1,13 +1,10 @@
 package archivio;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import dto.DTO;
 import dto.LuogoDTO;
 import dto.PrenotazioneDTO;
 import dto.TipoVisitaDTO;
-import dto.VisitaDTO;
 import utility.Credenziali;
 
 public interface ArchivioFacade {
@@ -17,13 +14,15 @@ public interface ArchivioFacade {
 	
 	public int getTipoUtente (String username);
 	
+	public int getTipoLinkato(String connectionCode);
+	
 	public boolean pubblicaPiano(String connectionCode);
 	
 	public boolean chiudiRaccoltaDisponibilita (String connectionCode);
 	
 	public boolean apriRaccoltaDisponibilita(String connectionCode);
 	
-	public boolean associaVolontariATipoVisitaEsistente(String connectionCode, List<String> volontari, String tipoVisita);
+	public boolean associaVolontariATipoVisitaEsistente(String connectionCode, List<Credenziali> volontari, String tipoVisita);
 	
 	public boolean associaVolontarioEsistenteATipoVisitaEsistente(String connectionCode, String volontario, String tipoVisita);
 	

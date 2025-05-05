@@ -29,7 +29,7 @@ public interface App {
 	public void viewListDTO(List<DTO> list);
 	public TipoVisitaDTO richiediTipoVisita(String luogo);
 	public String richiediTipoVisitaEsistente();
-	public ArrayList<String> richiediVolontari();
+	public ArrayList<Credenziali> richiediVolontari();
 	public String richiediVisitaEsistente();
 	public LuogoDTO richiediLuogo();
 }

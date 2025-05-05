@@ -149,6 +149,7 @@ public class AppUI implements App{
 		}
 		else return richiediCredenziali();
 	}
+	
 	public <T> void visualSetGeneric (Set<T> list, String name) {
 		view(name + ":");
 		for (T x :list) view(x.toString());
@@ -247,42 +248,43 @@ public class AppUI implements App{
 		boolean ticket = chiediSioNo("è da acquistare o no un biglietto?");
 		int minFruitore = richiediNumeroConLimiteInferiore("minimo fruitori per confermare la visita", 0);
 		int maxFruitore = richiediNumeroConLimiteInferiore("massimo fruitori per completare la visita", minFruitore);
-		ArrayList<String> volontari = richiediVolontari();
+		ArrayList<Credenziali> volontari = richiediVolontari();
 		TipoVisitaDTO result = new TipoVisitaDTO(tipoVisita, titolo, luogo, descrizione, puntoIncontro, dataInizio,
 				dataFine, giorniPrenotabili, oraInizio, durataVisita, ticket, minFruitore,
 				maxFruitore, volontari);
 		return result;
 	}
 	
-	public ArrayList<String> richiediVolontari() {
-		ArrayList<String> volontari = new ArrayList<>();
-        boolean continua = true;
+	public ArrayList<Credenziali> richiediVolontari() {
+		ArrayList<Credenziali> volontari = new ArrayList<>();
+		boolean continua = true;
 		do {
 		    if (chiediSioNo("Vuoi associare un nuovo volontario per questo tipo di visita?")) {
-		        boolean volontarioCreato;
 		        do {
-		        	volontarioCreato = impostaNuovoVolontarioConTipoVisitaScelto(null, volontari); //controller ma non giusto metodo
-		        	//volontarioCreato = controllerUtente.canAddVolontario(null volontari)
-		        	if (volontarioCreato) {
-		        		
+		        	view("Inserisci le credenziali del nuovo volontario.");
+		        	Credenziali c = richiediCredenziali();		        	
+		        	if (!controllerUtente.checkIfUserExists(c.getUsername())) {
+		        		volontari.add(c);
+		        		break;
 		        	}
 		        	else view("Non è stato inserito il nuovo volontario, username già in uso.");
-		        } while (!volontarioCreato);
-	    		continua = chiediSioNo("Vuoi inserire un altro volontario?");
+		        } while (true);
 		    } 
 		    else {
 		    	String volontario = richiediInput("volontario che gestirà la visita");
 		    	if (!controllerUtente.checkIfUserExists(volontario)) {
 		    		view("L'username inserito non è associato a nessun volontario.");
-		    		continua = true;
-		    	} else if (!volontari.contains(volontario)) {
-		    		volontari.add(volontario);
-		    		continua = chiediSioNo("Vuoi inserire un altro volontario?");
 		    	} else {
-		    		view("Volontario già inserito!");
-		    		continua = true;
-		    	}
+		    		boolean add = true;
+		    		for (Credenziali v : volontari) if (v.getUsername() == volontario) {
+		    			view("Volontario già inserito!");
+		    			add = false;
+		    		}
+		    		if (add) volontari.add(new Credenziali(volontario, null));
+		    	} 
 		    }
+		    continua = (volontari.size() == 0);
+		    if (!continua) continua = chiediSioNo("Vuoi inserire un altro volontario?");
 		} while (continua);
 	    return volontari;
 	}
@@ -300,10 +302,10 @@ public class AppUI implements App{
 	    String tipo;
 	    do {
 	        tipo = richiediInput("tag della visita da associare");
-	        if (!gdb.checkIfVisitTypeExists(tipo)) {
+	        if (!controllerUtente.checkIfVisitTypeExists(tipo)) {
 	            view("Non esiste il tipo inserito, reinserisci i dati.");
 	        }
-	    } while (!gdb.checkIfVisitTypeExists(tipo));
+	    } while (!controllerUtente.checkIfVisitTypeExists(tipo)); 
 	    return tipo;
 	}
 	

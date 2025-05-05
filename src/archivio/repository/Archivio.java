@@ -1,17 +1,12 @@
 package archivio.repository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import org.json.JSONArray;
 
 import dto.DTO;
 import dto.LuogoDTO;
 import dto.PrenotazioneDTO;
 import dto.TipoVisitaDTO;
-import dto.UserDTO;
-import dto.VisitaDTO;
 import utility.Credenziali;
 
 public interface Archivio {
@@ -34,7 +29,7 @@ public interface Archivio {
 	
 	//Precondizione: callerType = CostantiStruttura.CONFIGURATORE
 	public boolean associaVolontarioEsistenteATipoVisitaEsistente(String volontario, String tipoVisita);
-	public boolean associaVolontariATipoVisita(List<String> volontari, String tipoVisita);
+	public boolean associaVolontariATipoVisita(List<Credenziali> volontari, String tipoVisita);
 	public boolean getPossibileDareDisponibilita();
 	//Precondizione: callerTyper = CostantiStruttura.VOLONTARIO
     public boolean inserisciDisponibilita(String data, String username);

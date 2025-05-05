@@ -59,7 +59,9 @@
                     "durata-visita": 70,
                     "volontari": [
                               "volontario1",
-                              "volontario2"
+                              "volontario2",
+                              "volontariotest1",
+                              "volontariotest2"
                     ],
                     "data-fine": "31-12-2025",
                     "giorni-prenotabili": ["ven"],

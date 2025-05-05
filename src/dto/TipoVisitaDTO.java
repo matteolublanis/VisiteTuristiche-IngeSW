@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import utility.Credenziali;
+
 public class TipoVisitaDTO implements DTO{
 	private String tag = null;
     private String titolo = null;
@@ -13,18 +15,18 @@ public class TipoVisitaDTO implements DTO{
     private String puntoIncontro = null;
     private String dataInizio = null;
     private String dataFine = null;
-    private ArrayList<Integer> giorniPrenotabiliVal = null;
+    private List<Integer> giorniPrenotabiliVal = null;
     private String oraInizio = null;
     private int durataVisita = 0;
     private boolean daAcquistare = false;
     private int minFruitore = 0;
     private int maxFruitore = 0;
-    private ArrayList<String> volontariVal = null;
+    private List<Credenziali> volontariVal = null;
 
     
 	public TipoVisitaDTO(String tag, String titolo, String luogo, String descrizione, String puntoIncontro,
-			String dataInizio, String dataFine, ArrayList<Integer> giorniPrenotabiliVal, String oraInizio,
-			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, ArrayList<String> volontariVal) {
+			String dataInizio, String dataFine, List<Integer> giorniPrenotabiliVal, String oraInizio,
+			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, List<Credenziali> volontariVal) {
 		this.tag = tag;
 		this.titolo = titolo;
 		this.luogo = luogo;
@@ -83,7 +85,7 @@ public class TipoVisitaDTO implements DTO{
 		return dataFine;
 	}
 
-	public ArrayList<Integer> getGiorniPrenotabiliVal() {
+	public List<Integer> getGiorniPrenotabiliVal() {
 		return giorniPrenotabiliVal;
 	}
 
@@ -107,7 +109,7 @@ public class TipoVisitaDTO implements DTO{
 		return maxFruitore;
 	}
 
-	public ArrayList<String> getVolontariVal() {
+	public List<Credenziali> getVolontariVal() {
 		return volontariVal;
 	}
 	

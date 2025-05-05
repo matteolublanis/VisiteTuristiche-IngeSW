@@ -2,7 +2,6 @@ package archivio.repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import org.json.*;
 
 import dto.*;
@@ -373,20 +372,16 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 			String dataInizio, String dataFine, ArrayList<Integer> giorniPrenotabiliVal, String oraInizio,
 			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, ArrayList<String> volontariVal
 		 */
-		
+
 		JSONArray giorniPrenotabili = tipiVisiteJSONManager.returnGiorniPrenotabili(tipoVisita.getGiorniPrenotabiliVal());
 	    if (tipiVisiteJSONManager.intersectVisitTypeSamePlace (ambitoJSONManager.getTipiLuogo(tipoVisita.getLuogo()),
 	    		tipoVisita.getDataInizio(), tipoVisita.getDataFine(), tipoVisita.getOraInizio(), tipoVisita.getDurataVisita(), giorniPrenotabili.toString())) return false; //da rimuovere volontari nuovi
-	    JSONArray volontari = new JSONArray();
-	    for (String k : tipoVisita.getVolontariVal()) {
-    		JSONArray tipi = usersJSONManager.getTipiVisitaOfVolontario(k);
-    		if (tipiVisiteJSONManager.visitTypeIntersectsOtherVisitTypes(tipoVisita.getDataInizio(), tipoVisita.getDataFine(), tipoVisita.getOraInizio(), 
-    				tipoVisita.getDurataVisita(), giorniPrenotabili.toString(), tipi)) return false; //da rimuovere volontari nuovi
-    		volontari.put(k);
-	    }
-	    usersJSONManager.aggiungiTipoVisiteAVolontari(volontari, tipoVisita.getTag());
+	    
+		
 	    ambitoJSONManager.aggiungiTipoALuogo(tipoVisita.getLuogo(), tipoVisita.getTag());
 	    tipiVisiteJSONManager.aggiungiTipoVisite(tipoVisita);
+		
+	    associaVolontariATipoVisita(tipoVisita.getVolontariVal(), tipoVisita.getTag());
 		return true;
 	}
 	
@@ -440,19 +435,22 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	}
 
 	@Override
-	public boolean associaVolontariATipoVisita(List<String> volontari, String tipoVisita) {
-		for (String volontario : volontari) {
-			if (!usersJSONManager.checkIfUserExists(tipoVisita)) {
-				//do something
+	public boolean associaVolontariATipoVisita(List<Credenziali> volontari, String tipoVisita) {
+		int i = 0;
+		for (Credenziali volontario : volontari) {
+			if (!usersJSONManager.checkIfUserExists(volontario.getUsername())) {
+				usersJSONManager.impostaCredenzialiNuovoVolontario(volontario.getUsername(), volontario.getPassword(), new JSONArray());
+				associaVolontarioEsistenteATipoVisitaEsistente(volontario.getUsername(), tipoVisita);
+				i++;
 			}
 			else {
-				if (checkIfCanLinkVolontario(volontario, tipoVisita)) {
-					associaVolontarioEsistenteATipoVisitaEsistente(volontario, tipoVisita);
-					volontari.remove(volontario);
+				if (checkIfCanLinkVolontario(volontario.getUsername(), tipoVisita)) {
+					associaVolontarioEsistenteATipoVisitaEsistente(volontario.getUsername(), tipoVisita);
+					i++;
 				}
 			}
 		}
-		if (volontari.size() == 0) return true;
+		if (i == volontari.size()) return true;
 		else return false;
 	}
 

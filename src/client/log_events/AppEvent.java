@@ -93,7 +93,24 @@ public enum AppEvent { //TODO ResourceBundle per traduzioni
 	
 	TAG_ALREADY_EXISTS("Il tag inserito esiste già.", "TAG_ALREADY_EXISTS", Level.INFO),
 	
+	VOLUNTEER_DOESNT_EXIST("Il volontario inserito non esiste o non è un volontario, reinserire.", "VOLUNTEER_DOESNT_EXIST", Level.INFO),
 	
+	DATA_INTERSECT_VOLUNTEERS("Problema nell'inserimento del volontario, potrebbe esserci un conflitto con i giorni.", "DATA_INTERSECT_VOLUNTEERS", Level.INFO),
+	
+	VISIT_TYPE_ADDED("Il nuovo tipo di visita è stato aggiunto.", "VISIT_TYPE_ADDED", Level.INFO),
+	
+	VISIT_TYPE_NOT_ADDED("Il nuovo tipo di visita non è stato aggiunto.", "VISIT_TYPE_NOT_ADDED", Level.INFO),
+
+	PLACE_DOESNT_EXIST("Il luogo inserito è inesistente.", "PLACE_DOESNT_EXIST", Level.INFO),
+	
+	NEW_CONFIGURATOR_ADDED("Aggiunto nuovo configuratore.", "NEW_CONFIGURATOR_ADDED", Level.INFO),
+	
+	NEW_CONFIGURATOR_NOT_ADDED("Non è stato aggiunto un nuovo configuratore, username già in utilizzo.", "NEW_CONFIGURATOR_NOT_ADDED", Level.INFO),
+
+	PLACE_ADDED("Aggiunto un nuovo luogo.", "PLACE_ADDED", Level.INFO),
+	
+	PLACE_NOT_ADDED("Il luogo non è stato aggiunto, controllare il tag inserito.", "PLACE_NOT_ADDED", Level.INFO),
+
 	
 	;
 	

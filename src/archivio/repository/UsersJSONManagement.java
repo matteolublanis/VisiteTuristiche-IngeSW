@@ -1,16 +1,12 @@
 package archivio.repository;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import dto.DTO;
 import dto.TipoVisitaDTO;
-import dto.UserDTO;
 import dto.VolontarioDTO;
 import utility.CostantiStruttura;
 import utility.Credenziali;
@@ -211,7 +207,7 @@ public class UsersJSONManagement {
 	
 	public void impostaCredenzialiNuovoVolontario (String username, String password, JSONArray tipi_visite) {
 		JSONObject volontario = putValueInUserObject(username, true, CostantiStruttura.VOLONTARIO, password);
-	    volontario.put(TIPO_VISITA, tipi_visite);
+	    volontario.put(TIPO_VISITA, tipi_visite); 
 		jsonUsers.put(username, volontario);
 		aggiornaJsonUsers();
 	}
