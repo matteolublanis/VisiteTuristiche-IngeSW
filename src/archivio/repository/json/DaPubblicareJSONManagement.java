@@ -156,12 +156,6 @@ public class DaPubblicareJSONManagement {
 		return jsonPianoVisiteDaPubblicare.getInt(ANNO_ULTIMA_PUBBLICAZIONE);
 	}
 	
-	public boolean canAddOrRemove() {
-		if (jsonPianoVisiteDaPubblicare.getBoolean(PRIMA_PUBBLICAZIONE)) return true;
-		else return (jsonPianoVisiteDaPubblicare.getBoolean(ULTIMO_PIANO) &&
-				!jsonPianoVisiteDaPubblicare.getBoolean(POSSIBILE_DARE_DISPONIBILITA)); //POSSO MODIFICARE SOLO SE TRA PUBBLICAZIONE E RITORNATA POSS DISP
-	}
-	
 	public boolean chiudiRaccoltaDisponibilita() {
 		jsonPianoVisiteDaPubblicare.put(POSSIBILE_DARE_DISPONIBILITA, false);
 		jsonPianoVisiteDaPubblicare.put(ULTIMO_PIANO, false);

@@ -5,7 +5,6 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import dto.DTO;
 import dto.TipoVisitaDTO;
 import dto.UserDTO;
 import dto.VolontarioDTO;

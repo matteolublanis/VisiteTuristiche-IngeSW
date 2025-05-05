@@ -20,9 +20,9 @@ import utility.Credenziali;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class ArchivioTest {
 	//TODO ArchivioFactory
-	AmbitoRepository ambitoRep = new ArchivioJSON(); 
-	UserRepository userRep = new ArchivioJSON(); 
-	VisitsRepository visitRep = new ArchivioJSON(); 
+	AmbitoRepository ambitoRep = new ArchivioJSON(16); 
+	UserRepository userRep = new ArchivioJSON(16); 
+	VisitsRepository visitRep = new ArchivioJSON(16); 
 
 	
 	@BeforeEach

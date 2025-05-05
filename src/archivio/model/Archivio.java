@@ -18,7 +18,7 @@ import utility.CostantiStruttura;
 import utility.Credenziali;
 import utility.Time;
 
-public class ControllerArchivio implements AmbitoManager, AppManager, CredenzialiManager, UserInfoManager {
+public class Archivio implements AmbitoManager, AppManager, CredenzialiManager, UserInfoManager {
 	//Precondizione per ogni metodo di modifica Archivio del configuratore: canAddOrRemove (a parte aggiungi Configuratore, imposta max prenotazione)
 	//Precondizione per tutto: param != null
 	
@@ -26,10 +26,17 @@ public class ControllerArchivio implements AmbitoManager, AppManager, Credenzial
 	private AmbitoRepository ambitoRep;
 	private UserRepository userRep;
 	private VisitsRepository visitRep;
-	public ControllerArchivio (ArchivioJSON archivio) {
+	private static int RELEASE_DAY = 16;
+
+	public Archivio (ArchivioJSON archivio) {
 		ambitoRep = archivio;
 		userRep = archivio;
 		visitRep = archivio;
+	}
+	
+	public boolean canAddOrRemove() {
+		if (visitRep.isPrimaPubblicazione()) return true;
+		else return (visitRep.isUltimoPianoPubblicato() && !visitRep.getPossibileDareDisponibilita()); //POSSO MODIFICARE SOLO SE TRA PUBBLICAZIONE E RITORNATA POSS DISP
 	}
 	
 	private String getLinkedUsername (String connectionCode) { return usernameLinkati.get(connectionCode); } 
@@ -66,20 +73,43 @@ public class ControllerArchivio implements AmbitoManager, AppManager, Credenzial
 	}
 	
 	public boolean pubblicaPiano(String connectionCode) { 
-		if (getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.CONFIGURATORE) 
-			return visitRep.tryPubblicaPiano();
+		if (getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.CONFIGURATORE) {
+			if(isPrimaPubblicazione()) return visitRep.setPrimaPubblicazione(); 
+			if (Time.getActualDateValue(Time.DAY) >= RELEASE_DAY && //SE ULTIMO PIANO PUBBLICATO MESE SCORSO PUBBLICA
+					visitRep.isUltimaPubblicazioneMeseScorso() && !(visitRep.getPossibileDareDisponibilita())) {
+				return visitRep.pubblicaPiano();
+			}
+			else return false;
+		}
 		else return false;
 	}
 	
 	public boolean chiudiRaccoltaDisponibilita (String connectionCode) { //OK
-		if (getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.CONFIGURATORE) 
-			return visitRep.tryChiudiRaccoltaDisponibilita();
+		if (getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.CONFIGURATORE) {
+			if (!isPrimaPubblicazione() && Time.getActualDateValue(Time.DAY) >= RELEASE_DAY &&
+					visitRep.isUltimaPubblicazioneMeseScorso()) {
+			if (visitRep.getPossibileDareDisponibilita()) return visitRep.chiudiRaccoltaDisponibilita(); 
+			else return false;
+			}
+			else {
+				return false;
+			}
+		}
 		else return false;
 	}
 	
 	public boolean apriRaccoltaDisponibilita(String connectionCode) {  //OK
-		if (getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.CONFIGURATORE) 
-			return visitRep.tryApriRaccoltaDisponibilita();
+		if (getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.CONFIGURATORE) {
+			if (!isPrimaPubblicazione() && Time.getActualDateValue(Time.DAY) >= RELEASE_DAY&&
+					((visitRep.getUltimoMesePubblicazione() == Time.getActualDateValue(Time.MONTH) 
+					&& visitRep.getUltimoAnnoPubblicazione() == Time.getActualDateValue(Time.YEAR)))) { //aggiornato quando pubblicato
+				if (!(visitRep.isUltimoPianoPubblicato()) || visitRep.getPossibileDareDisponibilita()) return false; //SE ULTIMO PIANO NON PUBBLICATO O GIA' APERTA RITORNA FALSO
+				else return visitRep.apriRaccoltaDisponibilita();
+			}
+			else {
+				return false;
+			}
+		}
 		else return false;
 	}
 	
@@ -136,7 +166,9 @@ public class ControllerArchivio implements AmbitoManager, AppManager, Credenzial
 	}
 	
 	public boolean rimuoviVolontario (String volontario, String connectionCode) {
-		if (userRep.checkIfUserExists(volontario) && userRep.getTipoUtente(volontario) == CostantiStruttura.VOLONTARIO && canAddOrRemoveCheckUsername(getLinkedUsername(connectionCode))) return userRep.rimuoviVolontario(volontario);
+		if (userRep.getTipoUtente(volontario) == CostantiStruttura.VOLONTARIO 
+				&& canAddOrRemoveCheckUsername(getLinkedUsername(connectionCode))) 
+			return userRep.rimuoviVolontario(volontario);
 		else return false;
 	}
 	
@@ -146,15 +178,15 @@ public class ControllerArchivio implements AmbitoManager, AppManager, Credenzial
 	}
 	
 	public boolean canAddOrRemove(String connectionCode) {
-		if (checkIfUserExists(getLinkedUsername(connectionCode)) && getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.CONFIGURATORE) {
-			return userRep.canAddOrRemove();
+		if (getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.CONFIGURATORE) {
+			return canAddOrRemove();
 		}
 		else return false;
 	}
 	
 	private boolean canAddOrRemoveCheckUsername(String username) {
-		if (checkIfUserExists(username) && getTipoUtente(username) == CostantiStruttura.CONFIGURATORE) {
-			return userRep.canAddOrRemove();
+		if (getTipoUtente(username) == CostantiStruttura.CONFIGURATORE) {
+			return canAddOrRemove();
 		}
 		else return false;
 	}
@@ -207,8 +239,20 @@ public class ControllerArchivio implements AmbitoManager, AppManager, Credenzial
 	}
 	
 	public boolean rimuoviPrenotazione(String connectionCode, String codicePrenotazione) {
-		if (getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.FRUITORE)
-			return userRep.rimuoviPrenotazione(usernameLinkati.get(connectionCode), codicePrenotazione);
+		if (getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.FRUITORE) {
+			PrenotazioneDTO prenotazione = userRep.getPrenotazione(codicePrenotazione);
+			if (prenotazione != null) {
+				if (Time.isThreeDaysOrLessBefore(Time.getActualDate(), 
+						prenotazione.getGiorno())) return false;
+				else if (userRep.linkedUserToPrenotazione(codicePrenotazione)
+						.equals(usernameLinkati.get(connectionCode))) {
+					return userRep.rimuoviPrenotazione(usernameLinkati.get(connectionCode),
+							codicePrenotazione);
+				}
+				else return false;
+			}
+			else return false;
+		}
 		else return false;
 	}
 	

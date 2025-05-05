@@ -40,11 +40,11 @@ public interface UserRepository {
 	public boolean rimuoviVolontario (String volontario);
 	//Precondizione: isPrimoAvvio
 	public Credenziali getCredenzialiConfIniziale();
-	public boolean canAddOrRemove();
 	public boolean checkCredenzialiCorrette (Credenziali c);
 	public boolean checkPrimoAccesso (String username);
 	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato (String date);
-	
+	public PrenotazioneDTO getPrenotazione (String codicePrenotazione);
+	public String linkedUserToPrenotazione (String codicePrenotazione);
 	/*
 	 * Precondizione: callerType = CostantiStruttura.FRUITORE
 	 * Postcondizione: new Prenotazione

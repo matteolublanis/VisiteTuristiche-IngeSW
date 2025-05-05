@@ -175,7 +175,7 @@ public class PianoVisiteJSONManagement {
 	    return visiteList;
 	}
 	
-	public void rimuoviPrenotazione (String username, String codicePrenotazione, String giorno, String tagTipo, int nIscritti) {
+	public void rimuoviPrenotazione (String codicePrenotazione, String giorno, String tagTipo, int nIscritti) {
 		JSONObject giornoVisite = jsonPianoVisite.getJSONObject(giorno);
 		JSONObject visita = giornoVisite.getJSONObject(tagTipo);
 		JSONArray prenotazioniVisita = visita.getJSONArray(PRENOTAZIONI);		

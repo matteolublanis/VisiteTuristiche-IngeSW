@@ -47,6 +47,16 @@ public class PrenotazioniJSONManagement {
 		return getPrenotazioneJSONObject(codicePrenotazione).getInt(NUMERO_ISCRITTI);
 	}
 	
+	public PrenotazioneDTO getPrenotazione (String codicePrenotazione) {
+		try {
+			return new PrenotazioneDTO(codicePrenotazione, 
+					getGiornoPrenotazione(codicePrenotazione),
+					getTipoVisitaPrenotazione(codicePrenotazione),
+					getNIscrittiPrenotazione(codicePrenotazione));
+		}
+		catch (Exception e) { return null; }
+	}
+	
 	public String getGiornoPrenotazione (String codicePrenotazione) {
 		return getPrenotazioneJSONObject(codicePrenotazione).getString(GIORNO);
 	}

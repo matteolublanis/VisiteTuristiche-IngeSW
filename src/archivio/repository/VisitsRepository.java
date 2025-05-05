@@ -11,17 +11,19 @@ public interface VisitsRepository {
 	public List<VisitaDTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate ();
 
 	public boolean indicaDatePrecluse (String date);
-	public boolean tryPubblicaPiano();
 	/*
 	 * Precondizione: CallerType = CostantiStruttura.CONFIGURATORE
 	 * Postcondizione: prodotte visite del mese i+1
 	 */
-	public boolean pubblicaPiano(); //?????
+	public boolean isUltimaPubblicazioneMeseScorso();
+	public boolean setPrimaPubblicazione();
+	public int getUltimoMesePubblicazione(); //TODO rendere data unica
+	public boolean isUltimoPianoPubblicato();
+	public int getUltimoAnnoPubblicazione();
+	public boolean pubblicaPiano(); 
 	//Precondizione: CallerType = CostantiStruttura.CONFIGURATORE
-	public boolean tryChiudiRaccoltaDisponibilita ();
 	public boolean chiudiRaccoltaDisponibilita();
 	//Precondizione: CallerType = CostantiStruttura.CONFIGURATORE
-	public boolean tryApriRaccoltaDisponibilita();
 	public boolean apriRaccoltaDisponibilita();
 	
 	//Precondizione: callerTyper = CostantiStruttura.CONFIGURATORE

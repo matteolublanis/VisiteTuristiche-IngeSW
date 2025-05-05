@@ -20,12 +20,10 @@ public class ArchivioJSON implements AmbitoRepository, UserRepository, VisitsRep
 	private TipiVisiteJSONManagement tipiVisiteJSONManager = new TipiVisiteJSONManagement();
 	private AmbitoTerritorialeJSONManagement ambitoJSONManager = new AmbitoTerritorialeJSONManagement();
 	private PianoVisiteJSONManagement pianoVisiteJSONManager = new PianoVisiteJSONManagement();
-	static int RELEASE_DAY = 16;
-	
+	protected static int RELEASE_DAY = 16;
 	private static final String[] CREDENZIALI_CONF_INIZIALE = new String[] {"admin", "admin"};
 
-	public ArchivioJSON () {
-		System.out.println("Caricato archivio.");
+	public ArchivioJSON (int RELEASE_DAY) {
 		removeVisiteEffettuateCancellate(); 
 		setVisiteCancellateConfermate();
 	}
@@ -44,10 +42,6 @@ public class ArchivioJSON implements AmbitoRepository, UserRepository, VisitsRep
 	
 	public int getUltimoAnnoPubblicazione() {
 		return daPubblicareJSONManager.getUltimoAnnoPubblicazione();
-	}
-	
-	public boolean canAddOrRemove() { //MODEL
-		return daPubblicareJSONManager.canAddOrRemove();
 	}
 	
 	public boolean chiudiRaccoltaDisponibilita() {
@@ -97,16 +91,14 @@ public class ArchivioJSON implements AmbitoRepository, UserRepository, VisitsRep
 		ambitoJSONManager.rimuoviLuogo(k);
 		return true;
 	}
-
-	public boolean rimuoviVolontario (String k) {
-		JSONArray tipiVolontario = usersJSONManager.getTipiVisitaOfVolontario(k);
-		if (tipiVolontario != null) {
-			for (Object tipoVolontario : tipiVolontario) { //ciclo sui suoi tipi
-				 if (tipiVisiteJSONManager.rimuoviVolontarioDaTipo((String)tipoVolontario, k) == 0) rimuoviTipo((String)tipoVolontario);
-			}
-			return usersJSONManager.rimuoviVolontario(k);
+	//Precondizione: username di un volontario
+	public boolean rimuoviVolontario (String volontario) {
+		JSONArray tipiVolontario = usersJSONManager.getTipiVisitaOfVolontario(volontario);
+		for (Object tipoVolontario : tipiVolontario) { //ciclo sui suoi tipi
+			 if (tipiVisiteJSONManager.rimuoviVolontarioDaTipo((String)tipoVolontario, volontario) == 0) rimuoviTipo((String)tipoVolontario);
 		}
-		else return false;
+		return usersJSONManager.rimuoviVolontario(volontario);
+
 	}
 	
 	public List<UserDTO> getListaUser (int tipo_user) {
@@ -170,10 +162,7 @@ public class ArchivioJSON implements AmbitoRepository, UserRepository, VisitsRep
 	}
 
 	public boolean rimuoviPrenotazione (String username, String codicePrenotazione) {
-		if (!prenotazioniJSONManager.containsCodicePrenotazione(codicePrenotazione)) return false;
-		if (Time.isThreeDaysOrLessBefore(Time.getActualDate(), prenotazioniJSONManager.getGiornoPrenotazione(codicePrenotazione))) return false;
-		if (prenotazioniJSONManager.getLinkedFruitore(codicePrenotazione).equals(username)) {
-			pianoVisiteJSONManager.rimuoviPrenotazione(username, 
+			pianoVisiteJSONManager.rimuoviPrenotazione( 
 					codicePrenotazione, 
 					prenotazioniJSONManager.getGiornoPrenotazione(codicePrenotazione), 
 					prenotazioniJSONManager.getTipoVisitaPrenotazione(codicePrenotazione),
@@ -181,8 +170,7 @@ public class ArchivioJSON implements AmbitoRepository, UserRepository, VisitsRep
 			usersJSONManager.rimuoviPrenotazioneFruitore(username, codicePrenotazione);
 			prenotazioniJSONManager.rimuoviPrenotazione(codicePrenotazione);
 			return true;
-		}
-		else return false;
+
 	}
 
 	public boolean impostaCredenzialiNuovoVolontario (String username, String password, JSONArray tipi_visite, boolean tipiVisitaNecessari) {
@@ -297,18 +285,6 @@ public class ArchivioJSON implements AmbitoRepository, UserRepository, VisitsRep
 		return (RELEASE_DAY <= Time.getActualDateValue(Time.DAY));
 	}
 
-	public boolean tryApriRaccoltaDisponibilita() {  //OK
-		
-		if (!isPrimaPubblicazione() && Time.getActualDateValue(Time.DAY) >= RELEASE_DAY&&
-				((getUltimoMesePubblicazione() == Time.getActualDateValue(Time.MONTH) && getUltimoAnnoPubblicazione() == Time.getActualDateValue(Time.YEAR)))) { //aggiornato quando pubblicato
-			if (!isUltimoPianoPubblicato() || getPossibileDareDisponibilita()) return false; //SE ULTIMO PIANO NON PUBBLICATO O GIA' APERTA RITORNA FALSO
-			else return apriRaccoltaDisponibilita();
-		}
-		else {
-			return false;
-		}
-	}
-
 	public boolean tryPubblicaPiano() { //OK
 		if(isPrimaPubblicazione()) return setPrimaPubblicazione(); 
 		if (Time.getActualDateValue(Time.DAY) >= RELEASE_DAY && //SE ULTIMO PIANO PUBBLICATO MESE SCORSO PUBBLICA
@@ -317,20 +293,8 @@ public class ArchivioJSON implements AmbitoRepository, UserRepository, VisitsRep
 		}
 		else return false;
 	}
-
-	public boolean tryChiudiRaccoltaDisponibilita () { //OK
-		
-		if (!isPrimaPubblicazione() && Time.getActualDateValue(Time.DAY) >= RELEASE_DAY &&
-						isUltimaPubblicazioneMeseScorso()) {
-			if (getPossibileDareDisponibilita()) return chiudiRaccoltaDisponibilita(); 
-			else return false;
-		}
-		else {
-			return false;
-		}
-	}
 	
-	private boolean isUltimaPubblicazioneMeseScorso () {
+	public boolean isUltimaPubblicazioneMeseScorso () {
 		return ((getUltimoMesePubblicazione() == Time.getActualDateValue(Time.MONTH) - 1 && getUltimoAnnoPubblicazione() == Time.getActualDateValue(Time.YEAR)) ||
 				(getUltimoMesePubblicazione() == Time.getActualDateValue(Time.MONTH) - 1 + 12 && getUltimoAnnoPubblicazione() == Time.getActualDateValue(Time.YEAR) - 1));
 	}
@@ -457,6 +421,16 @@ public class ArchivioJSON implements AmbitoRepository, UserRepository, VisitsRep
 		}
 		if (i == volontari.size()) return true;
 		else return false;
+	}
+
+	@Override
+	public PrenotazioneDTO getPrenotazione(String codicePrenotazione) {
+		return prenotazioniJSONManager.getPrenotazione(codicePrenotazione);
+	}
+
+	@Override
+	public String linkedUserToPrenotazione(String codicePrenotazione) {
+		return prenotazioniJSONManager.getLinkedFruitore(codicePrenotazione);
 	}
 
 }
