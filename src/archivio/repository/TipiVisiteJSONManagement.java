@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import dto.DTO;
 import dto.DataDisponibilitaDTO;
 import dto.PrenotazioneDTO;
 import dto.TipoVisitaDTO;
@@ -203,16 +201,16 @@ public class TipiVisiteJSONManagement {
 		return newVisitType;
 	}
 	
-	public List<DTO> getElencoTipiVisite () {
-		List<DTO> result = new ArrayList<>();
+	public List<TipoVisitaDTO> getElencoTipiVisite () {
+		List<TipoVisitaDTO> result = new ArrayList<>();
 		for (String key : jsonTipiVisite.keySet()) {
 			result.add(new TipoVisitaDTO(key, jsonTipiVisite.getJSONObject(key).getString(TITOLO)));
 		}
 		return result;
 	}
 	
-	public List<DTO> getDatePerDisponibilitaFromTipiVisite(String username, JSONArray tipiVisite) {	 //OK
-		List<DTO> result = new ArrayList<>();
+	public List<DataDisponibilitaDTO> getDatePerDisponibilitaFromTipiVisite(String username, JSONArray tipiVisite) {	 //OK
+		List<DataDisponibilitaDTO> result = new ArrayList<>();
 			for (Object s : tipiVisite) { 
 				JSONObject tipo = getTipoVisitaJSONObject((String)s);
 				try {

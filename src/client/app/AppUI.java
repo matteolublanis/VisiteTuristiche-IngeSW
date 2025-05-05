@@ -10,8 +10,12 @@ import client.controller_utente.ControllerUtente;
 import client.log_events.AppEvent;
 import client.login.Login;
 import dto.DTO;
+import dto.DataDisponibilitaDTO;
 import dto.LuogoDTO;
+import dto.PrenotazioneDTO;
 import dto.TipoVisitaDTO;
+import dto.UserDTO;
+import dto.VisitaDTO;
 import utility.Credenziali;
 import utility.Time;
 
@@ -23,6 +27,15 @@ public class AppUI implements App{
 	
 	public AppUI() {
 		this.gestoreLogin = new Login(this, 0);
+	}
+	
+	public Login getGl() {
+		return gestoreLogin;
+	}
+	
+	//Precondizione: gu != null
+	public ControllerUtente getGu () {
+		return controllerUtente;
 	}
 	
 	//Precondizione: gu != null
@@ -60,7 +73,17 @@ public class AppUI implements App{
 		view("Quale operazione desidera (ESC per uscire)?");
 		visualNumberedListGeneric(controllerUtente.getAzioniDisponibiliConNomi());
 		String input = richiediInput("l'azione da eseguire (da 1 a " + controllerUtente.getAzioniDisponibiliConNomi().size() + " o esc)");
-		return controllerUtente.eseguiAzione(input);
+		try {
+			int i = Integer.parseInt(input);
+			return controllerUtente.eseguiAzione(String.valueOf(i - 1));
+		}
+		catch (NumberFormatException e) {
+			return controllerUtente.eseguiAzione(input);
+		}
+	}
+	
+	public boolean scegliAzione(String azione) {
+		return controllerUtente.eseguiAzione(azione);
 	}
 
 	//Precondizione: val != null
@@ -219,18 +242,6 @@ public class AppUI implements App{
 	}
 
 	@Override
-	public void viewListDTO(List<DTO> list) {
-		for (DTO dto : list) {
-			Map<String, List<String>> info = dto.infoDTO();
-			for (String dettaglio : info.keySet()) {
-				List<String> attributi = info.get(dettaglio);
-				view(dettaglio + ": " + attributi);
-			}
-		}
-		
-	}
-
-	@Override
 	public TipoVisitaDTO richiediTipoVisita(String luogo) {
 		String tipoVisita = richiediNuovoTipoVisita(); 
 		String titolo = richiediInput("titolo della visita");
@@ -349,6 +360,97 @@ public class AppUI implements App{
 	        if (giorni.size() == 7) continua = false; //inseriti TUTTI i giorni della settimana
 	    } while (continua);
 	    return giorni;
+	}
+	
+
+	@Override
+	public void viewListDTO(List<DTO> list) {
+		for (DTO dto : list) {
+			Map<String, List<String>> info = dto.infoDTO();
+			for (String dettaglio : info.keySet()) {
+				List<String> attributi = info.get(dettaglio);
+				view(dettaglio + ": " + attributi);
+			}
+		}
+		
+	}
+	
+	@Override
+	public void viewListDataDisponibilitaDTO(List<DataDisponibilitaDTO> list) {
+		for (DataDisponibilitaDTO data : list) {
+			view("Giorni " + data.getTag() + ": " + data.getGiorni().toString());
+		}
+		
+	}
+
+	@Override
+	public void viewListLuogoDTO(List<LuogoDTO> list) {
+		for (LuogoDTO luogo : list) {
+			if (luogo.getTipiAssociati() == null) {
+				view(luogo.getTitolo());
+			}
+			else {
+				view(luogo.getTitolo() + ": " + luogo.getTipiAssociati().toString());
+			}
+		}
+		
+	}
+
+	@Override
+	public void viewListPrenotazioneDTO(List<PrenotazioneDTO> list) {
+		for (PrenotazioneDTO prenotazione : list) {
+			view("Prenotazione " + prenotazione.getCodice() + ": " + prenotazione.getGiorno() + ", " + prenotazione.getTag_visita());
+			view("N. iscritti: " + prenotazione.getNum_da_prenotare());
+		}
+		
+	}
+
+	@Override
+	public void viewListTipoVisitaDTO(List<TipoVisitaDTO> list) {
+		for (TipoVisitaDTO tipo : list) {
+			view(tipo.getTag() + " " + tipo.getTitolo());
+		}
+		
+	}
+
+	@Override
+	public void viewListUserDTO(List<UserDTO> list) {
+		for (UserDTO user : list) {
+			view(user.toString()); //TODO al momento è usato come soluzione momentanea, si cambia
+		}
+		
+	}
+
+	@Override
+	public void viewListVisitaDTO(List<VisitaDTO> list) {
+		for (VisitaDTO visita : list) {
+			if (visita.getDaAcquistare() == null) { //non impostato per configuratore
+				String result = ("-----------") + ("\nTitolo: " +  visita.getTitolo()) + 
+						("\nGiorno: " +  visita.getGiorno()) + 
+						("\nLuogo: " +  visita.getLuogo()) + 
+						("\nStato: " +  visita.getStato());
+				view(result);
+			}
+			else {
+				String result = ("-----------") + ("\nTitolo: " +  visita.getTitolo()) + 
+						("\nDescrizione: " +  visita.getDescrizione())
+						+ ("\nPunto d'incontro: " +  visita.getPuntoIncontro()) + 
+						("\nGiorno: " +  visita.getGiorno()) + 
+						("\nOra d'inizio: " +  visita.getOraInizio())
+						+ ("\nDa acquistare: " +  visita.getDaAcquistare()) + 
+						("\nStato: " +  visita.getStato()) + ("\nTag: " +  visita.getTag());
+				if (visita.getPrenotazioni() != null) { //impostato da volontario
+					String codiciPrenotazioni = "";
+					for (int i = 0 ; i < visita.getPrenotazioni().size() ; i++) {
+						codiciPrenotazioni += "\nCodice: " + visita.getPrenotazioni().get(i).getCodice() + 
+								", n. iscritti:" + visita.getPrenotazioni().get(i).getNum_da_prenotare();
+					}
+					result += codiciPrenotazioni;
+				}
+				view(result);
+			}
+		
+		}
 	}
 	
 }

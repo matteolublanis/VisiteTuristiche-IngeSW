@@ -1,7 +1,5 @@
 package dto;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,11 +48,7 @@ public class TipoVisitaDTO implements DTO{
     
 	@Override
 	public Map<String, List<String>> infoDTO() {
-		Map<String, List<String>> info = new HashMap<String, List<String>>();
-		List<String> code = new ArrayList<String>();
-		code.add(tag);
-		info.put(titolo, code);
-		return info;
+		return null;
 	}
 
 	public String getTag() {

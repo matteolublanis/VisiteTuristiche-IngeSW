@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import dto.DTO;
 import dto.TipoVisitaDTO;
+import dto.UserDTO;
 import dto.VolontarioDTO;
 import utility.CostantiStruttura;
 import utility.Credenziali;
@@ -51,8 +52,8 @@ public class UsersJSONManagement {
 		return (int) (utente.get(TIPO_USER));
 	}
 	
-	public List<DTO> getListaUser (int tipo_user) {
-			List<DTO> result = new ArrayList<>();
+	public List<UserDTO> getListaUser (int tipo_user) {
+			List<UserDTO> result = new ArrayList<>();
 			for (String s : JSONUtility.allObjectsSameIntValue(jsonUsers, tipo_user, TIPO_USER)) {
 				JSONObject user = jsonUsers.getJSONObject(s);
 				switch (tipo_user) {
@@ -102,7 +103,8 @@ public class UsersJSONManagement {
 	}
 	
 	public JSONArray getTipiVisitaOfVolontario (String username) {
-		return jsonUsers.getJSONObject(username).getJSONArray(TIPO_VISITA);
+		if (getTipoUtente(username) == CostantiStruttura.VOLONTARIO)return jsonUsers.getJSONObject(username).getJSONArray(TIPO_VISITA);
+		else return null;
 	}
 	
 	public JSONArray getElencoPrenotazioniFruitore (String username) {
@@ -138,17 +140,21 @@ public class UsersJSONManagement {
 		if (tipiAssociatiVolontario.length() == 0) rimuoviVolontario(volontarioTipo);
 	}
 	
-	public void rimuoviVolontario (String volontarioTipo) {
-		jsonUsers.remove(volontarioTipo);
-		aggiornaJsonUsers();
+	public boolean rimuoviVolontario (String volontario) {
+		if (checkIfUserExists(volontario)) {
+			jsonUsers.remove(volontario);
+			aggiornaJsonUsers();
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean checkIfVolontarioHasNoVisitType (String username) { 
 		return jsonUsers.getJSONObject(username).getJSONArray(TIPO_VISITA).length() == 0;
 	}
 	
-	public List<DTO> getElencoTipiVisiteVolontario(String volontario, JSONObject tipiVisite) {
-		List<DTO> result = new ArrayList<>();
+	public List<TipoVisitaDTO> getElencoTipiVisiteVolontario(String volontario, JSONObject tipiVisite) {
+		List<TipoVisitaDTO> result = new ArrayList<>();
 		for (Object tipo : jsonUsers.getJSONObject(volontario).getJSONArray(TIPO_VISITA)) {
 			JSONObject tipoVisita = tipiVisite.getJSONObject((String) tipo);
 			String titolo = tipoVisita.getString("titolo");

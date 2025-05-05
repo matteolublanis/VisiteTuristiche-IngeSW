@@ -4,7 +4,8 @@ import java.util.List;
 import archivio.ArchivioFacade;
 import client.app.App;
 import client.log_events.AppEvent;
-import dto.DTO;
+import dto.DataDisponibilitaDTO;
+import dto.VisitaDTO;
 import utility.MethodName;
 
 public class HandlerVolontario extends ControllerUtente {
@@ -18,26 +19,26 @@ public class HandlerVolontario extends ControllerUtente {
 	
 	@MethodName("Visualizza i tipi di visita a cui sei collegato")
  	public void visualizzaTipiVisita() {
-		a.viewListDTO(archivio.getElencoTipiVisiteVolontario(connectionCode));
+		a.viewListTipoVisitaDTO(archivio.getElencoTipiVisiteVolontario(connectionCode));
  	}
 	
-	private void visualListVisitDTO (List<DTO> visite) {
+	private void visualListVisitDTO (List<VisitaDTO> visite) {
 		if (visite.size() != 0) {
-			a.viewListDTO(visite);
+			a.viewListVisitaDTO(visite);
 		}
 		else a.catchEvent(AppEvent.NO_CONFIRMED_VISIT);
 	}
 	
 	@MethodName("Visualizza le visite confermate che gestirai")
 	public void vediVisiteConfermate () {
-		List<DTO> visite = archivio.visiteConfermateVolontario(connectionCode);
+		List<VisitaDTO> visite = archivio.visiteConfermateVolontario(connectionCode);
 		visualListVisitDTO(visite);
 	}
 	//Postcondizione: disponibilità in Archivio
 	@MethodName("Comunica le tue prossime disponibilità")
  	public void comunicaDisponibilita() {
  		if (archivio.getPossibilitaDareDisponibilita()) { //se posso dare disponibilità	
- 			List<DTO> dateDisponibilita = archivio.getDatePerDisponibilita(connectionCode); //prendi disponibilità possibili
+ 			List<DataDisponibilitaDTO> dateDisponibilita = archivio.getDatePerDisponibilita(connectionCode); //prendi disponibilità possibili
  			if (dateDisponibilita == null) { //TODO se null significa che il volontario dovrebbe essere eliminato
  				a.catchEvent(AppEvent.NO_AVAILABILITY);
  			}
@@ -59,8 +60,8 @@ public class HandlerVolontario extends ControllerUtente {
  		else a.catchEvent(AppEvent.CANT_ADD_DISPONIBILITY);
  	}
 	
-	private void visualDateDisponibilita(List<DTO> dateDisponibilita) {
-		a.viewListDTO(dateDisponibilita);
+	private void visualDateDisponibilita(List<DataDisponibilitaDTO> dateDisponibilita) {
+		a.viewListDataDisponibilitaDTO(dateDisponibilita);
 	}
 		
 }

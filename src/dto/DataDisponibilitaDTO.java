@@ -1,6 +1,5 @@
 package dto;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,9 +15,7 @@ public class DataDisponibilitaDTO implements DTO{
 	
 	@Override
 	public Map<String, List<String>> infoDTO() {
-		Map<String, List<String>> result = new HashMap<String, List<String>>();
-		result.put(tag, giorni);
-		return result;
+		return null;
 	}
 	
 	public String getTag() { return tag; }

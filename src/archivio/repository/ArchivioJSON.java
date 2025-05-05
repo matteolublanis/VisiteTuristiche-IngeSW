@@ -23,7 +23,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 
 	public ArchivioJSON () {
 		System.out.println("Caricato archivio.");
-		removeVisiteEffettuateCancellate(); //per come è strutturata l'app, ha senso mettere un controllo ogni volta che avvio
+		removeVisiteEffettuateCancellate(); 
 		setVisiteCancellateConfermate();
 	}
 	
@@ -43,7 +43,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 		return daPubblicareJSONManager.getUltimoAnnoPubblicazione();
 	}
 	
-	public boolean canAddOrRemove() {
+	public boolean canAddOrRemove() { //MODEL
 		return daPubblicareJSONManager.canAddOrRemove();
 	}
 	
@@ -97,27 +97,29 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 
 	public boolean rimuoviVolontario (String k) {
 		JSONArray tipiVolontario = usersJSONManager.getTipiVisitaOfVolontario(k);
-		for (Object tipoVolontario : tipiVolontario) { //ciclo sui suoi tipi
-			 if (tipiVisiteJSONManager.rimuoviVolontarioDaTipo((String)tipoVolontario, k) == 0) rimuoviTipo((String)tipoVolontario);
+		if (tipiVolontario != null) {
+			for (Object tipoVolontario : tipiVolontario) { //ciclo sui suoi tipi
+				 if (tipiVisiteJSONManager.rimuoviVolontarioDaTipo((String)tipoVolontario, k) == 0) rimuoviTipo((String)tipoVolontario);
+			}
+			return usersJSONManager.rimuoviVolontario(k);
 		}
-		usersJSONManager.rimuoviVolontario(k);
-		return true;
+		else return false;
 	}
 	
-	public List<DTO> getListaUser (int tipo_user) {
+	public List<UserDTO> getListaUser (int tipo_user) {
 		return usersJSONManager.getListaUser(tipo_user);
 
 	}
 	
-	public List<DTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate () {
-	    List<DTO> visiteList = pianoVisiteJSONManager.getElencoVisiteProposteCompleteConfermateCancellateEffettuate(tipiVisiteJSONManager.getTipiVisitaTitoli());
+	public List<VisitaDTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate () {
+	    List<VisitaDTO> visiteList = pianoVisiteJSONManager.getElencoVisiteProposteCompleteConfermateCancellateEffettuate(tipiVisiteJSONManager.getTipiVisitaTitoli());
 		visiteList.addAll(pianoStoricoJSONManager.getElencoVisiteProposteCompleteConfermateCancellateEffettuate());
 		return visiteList;
 	}
 
-	public List<DTO> getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore (String username) {
+	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore (String username) {
 		JSONArray codiciPrenotazione = usersJSONManager.getElencoPrenotazioniFruitore(username);
-	    List<DTO> visiteList = new ArrayList<>();
+	    List<VisitaDTO> visiteList = new ArrayList<>();
 	    for (Object codicePrenotazione : codiciPrenotazione) {
 	    	VisitaDTO visita = pianoVisiteJSONManager.getVisitaProposteConfermateCancellatePrenotateDalFruitore(prenotazioniJSONManager.getGiornoPrenotazione((String)codicePrenotazione),
 	    			prenotazioniJSONManager.getTipoVisitaPrenotazione((String)codicePrenotazione), 
@@ -128,8 +130,8 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	    return visiteList;
 	}
 
-	public List<DTO> getElencoPrenotazioniFruitore (String username) {
-	    List<DTO> prenotazioneList = new ArrayList<>();
+	public List<PrenotazioneDTO> getElencoPrenotazioniFruitore (String username) {
+	    List<PrenotazioneDTO> prenotazioneList = new ArrayList<>();
 	    for (Object codicePrenotazione : usersJSONManager.getElencoPrenotazioniFruitore(username)) {
                 prenotazioneList.add(new PrenotazioneDTO((String)codicePrenotazione, 
                 		prenotazioniJSONManager.getGiornoPrenotazione((String)codicePrenotazione), 
@@ -140,16 +142,16 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 	    
 	}
 
-	public List<DTO> getElencoVisiteProposteConfermateCancellateFruitore () {	
+	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitore () {	
 	    return pianoVisiteJSONManager.getElencoVisiteProposteConfermateCancellateFruitore(tipiVisiteJSONManager);
 	}
 
-	public List<DTO> getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato (String date) {	
+	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato (String date) {	
 	    return pianoVisiteJSONManager.getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato(date, tipiVisiteJSONManager);
 	}
 	
 
-	public List<DTO> visiteConfermateVolontario (String username) {
+	public List<VisitaDTO> visiteConfermateVolontario (String username) {
 		return pianoVisiteJSONManager.visiteConfermateVolontario(username, prenotazioniJSONManager.prenotazioniNIscritti(), tipiVisiteJSONManager);
 	}
 
@@ -213,12 +215,12 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 		return usersJSONManager.impostaCredenzialiNuovoConfiguratore(username, password);
 	}
 	
-	public List<DTO> getElencoLuoghiVisitabili () { 	
+	public List<LuogoDTO> getElencoLuoghiVisitabili () { 	
 		return ambitoJSONManager.getElencoLuoghiVisitabili();
 
 	}
 
-	public List<DTO> getElencoTipiVisiteLuogo () {	
+	public List<LuogoDTO> getElencoTipiVisiteLuogo () {	
 		return ambitoJSONManager.getElencoTipiVisiteLuogo(tipiVisiteJSONManager.getTipiVisitaTitoli());
 
 	}
@@ -280,7 +282,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 		return true;
 	}
 	
-	public List<DTO> getElencoTipiVisite () {
+	public List<TipoVisitaDTO> getElencoTipiVisite () {
 		return tipiVisiteJSONManager.getElencoTipiVisite();
 	}
 	
@@ -330,8 +332,8 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 				(getUltimoMesePubblicazione() == Time.getActualDateValue(Time.MONTH) - 1 + 12 && getUltimoAnnoPubblicazione() == Time.getActualDateValue(Time.YEAR) - 1));
 	}
 
-	public List<DTO> getDatePerDisponibilita(String username) {	 //OK
-		List<DTO> result =
+	public List<DataDisponibilitaDTO> getDatePerDisponibilita(String username) {	 //OK
+		List<DataDisponibilitaDTO> result =
 				tipiVisiteJSONManager.getDatePerDisponibilitaFromTipiVisite(username, getTipiVisitaOfVolontario(username));
 		result.add(new DataDisponibilitaDTO("Date precluse", getDatePrecluse()));
 		return result;
@@ -393,7 +395,7 @@ public class ArchivioJSON implements Archivio{ //appelle-moi si tu te perds
 		daPubblicareJSONManager.setPossibilitaDareDisponibilitaVolontari(b);
 	}
 	
-	public List<DTO> getElencoTipiVisiteVolontario(String volontario) {
+	public List<TipoVisitaDTO> getElencoTipiVisiteVolontario(String volontario) {
 		return usersJSONManager.getElencoTipiVisiteVolontario(volontario, tipiVisiteJSONManager.getJSONTipiVisite());
  	}
 

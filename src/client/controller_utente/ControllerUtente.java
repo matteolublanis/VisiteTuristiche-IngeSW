@@ -70,8 +70,8 @@ public abstract class ControllerUtente {
 		try {
 			List<Method> azioniDisponibili = getAzioniDisponibili();
 			int scelta = Integer.parseInt(input);
-			if (scelta > 0 && scelta <= azioniDisponibili.size()) {
-				Method metodo = azioniDisponibili.get(scelta - 1);
+			if (scelta >= 0 && scelta < azioniDisponibili.size()) {
+				Method metodo = azioniDisponibili.get(scelta);
 				metodo.invoke(this);
 			} 
 			else {

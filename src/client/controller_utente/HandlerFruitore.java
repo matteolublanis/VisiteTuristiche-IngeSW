@@ -9,6 +9,7 @@ import client.app.App;
 import client.log_events.AppEvent;
 import dto.DTO;
 import dto.PrenotazioneDTO;
+import dto.VisitaDTO;
 import utility.MethodName;
 import utility.Time;
 
@@ -27,9 +28,9 @@ public class HandlerFruitore extends ControllerUtente {
 	}
 
 	
-	private void visualListVisitDTO (List<DTO> visite) {
+	private void visualListVisitDTO (List<VisitaDTO> visite) {
 		if (visite != null) {
-			a.viewListDTO(visite);
+			a.viewListVisitaDTO(visite);
 		}
 		else {
 			a.catchEvent(AppEvent.NO_VISIT);
@@ -74,16 +75,16 @@ public class HandlerFruitore extends ControllerUtente {
 	}
 	
 	private Set<String> prenotazioniLinkate () {
-		List<DTO> prenotazioni = archivio.getElencoPrenotazioniFruitore(connectionCode);
+		List<PrenotazioneDTO> prenotazioni = archivio.getElencoPrenotazioniFruitore(connectionCode);
 		Set<String> codiciPrenotazioni = new HashSet<>();
 		for (DTO prenotazione : prenotazioni) codiciPrenotazioni.add(((PrenotazioneDTO) prenotazione).getCodice());
 		return codiciPrenotazioni;
 	}
 	
 	private void visualElencoPrenotazioni (App a) {
-		List<DTO> prenotazioni = archivio.getElencoPrenotazioniFruitore(connectionCode);
+		List<PrenotazioneDTO> prenotazioni = archivio.getElencoPrenotazioniFruitore(connectionCode);
 		if (prenotazioni != null) {
-			a.viewListDTO(prenotazioni);
+			a.viewListPrenotazioneDTO(prenotazioni);
 		}
 	}
 	

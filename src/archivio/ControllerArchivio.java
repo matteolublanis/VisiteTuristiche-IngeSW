@@ -95,19 +95,19 @@ public class ControllerArchivio implements ArchivioFacade {
     	 else return false;
 	}
 	
-	public List<DTO> getDatePerDisponibilita(String connectionCode) {	 //OK
+	public List<DataDisponibilitaDTO> getDatePerDisponibilita(String connectionCode) {	 //OK
 		if (getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.VOLONTARIO) 
 			return archivio.getDatePerDisponibilita(usernameLinkati.get(connectionCode));
 		else return null;
 	}
 
-	public List<DTO> getElencoTipiVisite (String connectionCode) { //OK
+	public List<TipoVisitaDTO> getElencoTipiVisite (String connectionCode) { //OK
 		if (getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.CONFIGURATORE) 
 			return archivio.getElencoTipiVisite();
 		else return null;
  	}
 
- 	public List<DTO> getElencoTipiVisiteVolontario (String connectionCode) { 
+ 	public List<TipoVisitaDTO> getElencoTipiVisiteVolontario (String connectionCode) { 
  		if (getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.VOLONTARIO) 
  			return archivio.getElencoTipiVisiteVolontario(usernameLinkati.get(connectionCode));
  		else return null;
@@ -201,35 +201,35 @@ public class ControllerArchivio implements ArchivioFacade {
 		else return false;
 	}
 	
-	public List<DTO> visiteConfermateVolontario (String connectionCode) {
+	public List<VisitaDTO> visiteConfermateVolontario (String connectionCode) {
 		if (getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.VOLONTARIO) 
 			return archivio.visiteConfermateVolontario(usernameLinkati.get(connectionCode));
 		else return null;
 	}
 	
-	public List<DTO> getElencoPrenotazioniFruitore (String connectionCode) {
+	public List<PrenotazioneDTO> getElencoPrenotazioniFruitore (String connectionCode) {
 		if (getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.FRUITORE)
 			return archivio.getElencoPrenotazioniFruitore(usernameLinkati.get(connectionCode));
 		else return null;
 	}
 	
-	public List<DTO> getElencoVisiteProposteConfermateCancellateFruitore() { 
+	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitore() { 
 		return archivio.getElencoVisiteProposteConfermateCancellateFruitore();
 	}
 	
-	public List<DTO> getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore (String connectionCode) {
+	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore (String connectionCode) {
 		if (getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.FRUITORE)
 			return archivio.getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore(usernameLinkati.get(connectionCode));
 		else return null;
 	}
 
-	public List<DTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate (String connectionCode) {
+	public List<VisitaDTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate (String connectionCode) {
 		if (getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.CONFIGURATORE) 
 			return archivio.getElencoVisiteProposteCompleteConfermateCancellateEffettuate();
 		else return null;
 	}
 	
-	public List<DTO> getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato (String date) {
+	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato (String date) {
 		return archivio.getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato(date);
 	}
 	
@@ -283,31 +283,31 @@ public class ControllerArchivio implements ArchivioFacade {
 	}
 	
 	public boolean impostaCredenzialiNuovoConfiguratore(String connectionCode, String username, String password) {
-		if (getTipoUtente(getLinkedUsername(getLinkedUsername(connectionCode))) == CostantiStruttura.CONFIGURATORE) 
+		if (getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.CONFIGURATORE) 
 			return archivio.impostaCredenzialiNuovoConfiguratore(username, password);
 		else return false;
 	}
 	
 	public boolean modificaMaxPrenotazione (String connectionCode, int max) {
-		if (getTipoUtente(getLinkedUsername(getLinkedUsername(connectionCode))) == CostantiStruttura.CONFIGURATORE) 
+		if (getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.CONFIGURATORE) 
 			return archivio.impostaMaxPrenotazione(max);
 		else return false;
 	}
 
-	public List<DTO> getListaUser(String connectionCode, int tipo_user) {
-		if (getTipoUtente(getLinkedUsername(getLinkedUsername(connectionCode))) == CostantiStruttura.CONFIGURATORE)
+	public List<UserDTO> getListaUser(String connectionCode, int tipo_user) {
+		if (getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.CONFIGURATORE)
 			return archivio.getListaUser(tipo_user);
 		else return null;
 	}
 	
-	public List<DTO> getElencoLuoghiVisitabili (String connectionCode) { 
-		if (getTipoUtente(getLinkedUsername(getLinkedUsername(connectionCode))) == CostantiStruttura.CONFIGURATORE)
+	public List<LuogoDTO> getElencoLuoghiVisitabili (String connectionCode) { 
+		if (getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.CONFIGURATORE)
 			return archivio.getElencoLuoghiVisitabili();
 		else return null;
 	}
 	
-	public List<DTO> getElencoTipiVisiteLuogo (String connectionCode) {
-		if (getTipoUtente(getLinkedUsername(getLinkedUsername(connectionCode))) == CostantiStruttura.CONFIGURATORE)
+	public List<LuogoDTO> getElencoTipiVisiteLuogo (String connectionCode) {
+		if (getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.CONFIGURATORE)
 		return archivio.getElencoTipiVisiteLuogo();
 		else return null;
 	}

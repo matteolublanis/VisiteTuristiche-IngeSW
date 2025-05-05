@@ -5,7 +5,7 @@ import java.util.List;
 
 import client.controller_utente.ControllerUtente;
 import client.log_events.AppEvent;
-import dto.DTO;
+import dto.*;
 import dto.LuogoDTO;
 import dto.TipoVisitaDTO;
 import utility.Credenziali;
@@ -27,6 +27,12 @@ public interface App {
 	public void log(String msg);
 	public void viewPrimoAccesso();
 	public void viewListDTO(List<DTO> list);
+	public void viewListDataDisponibilitaDTO(List<DataDisponibilitaDTO> list);
+	public void viewListLuogoDTO(List<LuogoDTO> list);
+	public void viewListPrenotazioneDTO(List<PrenotazioneDTO> list);
+	public void viewListTipoVisitaDTO(List<TipoVisitaDTO> list);
+	public void viewListUserDTO(List<UserDTO> list);
+	public void viewListVisitaDTO(List<VisitaDTO> list);
 	public TipoVisitaDTO richiediTipoVisita(String luogo);
 	public String richiediTipoVisitaEsistente();
 	public ArrayList<Credenziali> richiediVolontari();

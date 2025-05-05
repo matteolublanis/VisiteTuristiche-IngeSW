@@ -31,7 +31,6 @@ public class VolontarioDTO  implements UserDTO, DTO {
 
 	@Override
 	public Map<String, List<String>> infoDTO() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	

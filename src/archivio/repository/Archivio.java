@@ -3,10 +3,12 @@ package archivio.repository;
 import java.util.List;
 import org.json.JSONArray;
 
-import dto.DTO;
+import dto.DataDisponibilitaDTO;
 import dto.LuogoDTO;
 import dto.PrenotazioneDTO;
 import dto.TipoVisitaDTO;
+import dto.UserDTO;
+import dto.VisitaDTO;
 import utility.Credenziali;
 
 public interface Archivio {
@@ -34,9 +36,9 @@ public interface Archivio {
 	//Precondizione: callerTyper = CostantiStruttura.VOLONTARIO
     public boolean inserisciDisponibilita(String data, String username);
 	//Precondizione: callerType = CostantiStruttura.VOLONTARIO
-    public List<DTO> getDatePerDisponibilita(String username);
-	public List<DTO> getElencoTipiVisite ();
- 	public List<DTO> getElencoTipiVisiteVolontario (String username);
+    public List<DataDisponibilitaDTO> getDatePerDisponibilita(String username);
+	public List<TipoVisitaDTO> getElencoTipiVisite ();
+ 	public List<TipoVisitaDTO> getElencoTipiVisiteVolontario (String username);
 	//Precondizione: callerTyper = CostantiStruttura.CONFIGURATORE
 	public boolean tryImpostaCredenzialiNuovoVolontario (String username, String password, List<String> tipi_visiteVal, boolean tipiVisitaNecessario);
 	
@@ -46,12 +48,12 @@ public interface Archivio {
 	 */
 	public boolean impostaCredenzialiNuovoVolontario (String username, String password, JSONArray tipi_visite, boolean tipiVisitaNecessari);
 	//Precondizione: callerType = CostantiStruttura.CONFIGURATORE
-	public List<DTO> getElencoTipiVisiteLuogo ();
-	public List<DTO> getElencoLuoghiVisitabili ();
+	public List<LuogoDTO> getElencoTipiVisiteLuogo ();
+	public List<LuogoDTO> getElencoLuoghiVisitabili ();
 	/*
 	 * Precondizione: 0 < tipo_user < 4
 	 */
-	public List<DTO> getListaUser(int tipo_user);
+	public List<UserDTO> getListaUser(int tipo_user);
 	//Precondizione: max > 0
 	public boolean impostaMaxPrenotazione(int max);
 	//Precondizione: callerType = CostantiStruttura.CONFIGURATORE
@@ -76,14 +78,14 @@ public interface Archivio {
 	 */
 	public boolean rimuoviPrenotazione(String username, String codicePrenotazione);
 	//Precondizione: callerType = CostantiStruttura.VOLONTARIO
-	public List<DTO> visiteConfermateVolontario (String username);
+	public List<VisitaDTO> visiteConfermateVolontario (String username);
 	//Precondizione: callerType = CostantiStruttura.FRUITORE
-	public List<DTO> getElencoPrenotazioniFruitore (String username);
-	public List<DTO> getElencoVisiteProposteConfermateCancellateFruitore();
+	public List<PrenotazioneDTO> getElencoPrenotazioniFruitore (String username);
+	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitore();
 	//Precondizione: callerType = CostantiStruttura.FRUITORE
-	public List<DTO> getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore (String username);
-	public List<DTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate ();
-	public List<DTO> getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato (String date);
+	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore (String username);
+	public List<VisitaDTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate ();
+	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellateFruitoreGiornoDato (String date);
 	
 	/*
 	 * Precondizione: callerType = CostantiStruttura.FRUITORE

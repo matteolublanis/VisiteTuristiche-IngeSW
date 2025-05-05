@@ -114,17 +114,17 @@ public class HandlerConfiguratore extends ControllerUtente{
 	
 	@MethodName("Visualizza lista volontari")
 	public void getListaVolontari() {
-		a.viewListDTO(archivio.getListaUser(connectionCode, CostantiStruttura.VOLONTARIO));
+		a.viewListUserDTO(archivio.getListaUser(connectionCode, CostantiStruttura.VOLONTARIO));
 	}
 	
 	@MethodName("Visualizza elenco luoghi visitabili")
 	public void getElencoLuoghiVisitabili() {
-		a.viewListDTO(archivio.getElencoLuoghiVisitabili(connectionCode));
+		a.viewListLuogoDTO(archivio.getElencoLuoghiVisitabili(connectionCode));
 	}
 	
 	@MethodName("Visualizza elenco tipi visite per luogo")
 	public void getElencoTipiVisiteLuogo() {
-		a.viewListDTO(archivio.getElencoTipiVisiteLuogo(connectionCode));
+		a.viewListLuogoDTO(archivio.getElencoTipiVisiteLuogo(connectionCode));
 	}
 	
 	//Precondizione: isTodays(16) o dopo
@@ -223,13 +223,13 @@ public class HandlerConfiguratore extends ControllerUtente{
 	}
 	@MethodName("Visualizza visite proposte, complete, confermate, cancellate e effettuate")
 	public void getElencoVisiteProposteCompleteConfermateCancellateEffettuate () {
-		a.viewListDTO(archivio.getElencoVisiteProposteCompleteConfermateCancellateEffettuate(connectionCode));
+		a.viewListVisitaDTO(archivio.getElencoVisiteProposteCompleteConfermateCancellateEffettuate(connectionCode));
 	}
 	
 	@MethodName("Aggiungi volontari ad un tipo di visita esistente")
 	public void aggiungiVolontariATipiVisita () {
 		if (canAddOrRemove()) {
-			a.viewListDTO(archivio.getElencoTipiVisite(connectionCode));
+			a.viewListTipoVisitaDTO(archivio.getElencoTipiVisite(connectionCode));
 			String tipo = a.richiediVisitaEsistente();
 			List<Credenziali> volontari = a.richiediVolontari();
 			archivio.associaVolontariATipoVisitaEsistente(connectionCode, volontari, tipo);

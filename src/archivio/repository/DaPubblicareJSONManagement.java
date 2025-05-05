@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import dto.DTO;
 import dto.DataDisponibilitaDTO;
 import utility.JSONUtility;
 import utility.Time;
@@ -103,17 +102,17 @@ public class DaPubblicareJSONManagement {
 	}
 	
 	
-	public boolean inserisciDisponibilita(String data, String username, List<DTO> m) { //ok\
+	public boolean inserisciDisponibilita(String data, String username, List<DataDisponibilitaDTO> m) { //ok\
 		List<String> datePrecluse = getDatePrecluse();
 		if (datePrecluse.contains(data)) return false; //per precondizione già sistemato
-		for (DTO tagVisita : m) {
-			if (((DataDisponibilitaDTO)m).getTag().contains(data)) {
+		for (DataDisponibilitaDTO dataDisp : m) {
+			if ((dataDisp.getGiorni().contains(data))) {
 				JSONObject disponibilita = jsonPianoVisiteDaPubblicare.getJSONObject(DISPONIBILITA);
 				if (!disponibilita.has(username)) {
 					JSONObject d =  new JSONObject();
 					disponibilita.put(username, d);
 					JSONObject volontario = disponibilita.getJSONObject(username);
-					volontario.put(data, tagVisita);
+					volontario.put(data, dataDisp.getTag());
 					JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
 					return true;
 				}
@@ -121,7 +120,7 @@ public class DaPubblicareJSONManagement {
 					JSONObject volontario = disponibilita.getJSONObject(username);
 					if (volontario.has(data)) return true;
 					else {
-						volontario.put(data, tagVisita);
+						volontario.put(data, dataDisp.getTag());
 						JSONUtility.aggiornaJsonFile(jsonPianoVisiteDaPubblicare, PATH_VISITE_DAPUBBLICARE, 10);
 						return true;
 					}

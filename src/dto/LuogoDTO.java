@@ -1,5 +1,6 @@
 package dto;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,8 +25,8 @@ public class LuogoDTO implements DTO {
 	
 	@Override
 	public Map<String, List<String>> infoDTO() {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, List<String>> infoDTO = new HashMap<>();
+		return infoDTO;
 	}
 
 	public String getTitolo() {

@@ -36,12 +36,6 @@ public class PrenotazioneDTO implements DTO{
 	public String getCodice() {
 		return codice;
 	}
-	
-	public String toString () {
-		String result = ("-----------") + ("\nCodice: " + getCodice() + ", giorno: " + getGiorno()) +
-				("\nTag visita: " + getTag_visita());
-		return result;
-	}
 
 	@Override
 	public Map<String, List<String>> infoDTO() {

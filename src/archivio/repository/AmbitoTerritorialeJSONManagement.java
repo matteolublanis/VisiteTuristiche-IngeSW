@@ -6,8 +6,6 @@ import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import dto.DTO;
 import dto.LuogoDTO;
 import utility.JSONUtility;
 
@@ -53,8 +51,8 @@ public class AmbitoTerritorialeJSONManagement {
 		return jsonAmbitoTerritoriale.getInt(MAX_PRENOTAZIONE);
 	}
 	
-	public List<DTO> getElencoTipiVisiteLuogo (Map<String, String> tipiVisiteTitoli) {
-		List<DTO> result = new ArrayList<>();
+	public List<LuogoDTO> getElencoTipiVisiteLuogo (Map<String, String> tipiVisiteTitoli) {
+		List<LuogoDTO> result = new ArrayList<>();
 		try {
 			for (String nomeLuogo : getLuoghi().toMap().keySet()) {
 				JSONObject infoLuogo = getLuogo(nomeLuogo);
@@ -100,8 +98,8 @@ public class AmbitoTerritorialeJSONManagement {
 		return jsonAmbitoTerritoriale.getJSONObject(LUOGHI).getJSONObject(luogo);
 	}
 	
-	public List<DTO> getElencoLuoghiVisitabili () { 
-		List<DTO> result = new ArrayList<>();
+	public List<LuogoDTO> getElencoLuoghiVisitabili () { 
+		List<LuogoDTO> result = new ArrayList<>();
 		try {
 			JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject(LUOGHI);
 			for (String k : luoghi.toMap().keySet()) {

@@ -32,11 +32,15 @@ public class Login {
 			if (credenziali == null) avvio();
 			if(!checkCredenzialiCorrette(credenziali)) a.catchEvent(AppEvent.WRONG_CREDENTIALS);
 			else {
-				configureHandlerUtente(archivio.makeConnection(credenziali));
+				inviaCredenziali(credenziali);
 				break;
 			}
 		} while (b);
 		
+	}
+	
+	public void inviaCredenziali(Credenziali credenziali) {
+		configureHandlerUtente(archivio.makeConnection(credenziali));
 	}
 	//Precondizione: a != null
 	//Postcondizione: fruitore registrato
@@ -46,7 +50,7 @@ public class Login {
 			if (credenziali == null) avvio();
 			if (checkUsernameGiaPresente(credenziali.getUsername()))  a.catchEvent(AppEvent.USERNAME_ALREADY_IN_USE); 
 			else {
-				configureHandlerUtente(archivio.makeConnection(credenziali));
+				inviaCredenziali(credenziali);
 				break;
 			}
 		} while (true);
