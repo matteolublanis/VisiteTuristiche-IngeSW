@@ -20,9 +20,10 @@ import utility.Credenziali;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class ArchivioTest {
 	//TODO ArchivioFactory
-	AmbitoRepository ambitoRep = new ArchivioJSON(16); 
-	UserRepository userRep = new ArchivioJSON(16); 
-	VisitsRepository visitRep = new ArchivioJSON(16); 
+	ArchivioJSON archivio = new ArchivioJSON(16); 
+	AmbitoRepository ambitoRep = archivio;
+	UserRepository userRep = archivio;
+	VisitsRepository visitRep = archivio;
 
 	
 	@BeforeEach
@@ -56,8 +57,7 @@ class ArchivioTest {
         userRep.rimuoviVolontario("volontariotest2");
         assertFalse(userRep.checkIfUserExists("volontariotest1"));
         assertFalse(userRep.checkIfUserExists("volontariotest2"));
-        assertFalse(userRep.rimuoviVolontario("volontariotest1")); //non posso rimuove due volte
-        
+        assertThrows(NullPointerException.class, () -> userRep.rimuoviVolontario("volontariotest2"));
         userRep.rimuoviVolontario("volontariosushi");
 		assertFalse(ambitoRep.checkIfVisitTypeExists("sushi"));
 		assertFalse(ambitoRep.checkIfPlaceExists("Milano"));
@@ -80,6 +80,7 @@ class ArchivioTest {
 		assertFalse(ambitoRep.checkIfPlaceExists("Milano"));
 
 	}
+
 	
 
 

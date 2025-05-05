@@ -62,35 +62,6 @@ public class VisitaDTO implements DTO{
 	public List<PrenotazioneDTO> getPrenotazioni() {
 		return prenotazioni;
 	}
-	
-	public String toString () { //TODO Pattern 
-		if (!getStato().equals("cancellata")) {
-			if (getDaAcquistare() == null) { //non impostato per configuratore
-				String result = ("-----------") + ("\nTitolo: " +  getTitolo()) + ("\nGiorno: " +  getGiorno()) + 
-						("\nLuogo: " +  getLuogo()) + ("\nStato: " +  getStato());
-				return result;
-			}
-			else {
-				String result = ("-----------") + ("\nTitolo: " +  getTitolo()) + ("\nDescrizione: " +  getDescrizione())
-						+ ("\nPunto d'incontro: " +  getPuntoIncontro()) + ("\nGiorno: " +  getGiorno()) + ("\nOra d'inizio: " +  getOraInizio())
-						+ ("\nDa acquistare: " +  getDaAcquistare()) + ("\nStato: " +  getStato()) + ("\nTag: " +  getTag());
-				if (prenotazioni != null) { //impostato da volontario
-					String codiciPrenotazioni = "";
-					for (int i = 0 ; i < getPrenotazioni().size() ; i++) {
-						codiciPrenotazioni += "\nCodice: " + getPrenotazioni().get(i).getCodice() + ", n. iscritti:" + getPrenotazioni().get(i).getNum_da_prenotare();
-					}
-					result += codiciPrenotazioni;
-				}
-				return result;
-			}
-
-		}
-		else {
-			String result =  ("-----------") + ("\nTitolo: " +  getTitolo()) + ("\nGiorno mancato svolgimento: " +  getGiorno())
-					+ ("Stato: " +  getStato());
-			return result;
-		}
-	}
 
 	@Override
 	public Map<String, List<String>> infoDTO() {

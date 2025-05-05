@@ -1,6 +1,7 @@
 package archivio;
 
 import java.util.List;
+
 import dto.LuogoDTO;
 import dto.TipoVisitaDTO;
 import dto.VisitaDTO;
@@ -20,12 +21,11 @@ public interface AmbitoManager {
 	public List<VisitaDTO> getElencoVisiteProposteCompleteConfermateCancellateEffettuate (String connectionCode);
 			
 	public boolean checkIfPlaceExists (String luogo);
-	//Da refattorizzare
-	public boolean aggiungiLuogo (String connectionCode, LuogoDTO luogo);
 
+	public boolean aggiungiLuogo (String connectionCode, LuogoDTO luogo);
+		
 	public void setPrimaConfigurazione(); 
 	
-	//TODO assolutamente da refattorizzare
 	public boolean aggiungiTipoVisite (TipoVisitaDTO tipoVisita, String connectionCode);
 	
 	public boolean checkIfVisitTypeExists (String tipo);

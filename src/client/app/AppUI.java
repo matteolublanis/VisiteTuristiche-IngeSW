@@ -80,6 +80,7 @@ public class AppUI implements App{
 		catch (NumberFormatException e) {
 			return controllerUtente.eseguiAzione(input);
 		}
+
 	}
 	
 	public boolean scegliAzione(String azione) {
@@ -424,32 +425,38 @@ public class AppUI implements App{
 	@Override
 	public void viewListVisitaDTO(List<VisitaDTO> list) {
 		for (VisitaDTO visita : list) {
-			if (visita.getDaAcquistare() == null) { //non impostato per configuratore
-				String result = ("-----------") + ("\nTitolo: " +  visita.getTitolo()) + 
-						("\nGiorno: " +  visita.getGiorno()) + 
-						("\nLuogo: " +  visita.getLuogo()) + 
-						("\nStato: " +  visita.getStato());
-				view(result);
+			if (!(visita.getStato().equals("cancellata"))) {
+				if (visita.getDaAcquistare() == null) { //non impostato per configuratore
+					String result = ("-----------") + ("\nTitolo: " +  visita.getTitolo()) + 
+							("\nGiorno: " +  visita.getGiorno()) + 
+							("\nLuogo: " +  visita.getLuogo()) + 
+							("\nStato: " +  visita.getStato());
+					view(result);
+				}
+				else {
+					String result = ("-----------") + ("\nTitolo: " +  visita.getTitolo()) + 
+							("\nDescrizione: " +  visita.getDescrizione())
+							+ ("\nPunto d'incontro: " +  visita.getPuntoIncontro()) + 
+							("\nGiorno: " +  visita.getGiorno()) + 
+							("\nOra d'inizio: " +  visita.getOraInizio())
+							+ ("\nDa acquistare: " +  visita.getDaAcquistare()) + 
+							("\nStato: " +  visita.getStato()) + ("\nTag: " +  visita.getTag());
+					if (visita.getPrenotazioni() != null) { //impostato da volontario
+						String codiciPrenotazioni = "";
+						for (int i = 0 ; i < visita.getPrenotazioni().size() ; i++) {
+							codiciPrenotazioni += "\nCodice: " + visita.getPrenotazioni().get(i).getCodice() + 
+									", n. iscritti:" + visita.getPrenotazioni().get(i).getNum_da_prenotare();
+						}
+						result += codiciPrenotazioni;
+					}
+					view(result);
+				}
 			}
 			else {
-				String result = ("-----------") + ("\nTitolo: " +  visita.getTitolo()) + 
-						("\nDescrizione: " +  visita.getDescrizione())
-						+ ("\nPunto d'incontro: " +  visita.getPuntoIncontro()) + 
-						("\nGiorno: " +  visita.getGiorno()) + 
-						("\nOra d'inizio: " +  visita.getOraInizio())
-						+ ("\nDa acquistare: " +  visita.getDaAcquistare()) + 
-						("\nStato: " +  visita.getStato()) + ("\nTag: " +  visita.getTag());
-				if (visita.getPrenotazioni() != null) { //impostato da volontario
-					String codiciPrenotazioni = "";
-					for (int i = 0 ; i < visita.getPrenotazioni().size() ; i++) {
-						codiciPrenotazioni += "\nCodice: " + visita.getPrenotazioni().get(i).getCodice() + 
-								", n. iscritti:" + visita.getPrenotazioni().get(i).getNum_da_prenotare();
-					}
-					result += codiciPrenotazioni;
-				}
+				String result =  ("-----------") + ("\nTitolo: " +  visita.getTitolo()) + ("\nGiorno mancato svolgimento: " +  visita.getGiorno())
+						+ ("Stato: " +  visita.getStato());
 				view(result);
 			}
-		
 		}
 	}
 	

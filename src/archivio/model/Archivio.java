@@ -381,5 +381,6 @@ public class Archivio implements AmbitoManager, AppManager, CredenzialiManager, 
 			return userRep.associaVolontariATipoVisita(volontari, tipoVisita);
 		else return false;
 	}
+
 	
 }

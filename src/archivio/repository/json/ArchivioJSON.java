@@ -285,15 +285,6 @@ public class ArchivioJSON implements AmbitoRepository, UserRepository, VisitsRep
 		return (RELEASE_DAY <= Time.getActualDateValue(Time.DAY));
 	}
 
-	public boolean tryPubblicaPiano() { //OK
-		if(isPrimaPubblicazione()) return setPrimaPubblicazione(); 
-		if (Time.getActualDateValue(Time.DAY) >= RELEASE_DAY && //SE ULTIMO PIANO PUBBLICATO MESE SCORSO PUBBLICA
-				isUltimaPubblicazioneMeseScorso() && !getPossibileDareDisponibilita()) {
-			return pubblicaPiano();
-		}
-		else return false;
-	}
-	
 	public boolean isUltimaPubblicazioneMeseScorso () {
 		return ((getUltimoMesePubblicazione() == Time.getActualDateValue(Time.MONTH) - 1 && getUltimoAnnoPubblicazione() == Time.getActualDateValue(Time.YEAR)) ||
 				(getUltimoMesePubblicazione() == Time.getActualDateValue(Time.MONTH) - 1 + 12 && getUltimoAnnoPubblicazione() == Time.getActualDateValue(Time.YEAR) - 1));
@@ -336,12 +327,6 @@ public class ArchivioJSON implements AmbitoRepository, UserRepository, VisitsRep
 	}
 	
 	public boolean tryAggiungiVisite (TipoVisitaDTO tipoVisita) {
-		/*
-		 * String luogo, String tipoVisita, String titolo, String descrizione, String puntoIncontro, 
-			String dataInizio, String dataFine, ArrayList<Integer> giorniPrenotabiliVal, String oraInizio,
-			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, ArrayList<String> volontariVal
-		 */
-
 		JSONArray giorniPrenotabili = tipiVisiteJSONManager.returnGiorniPrenotabili(tipoVisita.getGiorniPrenotabiliVal());
 	    if (tipiVisiteJSONManager.intersectVisitTypeSamePlace (ambitoJSONManager.getTipiLuogo(tipoVisita.getLuogo()),
 	    		tipoVisita.getDataInizio(), tipoVisita.getDataFine(), tipoVisita.getOraInizio(), tipoVisita.getDurataVisita(), giorniPrenotabili.toString())) return false; //da rimuovere volontari nuovi

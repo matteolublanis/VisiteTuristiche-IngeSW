@@ -7,11 +7,13 @@ import archivio.repository.json.ArchivioJSON;
  public class ArchivioFactory {
 	
 	private static final int RELEASE_DAY = 16;
+	private static Archivio archivio = new Archivio(new ArchivioJSON(RELEASE_DAY));
+	
 	
  	public static CredenzialiManager createCredenzialiManager(int tipo) {
  		switch (tipo) {
  		case CostantiStruttura.STANDALONE:
- 			return new Archivio(new ArchivioJSON(RELEASE_DAY));
+ 			return archivio;
  		default:
  			return null;
  		}
@@ -20,7 +22,7 @@ import archivio.repository.json.ArchivioJSON;
  	public static UserInfoManager createUserInfoManager(int tipo) {
  		switch (tipo) {
  		case CostantiStruttura.STANDALONE:
- 			return new Archivio(new ArchivioJSON(RELEASE_DAY));
+ 			return archivio;
  		default:
  			return null;
  		}
@@ -29,7 +31,7 @@ import archivio.repository.json.ArchivioJSON;
  	public static AppManager createAppManager(int tipo) {
  		switch (tipo) {
  		case CostantiStruttura.STANDALONE:
- 			return new Archivio(new ArchivioJSON(RELEASE_DAY));
+ 			return archivio;
  		default:
  			return null;
  		}

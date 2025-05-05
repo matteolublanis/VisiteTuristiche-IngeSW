@@ -147,8 +147,14 @@ public class AmbitoTerritorialeJSONManagement {
 	}
 	
 	public boolean checkIfPlaceExists(String luogo) {
-		JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject(LUOGHI);
-		return (luoghi.has(luogo));
+		try {
+			JSONObject luoghi = jsonAmbitoTerritoriale.getJSONObject(LUOGHI);
+			return (luoghi.has(luogo));
+		}
+		catch (Exception e) {
+			return false;
+		}
+		
 	}
 	
 	public boolean checkIfLuogoHasNoVisitType (String luogo) {	
