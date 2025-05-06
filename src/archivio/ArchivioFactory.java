@@ -7,8 +7,8 @@ import archivio.repository.json.ArchivioJSON;
  public class ArchivioFactory {
 	
 	private static final int RELEASE_DAY = 16; 
-	private static final ArchivioJSON archivioJSON = new ArchivioJSON(RELEASE_DAY);
-	private static final Archivio archivio = new Archivio(archivioJSON,archivioJSON,archivioJSON);
+	private static  ArchivioJSON archivioJSON = new ArchivioJSON(RELEASE_DAY); //SingleTon?
+	private static Archivio archivio = new Archivio(archivioJSON,archivioJSON,archivioJSON);
 	
 	
  	public static CredenzialiManager createCredenzialiManager(int tipo) {

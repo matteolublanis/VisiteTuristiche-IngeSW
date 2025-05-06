@@ -337,9 +337,10 @@ public class AppUI implements App{
 	    String tipo;
 	    do {
 	        tipo = richiediInput("tag del tipo della visita");
-	        if (controllerUtente.checkIfVisitTypeExists(tipo)) {
+	        if (!controllerUtente.checkIfVisitTypeExists(tipo)) {
 	            catchEvent(AppEvent.VISITTYPE_NON_EXISTENT);
 	        }
+	        else break;
 	    } while (controllerUtente.checkIfVisitTypeExists(tipo));
 	    return tipo;
 	}

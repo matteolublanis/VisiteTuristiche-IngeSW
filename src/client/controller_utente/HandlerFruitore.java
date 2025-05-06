@@ -86,7 +86,7 @@ public class HandlerFruitore extends ControllerUtente {
 		return codiciPrenotazioni;
 	}
 	
-	private void visualElencoPrenotazioni (App a) {
+	private void visualElencoPrenotazioni () {
 		List<PrenotazioneDTO> prenotazioni = userInfo.getElencoPrenotazioniFruitore(connectionCode);
 		if (prenotazioni != null) {
 			a.viewListPrenotazioneDTO(prenotazioni);
@@ -95,9 +95,9 @@ public class HandlerFruitore extends ControllerUtente {
 	
 	//Postcondizione: prenotazione rimossa da Archivio
 	@MethodName("Disdisci una prenotazione")
-	public void disdiciIscrizione (App a) {
+	public void disdiciIscrizione () {
 		if (userInfo.getElencoPrenotazioniFruitore(connectionCode) != null) {
-			visualElencoPrenotazioni(a);
+			visualElencoPrenotazioni();
 			String codicePrenotazioneDaEliminare = null;
 			Set<String> k = prenotazioniLinkate();
 			if (k != null)do {

@@ -1,10 +1,8 @@
 package client.controller_utente;
 
 import java.util.List;
-import archivio.AmbitoManager;
 import archivio.AppManager;
 import archivio.ArchivioFactory;
-import archivio.CredenzialiManager;
 import archivio.UserInfoManager;
 import client.app.App;
 import client.log_events.AppEvent;

@@ -421,7 +421,5 @@ public class Archivio implements AmbitoManager, AppManager, CredenzialiManager, 
 		if (canAddOrRemoveCheckUsername(getLinkedUsername(connectionCode))) 
 			return userRep.associaVolontariATipoVisita(volontari, tipoVisita);
 		else return false;
-	}
-
-	
+	}	
 }
