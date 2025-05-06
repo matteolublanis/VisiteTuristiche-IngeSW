@@ -201,6 +201,30 @@ public class TipiVisiteJSONManagement {
 		return newVisitType;
 	}
 	
+	public TipoVisitaDTO getTipoVisitaDTOAssociato(String tag, String luogo) {
+		JSONObject tipoVisita = getTipoVisitaJSONObject(tag);
+		List<Integer> giorniPrenotabili = new ArrayList<>();
+		for (Object o : tipoVisita.getJSONArray(GIORNI_PRENOTABILI)) {
+			for (int i = 0 ; i < GIORNISETTIMANA.length ; i ++) 
+				if (GIORNISETTIMANA[i].equals((String) o)) giorniPrenotabili.add(i + 1);
+		}
+		List<Credenziali> volontari = new ArrayList<>();
+		for (Object o : tipoVisita.getJSONArray(VOLONTARI2)) volontari.add(new Credenziali ((String) o, null));
+		return new TipoVisitaDTO(
+				tag, tipoVisita.getString(TITOLO), luogo, tipoVisita.getString(DESCRIPTION),
+				tipoVisita.getString(PUNTO_INCONTRO), tipoVisita.getString(DATA_INIZIO), tipoVisita.getString(DATA_FINE), giorniPrenotabili
+				, tipoVisita.getString(ORA_INIZIO), tipoVisita.getInt(DURATA_VISITA),
+				tipoVisita.getBoolean(DA_ACQUISTARE), tipoVisita.getInt(MIN_FRUITORE), tipoVisita.getInt(MAX_FRUITORE),
+				volontari);
+	}
+	
+	public List<TipoVisitaDTO> getElencoTipiVisiteLuogo () {
+		List<TipoVisitaDTO> result = new ArrayList<>();
+		for (String key : jsonTipiVisite.keySet()) {
+			result.add(new TipoVisitaDTO(key, jsonTipiVisite.getJSONObject(key).getString(TITOLO)));
+		}
+		return result;
+	}
 	public List<TipoVisitaDTO> getElencoTipiVisite () {
 		List<TipoVisitaDTO> result = new ArrayList<>();
 		for (String key : jsonTipiVisite.keySet()) {
@@ -247,24 +271,6 @@ public class TipiVisiteJSONManagement {
 	    	}
 	    }
 	    return giorniPrenotabili;
-	}
-	
-	public boolean intersectVisitTypeSamePlace (JSONArray tipiLuogo, String dateStart1, String dateFinish1, String hour1, int duration1, String days1) {
-		for (Object k : tipiLuogo) { //tipiVisita del luogo 
-			JSONObject tipo = jsonTipiVisite.getJSONObject((String)k);  
-			if (Time.comesBefore(dateStart1, tipo.getString(DATA_FINE)) && !Time.comesBefore(dateFinish1, tipo.getString(DATA_INIZIO))) {
-				JSONArray days2 = tipo.getJSONArray(GIORNI_PRENOTABILI); //giorni del tipo già esistente
-				for (Object d : days2) {
-					if (days1.contains((String)d)) { //vuol dire che un giorno qualsiasi può intersecare
-						String startHourType = tipo.getString(ORA_INIZIO);
-						int[] fValue = Time.calculateEndTimeWithStartAndDuration(Integer.parseInt(startHourType.split(":")[0]), Integer.parseInt(startHourType.split(":")[1]), tipo.getInt(DURATA_VISITA));
-						String finishHourType = String.format("%02d:%02d", fValue[0], fValue[1]);
-						if (Time.isTimeBetween(hour1, startHourType, finishHourType)) return true;
-					}
-				}
-			}
-		}
-		return false;
 	}
 	
 	public void aggiungiTipoVisite(TipoVisitaDTO tipoVisita) {

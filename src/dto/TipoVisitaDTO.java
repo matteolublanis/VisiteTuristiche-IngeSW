@@ -20,7 +20,29 @@ public class TipoVisitaDTO implements DTO{
     private int minFruitore = 0;
     private int maxFruitore = 0;
     private List<Credenziali> volontariVal = null;
+    private List<String> giorniPrenotabili = null;
 
+    
+    
+	public TipoVisitaDTO(String tag, String titolo, String luogo, String descrizione, String puntoIncontro,
+			String dataInizio, String dataFine, String oraInizio,
+			int durataVisita, boolean daAcquistare, int minFruitore, int maxFruitore, List<Credenziali> volontariVal, 
+			List<String> giorniPrenotabili) {
+		this.tag = tag;
+		this.titolo = titolo;
+		this.luogo = luogo;
+		this.descrizione = descrizione;
+		this.puntoIncontro = puntoIncontro;
+		this.dataInizio = dataInizio;
+		this.dataFine = dataFine;
+		this.oraInizio = oraInizio;
+		this.durataVisita = durataVisita;
+		this.daAcquistare = daAcquistare;
+		this.minFruitore = minFruitore;
+		this.maxFruitore = maxFruitore;
+		this.volontariVal = volontariVal;
+		this.giorniPrenotabili = giorniPrenotabili;
+	}
     
 	public TipoVisitaDTO(String tag, String titolo, String luogo, String descrizione, String puntoIncontro,
 			String dataInizio, String dataFine, List<Integer> giorniPrenotabiliVal, String oraInizio,
@@ -105,6 +127,10 @@ public class TipoVisitaDTO implements DTO{
 
 	public List<Credenziali> getVolontariVal() {
 		return volontariVal;
+	}
+
+	public List<String> getGiorniPrenotabili() {
+		return giorniPrenotabili;
 	}
 	
 }

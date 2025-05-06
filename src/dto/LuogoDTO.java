@@ -9,16 +9,23 @@ public class LuogoDTO implements DTO {
 	private String descrizione;
 	private String collocazione;
 	private String titolo;
-	private List<String> tipiAssociati; //si può usare TipoVisitaDTO e si dovrebbe
+	private List<String> tagTipiAssociati; //si può usare TipoVisitaDTO e si dovrebbe
+	private List<TipoVisitaDTO> tipiVisitaAssociati;
+	
+	public LuogoDTO(String tag, String titolo, List<String> tipiAssociati) {
+		this.tag = tag;
+		this.titolo = titolo;
+		this.tagTipiAssociati = tipiAssociati;
+	}
 	
 	public LuogoDTO(String titolo, List<String> tipiAssociati) {
 		this.titolo = titolo;
-		this.tipiAssociati = tipiAssociati;
+		this.tagTipiAssociati = tipiAssociati;
 	}
 	
-	public LuogoDTO(String tag, String nome, String descrizione, String collocazione) {
+	public LuogoDTO(String tag, String titolo, String descrizione, String collocazione) {
 		this.tag = tag;
-		titolo = nome;
+		this.titolo = titolo;
 		this.descrizione = descrizione;
 		this.collocazione = collocazione;
 	}
@@ -34,7 +41,7 @@ public class LuogoDTO implements DTO {
 	}
 
 	public List<String> getTipiAssociati() {
-		return tipiAssociati;
+		return tagTipiAssociati;
 	}
 	
 	public String getTag() {
@@ -47,5 +54,13 @@ public class LuogoDTO implements DTO {
 
 	public String getCollocazione() {
 		return collocazione;
+	}
+
+	public List<TipoVisitaDTO> getTipiVisitaAssociati() {
+		return tipiVisitaAssociati;
+	}
+
+	public void setTipiVisitaAssociati(List<TipoVisitaDTO> tipiVisitaAssociati) {
+		this.tipiVisitaAssociati = tipiVisitaAssociati;
 	}
 }

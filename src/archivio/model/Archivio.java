@@ -3,7 +3,6 @@ package archivio.model;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import archivio.AmbitoManager;
 import archivio.AppManager;
 import archivio.CredenzialiManager;
@@ -11,7 +10,6 @@ import archivio.UserInfoManager;
 import archivio.repository.AmbitoRepository;
 import archivio.repository.UserRepository;
 import archivio.repository.VisitsRepository;
-import archivio.repository.json.ArchivioJSON;
 import dto.*;
 import utility.CodiceGenerator;
 import utility.CostantiStruttura;
@@ -28,10 +26,10 @@ public class Archivio implements AmbitoManager, AppManager, CredenzialiManager, 
 	private VisitsRepository visitRep;
 	private static int RELEASE_DAY = 16;
 
-	public Archivio (ArchivioJSON archivio) {
-		ambitoRep = archivio;
-		userRep = archivio;
-		visitRep = archivio;
+	public Archivio (AmbitoRepository ambito, UserRepository users, VisitsRepository visits) {
+		ambitoRep = ambito;
+		userRep = users;
+		visitRep = visits;
 	}
 	
 	public boolean canAddOrRemove() {
@@ -155,9 +153,20 @@ public class Archivio implements AmbitoManager, AppManager, CredenzialiManager, 
  	}
 	
 	public boolean impostaCredenzialiNuovoVolontario (String connectionCode, String username, String password, List<String> tipi_visiteVal, boolean tipiVisitaNecessario) {
-		if (getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.CONFIGURATORE) 
-			return userRep.tryImpostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal, tipiVisitaNecessario);
+		if (getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.CONFIGURATORE
+				&& !checkIfUserExists(username)) {
+			if (!checkIfTypeExistsInList(tipi_visiteVal)) return false;
+		    if (tipiVisitaNecessario && tipi_visiteVal.size() == 0) return false;
+			return userRep.impostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal, tipiVisitaNecessario);
+
+		}
 		else return false;
+	}
+	private boolean checkIfTypeExistsInList (List<String> tipiVisitaVal) {
+    	for (String tipo : tipiVisitaVal) {
+	    	if (!checkIfVisitTypeExists(tipo) && !tipo.equals("")) return false;
+	    }
+    	return true;
 	}
 	
 	public boolean rimuoviLuogo (String luogo, String connectionCode) {
@@ -212,7 +221,7 @@ public class Archivio implements AmbitoManager, AppManager, CredenzialiManager, 
 	
 	public boolean isReleaseOrLaterDay(String connectionCode) {
 		if (getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.CONFIGURATORE) 
-			return visitRep.isReleaseOrLaterDay();
+			return RELEASE_DAY >= 16;
 		else return false;
 	}
 	
@@ -320,9 +329,41 @@ public class Archivio implements AmbitoManager, AppManager, CredenzialiManager, 
 	}
 	
 	public boolean aggiungiTipoVisite (TipoVisitaDTO tipoVisita, String connectionCode) {
-		if (canAddOrRemoveCheckUsername(getLinkedUsername(connectionCode)))
-			return ambitoRep.tryAggiungiVisite(tipoVisita);
+		if (canAddOrRemoveCheckUsername(getLinkedUsername(connectionCode))) {
+			if (checkIfVisitTypeExists(tipoVisita.getTag())) return false;
+			List<LuogoDTO> luoghiConTipiAssociati = getElencoTipiVisiteLuogo(connectionCode);
+			List<TipoVisitaDTO> listaTipiChePossonoIntersecare = null;
+			for (LuogoDTO luogo : luoghiConTipiAssociati) {
+				if (luogo.getTag().equals(tipoVisita.getLuogo())) {
+					listaTipiChePossonoIntersecare = luogo.getTipiVisitaAssociati();
+					break;
+				}
+			}	
+			if (listaTipiChePossonoIntersecare!=null) {
+				if (intersectVisitTypeSamePlace(listaTipiChePossonoIntersecare, tipoVisita)) return false;
+			}
+			else return false;
+			
+			return ambitoRep.aggiungiTipoVisite(tipoVisita);
+		}
 		else return false;
+	}
+	
+	public boolean intersectVisitTypeSamePlace (List<TipoVisitaDTO> tipiLuogo, TipoVisitaDTO tipoDaAggiungere) {
+		for (TipoVisitaDTO tipo : tipiLuogo) { //tipiVisita del luogo 
+			if (Time.comesBefore(tipoDaAggiungere.getDataInizio(), tipo.getDataFine()) 
+					&& !Time.comesBefore(tipoDaAggiungere.getDataFine(), tipo.getDataInizio())) {
+				for (int day : tipo.getGiorniPrenotabiliVal()) {
+					if (tipoDaAggiungere.getGiorniPrenotabiliVal().contains(day)) { //vuol dire che un giorno qualsiasi può intersecare
+						String startHourType = tipo.getOraInizio();
+						int[] fValue = Time.calculateEndTimeWithStartAndDuration(Integer.parseInt(startHourType.split(":")[0]), Integer.parseInt(startHourType.split(":")[1]), tipo.getDurataVisita());
+						String finishHourType = String.format("%02d:%02d", fValue[0], fValue[1]);
+						if (Time.isTimeBetween(tipoDaAggiungere.getOraInizio(), startHourType, finishHourType)) return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 	
 	public boolean checkIfUserExists (String username) {

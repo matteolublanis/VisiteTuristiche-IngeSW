@@ -10,11 +10,12 @@ public interface AmbitoRepository {
 	//Precondizione: CallerType = CostantiStruttura.CONFIGURATORE
 
 	public List<TipoVisitaDTO> getElencoTipiVisite ();
-
+	
 	//Precondizione: callerType = CostantiStruttura.CONFIGURATORE
 	public List<LuogoDTO> getElencoTipiVisiteLuogo ();
 	public List<LuogoDTO> getElencoLuoghiVisitabili ();
-
+	public List<String> getGiorniPrenotabiliTipoVisita(TipoVisitaDTO tipoVisita);
+	
 	//Precondizione: max > 0
 	public boolean impostaMaxPrenotazione(int max);
 	//Precondizione: callerType = CostantiStruttura.CONFIGURATORE
@@ -22,7 +23,7 @@ public interface AmbitoRepository {
 	public void impostaAmbitoTerritoriale(String nomeAmbito);
 	public boolean checkIfVisitTypeExists (String tipo);
 	//Precondizione: callerTyper = CostantiStruttura.CONFIGURATORE
-	public boolean tryAggiungiVisite (TipoVisitaDTO tipoVisita);
+	public boolean aggiungiTipoVisite (TipoVisitaDTO tipoVisita); //TODO logica di Model, va in archivio
 	public boolean checkIfPlaceExists (String luogo);
 	//Precondizione: callerTyper = CostantiStruttura.CONFIGURATORE
 	public boolean aggiungiLuogo (LuogoDTO luogo);

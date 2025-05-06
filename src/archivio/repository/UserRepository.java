@@ -2,8 +2,6 @@ package archivio.repository;
 
 import java.util.List;
 
-import org.json.JSONArray;
-
 import dto.DataDisponibilitaDTO;
 import dto.PrenotazioneDTO;
 import dto.TipoVisitaDTO;
@@ -22,13 +20,7 @@ public interface UserRepository {
 	//Precondizione: callerType = CostantiStruttura.VOLONTARIO
     public List<DataDisponibilitaDTO> getDatePerDisponibilita(String username);
     public List<TipoVisitaDTO> getElencoTipiVisiteVolontario (String username);
-	//Precondizione: callerTyper = CostantiStruttura.CONFIGURATORE
-	public boolean tryImpostaCredenzialiNuovoVolontario (String username, String password, List<String> tipi_visiteVal, boolean tipiVisitaNecessario);
-	/*
-	 * Precondizione: callerType = CostantiStruttura.CONFIGURATORE
-	 * Postcondizione: new Volontario in Archivio
-	 */
-	public boolean impostaCredenzialiNuovoVolontario (String username, String password, JSONArray tipi_visite, boolean tipiVisitaNecessari);
+
 	/*
 	 * Precondizione: 0 < tipo_user < 4
 	 */
@@ -66,6 +58,8 @@ public interface UserRepository {
 	//Precondizione: callerType = CostantiStruttura.FRUITORE
 	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore (String username);
 	public boolean checkIfUserExists (String username);
+	//Precondizione: callerTyper = CostantiStruttura.CONFIGURATORE
+		public boolean impostaCredenzialiNuovoVolontario (String username, String password, List<String> tipi_visiteVal, boolean tipiVisitaNecessario);
 	public boolean impostaCredenzialiNuovoFruitore(String username, String password);
 	public boolean impostaCredenzialiNuovoConfiguratore(String username, String password);
 

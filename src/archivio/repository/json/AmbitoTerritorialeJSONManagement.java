@@ -43,6 +43,7 @@ public class AmbitoTerritorialeJSONManagement {
 	}
 	public void aggiungiTipoALuogo (String luogo, String tipoVisita) {
 		JSONArray tipiLuogo = getTipiLuogo(luogo);
+		for (Object o : tipiLuogo) if (((String) o).equals(tipoVisita)) return;
 		tipiLuogo.put(tipoVisita);
 	    JSONUtility.aggiornaJsonFile(jsonAmbitoTerritoriale, PATH_AMBITO, 10);
 	}
@@ -61,9 +62,9 @@ public class AmbitoTerritorialeJSONManagement {
 				List<String> tipiVisiteAssociati = new ArrayList<>();
 				for (int i = 0 ; i < tipiVisite.length() ; i++) 
 					{
-						tipiVisiteAssociati.add(tipiVisiteTitoli.get(tipiVisite.get(i)));
+						tipiVisiteAssociati.add((String)tipiVisite.get(i));
 					}
-					result.add(new LuogoDTO(infoLuogo.getString(NAME), tipiVisiteAssociati));	
+					result.add(new LuogoDTO(nomeLuogo, infoLuogo.getString(NAME), tipiVisiteAssociati));	
 				}
 			}
 			return result;
@@ -82,8 +83,8 @@ public class AmbitoTerritorialeJSONManagement {
 				break;
 			}
 		}
-		aggiornaJsonAmbito();
 		if (checkIfLuogoHasNoVisitType(luogo)) rimuoviLuogo(luogo);
+		aggiornaJsonAmbito();
 	}
 	
 	public JSONObject getLuoghi () {

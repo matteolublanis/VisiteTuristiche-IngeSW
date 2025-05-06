@@ -30,7 +30,6 @@ public interface VisitsRepository {
 	public void setPossibilitaDareDisponibilitaVolontari(boolean b); //Semplifica gli altri due
 	
 	public boolean getPossibileDareDisponibilita();
-	public boolean isReleaseOrLaterDay();
 	//Precondizione: callerTyper = CostantiStruttura.CONFIGURATORE
 	public boolean isPrimaPubblicazione ();
 }	

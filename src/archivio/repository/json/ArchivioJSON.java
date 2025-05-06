@@ -158,7 +158,6 @@ public class ArchivioJSON implements AmbitoRepository, UserRepository, VisitsRep
 				return codicePrenotazione;
 			}
 			else return null;
-
 	}
 
 	public boolean rimuoviPrenotazione (String username, String codicePrenotazione) {
@@ -173,7 +172,7 @@ public class ArchivioJSON implements AmbitoRepository, UserRepository, VisitsRep
 
 	}
 
-	public boolean impostaCredenzialiNuovoVolontario (String username, String password, JSONArray tipi_visite, boolean tipiVisitaNecessari) {
+	private boolean impostaCredenzialiNuovoVolontario (String username, String password, JSONArray tipi_visite, boolean tipiVisitaNecessari) {
 			tipiVisiteJSONManager.inserisciNuovoVolontarioAssociatoAVisite(tipi_visite, username);
 		    usersJSONManager.impostaCredenzialiNuovoVolontario(username, password, tipi_visite);
 			return true;
@@ -212,8 +211,15 @@ public class ArchivioJSON implements AmbitoRepository, UserRepository, VisitsRep
 	}
 
 	public List<LuogoDTO> getElencoTipiVisiteLuogo () {	
-		return ambitoJSONManager.getElencoTipiVisiteLuogo(tipiVisiteJSONManager.getTipiVisitaTitoli());
-
+		List<LuogoDTO> result = ambitoJSONManager.getElencoTipiVisiteLuogo(tipiVisiteJSONManager.getTipiVisitaTitoli());
+		for (LuogoDTO luogo : result) {
+			List<TipoVisitaDTO> tipiVisita = new ArrayList<>();
+			for (String tagTipoVisita : luogo.getTipiAssociati()) {
+				tipiVisita.add(tipiVisiteJSONManager.getTipoVisitaDTOAssociato(tagTipoVisita, luogo.getTag()));
+			}
+			luogo.setTipiVisitaAssociati(tipiVisita);
+		}
+		return result;
 	}
 
 	public boolean impostaMaxPrenotazione (int max) {
@@ -280,10 +286,6 @@ public class ArchivioJSON implements AmbitoRepository, UserRepository, VisitsRep
 	public boolean primoAccessoEseguito (String user) {
 		return usersJSONManager.primoAccessoEseguito(user);
 	}
-	
-	public boolean isReleaseOrLaterDay() {
-		return (RELEASE_DAY <= Time.getActualDateValue(Time.DAY));
-	}
 
 	public boolean isUltimaPubblicazioneMeseScorso () {
 		return ((getUltimoMesePubblicazione() == Time.getActualDateValue(Time.MONTH) - 1 && getUltimoAnnoPubblicazione() == Time.getActualDateValue(Time.YEAR)) ||
@@ -315,32 +317,26 @@ public class ArchivioJSON implements AmbitoRepository, UserRepository, VisitsRep
 	    }
     	return true;
 	}
-	
-	public boolean tryImpostaCredenzialiNuovoVolontario (String username, String password, List<String> tipi_visiteVal, boolean tipiVisitaNecessario) {
-		if (checkIfUserExists(username)) return false; 
+
+	public boolean impostaCredenzialiNuovoVolontario (String username, String password, List<String> tipi_visiteVal, boolean tipiVisitaNecessario) {
 		JSONArray tipiVisite = new JSONArray();
-	    if (tipi_visiteVal != null) {
-	    	if (!checkIfTypeAlreadyExistsInSet(tipi_visiteVal, tipiVisite)) return false;
-	    }
-	    if (tipiVisitaNecessario && tipiVisite.length() == 0) return false;
+		for (String tipo : tipi_visiteVal) { if (!tipo.equals(""))tipiVisite.put(tipo); }
 		return impostaCredenzialiNuovoVolontario(username, password, tipiVisite, tipiVisitaNecessario);
 	}
 	
-	public boolean tryAggiungiVisite (TipoVisitaDTO tipoVisita) {
+	public List<String> getGiorniPrenotabiliTipoVisita(TipoVisitaDTO tipoVisita) {
 		JSONArray giorniPrenotabili = tipiVisiteJSONManager.returnGiorniPrenotabili(tipoVisita.getGiorniPrenotabiliVal());
-	    if (tipiVisiteJSONManager.intersectVisitTypeSamePlace (ambitoJSONManager.getTipiLuogo(tipoVisita.getLuogo()),
-	    		tipoVisita.getDataInizio(), tipoVisita.getDataFine(), tipoVisita.getOraInizio(), tipoVisita.getDurataVisita(), giorniPrenotabili.toString())) return false; //da rimuovere volontari nuovi
-	    
-		
+		List<String> result = new ArrayList<>();
+		for (Object o : giorniPrenotabili) result.add((String)o);
+		return result;
+	}
+	
+	public boolean aggiungiTipoVisite (TipoVisitaDTO tipoVisita) {		
 	    ambitoJSONManager.aggiungiTipoALuogo(tipoVisita.getLuogo(), tipoVisita.getTag());
 	    tipiVisiteJSONManager.aggiungiTipoVisite(tipoVisita);
 		
 	    associaVolontariATipoVisita(tipoVisita.getVolontariVal(), tipoVisita.getTag());
 		return true;
-	}
-	
-	public boolean intersectOtherEventSamePlace (String dateStart1, String dateFinish1, String hour1, int duration1, String days1, JSONArray tipiLuogo) {
-		return tipiVisiteJSONManager.intersectVisitTypeSamePlace(tipiLuogo, dateStart1, dateFinish1, hour1, duration1, days1);
 	}
 
 	public void setPossibilitaDareDisponibilitaVolontari(boolean b) {
@@ -402,6 +398,10 @@ public class ArchivioJSON implements AmbitoRepository, UserRepository, VisitsRep
 					associaVolontarioEsistenteATipoVisitaEsistente(volontario.getUsername(), tipoVisita);
 					i++;
 				}
+				else {
+					//TESTO DI LOG
+					System.out.println("Can't link " + volontario.getUsername());
+				}
 			}
 		}
 		if (i == volontari.size()) return true;
@@ -417,5 +417,6 @@ public class ArchivioJSON implements AmbitoRepository, UserRepository, VisitsRep
 	public String linkedUserToPrenotazione(String codicePrenotazione) {
 		return prenotazioniJSONManager.getLinkedFruitore(codicePrenotazione);
 	}
+
 
 }
