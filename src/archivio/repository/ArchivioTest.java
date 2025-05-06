@@ -129,7 +129,7 @@ class ArchivioTest {
 		volontari.add(new Credenziali("volontario2", null)); //Non deve entrare nell'aggiunta, quindi non lancia eccezione
 		TipoVisitaDTO tipoStessoTag = new TipoVisitaDTO("sushitest", "sushi", "milano", "sushi", "sushi",
 				"08-09-2025", "08-12-2025", giornoStessiGiornoSushi, "10:30", 60, true, 5, 20, volontari);
-		assertTrue(arch.aggiungiTipoVisite(tipoStessoTag, connectionCode));
+		assertFalse(arch.aggiungiTipoVisite(tipoStessoTag, connectionCode));
 	}
 	
 	@AfterEach

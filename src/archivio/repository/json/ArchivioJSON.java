@@ -335,8 +335,7 @@ public class ArchivioJSON implements AmbitoRepository, UserRepository, VisitsRep
 	    ambitoJSONManager.aggiungiTipoALuogo(tipoVisita.getLuogo(), tipoVisita.getTag());
 	    tipiVisiteJSONManager.aggiungiTipoVisite(tipoVisita);
 		
-	    associaVolontariATipoVisita(tipoVisita.getVolontariVal(), tipoVisita.getTag());
-		return true;
+	    return associaVolontariATipoVisita(tipoVisita.getVolontariVal(), tipoVisita.getTag());
 	}
 
 	public void setPossibilitaDareDisponibilitaVolontari(boolean b) {
