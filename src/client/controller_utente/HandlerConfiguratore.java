@@ -25,10 +25,10 @@ public class HandlerConfiguratore extends ControllerUtente{
 		this.connectionCode = connectionCode;
 		userInfo = ArchivioFactory.createUserInfoManager(tipoApp);
 		appPlan = ArchivioFactory.createAppManager(tipoApp);
+		doPrimaConfigurazioneIfNecessaria();
 	}
 	
-	public void checkPrimoAccesso () {
-		super.checkPrimoAccesso();
+	private void doPrimaConfigurazioneIfNecessaria () {
 		if (checkPrimaConfigurazioneArchivio()) configuraArchivio();
 	}
 	
