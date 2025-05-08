@@ -10,9 +10,7 @@ import org.junit.runners.MethodSorters;
 
 import archivio.ArchivioFactory;
 import archivio.CredenzialiManager;
-import archivio.UserInfoManager;
 import archivio.model.Archivio;
-import archivio.model.UserManager;
 import archivio.repository.json.ArchivioJSON;
 
 import java.util.ArrayList;

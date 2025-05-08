@@ -70,7 +70,7 @@ public class UserManager implements UserInfoManager {
 
 	@Override
     public boolean inserisciDisponibilita(String connectionCode, String data) { //OK
-   	 if (getTipoUtente(accessoManager.getLinkedUsername(connectionCode)) == CostantiStruttura.VOLONTARIO) 
+   	 if (getTipoUtente(getUsernameClient(connectionCode)) == CostantiStruttura.VOLONTARIO) 
    		 return userRep.inserisciDisponibilita(data, getUsernameClient(connectionCode));
    	 else return false;
 	}
@@ -158,7 +158,7 @@ public class UserManager implements UserInfoManager {
 
 	@Override
 	public boolean canAddOrRemove(String connectionCode) {
-		if (getTipoUtente(accessoManager.getLinkedUsername(connectionCode)) == CostantiStruttura.CONFIGURATORE) {
+		if (getTipoUtente(getUsernameClient(connectionCode)) == CostantiStruttura.CONFIGURATORE) {
 			return canAddOrRemove();
 		}
 		else return false;

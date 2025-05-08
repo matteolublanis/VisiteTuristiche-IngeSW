@@ -23,7 +23,9 @@ public class AccessoManager implements CredenzialiManager {
 	}
 
 	@Override
-	public String getLinkedUsername (String connectionCode) { return usernameLinkati.get(connectionCode); } 
+	public String getLinkedUsername (String connectionCode) {
+		return usernameLinkati.get(connectionCode); 
+	} 
 	
 	@Override	
 	public String makeConnection(Credenziali c) {

@@ -53,12 +53,11 @@ class FunzioniUtenteTest {
 		assertEquals(i, -1);
 	}
 	
-	
 	@Test
 	void testAggiuntaCredenzialiConfiguratore() {
 		int i = getIndexAzione("Aggiungi credenziali nuovo configuratore");
 		app.scegliAzione(String.valueOf(i)); //manualmente da inserire dati
 		assertTrue(app.getGu().checkIfUserExists("conftest"));
 	}
-
+	
 }
