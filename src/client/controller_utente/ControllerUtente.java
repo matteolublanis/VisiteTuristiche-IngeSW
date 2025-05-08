@@ -94,7 +94,7 @@ public abstract class ControllerUtente {
 	}
 	
 	public boolean checkIfUserExists(String username) {
-		return credenzialiInfo.checkIfUserExists(username);
+		return credenzialiInfo.checkIfUsernameExists(username);
 	}
 	
 	public boolean checkIfVisitTypeExists(String tipoVisita) {

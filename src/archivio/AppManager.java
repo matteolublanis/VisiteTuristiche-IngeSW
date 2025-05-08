@@ -1,9 +1,7 @@
 package archivio;
 
 public interface AppManager {
-	
-	public boolean checkPrimoAvvio ();
-	
+		
 	public boolean pubblicaPiano(String connectionCode);
 	
 	public boolean chiudiRaccoltaDisponibilita (String connectionCode);

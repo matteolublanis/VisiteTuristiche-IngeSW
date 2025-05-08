@@ -59,11 +59,8 @@
           "tipo": 2,
           "password": "volontario1",
           "primo-accesso": false,
-          "tipo-visita": [
-               "museo_armi",
-               "visita_capitolium"
-          ],
-          "username": "volontario1"
+          "username": "volontario1",
+          "prenotazioni": []
      },
      "conf2": {
           "tipo": 1,
@@ -82,6 +79,7 @@
           "tipo": 1,
           "password": "admin",
           "primo-accesso": false,
-          "username": "conf1"
+          "username": "conf1",
+          "prenotazioni": []
      }
 }

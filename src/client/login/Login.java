@@ -1,9 +1,7 @@
 package client.login;
 
-import archivio.AppManager;
 import archivio.ArchivioFactory;
 import archivio.CredenzialiManager;
-import archivio.UserInfoManager;
 import client.app.App;
 import client.controller_utente.ControllerUtente;
 import client.controller_utente.ControllerUtenteFactory;
@@ -13,8 +11,6 @@ import utility.Credenziali;
 public class Login {
 	
 	private App a;
-	private UserInfoManager userManager;
-	private AppManager appManager;
 	private CredenzialiManager credenzialiManager;
 	private int tipoApp;
 	
@@ -26,8 +22,6 @@ public class Login {
  	}
  	
  	private void linkWithArchive(int tipoApp) {
- 		userManager = ArchivioFactory.createUserInfoManager(tipoApp);
- 		appManager = ArchivioFactory.createAppManager(tipoApp);
  		credenzialiManager = ArchivioFactory.createCredenzialiManager(tipoApp);
  		
  	}
@@ -66,7 +60,7 @@ public class Login {
 	}
 	
 	public boolean checkPrimoAvvio() {
-		return appManager.checkPrimoAvvio();
+		return credenzialiManager.checkPrimoAvvio();
 	}
 	
 	public void avvio () {
@@ -79,7 +73,7 @@ public class Login {
 	}
 	//Precondizione: username != null
 	private boolean checkUsernameGiaPresente(String username) {
-		return credenzialiManager.checkIfUserExists(username);
+		return credenzialiManager.checkIfUsernameExists(username);
 	}
 	//Precondizione: c != null
 	private boolean checkCredenzialiCorrette(Credenziali c) {
@@ -92,7 +86,7 @@ public class Login {
 			a.catchEvent(AppEvent.WEIRD_SETTING_USERHANDLER);
 			return;
 		}
-		int tipoUtente = userManager.getTipoLinkato(connectionCode);
+		int tipoUtente = credenzialiManager.getTipoLinkato(connectionCode);
 		ControllerUtente gu = ControllerUtenteFactory.createControllerUtente(tipoUtente, tipoApp,a, connectionCode);
 		a.setGu(gu);
 		gu.checkPrimoAccesso();

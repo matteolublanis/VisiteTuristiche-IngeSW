@@ -8,7 +8,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runners.MethodSorters;
 
+import archivio.ArchivioFactory;
+import archivio.CredenzialiManager;
+import archivio.UserInfoManager;
 import archivio.model.Archivio;
+import archivio.model.UserManager;
 import archivio.repository.json.ArchivioJSON;
 
 import java.util.ArrayList;
@@ -25,7 +29,9 @@ class ArchivioTest {
 	AmbitoRepository ambitoRep;
 	UserRepository userRep;
 	VisitsRepository visitRep;
+	CredenzialiManager accessoManager = ArchivioFactory.createCredenzialiManager(CostantiStruttura.STANDALONE);
 	Archivio arch;
+	String connectionCode = accessoManager.makeConnection(new Credenziali("conf1", "admin"));
 
 	
 	@BeforeEach
@@ -34,7 +40,7 @@ class ArchivioTest {
 		ambitoRep = archivio;
 		userRep = archivio;
 		visitRep = archivio;
-		arch = new Archivio(ambitoRep, userRep, visitRep);
+		arch = new Archivio(ambitoRep, userRep, visitRep, accessoManager, ArchivioFactory.createUserInfoManager(0));
 		ambitoRep.aggiungiLuogo(new LuogoDTO("milano", "Milano", "Milano", "Milano"));
 		List<Integer> giorni = new ArrayList<>(); giorni.add(1);
 		List<Credenziali> volontari = new ArrayList<>(); 
@@ -100,7 +106,6 @@ class ArchivioTest {
 	
 	@Test
 	void testF_aggiuntaModelStessoTag () {
-		String connectionCode = arch.makeConnection(new Credenziali("conf1", "admin"));
 		List<Integer> giorniStessoTag = new ArrayList<>(); giorniStessoTag.add(2);
 		List<Credenziali> volontariStessoTag = new ArrayList<>(); 
 		volontariStessoTag.add(new Credenziali("volontariosushi", null));
@@ -111,7 +116,6 @@ class ArchivioTest {
 
 	@Test
 	void testG_aggiuntaModelStessoGiorno () {
-		String connectionCode = arch.makeConnection(new Credenziali("conf1", "admin"));
 		List<Integer> giornoStessiGiornoSushi = new ArrayList<>(); giornoStessiGiornoSushi.add(1);
 		List<Credenziali> volontari = new ArrayList<>(); 
 		volontari.add(new Credenziali("volontariotest", null)); //Non deve entrare nell'aggiunta, quindi non lancia eccezione
@@ -122,8 +126,6 @@ class ArchivioTest {
 
 	@Test
 	void testH_volontarioNonAssociabile() {
-		System.out.println("Test G");
-		String connectionCode = arch.makeConnection(new Credenziali("conf1", "admin"));
 		List<Integer> giornoStessiGiornoSushi = new ArrayList<>(); giornoStessiGiornoSushi.add(3);
 		List<Credenziali> volontari = new ArrayList<>(); 
 		volontari.add(new Credenziali("volontario2", null)); //Non deve entrare nell'aggiunta, quindi non lancia eccezione
