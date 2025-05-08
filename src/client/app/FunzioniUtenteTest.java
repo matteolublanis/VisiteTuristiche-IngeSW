@@ -48,9 +48,16 @@ class FunzioniUtenteTest {
 	}
 	
 	@Test
+	void testSceltaAzioneNonDisponibile() {
+		int i = getIndexAzione("Effettua iscrizione ad una visita proposta");
+		assertEquals(i, -1);
+	}
+	
+	
+	@Test
 	void testAggiuntaCredenzialiConfiguratore() {
 		int i = getIndexAzione("Aggiungi credenziali nuovo configuratore");
-		app.scegliAzione(String.valueOf(i));
+		app.scegliAzione(String.valueOf(i)); //manualmente da inserire dati
 		assertTrue(app.getGu().checkIfUserExists("conftest"));
 	}
 
