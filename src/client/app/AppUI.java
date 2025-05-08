@@ -62,6 +62,7 @@ public class AppUI implements App{
 	public void stop() {
 		view("Arrivederci!");
 		sc.close();
+		gestoreLogin.stopConnection();
 		System.exit(0);
 	}
 	

@@ -39,12 +39,6 @@
                "98EYF34U"
           ]
      },
-     "conftest": {
-          "tipo": 1,
-          "password": "test",
-          "primo-accesso": true,
-          "username": "conftest"
-     },
      "volontario2": {
           "tipo": 2,
           "password": "volontario2",
@@ -59,8 +53,11 @@
           "tipo": 2,
           "password": "volontario1",
           "primo-accesso": false,
-          "username": "volontario1",
-          "prenotazioni": []
+          "tipo-visita": [
+               "museo_armi",
+               "visita_capitolium"
+          ],
+          "username": "volontario1"
      },
      "conf2": {
           "tipo": 1,
@@ -79,7 +76,6 @@
           "tipo": 1,
           "password": "admin",
           "primo-accesso": false,
-          "username": "conf1",
-          "prenotazioni": []
+          "username": "conf1"
      }
 }

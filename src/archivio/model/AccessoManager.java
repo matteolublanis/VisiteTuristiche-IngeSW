@@ -121,4 +121,10 @@ public class AccessoManager implements CredenzialiManager {
 		return userRep.getTipoUtente(getLinkedUsername(connectionCode));
 	}
 
+	@Override
+	public void stopConnection(String connectionCode) {
+		usernameLinkati.remove(connectionCode);
+		
+	}
+
 }

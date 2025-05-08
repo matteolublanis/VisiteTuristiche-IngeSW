@@ -8,6 +8,8 @@ public interface CredenzialiManager {
 	
 	public String makeConnection(Credenziali c);
 	
+	public void stopConnection(String connectionCode); //da rivedere
+	
 	public boolean checkPrimoAvvio ();
 	
 	public int getTipoLinkato(String connectionCode);

@@ -23,6 +23,10 @@ public class Login {
  		this.tipoApp = tipoApp;
  	}
  	
+	public void stopConnection() {
+		credenzialiManager.stopConnection(connectionCode);
+	}
+	
  	private void linkWithArchive(int tipoApp) {
  		credenzialiManager = ArchivioFactory.createCredenzialiManager(tipoApp);
  		
