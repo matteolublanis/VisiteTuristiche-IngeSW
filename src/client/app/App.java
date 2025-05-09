@@ -5,6 +5,7 @@ import java.util.List;
 
 import client.controller_utente.ControllerUtente;
 import client.log_events.AppEvent;
+import client.login.Login;
 import dto.*;
 import dto.LuogoDTO;
 import dto.TipoVisitaDTO;
@@ -13,7 +14,10 @@ import utility.Credenziali;
 public interface App {
 	public void start();
 	public void stop();
+	public boolean scegliAzione(String azione); //TODO da cambiare con ENUM azioni
+	public Login getGl();
 	public void setGu(ControllerUtente gu);
+	public ControllerUtente getGu();
 	public String richiediInput(String msg);
 	public boolean chiediSioNo(String msg);
 	public String richiediDataValida(String msg); //TODO da cambiare con LocalDate o Calendar?

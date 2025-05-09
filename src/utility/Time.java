@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,7 +17,8 @@ public class Time {
 	public static final int DAY = 1, MONTH = 2, YEAR = 3;
 	private static final String TIMEREGEX = "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$";
     private static final String DATAREGEX = "\\b(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\\d{4})\\b";
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MM-uuuu")
+    		.withResolverStyle(ResolverStyle.STRICT);
 	private static String fictionalDate = "16-06-2025";
     private static String actualDate = fictionalDate;//getTodaysDate()
     
@@ -192,7 +194,9 @@ public class Time {
 
 	public static boolean comesBefore(String date1, String date2) {
         try {
+        	System.out.println(date1 + " " + isValidDate(date1));
             LocalDate d1 = LocalDate.parse(date1, FORMATTER);
+            System.out.println("eccomi");
             LocalDate d2 = LocalDate.parse(date2, FORMATTER);
             return d1.isBefore(d2);
         } catch (Exception e) {

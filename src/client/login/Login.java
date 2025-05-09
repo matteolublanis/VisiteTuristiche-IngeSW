@@ -1,11 +1,8 @@
 package client.login;
 
-import archivio.AppManager;
 import archivio.ArchivioFactory;
 import archivio.CredenzialiManager;
-import archivio.UserInfoManager;
 import client.app.App;
-import client.controller_utente.ControllerUtente;
 import client.controller_utente.ControllerUtenteFactory;
 import client.log_events.AppEvent;
 import utility.Credenziali;
@@ -13,10 +10,10 @@ import utility.Credenziali;
 public class Login {
 	
 	private App a;
-	private UserInfoManager userManager;
-	private AppManager appManager;
 	private CredenzialiManager credenzialiManager;
 	private int tipoApp;
+	private String connectionCode;
+	private int tipoUtente;
 	
 	//Precondizione> archivio != null
 	public Login(App a, int tipoApp) {
@@ -25,9 +22,11 @@ public class Login {
  		this.tipoApp = tipoApp;
  	}
  	
+	public void stopConnection() {
+		credenzialiManager.stopConnection(connectionCode);
+	}
+	
  	private void linkWithArchive(int tipoApp) {
- 		userManager = ArchivioFactory.createUserInfoManager(tipoApp);
- 		appManager = ArchivioFactory.createAppManager(tipoApp);
  		credenzialiManager = ArchivioFactory.createCredenzialiManager(tipoApp);
  		
  	}
@@ -66,7 +65,7 @@ public class Login {
 	}
 	
 	public boolean checkPrimoAvvio() {
-		return appManager.checkPrimoAvvio();
+		return credenzialiManager.checkPrimoAvvio();
 	}
 	
 	public void avvio () {
@@ -79,7 +78,7 @@ public class Login {
 	}
 	//Precondizione: username != null
 	private boolean checkUsernameGiaPresente(String username) {
-		return credenzialiManager.checkIfUserExists(username);
+		return credenzialiManager.checkIfUsernameExists(username);
 	}
 	//Precondizione: c != null
 	private boolean checkCredenzialiCorrette(Credenziali c) {
@@ -92,10 +91,35 @@ public class Login {
 			a.catchEvent(AppEvent.WEIRD_SETTING_USERHANDLER);
 			return;
 		}
-		int tipoUtente = userManager.getTipoLinkato(connectionCode);
-		ControllerUtente gu = ControllerUtenteFactory.createControllerUtente(tipoUtente, tipoApp,a, connectionCode);
-		a.setGu(gu);
-		gu.checkPrimoAccesso();
+		tipoUtente = credenzialiManager.getTipoLinkato(connectionCode);
+		this.connectionCode = connectionCode;
+		checkPrimoAccesso();
 		
+	}
+	
+	protected void checkPrimoAccesso() {
+		if (credenzialiManager.checkPrimoAccesso(connectionCode)) primoAccesso();
+		else setupGestoreUtente();
+	}
+	
+	//Precondizione: isPrimoAccesso == true
+	//Post condizione: credenziali modificate
+	protected void primoAccesso() {
+		a.viewPrimoAccesso();
+		do {
+			Credenziali c = a.richiediCredenziali();
+			if (cambiaCredenziali(c)) a.catchEvent(AppEvent.USERNAME_ALREADY_IN_USE);
+			else break;
+		} while (true);
+		a.catchEvent(AppEvent.CHANGED_CREDENTIALS);
+		setupGestoreUtente();
+	}
+	
+	private void setupGestoreUtente () {
+		a.setGu(ControllerUtenteFactory.createControllerUtente(tipoUtente, tipoApp,a, connectionCode));
+	}
+	
+	protected boolean cambiaCredenziali(Credenziali c) {
+		return (credenzialiManager.cambiaCredenziali(connectionCode, c));
 	}
 }

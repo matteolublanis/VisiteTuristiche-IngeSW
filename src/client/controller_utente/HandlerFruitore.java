@@ -27,12 +27,6 @@ public class HandlerFruitore extends ControllerUtente {
 		userInfo = ArchivioFactory.createUserInfoManager(tipoApp);
 	}
 	
-	@Override
-	public void checkPrimoAccesso() {
-		
-	}
-
-	
 	private void visualListVisitDTO (List<VisitaDTO> visite) {
 		if (visite != null) {
 			a.viewListVisitaDTO(visite);

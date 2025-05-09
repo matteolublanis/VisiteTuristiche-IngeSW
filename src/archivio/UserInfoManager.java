@@ -12,8 +12,8 @@ import utility.Credenziali;
 public interface UserInfoManager {
 	
 	public int getTipoUtente (String username);
-	
-	public int getTipoLinkato(String connectionCode);
+		
+	public boolean checkIfUsernameExists (String username);
 	
 	public boolean associaVolontariATipoVisitaEsistente(String connectionCode, List<Credenziali> volontari, String tipoVisita);
 	

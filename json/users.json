@@ -39,12 +39,6 @@
                "98EYF34U"
           ]
      },
-     "conftest": {
-          "tipo": 1,
-          "password": "test",
-          "primo-accesso": true,
-          "username": "conftest"
-     },
      "volontario2": {
           "tipo": 2,
           "password": "volontario2",

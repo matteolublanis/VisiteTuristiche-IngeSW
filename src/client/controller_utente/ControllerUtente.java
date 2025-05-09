@@ -25,27 +25,6 @@ public abstract class ControllerUtente {
 		this.credenzialiInfo = ArchivioFactory.createCredenzialiManager(tipoApp);
 	}
 	
-	public void checkPrimoAccesso() {
-		if (credenzialiInfo.checkPrimoAccesso(connectionCode)) primoAccesso();
-		else ; //A livello grafico, potrebbe chiudere schermata di Login e aprire una nuova roba, il controller dà comando
-	}
-	
-	//Precondizione: isPrimoAccesso == true
-	//Post condizione: credenziali modificate
-	protected void primoAccesso() {
-		a.viewPrimoAccesso();
-		do {
-			Credenziali c = a.richiediCredenziali();
-			if (cambiaCredenziali(c)) a.catchEvent(AppEvent.USERNAME_ALREADY_IN_USE);
-			else break;
-		} while (true);
-		a.catchEvent(AppEvent.CHANGED_CREDENTIALS);
-	}
-	
-	protected boolean cambiaCredenziali(Credenziali c) {
-		return (credenzialiInfo.cambiaCredenziali(connectionCode, c));
-	}
-	
 	public List<String> getAzioniDisponibiliConNomi() {
 	    List<String> nomiAzioni = new ArrayList<>();
 	    List<Method> azioniDisponibili = getAzioniDisponibili();
@@ -94,7 +73,7 @@ public abstract class ControllerUtente {
 	}
 	
 	public boolean checkIfUserExists(String username) {
-		return credenzialiInfo.checkIfUserExists(username);
+		return credenzialiInfo.checkIfUsernameExists(username);
 	}
 	
 	public boolean checkIfVisitTypeExists(String tipoVisita) {

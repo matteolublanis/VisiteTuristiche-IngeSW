@@ -1,11 +1,16 @@
 package client.app;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.Set;
+
+import javax.sound.sampled.LineUnavailableException;
+
 import client.controller_utente.ControllerUtente;
 import client.log_events.AppEvent;
 import client.login.Login;
@@ -24,6 +29,11 @@ public class AppUI implements App{
 	private Scanner sc = new Scanner(System.in);
 	private Login gestoreLogin;
 	private ControllerUtente controllerUtente; 
+	
+	public static void main (String args[]) throws IllegalAccessException, InvocationTargetException, IOException, LineUnavailableException {
+		App app = new AppUI(); 
+		app.start();
+}
 	
 	public AppUI() {
 		this.gestoreLogin = new Login(this, 0);
@@ -62,6 +72,7 @@ public class AppUI implements App{
 	public void stop() {
 		view("Arrivederci!");
 		sc.close();
+		gestoreLogin.stopConnection();
 		System.exit(0);
 	}
 	
