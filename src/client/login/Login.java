@@ -3,7 +3,6 @@ package client.login;
 import archivio.ArchivioFactory;
 import archivio.CredenzialiManager;
 import client.app.App;
-import client.controller_utente.ControllerUtente;
 import client.controller_utente.ControllerUtenteFactory;
 import client.log_events.AppEvent;
 import utility.Credenziali;
@@ -117,8 +116,7 @@ public class Login {
 	}
 	
 	private void setupGestoreUtente () {
-		ControllerUtente gu = ControllerUtenteFactory.createControllerUtente(tipoUtente, tipoApp,a, connectionCode);
-		a.setGu(gu);
+		a.setGu(ControllerUtenteFactory.createControllerUtente(tipoUtente, tipoApp,a, connectionCode));
 	}
 	
 	protected boolean cambiaCredenziali(Credenziali c) {
