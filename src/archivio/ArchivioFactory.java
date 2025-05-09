@@ -1,10 +1,10 @@
 package archivio;
  
  import utility.CostantiStruttura;
-import archivio.model.AccessoManager;
 import archivio.model.Archivio;
 import archivio.model.UserManager;
 import archivio.repository.json.ArchivioJSON;
+import archivio.server.AccessoManager;
  
  public class ArchivioFactory {
 	
