@@ -30,7 +30,10 @@ public class Archivio implements AmbitoManager, AppManager {
 	
 	public boolean pubblicaPiano(String connectionCode) { 
 		if (userRep.getTipoUtente(getUsernameClient(connectionCode)) == CostantiStruttura.CONFIGURATORE) {
-			if(isPrimaPubblicazione()) return visitRep.setPrimaPubblicazione(); 
+			if(isPrimaPubblicazione()) {
+				visitRep.apriRaccoltaDisponibilita();
+				return visitRep.setPrimaPubblicazione(); 
+			}
 			if (Time.getActualDateValue(Time.DAY) >= RELEASE_DAY && //SE ULTIMO PIANO PUBBLICATO MESE SCORSO PUBBLICA
 					visitRep.isUltimaPubblicazioneMeseScorso() && !(visitRep.getPossibileDareDisponibilita())) {
 				return visitRep.pubblicaPiano();

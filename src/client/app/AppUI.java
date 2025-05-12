@@ -58,6 +58,7 @@ public class AppUI implements App{
 	 */
 	public void start() {
 		view("Benvenuto!");
+		Time.setActualDate(richiediDataValida("data di app"));
 		gestoreLogin.avvio(); //fase login
 
 		do {
@@ -466,7 +467,7 @@ public class AppUI implements App{
 			}
 			else {
 				String result =  ("-----------") + ("\nTitolo: " +  visita.getTitolo()) + ("\nGiorno mancato svolgimento: " +  visita.getGiorno())
-						+ ("Stato: " +  visita.getStato());
+						+ ("\nStato: " +  visita.getStato());
 				view(result);
 			}
 		}

@@ -16,11 +16,11 @@ public interface CredenzialiManager {
 	
 	public String getLinkedUsername (String connectionCode);
 	
-	public boolean impostaCredenzialiNuovoVolontario (String connectionCode, String username, String password, List<String> tipi_visiteVal, boolean tipiVisitaNecessario);
+	public boolean impostaCredenzialiNuovoVolontario (String connectionCode, Credenziali c, List<String> tipi_visiteVal, boolean tipiVisitaNecessario);
 	
 	public Credenziali getCredenzialiIniziali ();
 	
-	public boolean impostaCredenzialiNuovoConfiguratore(String connectionCode, String username, String password);
+	public boolean impostaCredenzialiNuovoConfiguratore(String connectionCode, Credenziali credenziali);
 	
 	public boolean checkIfUsernameExists (String username);
 		

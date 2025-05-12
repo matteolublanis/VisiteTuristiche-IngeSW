@@ -58,6 +58,7 @@ class FunzioniUtenteTest {
 		int i = getIndexAzione("Aggiungi credenziali nuovo configuratore");
 		app.scegliAzione(String.valueOf(i)); //manualmente da inserire dati
 		assertTrue(app.getGu().checkIfUserExists("conftest"));
+		//da rimuovere user una volta aggiunto
 	}
 	
 }

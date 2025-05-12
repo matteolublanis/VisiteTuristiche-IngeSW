@@ -139,10 +139,9 @@ public class HandlerConfiguratore extends ControllerUtente{
  	@MethodName("Pubblica il piano delle visite")
 	public void pubblicaPianoVisite() {
 		if (appPlan.isReleaseOrLaterDay(connectionCode)) {
-			if (appPlan.isPrimaPubblicazione()) {
+			if (appPlan.isPrimaPubblicazione()) { //TODO da testare
 				a.catchEvent(AppEvent.PROJECT_STARTED);
 				appPlan.pubblicaPiano(connectionCode);
-				appPlan.apriRaccoltaDisponibilita(connectionCode);
 			}
 			else {
 				if (appPlan.pubblicaPiano(connectionCode)) {
@@ -220,7 +219,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	public void impostaCredenzialiNuovoConfiguratore () {
 		//Event Add Configuratore
 		Credenziali c = a.richiediCredenziali();
-		if (credenzialiInfo.impostaCredenzialiNuovoConfiguratore(connectionCode, c.getUsername(), c.getPassword())) {
+		if (credenzialiInfo.impostaCredenzialiNuovoConfiguratore(connectionCode, c)) {
 			a.catchEvent(AppEvent.NEW_CONFIGURATOR_ADDED); //Event
 		}
 		else {

@@ -52,12 +52,12 @@ public class AccessoManager implements CredenzialiManager {
 	}
 
 	@Override
-	public boolean impostaCredenzialiNuovoVolontario (String connectionCode, String username, String password, List<String> tipi_visiteVal, boolean tipiVisitaNecessario) {
+	public boolean impostaCredenzialiNuovoVolontario (String connectionCode, Credenziali credenziali, List<String> tipi_visiteVal, boolean tipiVisitaNecessario) {
 		if (userRep.getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.CONFIGURATORE
-				&& !checkIfUsernameExists(username)) {
+				&& !checkIfUsernameExists(credenziali.getUsername())) {
 			if (!checkIfTypeExistsInList(tipi_visiteVal)) return false;
 		    if (tipiVisitaNecessario && tipi_visiteVal.size() == 0) return false;
-			return userRep.impostaCredenzialiNuovoVolontario(username, password, tipi_visiteVal, tipiVisitaNecessario);
+			return userRep.impostaCredenzialiNuovoVolontario(credenziali, tipi_visiteVal, tipiVisitaNecessario);
 
 		}
 		else return false;
@@ -79,9 +79,9 @@ public class AccessoManager implements CredenzialiManager {
 	}
 
 	@Override
-	public boolean impostaCredenzialiNuovoConfiguratore(String connectionCode, String username, String password) {
+	public boolean impostaCredenzialiNuovoConfiguratore(String connectionCode, Credenziali c) {
 		if (userRep.getTipoUtente(getLinkedUsername(connectionCode)) == CostantiStruttura.CONFIGURATORE) 
-			return userRep.impostaCredenzialiNuovoConfiguratore(username, password);
+			return userRep.impostaCredenzialiNuovoConfiguratore(c);
 		else return false;
 	}
 
@@ -91,7 +91,7 @@ public class AccessoManager implements CredenzialiManager {
 	}
 
 	private boolean createNewFruitore(Credenziali c) {
-		return userRep.impostaCredenzialiNuovoFruitore(c.getUsername(), c.getPassword());
+		return userRep.impostaCredenzialiNuovoFruitore(c);
 	}
 
 	@Override

@@ -59,9 +59,9 @@ public interface UserRepository {
 	public List<VisitaDTO> getElencoVisiteProposteConfermateCancellatePrenotateDalFruitore (String username);
 	public boolean checkIfUserExists (String username);
 	//Precondizione: callerTyper = CostantiStruttura.CONFIGURATORE
-		public boolean impostaCredenzialiNuovoVolontario (String username, String password, List<String> tipi_visiteVal, boolean tipiVisitaNecessario);
-	public boolean impostaCredenzialiNuovoFruitore(String username, String password);
-	public boolean impostaCredenzialiNuovoConfiguratore(String username, String password);
+		public boolean impostaCredenzialiNuovoVolontario (Credenziali credenziali, List<String> tipi_visiteVal, boolean tipiVisitaNecessario);
+	public boolean impostaCredenzialiNuovoFruitore(Credenziali credenziali);
+	public boolean impostaCredenzialiNuovoConfiguratore(Credenziali credenziali);
 
 
 }

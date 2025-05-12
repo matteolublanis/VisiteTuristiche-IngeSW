@@ -197,12 +197,12 @@ public class ArchivioJSON implements AmbitoRepository, UserRepository, VisitsRep
 		return true;
 	}
 
-	public boolean impostaCredenzialiNuovoFruitore (String username, String password) {
-		return usersJSONManager.impostaCredenzialiNuovoFruitore(username, password);
+	public boolean impostaCredenzialiNuovoFruitore (Credenziali c) {
+		return usersJSONManager.impostaCredenzialiNuovoFruitore(c.getUsername(), c.getPassword());
 	}
 
-	public boolean impostaCredenzialiNuovoConfiguratore(String username, String password) {
-		return usersJSONManager.impostaCredenzialiNuovoConfiguratore(username, password);
+	public boolean impostaCredenzialiNuovoConfiguratore(Credenziali c) {
+		return usersJSONManager.impostaCredenzialiNuovoConfiguratore(c.getUsername(), c.getPassword());
 	}
 	
 	public List<LuogoDTO> getElencoLuoghiVisitabili () { 	
@@ -318,10 +318,10 @@ public class ArchivioJSON implements AmbitoRepository, UserRepository, VisitsRep
     	return true;
 	}
 
-	public boolean impostaCredenzialiNuovoVolontario (String username, String password, List<String> tipi_visiteVal, boolean tipiVisitaNecessario) {
+	public boolean impostaCredenzialiNuovoVolontario (Credenziali c, List<String> tipi_visiteVal, boolean tipiVisitaNecessario) {
 		JSONArray tipiVisite = new JSONArray();
 		for (String tipo : tipi_visiteVal) { if (!tipo.equals(""))tipiVisite.put(tipo); }
-		return impostaCredenzialiNuovoVolontario(username, password, tipiVisite, tipiVisitaNecessario);
+		return impostaCredenzialiNuovoVolontario(c.getUsername(), c.getPassword(), tipiVisite, tipiVisitaNecessario);
 	}
 	
 	public List<String> getGiorniPrenotabiliTipoVisita(TipoVisitaDTO tipoVisita) {

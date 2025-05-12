@@ -10,7 +10,6 @@ import archivio.ArchivioFactory;
 import archivio.CredenzialiManager;
 import client.app.App;
 import client.log_events.AppEvent;
-import utility.Credenziali;
 import utility.MethodName;
 
 public abstract class ControllerUtente {
@@ -73,7 +72,7 @@ public abstract class ControllerUtente {
 	}
 	
 	public boolean checkIfUserExists(String username) {
-		return credenzialiInfo.checkIfUsernameExists(username);
+		return credenzialiInfo.checkIfUsernameExists(username); //user info?
 	}
 	
 	public boolean checkIfVisitTypeExists(String tipoVisita) {
