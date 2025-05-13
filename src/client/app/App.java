@@ -14,21 +14,22 @@ import utility.Credenziali;
 public interface App {
 	public void start();
 	public void stop();
-	public boolean scegliAzione(String azione); //TODO da cambiare con ENUM azioni
+	public boolean scegliAzione(String azione); 
 	public Login getGl();
 	public void setGu(ControllerUtente gu);
 	public ControllerUtente getGu();
+	public void catchEvent(AppEvent e);
+	public void catchEvent(AppEvent e, String attachment);
+	
 	public String richiediInput(String msg);
 	public boolean chiediSioNo(String msg);
 	public String richiediDataValida(String msg); //TODO da cambiare con LocalDate o Calendar?
 	public int richiediInt(String msg);
 	public String richiediOraValida(String msg);
 	public int richiediNumeroConLimiteInferiore(String msg, int limite);
-	public void viewLogin(Credenziali primeCredenziali);
 	public Credenziali richiediCredenziali();
-	void catchEvent(AppEvent e);
-	void catchEvent(AppEvent e, String attachment);
 	public void log(String msg);
+	public void viewLogin(Credenziali primeCredenziali);
 	public void viewPrimoAccesso();
 	public void viewListDTO(List<DTO> list);
 	public void viewListDataDisponibilitaDTO(List<DataDisponibilitaDTO> list);
