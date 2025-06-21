@@ -42,4 +42,6 @@ public interface App {
 	public ArrayList<Credenziali> richiediVolontari();
 	public String richiediVisitaEsistente();
 	public LuogoDTO richiediLuogo();
+	public String richiediNuovoTipoVisita();
+	public String richiediTitolo();
 }

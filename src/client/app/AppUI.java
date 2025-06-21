@@ -1,15 +1,11 @@
 package client.app;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.Set;
-
-import javax.sound.sampled.LineUnavailableException;
 
 import client.controller_utente.ControllerUtente;
 import client.log_events.AppEvent;
@@ -24,33 +20,14 @@ import dto.VisitaDTO;
 import utility.Credenziali;
 import utility.Time;
 
-public class AppUI implements App{ 
+public class AppUI implements App, Observable{ 
 	
 	private Scanner sc = new Scanner(System.in);
-	private Login gestoreLogin;
-	private ControllerUtente controllerUtente; 
+	private List<Observer> observers = new ArrayList<>();
+	private final AzioniProvider azioniProvider;
 	
-	public static void main (String args[]) throws IllegalAccessException, InvocationTargetException, IOException, LineUnavailableException {
-		App app = new AppUI(); 
-		app.start();
-}
-	
-	public AppUI() {
-		this.gestoreLogin = new Login(this, 0);
-	}
-	
-	public Login getGl() {
-		return gestoreLogin;
-	}
-	
-	//Precondizione: gu != null
-	public ControllerUtente getGu () {
-		return controllerUtente;
-	}
-	
-	//Precondizione: gu != null
-	public void setGu (ControllerUtente gu) {
-		this.controllerUtente = gu;
+	public AppUI(AzioniProvider azioniProvider) {
+		this.azioniProvider = azioniProvider;
 	}
 	
 	/*
@@ -59,21 +36,21 @@ public class AppUI implements App{
 	public void start() {
 		view("Benvenuto!");
 		Time.setActualDate(richiediDataValida("data di app"));
-		gestoreLogin.avvio(); //fase login
-
+		
+		notifyObservers(new UiEvent(UiEventType.START, null));
+		
 		do {
 			
-			if (!scegliAzione()) break;
+			scegliAzione();
 			
 		} while (true); 
 		
-		stop();
 	}
 	
 	public void stop() {
 		view("Arrivederci!");
 		sc.close();
-		gestoreLogin.stopConnection();
+		notifyObservers(new UiEvent(UiEventType.STOP, null));
 		System.exit(0);
 	}
 	
@@ -81,24 +58,13 @@ public class AppUI implements App{
 	 * L'app carica i metodi disponibili per il tipo di utente associato, in base all'input
 	 * decide che azione compiere (@see eseguiAzione)
 	 */
-	private boolean scegliAzione () {
+	private void scegliAzione () {
 		view("Quale operazione desidera (ESC per uscire)?");
-		visualNumberedListGeneric(controllerUtente.getAzioniDisponibiliConNomi());
-		String input = richiediInput("l'azione da eseguire (da 1 a " + controllerUtente.getAzioniDisponibiliConNomi().size() + " o esc)");
-		try {
-			int i = Integer.parseInt(input);
-			return controllerUtente.eseguiAzione(String.valueOf(i - 1));
-		}
-		catch (NumberFormatException e) {
-			return controllerUtente.eseguiAzione(input);
-		}
-
+		visualNumberedListGeneric(azioniProvider.getAzioniDisponibiliConNomi());
+		String input = richiediInput("l'azione da eseguire (da 1 a " + azioniProvider.getAzioniDisponibiliConNomi().size() + " o esc)");
+		notifyObservers(new UiEvent(UiEventType.ESEGUI_AZIONE, input));
 	}
 	
-	public boolean scegliAzione(String azione) {
-		return controllerUtente.eseguiAzione(azione);
-	}
-
 	//Precondizione: val != null
 	public boolean chiediSioNo (String val) {
 		view(val);
@@ -206,21 +172,6 @@ public class AppUI implements App{
 	}
 
 	@Override
-	public void viewLogin(Credenziali credenzialiIniziali) {
-		if (credenzialiIniziali != null) { 
-			gestoreLogin.accesso();
-		}
-		else {
-			if (chiediSioNo("Vuoi registrarti come nuovo utente?")) {
-				gestoreLogin.registrazione();
-			}
-			else {
-				gestoreLogin.accesso();
-			}
-		}
-	}
-
-	@Override
 	public void catchEvent(AppEvent e) {
 		view(e.getMessage()); 
 		switch (e.getSeverity()) {
@@ -239,7 +190,6 @@ public class AppUI implements App{
 	@Override
 	public void catchEvent(AppEvent e, String attachment) {
 		view(e.getMessage(attachment));
-		
 	}
 
 	@Override
@@ -251,7 +201,6 @@ public class AppUI implements App{
 	public void viewPrimoAccesso() {
 		view("Primo accesso eseguito.");
 		view("Cambia le tue credenziali:");
-		
 	}
 
 	@Override
@@ -334,14 +283,8 @@ public class AppUI implements App{
 	}
 	
 	
-	private String richiediNuovoTipoVisita() {
-	    String tipoVisita;
-	    do {
-	        tipoVisita = richiediInput("tag del tipo della visita");
-	        if (controllerUtente.checkIfVisitTypeExists(tipoVisita)) {
-	            catchEvent(AppEvent.TAG_ALREADY_EXISTS);
-	        }
-	    } while (controllerUtente.checkIfVisitTypeExists(tipoVisita));
+	public String richiediNuovoTipoVisita() {
+	    String tipoVisita = richiediInput("tag del tipo della visita");
 	    return tipoVisita;
 	}
 	
@@ -471,6 +414,54 @@ public class AppUI implements App{
 				view(result);
 			}
 		}
+	}
+
+
+    @Override
+    public void attach(Observer o) {
+        observers.add(o);
+    }
+
+    @Override
+    public void detach(Observer o) {
+        observers.remove(o);
+    }
+
+    @Override
+    public void notifyObservers(UiEvent evento) {
+        for (Observer o : observers) {
+            o.update(evento);
+        }
+    }
+
+	@Override
+	public Login getGl() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setGu(ControllerUtente gu) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ControllerUtente getGu() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean scegliAzione(String azione) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void viewLogin(Credenziali primeCredenziali) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

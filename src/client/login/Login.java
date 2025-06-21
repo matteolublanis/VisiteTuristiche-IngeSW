@@ -3,21 +3,23 @@ package client.login;
 import archivio.ArchivioFactory;
 import archivio.CredenzialiManager;
 import client.app.App;
+import client.app.AppUI;
+import client.app.ControllerMVC;
 import client.controller_utente.ControllerUtenteFactory;
 import client.log_events.AppEvent;
 import utility.Credenziali;
 
 public class Login {
 	
-	private App a;
+	private App appUI;
 	private CredenzialiManager credenzialiManager;
 	private int tipoApp;
 	private String connectionCode;
 	private int tipoUtente;
 	
 	//Precondizione> archivio != null
-	public Login(App a, int tipoApp) {
- 		this.a = a;
+	public Login(App appUI, int tipoApp) {
+ 		this.appUI = appUI;
  		linkWithArchive(tipoApp);
  		this.tipoApp = tipoApp;
  	}
@@ -70,10 +72,15 @@ public class Login {
 	
 	public void avvio () {
 		if (checkPrimoAvvio()) { 
-			a.viewLogin(credenzialiManager.getCredenzialiIniziali());
+			accesso();
 		}
 		else {
-			a.viewLogin(null);
+			if(appUI.chiediSioNo("Vuoi registrarti come nuovo utente?")) {
+				registrazione();
+			}
+			else {
+				accesso();
+			}
 		}
 	}
 	//Precondizione: username != null

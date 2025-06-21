@@ -18,6 +18,11 @@ import utility.Time;
 
 public class UserManager implements UserInfoManager {
 	
+	private CredenzialiManager accessoManager;
+	private UserRepository userRep;
+	private AmbitoRepository ambitoRep;
+	private VisitsRepository visitRep;
+	
 	public UserManager(CredenzialiManager accessoManager, UserRepository userRep, AmbitoRepository ambitoRep,
 			VisitsRepository visitRep) {
 		super();
@@ -26,18 +31,13 @@ public class UserManager implements UserInfoManager {
 		this.ambitoRep = ambitoRep;
 		this.visitRep = visitRep;
 	}
-
-	private CredenzialiManager accessoManager;
-	private UserRepository userRep;
-	private AmbitoRepository ambitoRep;
-	private VisitsRepository visitRep;
 	
 	private String getUsernameClient(String connectionCode) {
 		return accessoManager.getLinkedUsername(connectionCode);
 	}
 	
 	@Override
-	public int getTipoUtente (String username) { //OK
+	public int getTipoUtente (String username) { 
 		return userRep.getTipoUtente(username);
 	}
 
@@ -171,7 +171,7 @@ public class UserManager implements UserInfoManager {
 	
 	private boolean canAddOrRemove() {
 		if (visitRep.isPrimaPubblicazione()) return true;
-		else return (visitRep.isUltimoPianoPubblicato() && !visitRep.getPossibileDareDisponibilita()); //POSSO MODIFICARE SOLO SE TRA PUBBLICAZIONE E RITORNATA POSS DISP
+		else return (visitRep.isUltimoPianoPubblicato() && !visitRep.getPossibileDareDisponibilita()); 
 	}
 
 }

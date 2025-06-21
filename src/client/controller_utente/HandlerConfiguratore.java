@@ -271,8 +271,18 @@ public class HandlerConfiguratore extends ControllerUtente{
 				}
 				else a.catchEvent(AppEvent.PLACE_NOT_ADDED); 
 			} while (a.chiediSioNo("Vuoi aggiungere un altro luogo?"));
-		}
-		
+		}	
+	}
+	
+	private String richiediNuovoTipoVisita() {
+	    String tipoVisita = a.richiediNuovoTipoVisita();
+	    do {
+	        if (checkIfVisitTypeExists(tipoVisita)) {
+	            a.catchEvent(AppEvent.TAG_ALREADY_EXISTS);
+	        }
+	    } while (checkIfVisitTypeExists(tipoVisita));
+	    
+	    return tipoVisita;
 	}
 	
 }

@@ -29,7 +29,9 @@ public class AccessoManager implements CredenzialiManager {
 	
 	@Override	
 	public String makeConnection(Credenziali c) {
-		if (checkIfUsernameExists(c.getUsername())) if (!checkCredenzialiCorrette(c)) return null;
+		if (checkIfUsernameExists(c.getUsername())) {
+			if (!checkCredenzialiCorrette(c)) return null;
+		}
 		if (!checkIfUsernameExists(c.getUsername())) {
 			createNewFruitore(c);
 		}
@@ -47,7 +49,7 @@ public class AccessoManager implements CredenzialiManager {
 	}
 
 	@Override
-	public boolean checkPrimoAvvio () { //OK
+	public boolean checkPrimoAvvio () {
 		return ambitoRep.checkPrimoAvvio();
 	}
 

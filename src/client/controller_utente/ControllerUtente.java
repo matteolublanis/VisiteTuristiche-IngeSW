@@ -9,10 +9,11 @@ import archivio.AmbitoManager;
 import archivio.ArchivioFactory;
 import archivio.CredenzialiManager;
 import client.app.App;
+import client.app.AzioniProvider;
 import client.log_events.AppEvent;
 import utility.MethodName;
 
-public abstract class ControllerUtente {
+public abstract class ControllerUtente implements AzioniProvider {
 	
 	protected AmbitoManager archivio;
 	protected CredenzialiManager credenzialiInfo;
