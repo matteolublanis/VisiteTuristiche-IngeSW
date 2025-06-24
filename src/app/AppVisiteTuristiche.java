@@ -12,7 +12,7 @@ import client.login.Login;
 
 public class AppVisiteTuristiche {
 
-	private static final int TIPO_APP = 1; // Definisci il tipo di app appropriato
+	private static final int TIPO_APP = 0;
 	
 	public static void main(String args[]) throws IllegalAccessException, InvocationTargetException, IOException, LineUnavailableException {
 		
