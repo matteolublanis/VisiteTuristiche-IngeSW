@@ -1,11 +1,11 @@
 package client.controller_utente;
 
-import client.app.App;
+import client.app.ViewInterface;
 import utility.CostantiStruttura;
 
 public class ControllerUtenteFactory {
 	
-	public static ControllerUtente createControllerUtente (int tipo, int tipoApp, App a, String connectionCode) {
+	public static ControllerUtente createControllerUtente (int tipo, int tipoApp, ViewInterface a, String connectionCode) {
 		switch (tipoApp) {
 		case CostantiStruttura.STANDALONE:
 			switch (tipo) {

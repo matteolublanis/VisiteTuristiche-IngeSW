@@ -1,16 +1,12 @@
 package client.app;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
-import java.util.Set;
-
-import client.controller_utente.ControllerUtente;
-import client.log_events.AppEvent;
-import client.login.Login;
-import dto.DTO;
+import java.util.concurrent.CompletableFuture;
 import dto.DataDisponibilitaDTO;
 import dto.LuogoDTO;
 import dto.PrenotazioneDTO;
@@ -20,448 +16,319 @@ import dto.VisitaDTO;
 import utility.Credenziali;
 import utility.Time;
 
-public class AppUI implements App, Observable{ 
+public class AppUI implements ViewInterface, Observable{ 
 	
-	private Scanner sc = new Scanner(System.in);
-	private List<Observer> observers = new ArrayList<>();
-	private final AzioniProvider azioniProvider;
-	
-	public AppUI(AzioniProvider azioniProvider) {
-		this.azioniProvider = azioniProvider;
-	}
-	
-	/*
-	 * Funzione di start dell'applicazione, esegue il loop principale 
-	 */
-	public void start() {
-		view("Benvenuto!");
-		Time.setActualDate(richiediDataValida("data di app"));
-		
-		notifyObservers(new UiEvent(UiEventType.START, null));
-		
-		do {
-			
-			scegliAzione();
-			
-		} while (true); 
-		
-	}
-	
-	public void stop() {
-		view("Arrivederci!");
-		sc.close();
-		notifyObservers(new UiEvent(UiEventType.STOP, null));
-		System.exit(0);
-	}
-	
-	/*
-	 * L'app carica i metodi disponibili per il tipo di utente associato, in base all'input
-	 * decide che azione compiere (@see eseguiAzione)
-	 */
-	private void scegliAzione () {
-		view("Quale operazione desidera (ESC per uscire)?");
-		visualNumberedListGeneric(azioniProvider.getAzioniDisponibiliConNomi());
-		String input = richiediInput("l'azione da eseguire (da 1 a " + azioniProvider.getAzioniDisponibiliConNomi().size() + " o esc)");
-		notifyObservers(new UiEvent(UiEventType.ESEGUI_AZIONE, input));
-	}
-	
-	//Precondizione: val != null
-	public boolean chiediSioNo (String val) {
-		view(val);
-		do {
-			String answer = (String) richiediInput("si o no");
-			switch (answer.toLowerCase()) {
-			case "si":
-				return true;
-			case "no":
-				return false;
-			default:
-				view("Formato non valido, inserire si/no");
-				break;
-			}
-		} while (true);
+    private Scanner sc = new Scanner(System.in);
+    private List<Observer> observers = new ArrayList<>();
+    private Map<String, CompletableFuture<Object>> richiesteInCorso = new HashMap<>();
+    
+    @Override
+    public void mostraMessaggio(String messaggio) {
+        if (messaggio != null && !messaggio.isEmpty()) {
+            System.out.println(messaggio);
+        }
+    }
+    
+    @Override
+    public void mostraElencoAzioni(List<String> azioni) {
+        mostraMessaggio("Quale operazione desidera (ESC per uscire)?");
+        for (int i = 0; i < azioni.size(); i++) {
+            System.out.println((i + 1) + ") " + azioni.get(i));
+        }
+        
+        String input = leggiInputDiretto("l'azione da eseguire (da 1 a " + azioni.size() + " o esc)");
+        notifyObservers(new UiEvent(UiEventType.ESEGUI_AZIONE, input));
+    }
+    
+    @Override
+    public void richiediInput(UiRequest richiesta) {
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        richiesteInCorso.put(richiesta.getRichiedenteId(), future);
 
-	}
-	//Precondizione: msg != null
-	public String richiediOraValida(String msg) {
-	    String ora;
-	    do {
-	        ora = richiediInput(msg);
-	        if (!Time.isValidHour(ora)) {
-	            view("Formato non corretto, inserire tipo 10:30.");
-	        }
-	    } while (!Time.isValidHour(ora));
-	    return ora;
-	}
-	//Precondizione: msg != null
-	public int richiediNumeroConLimiteInferiore(String msg, int limit) {
-	    int n;
-	    do {
-	        n = richiediInt(msg);
-	        if (n <= limit) {
-	            view("Non può essere più piccolo o uguale di " + limit + ".");
-	        }
-	    } while (n <= limit);
-	    return n;
-	}
-	//Precondizione: messaggio != null
-	public String richiediDataValida(String messaggio) {
-	    String data;
-	    do {
-	        data = (String) richiediInput(messaggio);
-	        if (!Time.isValidDate(data)) {
-	            view("Formato data non valido, deve essere (dd-mm-yyyy)");
-	        }
-	    } while (!Time.isValidDate(data));
-	    return data;
-	}
-	//Precondizione: s != null
-	public int richiediInt (String s) {
-		view("Inserisci " + s + ":");
-		while (!sc.hasNextInt()) {
-			view("Formato non valido, reinserire.");
-			sc.nextLine();
-		}
-		int result = sc.nextInt();
-		sc.nextLine();
-		return result;
-	}
-	//Precondizione: s != null
-	public String richiediInput (String s) {
-		
-		try {
-			view("Inserisci " + s + ":");
-			s = sc.nextLine();
-			return s;
-		}
-		catch (NoSuchElementException e) {
-			view("EOF individuato, arrivederci!");
-			stop();
-			return null;
-		}
-
-	}
-	
-	public Credenziali richiediCredenziali () {
-		String username = richiediInput("username (ESC per tornare indietro)");
-		if (username.equalsIgnoreCase("esc")) return null;
-		String password = richiediInput("password");
-		if (chiediSioNo("Confermi?")) { 
-			return new Credenziali(username, password);
-		}
-		else return richiediCredenziali();
-	}
-	
-	public <T> void visualSetGeneric (Set<T> list, String name) {
-		view(name + ":");
-		for (T x :list) view(x.toString());
-	}
-	
-	public <T> void visualListGeneric (List<T> list, String name) {
-		view(name + ":");
-		for (T x : list) view(x.toString());
-	}
-	
-	public <T> void visualNumberedListGeneric (List<T> list) {
-		for (int i = 1 ; i <= list.size() ; i++) view(i + ") " + list.get(i-1).toString());
-	}
-	
-	//Precondizione: msg != null
-	public void view (String msg) throws NullPointerException {
-		if (!msg.equals("")) System.out.println(msg);
-	}
-
-	@Override
-	public void catchEvent(AppEvent e) {
-		view(e.getMessage()); 
-		switch (e.getSeverity()) {
-		case ERROR:
-			stop();
-			break;
-		case INFO:
-			break;
-		case WARNING:
-			break;
-		default:
-			break;
-		}
-		
-	}
-	@Override
-	public void catchEvent(AppEvent e, String attachment) {
-		view(e.getMessage(attachment));
-	}
-
-	@Override
-	public void log(String msg) {
-		view(msg);
-	}
-
-	@Override
-	public void viewPrimoAccesso() {
-		view("Primo accesso eseguito.");
-		view("Cambia le tue credenziali:");
-	}
-
-	@Override
-	public TipoVisitaDTO richiediTipoVisita(String luogo) {
-		String tipoVisita = richiediNuovoTipoVisita(); 
-		String titolo = richiediInput("titolo della visita");
-		String descrizione = richiediInput("descrizione riassuntiva della visita");
-		String puntoIncontro = richiediInput("punto di incontro della visita (locazione geografica)");
-		String dataInizio = richiediDataValida("apertura del periodo della visita (dd-mm-yyyy)");
-		String dataFine = "";
-		do {
-			dataFine = richiediDataValida("chiusura del periodo della visita (dd-mm-yyyy)");
-			if (Time.comesBefore(dataFine, dataInizio)) view("Non può finire prima che inizi."); 
-		} while (Time.comesBefore(dataFine, dataInizio));
-		ArrayList<Integer> giorniPrenotabili = richiediGiorniPrenotabili();
-		String oraInizio = richiediOraValida("ora d'inizio visita (hh-mm)");
-		int durataVisita = richiediInt("durata della visita in minuti (ad esempio 120 sono 120 minuti, quindi 2 ore)");
-		boolean ticket = chiediSioNo("è da acquistare o no un biglietto?");
-		int minFruitore = richiediNumeroConLimiteInferiore("minimo fruitori per confermare la visita", 0);
-		int maxFruitore = richiediNumeroConLimiteInferiore("massimo fruitori per completare la visita", minFruitore);
-		ArrayList<Credenziali> volontari = richiediVolontari();
-		TipoVisitaDTO result = new TipoVisitaDTO(tipoVisita, titolo, luogo, descrizione, puntoIncontro, dataInizio,
-				dataFine, giorniPrenotabili, oraInizio, durataVisita, ticket, minFruitore,
-				maxFruitore, volontari);
-		return result;
-	}
-	
-	public ArrayList<Credenziali> richiediVolontari() {
-		ArrayList<Credenziali> volontari = new ArrayList<>();
-		boolean continua = true;
-		do {
-		    if (chiediSioNo("Vuoi associare un nuovo volontario per questo tipo di visita?")) {
-		        do {
-		        	view("Inserisci le credenziali del nuovo volontario.");
-		        	Credenziali c = richiediCredenziali();		        	
-		        	if (!controllerUtente.checkIfUserExists(c.getUsername())) {
-		        		volontari.add(c);
-		        		break;
-		        	}
-		        	else view("Non è stato inserito il nuovo volontario, username già in uso.");
-		        } while (true);
-		    } 
-		    else {
-		    	String volontario = richiediInput("volontario che gestirà la visita");
-		    	if (!controllerUtente.checkIfUserExists(volontario)) {
-		    		view("L'username inserito non è associato a nessun volontario.");
-		    	} else {
-		    		boolean add = true;
-		    		for (Credenziali v : volontari) if (v.getUsername() == volontario) {
-		    			view("Volontario già inserito!");
-		    			add = false;
-		    		}
-		    		if (add) volontari.add(new Credenziali(volontario, null));
-		    	} 
-		    }
-		    continua = (volontari.size() == 0);
-		    if (!continua) continua = chiediSioNo("Vuoi inserire un altro volontario?");
-		} while (continua);
-	    return volontari;
-	}
-	
-	public LuogoDTO richiediLuogo () {
-		String tag = richiediInput("tag del luogo");
-		String nome = richiediInput("nome del luogo");
-		String descrizione = richiediInput("descrizione del luogo");
-		String collocazione = richiediInput("collocazione del luogo");
-		return new LuogoDTO(tag, nome, descrizione, collocazione);
-	}
-	
-	@Override
-	public String richiediVisitaEsistente() {
-	    String tipo;
-	    do {
-	        tipo = richiediInput("tag della visita da associare");
-	        if (!controllerUtente.checkIfVisitTypeExists(tipo)) {
-	            view("Non esiste il tipo inserito, reinserisci i dati.");
-	        }
-	    } while (!controllerUtente.checkIfVisitTypeExists(tipo)); 
-	    return tipo;
-	}
-	
-	
-	public String richiediNuovoTipoVisita() {
-	    String tipoVisita = richiediInput("tag del tipo della visita");
-	    return tipoVisita;
-	}
-	
-	public String richiediTipoVisitaEsistente() {
-	    String tipo;
-	    do {
-	        tipo = richiediInput("tag del tipo della visita");
-	        if (!controllerUtente.checkIfVisitTypeExists(tipo)) {
-	            catchEvent(AppEvent.VISITTYPE_NON_EXISTENT);
-	        }
-	        else break;
-	    } while (controllerUtente.checkIfVisitTypeExists(tipo));
-	    return tipo;
-	}
-	
-	private ArrayList<Integer> richiediGiorniPrenotabili() {
-		ArrayList<Integer> giorni = new ArrayList<>();
-	    boolean continua = true;
-	    do {
-	        int giorno = richiediInt("giorno prenotabile della visita (1-7)");
-	        if (giorno < 1 || giorno > 7) {
-	            view("Numero inserito non valido, deve essere tra 1 e 7.");
-	        } else if (!giorni.contains(giorno)) { //se non contiene
-	            giorni.add(giorno); //aggiungi giorno
-	            continua = chiediSioNo("Vuoi aggiungere un altro giorno prenotabile?");
-	        } else {
-	            view("Giorno già inserito!");
-	            continua = true;
-	        }
-	        if (giorni.size() == 7) continua = false; //inseriti TUTTI i giorni della settimana
-	    } while (continua);
-	    return giorni;
-	}
-	
-
-	@Override
-	public void viewListDTO(List<DTO> list) {
-		for (DTO dto : list) {
-			Map<String, List<String>> info = dto.infoDTO();
-			for (String dettaglio : info.keySet()) {
-				List<String> attributi = info.get(dettaglio);
-				view(dettaglio + ": " + attributi);
-			}
-		}
-		
-	}
-	
-	@Override
-	public void viewListDataDisponibilitaDTO(List<DataDisponibilitaDTO> list) {
-		for (DataDisponibilitaDTO data : list) {
-			view("Giorni " + data.getTag() + ": " + data.getGiorni().toString());
-		}
-		
-	}
-
-	@Override
-	public void viewListLuogoDTO(List<LuogoDTO> list) {
-		for (LuogoDTO luogo : list) {
-			if (luogo.getTipiAssociati() == null) {
-				view(luogo.getTitolo());
-			}
-			else {
-				view(luogo.getTitolo() + ": " + luogo.getTipiAssociati().toString());
-			}
-		}
-		
-	}
-
-	@Override
-	public void viewListPrenotazioneDTO(List<PrenotazioneDTO> list) {
-		for (PrenotazioneDTO prenotazione : list) {
-			view("Prenotazione " + prenotazione.getCodice() + ": " + prenotazione.getGiorno() + ", " + prenotazione.getTag_visita());
-			view("N. iscritti: " + prenotazione.getNum_da_prenotare());
-		}
-		
-	}
-
-	@Override
-	public void viewListTipoVisitaDTO(List<TipoVisitaDTO> list) {
-		for (TipoVisitaDTO tipo : list) {
-			view(tipo.getTag() + " " + tipo.getTitolo());
-		}
-		
-	}
-
-	@Override
-	public void viewListUserDTO(List<UserDTO> list) {
-		for (UserDTO user : list) {
-			view(user.toString()); //TODO al momento è usato come soluzione momentanea, si cambia
-		}
-		
-	}
-
-	@Override
-	public void viewListVisitaDTO(List<VisitaDTO> list) {
-		for (VisitaDTO visita : list) {
-			if (!(visita.getStato().equals("cancellata"))) {
-				if (visita.getDaAcquistare() == null) { //non impostato per configuratore
-					String result = ("-----------") + ("\nTitolo: " +  visita.getTitolo()) + 
-							("\nGiorno: " +  visita.getGiorno()) + 
-							("\nLuogo: " +  visita.getLuogo()) + 
-							("\nStato: " +  visita.getStato());
-					view(result);
-				}
-				else {
-					String result = ("-----------") + ("\nTitolo: " +  visita.getTitolo()) + 
-							("\nDescrizione: " +  visita.getDescrizione())
-							+ ("\nPunto d'incontro: " +  visita.getPuntoIncontro()) + 
-							("\nGiorno: " +  visita.getGiorno()) + 
-							("\nOra d'inizio: " +  visita.getOraInizio())
-							+ ("\nDa acquistare: " +  visita.getDaAcquistare()) + 
-							("\nStato: " +  visita.getStato()) + ("\nTag: " +  visita.getTag());
-					if (visita.getPrenotazioni() != null) { //impostato da volontario
-						String codiciPrenotazioni = "";
-						for (int i = 0 ; i < visita.getPrenotazioni().size() ; i++) {
-							codiciPrenotazioni += "\nCodice: " + visita.getPrenotazioni().get(i).getCodice() + 
-									", n. iscritti:" + visita.getPrenotazioni().get(i).getNum_da_prenotare();
-						}
-						result += codiciPrenotazioni;
-					}
-					view(result);
-				}
-			}
-			else {
-				String result =  ("-----------") + ("\nTitolo: " +  visita.getTitolo()) + ("\nGiorno mancato svolgimento: " +  visita.getGiorno())
-						+ ("\nStato: " +  visita.getStato());
-				view(result);
-			}
-		}
-	}
-
-
+        Object risultato = gestisciRichiestaInput(richiesta);
+        richiestaCompletata(richiesta.getRichiedenteId(), risultato);
+    }
+    
+    private Object gestisciRichiestaInput(UiRequest richiesta) {
+        switch (richiesta.getTipo()) {
+            case RICHIEDI_INPUT:
+                return leggiInputDiretto(richiesta.getMessaggio());
+                
+            case RICHIEDI_CREDENZIALI:
+                return leggiCredenziali();
+                
+            case RICHIEDI_SI_NO:
+                return leggiSiNo(richiesta.getMessaggio());
+                
+            case RICHIEDI_DATA_VALIDA:
+                return leggiDataValida(richiesta.getMessaggio());
+                
+            case RICHIEDI_INT:
+                return leggiInt(richiesta.getMessaggio());
+                
+            case RICHIEDI_ORA_VALIDA:
+                return leggiOraValida(richiesta.getMessaggio());
+                
+            case RICHIEDI_NUMERO_CON_LIMITE:
+                Integer limite = (Integer) richiesta.getParametriAggiuntivi();
+                return leggiNumeroConLimite(richiesta.getMessaggio(), limite);
+                
+            case RICHIEDI_LUOGO:
+                return leggiLuogo();
+                
+            case RICHIEDI_VOLONTARI:
+                return leggiVolontari();
+                
+            case RICHIEDI_GIORNI_PRENOTABILI:
+                return leggiGiorniPrenotabili();
+                
+            default:
+                return null;
+        }
+    }
+    
+    private String leggiInputDiretto(String messaggio) {
+        System.out.println("Inserisci " + messaggio + ":");
+        return sc.nextLine();
+    }
+    
+    private Credenziali leggiCredenziali() {
+        String username = leggiInputDiretto("username (ESC per tornare indietro)");
+        if (username.equalsIgnoreCase("esc")) return null;
+        String password = leggiInputDiretto("password");
+        if (leggiSiNo("Confermi?")) {
+            return new Credenziali(username, password);
+        }
+        return leggiCredenziali(); 
+    }
+    
+    private boolean leggiSiNo(String messaggio) {
+        System.out.println(messaggio);
+        do {
+            String answer = leggiInputDiretto("si o no");
+            switch (answer.toLowerCase()) {
+                case "si": return true;
+                case "no": return false;
+                default: 
+                    System.out.println("Formato non valido, inserire si/no");
+                    break;
+            }
+        } while (true);
+    }
+    
+    private String leggiDataValida(String messaggio) {
+        String data;
+        do {
+            data = leggiInputDiretto(messaggio);
+            if (!Time.isValidDate(data)) {
+                System.out.println("Formato data non valido, deve essere (dd-mm-yyyy)");
+            }
+        } while (!Time.isValidDate(data));
+        return data;
+    }
+    
+    private int leggiInt(String messaggio) {
+        System.out.println("Inserisci " + messaggio + ":");
+        while (!sc.hasNextInt()) {
+            System.out.println("Formato non valido, reinserire.");
+            sc.nextLine();
+        }
+        int result = sc.nextInt();
+        sc.nextLine();
+        return result;
+    }
+    
+    private String leggiOraValida(String messaggio) {
+        String ora;
+        do {
+            ora = leggiInputDiretto(messaggio);
+            if (!Time.isValidHour(ora)) {
+                System.out.println("Formato non corretto, inserire tipo 10:30.");
+            }
+        } while (!Time.isValidHour(ora));
+        return ora;
+    }
+    
+    private int leggiNumeroConLimite(String messaggio, int limite) {
+        int n;
+        do {
+            n = leggiInt(messaggio);
+            if (n <= limite) {
+                System.out.println("Non può essere più piccolo o uguale di " + limite + ".");
+            }
+        } while (n <= limite);
+        return n;
+    }
+    
+    private LuogoDTO leggiLuogo() {
+        String tag = leggiInputDiretto("tag del luogo");
+        String nome = leggiInputDiretto("nome del luogo");
+        String descrizione = leggiInputDiretto("descrizione del luogo");
+        String collocazione = leggiInputDiretto("collocazione del luogo");
+        return new LuogoDTO(tag, nome, descrizione, collocazione);
+    }
+    
+    private ArrayList<Credenziali> leggiVolontari() {
+        ArrayList<Credenziali> volontari = new ArrayList<>();
+        boolean continua = true;
+        
+        do {
+            if (leggiSiNo("Vuoi associare un nuovo volontario per questo tipo di visita?")) {
+                System.out.println("Inserisci le credenziali del nuovo volontario.");
+                Credenziali c = leggiCredenziali();
+                if (c != null) {
+                    volontari.add(c);
+                }
+            } else {
+                String username = leggiInputDiretto("username del volontario che gestirà la visita");
+                volontari.add(new Credenziali(username, null));
+            }
+            
+            continua = (volontari.size() == 0) || leggiSiNo("Vuoi inserire un altro volontario?");
+        } while (continua);
+        
+        return volontari;
+    }
+    
+    private ArrayList<Integer> leggiGiorniPrenotabili() {
+        ArrayList<Integer> giorni = new ArrayList<>();
+        boolean continua = true;
+        
+        do {
+            int giorno = leggiInt("giorno prenotabile della visita (1-7)");
+            if (giorno < 1 || giorno > 7) {
+                System.out.println("Numero inserito non valido, deve essere tra 1 e 7.");
+            } else if (!giorni.contains(giorno)) {
+                giorni.add(giorno);
+                continua = leggiSiNo("Vuoi aggiungere un altro giorno prenotabile?");
+            } else {
+                System.out.println("Giorno già inserito!");
+                continua = true;
+            }
+            if (giorni.size() == 7) continua = false;
+        } while (continua);
+        
+        return giorni;
+    }
+    
+    @Override
+    public void richiestaCompletata(String richiedenteId, Object risultato) {
+        CompletableFuture<Object> future = richiesteInCorso.remove(richiedenteId);
+        if (future != null) {
+            future.complete(risultato);
+        }
+        
+        // Notifica il controller del risultato
+        notifyObservers(new UiEvent(UiEventType.INPUT_RESPONSE, 
+            new AbstractMap.SimpleEntry<>(richiedenteId, risultato)));
+    }
+    
+    @Override
+    public void mostraListaLuoghi(List<LuogoDTO> list) {
+        for (LuogoDTO luogo : list) {
+            if (luogo.getTipiAssociati() == null) {
+                System.out.println(luogo.getTitolo());
+            } else {
+                System.out.println(luogo.getTitolo() + ": " + luogo.getTipiAssociati().toString());
+            }
+        }
+    }
+    
+    @Override
+    public void mostraListaVisite(List<VisitaDTO> list) {
+        for (VisitaDTO visita : list) {
+            if (!visita.getStato().equals("cancellata")) {
+                StringBuilder result = new StringBuilder("-----------");
+                result.append("\nTitolo: ").append(visita.getTitolo());
+                result.append("\nGiorno: ").append(visita.getGiorno());
+                result.append("\nLuogo: ").append(visita.getLuogo());
+                result.append("\nStato: ").append(visita.getStato());
+                
+                if (visita.getDaAcquistare() != null) {
+                    result.append("\nDescrizione: ").append(visita.getDescrizione());
+                    result.append("\nPunto d'incontro: ").append(visita.getPuntoIncontro());
+                    result.append("\nOra d'inizio: ").append(visita.getOraInizio());
+                    result.append("\nDa acquistare: ").append(visita.getDaAcquistare());
+                    result.append("\nTag: ").append(visita.getTag());
+                    
+                    if (visita.getPrenotazioni() != null) {
+                        for (PrenotazioneDTO p : visita.getPrenotazioni()) {
+                            result.append("\nCodice: ").append(p.getCodice());
+                            result.append(", n. iscritti: ").append(p.getNum_da_prenotare());
+                        }
+                    }
+                }
+                System.out.println(result.toString());
+            } else {
+                String result = "-----------\nTitolo: " + visita.getTitolo() + 
+                              "\nGiorno mancato svolgimento: " + visita.getGiorno() + 
+                              "\nStato: " + visita.getStato();
+                System.out.println(result);
+            }
+        }
+    }
+    
+    @Override
+    public void mostraListaTipiVisita(List<TipoVisitaDTO> list) {
+        for (TipoVisitaDTO tipo : list) {
+            System.out.println(tipo.getTag() + " " + tipo.getTitolo());
+        }
+    }
+    
+    @Override
+    public void mostraListaUtenti(List<UserDTO> list) {
+        for (UserDTO user : list) {
+            System.out.println(user.toString());
+        }
+    }
+    
+    @Override
+    public void mostraListaPrenotazioni(List<PrenotazioneDTO> list) {
+        for (PrenotazioneDTO prenotazione : list) {
+            System.out.println("Prenotazione " + prenotazione.getCodice() + ": " + 
+                             prenotazione.getGiorno() + ", " + prenotazione.getTag_visita());
+            System.out.println("N. iscritti: " + prenotazione.getNum_da_prenotare());
+        }
+    }
+    
+    @Override
+    public void mostraListaDateDisponibilita(List<DataDisponibilitaDTO> list) {
+        for (DataDisponibilitaDTO data : list) {
+            System.out.println("Giorni " + data.getTag() + ": " + data.getGiorni().toString());
+        }
+    }
+    
+    // Pattern Observer
     @Override
     public void attach(Observer o) {
         observers.add(o);
     }
-
+    
     @Override
     public void detach(Observer o) {
         observers.remove(o);
     }
-
+    
     @Override
     public void notifyObservers(UiEvent evento) {
         for (Observer o : observers) {
             o.update(evento);
         }
     }
-
-	@Override
-	public Login getGl() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setGu(ControllerUtente gu) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public ControllerUtente getGu() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean scegliAzione(String azione) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void viewLogin(Credenziali primeCredenziali) {
-		// TODO Auto-generated method stub
-		
-	}
-	
+    
+    public void start() {
+        System.out.println("Benvenuto!");
+        String dataApp = leggiDataValida("data di app");
+        Time.setActualDate(dataApp);
+        
+        notifyObservers(new UiEvent(UiEventType.START, null));
+        
+    }
+    
+    public void stop() {
+        System.out.println("Arrivederci!");
+        sc.close();
+        notifyObservers(new UiEvent(UiEventType.STOP, null));
+        System.exit(0);
+    }
 }

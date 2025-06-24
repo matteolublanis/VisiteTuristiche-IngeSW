@@ -10,7 +10,7 @@ import utility.Credenziali;
 
 class FunzioniUtenteTest {
 	
-	private App app = new AppUI();
+	private ViewInterface app = new AppUI();
 	
 	private int getIndexAzione(String azione) {
 		return app.getGu().getAzioniDisponibiliConNomi().indexOf(azione);
