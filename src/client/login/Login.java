@@ -108,7 +108,7 @@ public class Login {
 		a.viewPrimoAccesso();
 		do {
 			Credenziali c = a.richiediCredenziali();
-			if (cambiaCredenziali(c)) a.catchEvent(AppEvent.USERNAME_ALREADY_IN_USE);
+			if (!cambiaCredenziali(c)) a.catchEvent(AppEvent.USERNAME_ALREADY_IN_USE);
 			else break;
 		} while (true);
 		a.catchEvent(AppEvent.CHANGED_CREDENTIALS);

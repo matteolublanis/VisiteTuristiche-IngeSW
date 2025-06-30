@@ -208,6 +208,8 @@ public class AppUI implements App{
 	@Override
 	public void viewLogin(Credenziali credenzialiIniziali) {
 		if (credenzialiIniziali != null) { 
+			view("AVVIO APPLICAZIONE - CREDENZIALI INIZIALI\nUsername: " + credenzialiIniziali.getUsername()
+					+ "\nPassword: " + credenzialiIniziali.getPassword() + "\n");
 			gestoreLogin.accesso();
 		}
 		else {
