@@ -181,7 +181,8 @@ public class AppUI implements App{
 		if (username.equalsIgnoreCase("esc")) return null;
 		String password = richiediInput("password");
 		if (chiediSioNo("Confermi?")) { 
-			return new Credenziali(username, password);
+			Credenziali c = new Credenziali(username, password);
+			return c;
 		}
 		else return richiediCredenziali();
 	}

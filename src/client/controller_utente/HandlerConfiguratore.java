@@ -22,6 +22,7 @@ public class HandlerConfiguratore extends ControllerUtente{
 	public HandlerConfiguratore(App a, String connectionCode, int tipoApp) {
 		super(tipoApp);
 		this.a = a;
+		a.setGu(this);
 		this.connectionCode = connectionCode;
 		userInfo = ArchivioFactory.createUserInfoManager(tipoApp);
 		appPlan = ArchivioFactory.createAppManager(tipoApp);

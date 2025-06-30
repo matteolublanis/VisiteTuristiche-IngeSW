@@ -23,6 +23,7 @@ public class HandlerFruitore extends ControllerUtente {
 	public HandlerFruitore(App a, String connectionCode, int tipoApp) {
 		super(tipoApp);
 		this.a = a;
+		a.setGu(this);
 		this.connectionCode = connectionCode;
 		userInfo = ArchivioFactory.createUserInfoManager(tipoApp);
 	}

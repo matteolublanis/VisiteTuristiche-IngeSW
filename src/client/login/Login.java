@@ -37,8 +37,11 @@ public class Login {
 		boolean b = true;
 		do {
 			Credenziali credenziali = a.richiediCredenziali();
-			if (credenziali == null) avvio();
-			if(!checkCredenzialiCorrette(credenziali)) a.catchEvent(AppEvent.WRONG_CREDENTIALS);
+			if (credenziali == null) {
+				avvio();
+				return;
+			}
+			else if(!checkCredenzialiCorrette(credenziali)) a.catchEvent(AppEvent.WRONG_CREDENTIALS);
 			else {
 				inviaCredenziali(credenziali);
 				break;
@@ -50,13 +53,17 @@ public class Login {
 	public void inviaCredenziali(Credenziali credenziali) {
 		configureHandlerUtente(credenzialiManager.makeConnection(credenziali));
 	}
+	
 	//Precondizione: a != null
 	//Postcondizione: fruitore registrato
 	public void registrazione() {
 		do {
 			Credenziali credenziali = a.richiediCredenziali();
-			if (credenziali == null) avvio();
-			if (checkUsernameGiaPresente(credenziali.getUsername()))  a.catchEvent(AppEvent.USERNAME_ALREADY_IN_USE); 
+			if (credenziali == null) {
+				avvio();
+				return;
+			}
+			else if (checkUsernameGiaPresente(credenziali.getUsername()))  a.catchEvent(AppEvent.USERNAME_ALREADY_IN_USE); 
 			else {
 				inviaCredenziali(credenziali);
 				break;
@@ -116,7 +123,7 @@ public class Login {
 	}
 	
 	private void setupGestoreUtente () {
-		a.setGu(ControllerUtenteFactory.createControllerUtente(tipoUtente, tipoApp,a, connectionCode));
+		a.setGu(ControllerUtenteFactory.createControllerUtente(tipoUtente, tipoApp, a, connectionCode));
 	}
 	
 	protected boolean cambiaCredenziali(Credenziali c) {

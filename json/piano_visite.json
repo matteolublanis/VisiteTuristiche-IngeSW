@@ -1,0 +1,83 @@
+{
+          "last-check": "16-06-2025",
+          "29-07-2025": {"sotterranei_castello": {
+                    "stato": "proposta",
+                    "numero-iscritti": 0,
+                    "luogo": "castello_brescia",
+                    "volontari": ["volontario2"],
+                    "prenotazioni": []
+          }},
+          "02-07-2025": {"museo_armi": {
+                    "stato": "confermata",
+                    "numero-iscritti": 10,
+                    "luogo": "castello_brescia",
+                    "volontari": ["volontario1"],
+                    "prenotazioni": [
+                              "98EYF34U",
+                              "J4MPHIVV"
+                    ]
+          }},
+          "21-07-2025": {"sotterranei_castello": {
+                    "stato": "proposta",
+                    "numero-iscritti": 0,
+                    "luogo": "castello_brescia",
+                    "volontari": ["volontario2"],
+                    "prenotazioni": []
+          }},
+          "16-07-2025": {"museo_armi": {
+                    "stato": "proposta",
+                    "numero-iscritti": 0,
+                    "luogo": "castello_brescia",
+                    "volontari": ["volontario1"],
+                    "prenotazioni": []
+          }},
+          "04-07-2025": {"visita_capitolium": {
+                    "stato": "cancellata",
+                    "numero-iscritti": 3,
+                    "luogo": "brescia_romana",
+                    "volontari": ["volontario1"],
+                    "prenotazioni": ["284BS9EE"]
+          }},
+          "22-07-2025": {"sotterranei_castello": {
+                    "stato": "proposta",
+                    "numero-iscritti": 0,
+                    "luogo": "castello_brescia",
+                    "volontari": ["volontario2"],
+                    "prenotazioni": []
+          }},
+          "28-07-2025": {"sotterranei_castello": {
+                    "stato": "proposta",
+                    "numero-iscritti": 0,
+                    "luogo": "castello_brescia",
+                    "volontari": ["volontario2"],
+                    "prenotazioni": []
+          }},
+          "14-07-2025": {"sotterranei_castello": {
+                    "stato": "completa",
+                    "numero-iscritti": 50,
+                    "luogo": "castello_brescia",
+                    "volontari": ["volontario2"],
+                    "prenotazioni": [
+                              "9PD2BPNE",
+                              "P4JU8VHL",
+                              "SXFUR9DO"
+                    ]
+          }},
+          "09-07-2025": {"museo_armi": {
+                    "stato": "proposta",
+                    "numero-iscritti": 0,
+                    "luogo": "castello_brescia",
+                    "volontari": ["volontario1"],
+                    "prenotazioni": []
+          }},
+          "03-07-2025": {"museo_armi": {
+                    "stato": "confermata",
+                    "numero-iscritti": 10,
+                    "luogo": "castello_brescia",
+                    "volontari": ["volontario1"],
+                    "prenotazioni": [
+                              "1XBZKPSH",
+                              "OE7L58GA"
+                    ]
+          }}
+}
